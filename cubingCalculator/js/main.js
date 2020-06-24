@@ -1037,13 +1037,13 @@ function repeatExperiment(cubeType, itemLevel, itemCategory, desiredResult, tota
 
 function updatedDesiredStats() {
   var itemType = document.getElementById('itemType').value;
-  var length = $('#desiredStats').children('option').length;
+  var length = document.getElementById('desiredStats').children('option').length;
   var i = 0;
   var ids_to_remove = [];
   var ids_to_keep = [];
 
   while (i < length) {
-    var current_id = $('#desiredStats').children('option')[i].id;
+    var current_id = document.getElementById('desiredStats').children('option')[i].id;
     if (current_id.includes(itemType) || current_id.includes('any')) {
       ids_to_keep.push(current_id);
       i++
