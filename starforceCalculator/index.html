@@ -1,0 +1,120 @@
+<script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap" rel="stylesheet">
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<script src="jquery-3.4.1.min.js"></script>
+<script src="bootstrap.js"></script>
+<script src="main.js"></script>
+
+<link rel="stylesheet" href="bootstrap.css">
+<link rel="stylesheet" href="style.css">
+
+
+<div class="container-fluid head">
+<div id='loader1' class="spinner" style="display:none">
+</div>
+<div id='loader2' class="spinner-background" style="display:none">
+</div>
+<h1><span><ion-icon name="star-sharp"></ion-icon>Star Force</span> Experimental Probability</h1>
+
+</div>
+
+<div class="container">
+<div class="container-fluid maincon">
+    <form onsubmit="return false">
+        <div class="col-sm-12 containOne">
+            <p>Item Level: <input type="number" id="level" value="200"/></p>
+            <p>Item Type: <select id="item_type">
+            <option id='normal' value="normal">Normal</option>
+            <option id='tyrant' value="tyrant">Tyrant</option>
+            </select>
+            </p>
+            <p>Star Catching: <select id="starcatching">
+                <option value="none">No star catching</option>
+                <option value="mult">+4.5% multiplicative</option>
+            </select>
+            </p>
+            <p>Safeguard: <select id="safeguard">
+                <option value="yes">Safeguard</option>
+                <option value="no">No safeguard</option>
+            </select>
+            </p>
+        </div>
+
+        <div class="col-sm-12 containOne">
+            <p>Current Stars: <input type="number" id="cur_stars" value="0"/></p>
+            <p>Target Stars: <input type="number" id="target_stars" value="22"/></p>
+            <p>MVP Discount: <select id="mvp">
+                <option value="none">None</option>
+                <option value="silver">MVP Silver (3% off 1 to 16)</option>
+                <option value="gold">MVP Gold (5% off 1 to 16)</option>
+                <option value="diamond">MVP Diamond (10% off 1 to 16)</option>
+            </select>
+            </p>
+        </div>
+
+        <div class="col-sm-12 containOne">
+            <p>Event:
+                <label class="checkbox">
+                    <input type="checkbox" id="5_10_15" name="5_10_15" value="5_10_15"/>
+                    <span>5/10/15</span>
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" id="plus2" name="plus2" value="plus2">
+                    <span>+2 Stars (Up to 10 stars)</span>
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" id="30" name="30" value="30">
+                    <span>30% off</span>
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" id="sauna" name="sauna" value="sauna">
+                    <span>No Boom Sauna (Up to 15 stars) </span>
+                </label>
+            </p>
+
+            <checkbox id="event">
+                <p>Number of Trials: <input type="number" id="trials" value="1000"/></p>
+
+
+                <div>
+                    <div id="result10"></div>
+                </div>
+            </checkbox>
+            <div class="col-sm-12 containTwo">
+                <button id='calculateButton' type="submit" class="btn btnSubmit">
+                    <ion-icon name="calculator"></ion-icon>
+                    Calculate
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="error-container" class="containThree" style="display:none">
+  <div id='error-msg'></div>
+</div>
+<div id="result"></div>
+<div id="graphhere" style="display:none">
+    <figure class="highcharts-figure containThree container-fluid">
+        <div id="container"></div>
+    </figure>
+</div>
+</div>
+
+<footer>
+<a href="#">
+    <ion-icon name="heart"></ion-icon>
+    <ion-icon name="game-controller"></ion-icon>
+    Made by SuckHard
+    <ion-icon name="color-wand"></ion-icon> Styled by Taha
+    </a>
+</footer>
