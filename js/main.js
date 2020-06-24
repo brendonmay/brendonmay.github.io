@@ -1234,163 +1234,166 @@ function choose(arr) {
     updatedDesiredStats();
   });
   
-  document.getElementById("calculateButton").addEventListener("click", function() {
-    function loaderOn() {
-      $('#loader1').show();
-      $('#loader2').show();
-          setTimeout(runCalculator, 100);
-    }
-  
-    function loaderOff() {
-      $('#loader1').hide();
-      $('#loader2').hide()
-    }
-  
-    function runCalculator() {
-      var itemType = document.getElementById('itemType').value;
-      var cubeType = document.getElementById('cubeType').value;
-      var currentTier = parseInt(document.getElementById('currentTier').value);
-      var totalTrials = parseInt(document.getElementById('totalTrials').value);
-      var itemLevel = parseInt(document.getElementById('itemLevel').value);
-      var desiredTier = parseInt(document.getElementById('desiredTier').value);
-  
-      //Todo: meso/drop/CDhat/
-      var desiredStat = document.getElementById('desiredStats').value;
-  
-      var results = repeatExperiment(cubeType, itemLevel, itemType, desiredStat, totalTrials, currentTier, desiredTier);
-  
-      var minCubeCount = results.minCubeCount
-      var maxCubeCount = results.maxCubeCount
-      var minCost = results.minCost
-      var maxCost = results.maxCost
-      var averageCubeCount = results.averageCubeCount
-      var averageCost = results.averageCost
-      var medianCost = results.medianCost
-      var medianCubeCount = results.medianCubeCount
-      var mesoDataForGraph = results.mesoDataForGraph
-      var costSevenFive = results.costSevenFive
-      var costEightFive = results.costEightFive
-      var costNineFive = results.costNineFive
-      var cubeSevenFive = results.cubeSevenFive
-      var cubeEightFive = results.cubeEightFive
-      var cubeNineFive = results.cubeNineFive
-  
-      //console.log(repeatExperiment('red', 150, 'weapon', '2LATT', 1, 3, 3))
-      Highcharts.chart('container', {
-        title: {
-          text: 'Frequency Histogram'
-        },
-  
-        xAxis: [{
+  window.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("calculateButton").addEventListener("click", function() {
+      function loaderOn() {
+        $('#loader1').show();
+        $('#loader2').show();
+            setTimeout(runCalculator, 100);
+      }
+    
+      function loaderOff() {
+        $('#loader1').hide();
+        $('#loader2').hide()
+      }
+    
+      function runCalculator() {
+        var itemType = document.getElementById('itemType').value;
+        var cubeType = document.getElementById('cubeType').value;
+        var currentTier = parseInt(document.getElementById('currentTier').value);
+        var totalTrials = parseInt(document.getElementById('totalTrials').value);
+        var itemLevel = parseInt(document.getElementById('itemLevel').value);
+        var desiredTier = parseInt(document.getElementById('desiredTier').value);
+    
+        //Todo: meso/drop/CDhat/
+        var desiredStat = document.getElementById('desiredStats').value;
+    
+        var results = repeatExperiment(cubeType, itemLevel, itemType, desiredStat, totalTrials, currentTier, desiredTier);
+    
+        var minCubeCount = results.minCubeCount
+        var maxCubeCount = results.maxCubeCount
+        var minCost = results.minCost
+        var maxCost = results.maxCost
+        var averageCubeCount = results.averageCubeCount
+        var averageCost = results.averageCost
+        var medianCost = results.medianCost
+        var medianCubeCount = results.medianCubeCount
+        var mesoDataForGraph = results.mesoDataForGraph
+        var costSevenFive = results.costSevenFive
+        var costEightFive = results.costEightFive
+        var costNineFive = results.costNineFive
+        var cubeSevenFive = results.cubeSevenFive
+        var cubeEightFive = results.cubeEightFive
+        var cubeNineFive = results.cubeNineFive
+    
+        //console.log(repeatExperiment('red', 150, 'weapon', '2LATT', 1, 3, 3))
+        Highcharts.chart('container', {
           title: {
-            text: ''
+            text: 'Frequency Histogram'
           },
-          alignTicks: false,
-          visible: false,
-          opposite: true
-        }, {
-          title: {
-            text: 'Meso Cost (in Billions)'
-          },
-          alignTicks: false,
-          opposite: false
-        }],
-  
-        yAxis: [{
-          title: {
-            text: ''
-          },
-          visible: false,
-          opposite: true
-        }, {
-          title: {
-            text: 'Frequency'
-          },
-          opposite: false
-        }],
-  
-        plotOptions: {
-          histogram: {
-            accessibility: {
-              pointDescriptionFormatter: function(point) {
-                var ix = point.index + 1,
-                  x1 = point.x.toFixed(3),
-                  x2 = point.x2.toFixed(3),
-                  val = point.y;
-                return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
+    
+          xAxis: [{
+            title: {
+              text: ''
+            },
+            alignTicks: false,
+            visible: false,
+            opposite: true
+          }, {
+            title: {
+              text: 'Meso Cost (in Billions)'
+            },
+            alignTicks: false,
+            opposite: false
+          }],
+    
+          yAxis: [{
+            title: {
+              text: ''
+            },
+            visible: false,
+            opposite: true
+          }, {
+            title: {
+              text: 'Frequency'
+            },
+            opposite: false
+          }],
+    
+          plotOptions: {
+            histogram: {
+              accessibility: {
+                pointDescriptionFormatter: function(point) {
+                  var ix = point.index + 1,
+                    x1 = point.x.toFixed(3),
+                    x2 = point.x2.toFixed(3),
+                    val = point.y;
+                  return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
+                }
               }
             }
-          }
-        },
-  
-        series: [{
-          name: 'Histogram',
-          type: 'histogram',
-          color: '#135273',
-          xAxis: 1,
-          yAxis: 1,
-          baseSeries: 's1',
-          zIndex: -1
-        }, {
-          name: '',
-          type: 'scatter',
-          visible: false,
-          data: mesoDataForGraph,
-          id: 's1',
-          marker: {
-            radius: 0
-          }
-        }]
-      });
-      document.getElementById("graphhere").style.display = '';
-      document.getElementById('result').style.display = '';
-      document.getElementById('error-container').style.display = 'none';
-      document.getElementById('result').innerHTML =
-        `
-  <div class="container secondarycon">
-    <div class=" statBox statBox1" style="background-color:#aaa;">
-      <h2 style="text-align:center;">Mesos Stats</h2>
-          <p style="text-align:center;"">
-              Average cost: ${averageCost}<br />
-          Median cost: ${medianCost}<br />
-          Range of cost: ${minCost} - ${maxCost}<br />
-          </p>
-    </div>
-    <div class=" statBox statBox2" style="background-color:#bbb;">
-      <h2 style="text-align:center;">Mesos Percentiles</h2>
-      <p style="text-align:center;"">
-          75% chance within ${costSevenFive} mesos<br />
-          85% chance within ${costEightFive} mesos<br />
-          95% chance within ${costNineFive} mesos<br />
-      </p>
-    </div>
+          },
     
-    <div class=" statBox statBox3" style="background-color:#aaa;">
-      <h2 style="text-align:center;"">Cube Stats</h2>
-          <p style="text-align:center;"">
-              Average cubes: ${averageCubeCount} ${cubeType} cubes<br />
-              Median cubes: ${medianCubeCount} ${cubeType} cubes<br />
-              Range of cubes: ${minCubeCount} - ${maxCubeCount} ${cubeType} cubes<br />
-          </p>
+          series: [{
+            name: 'Histogram',
+            type: 'histogram',
+            color: '#135273',
+            xAxis: 1,
+            yAxis: 1,
+            baseSeries: 's1',
+            zIndex: -1
+          }, {
+            name: '',
+            type: 'scatter',
+            visible: false,
+            data: mesoDataForGraph,
+            id: 's1',
+            marker: {
+              radius: 0
+            }
+          }]
+        });
+        document.getElementById("graphhere").style.display = '';
+        document.getElementById('result').style.display = '';
+        document.getElementById('error-container').style.display = 'none';
+        document.getElementById('result').innerHTML =
+          `
+    <div class="container secondarycon">
+      <div class=" statBox statBox1" style="background-color:#aaa;">
+        <h2 style="text-align:center;">Mesos Stats</h2>
+            <p style="text-align:center;"">
+                Average cost: ${averageCost}<br />
+            Median cost: ${medianCost}<br />
+            Range of cost: ${minCost} - ${maxCost}<br />
+            </p>
+      </div>
+      <div class=" statBox statBox2" style="background-color:#bbb;">
+        <h2 style="text-align:center;">Mesos Percentiles</h2>
+        <p style="text-align:center;"">
+            75% chance within ${costSevenFive} mesos<br />
+            85% chance within ${costEightFive} mesos<br />
+            95% chance within ${costNineFive} mesos<br />
+        </p>
+      </div>
+      
+      <div class=" statBox statBox3" style="background-color:#aaa;">
+        <h2 style="text-align:center;"">Cube Stats</h2>
+            <p style="text-align:center;"">
+                Average cubes: ${averageCubeCount} ${cubeType} cubes<br />
+                Median cubes: ${medianCubeCount} ${cubeType} cubes<br />
+                Range of cubes: ${minCubeCount} - ${maxCubeCount} ${cubeType} cubes<br />
+            </p>
+      </div>
+      <div class=" statBox statBox4" style="background-color:#bbb;">
+        <h2 style="text-align:center;">Cube Percentiles</h2>
+        <p style="text-align:center;"">
+            75% chance within ${cubeSevenFive} ${cubeType} cubes<br />
+            85% chance within ${cubeEightFive} ${cubeType} cubes<br />
+            95% chance within ${cubeNineFive} ${cubeType} cubes<br />
+        </p>
+      </div>
     </div>
-    <div class=" statBox statBox4" style="background-color:#bbb;">
-      <h2 style="text-align:center;">Cube Percentiles</h2>
-      <p style="text-align:center;"">
-          75% chance within ${cubeSevenFive} ${cubeType} cubes<br />
-          85% chance within ${cubeEightFive} ${cubeType} cubes<br />
-          95% chance within ${cubeNineFive} ${cubeType} cubes<br />
-      </p>
-    </div>
-  </div>
-      `
-    }
-    loaderOn();
-    setTimeout(loaderOff, 100);
+        `
+      }
+      loaderOn();
+      setTimeout(loaderOff, 100);
+    
+      //console.log(performExperiment('black', 150, 'earring', '2LDropOrMeso', 3, 3))
+    
+      //console.log(repeatExperiment('black', 150, 'hat', '3SecCD', 100, 3, 3))
+    });
+}, false);
   
-    //console.log(performExperiment('black', 150, 'earring', '2LDropOrMeso', 3, 3))
-  
-    //console.log(repeatExperiment('black', 150, 'hat', '3SecCD', 100, 3, 3))
-  });
   
   $('#nothing').on('click', (function() {}));
   
