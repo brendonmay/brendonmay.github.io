@@ -1,7 +1,159 @@
 <!DOCTYPE html>
 <html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-</body>
+<!-- 
+  Bootstrap docs: https://getbootstrap.com/docs
+-->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap" rel="stylesheet">
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+              <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<div class="container-fluid head">
+
+  <div id='loader1' class="spinner" style='display:none;'>
+  </div>
+  <div id='loader2' class="spinner-background" style='display:none;'>
+  </div>
+
+    <h1><span><ion-icon name="cube-sharp"></ion-icon>Cubing</span> Experimental Probability</h1>
+
+</div>
+<div class="container maincon">
+  <form onsubmit="return false">
+      <div class='form-row'>
+      <div class='form-group col title'>
+        <h4><span>
+          Cubing Information
+        </span></h4>
+      </div>
+    </div>
+    <div class='form-row'>
+      <div class='form-group col'>
+        <label for="itemType">Item Category</label>
+        <select id="itemType" class="form-control">
+          <option value='accessory'>Accessory</option>
+          <option value='badge'>Badge</option>
+          <option value='belt'>Belt</option>
+          <option value='bottom'>Bottom</option>
+          <option value='cape'>Cape</option>
+          <option value='emblem'>Emblem</option>
+          <option value='gloves'>Gloves</option>
+          <option value='hat'>Hat</option>
+          <option value='heart'>Heart</option>
+          <option value='overall'>Overall</option>
+          <option value='top'>Top</option>   
+          <option value='secondary'>Secondary</option>
+          <option value='shield'>Shield</option>
+          <option value='shoes' selected>Shoes</option>
+          <option value='shoulder'>Shoulder</option>         
+          <option value='weapon'>Weapon</option>
+          
+        </select>
+      </div>
+      <div class='form-group col'>
+        <label for="cubeType">Cube Type</label>
+        <select id="cubeType" class="form-control">
+          <option value='red' selected>Red</option>
+          <option value='black'>Black</option>
+        </select>
+      </div>
+      <div class='form-group col'>
+        <label for="currentTier">Current Tier</label>
+        <select id="currentTier" class="form-control">
+          <option value=0 selected>Rare</option>
+          <option value=1>Epic</option>
+          <option value=2>Unique</option>
+          <option value=3>Legendary</option>
+        </select>
+      </div>
+      <div class='form-group col'>
+        <label for="itemLevel">Item Level</label>
+        <input type="number" class="form-control" id="itemLevel" value=150>
+      </div>
+    </div>
+    <div class='form-row'>
+      <div class='form-group col title'>
+        <h4><span>
+          Desired Stats
+        </span></h4>
+      </div>
+    </div>
+    <div class='form-row'>
+      <div class='form-group col-3'>
+        <label for="desiredTier">Desired Tier</label>
+        <select id="desiredTier" class="form-control">
+          <option value=1>Epic</option>
+          <option value=2>Unique</option>
+          <option value=3 selected>Legendary</option>
+        </select>
+      </div>
+      <div class='form-group col-6'>
+        <label for="desiredStats">Desired Stat</label>
+        <select id="desiredStats" class="form-control">
+          <! -- ALL -->
+            <option id='any' value='any'>Any</option>
+            <! -- LVL 71-151 -->
+              <option id='any1' value='21PercLUK'>21%+ Stat</option>
+              <option id='any2' value='24PercLUK'>24%+ Stat</option>
+              <option id='any3' value='27PercLUK'>27%+ Stat</option>
+              <option id='any4' value='30PercLUK'>30%+ Stat</option>
+              <option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>
+              <option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>
+              <option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>
+              <! -- Hat Options -->
+             
+        </select>
+      </div>
+      <div class='form-group col-3'>
+        <label for="totalTrials">Number of Trials</label>
+        <input type="number" class="form-control" id="totalTrials" value=100>
+      </div>
+    </div>
+    <div class='form-row'>
+      <div class='form-group col text-center'>
+        <button id='calculateButton' type="submit" class="btn btn-primary btnSubmit" >Calculate</button>
+      </div>
+    </div>
+  </form>
+</div>
+<div id="error-container" class="container containThree">
+  <div class='row'>
+    <div class='col text-center error-msg title'>
+      <p><span>
+        Note: Raising Number of Trials will increase accuracy, but will take longer to compute.<br> Furthermore, very rare outcomes may take a while to process, please be patient.
+      </span></p>
+    </div>
+  </div>
+</div>
+<div id="result"></div>
+    <div id="graphhere" class="container containThree" style="display:none">
+        <figure class="highcharts-figure container-fluid">
+            <div id="container"></div>
+        </figure>
+    </div>
+<footer>
+    <a href="#">
+      
+      <ion-icon name="heart"></ion-icon><ion-icon name="game-controller"></ion-icon>Made by SuckHard
+      
+      <ion-icon name="color-wand"></ion-icon> Styled by Taha
+      
+      <ion-icon name="git-branch-outline"></ion-icon> Forked from stripedypaper
+      
+      <ion-icon name="clipboard-outline"></ion-icon> Experimental Data from jeffim
+      
+        </a>
+</footer>
+
+<script type='module' src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.esm.js"></script>
+
 </html>
