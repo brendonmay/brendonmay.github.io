@@ -1234,7 +1234,7 @@ function choose(arr) {
     updatedDesiredStats();
   });
   
-  window.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("calculateButton").addEventListener("click", function() {
       function loaderOn() {
         $('#loader1').show();
@@ -1393,9 +1393,6 @@ function choose(arr) {
       //console.log(repeatExperiment('black', 150, 'hat', '3SecCD', 100, 3, 3))
     });
 }, false);
-  
-  
-  $('#nothing').on('click', (function() {}));
   
   Game.init();
   
