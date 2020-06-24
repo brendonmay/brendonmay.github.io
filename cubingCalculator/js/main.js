@@ -1167,7 +1167,7 @@ function updatedDesiredStats() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  $('#currentTier').on('change', function () {
+  document.getElementById("currentTier").addEventListener("change", function () {
     var currentTier = $(this).val();
     $('#desiredTier').empty();
 
@@ -1182,21 +1182,21 @@ document.addEventListener("DOMContentLoaded", function () {
       $('#desiredTier').append("<option value=3 selected>Legendary</option>");
     }
   });
-
-  $('#itemType').on('change', function () {
+  
+  document.getElementById("itemType").addEventListener("change", function () {
     document.getElementById('error-container').style.display = '';
     updatedDesiredStats();
   });
 
-  $('#totalTrials').on('change', function () {
+  document.getElementById("totalTrials").addEventListener("change", function () {
     document.getElementById('error-container').style.display = '';
   });
 
-  $('#desiredStats').on('change', function () {
+  document.getElementById("desiredStats").addEventListener("change", function () {
     document.getElementById('error-container').style.display = '';
   });
 
-  $('#itemLevel').on('change', function () {
+  document.getElementById("itemLevel").addEventListener("change", function () {
     // Set selected option as variable
     var itemLevel = parseInt($(this).val());
 
