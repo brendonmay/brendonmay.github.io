@@ -1055,7 +1055,8 @@ function updatedDesiredStats() {
   i = 0;
   while (i < ids_to_remove.length) {
     var current_id = ids_to_remove[i];
-    document.getElementById(current_id).remove();
+    //document.getElementById(current_id).remove();
+    $('#' + current_id).remove();
     i++
   }
 
