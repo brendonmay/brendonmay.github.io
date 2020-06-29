@@ -23,11 +23,11 @@
 
 <div class="container form-container rounded">
     <form id='WSE_form' onsubmit="return false">
-        <div class='form-row top-margin'>
+        <div class='form-row top-margin bottom-margin'>
             <div class='col text-center'>
                 <a tabindex="0" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="popover"
                     data-trigger="focus" title="Entering Your Stats"
-                    data-content="Enter your stats while fully buffed as they appear in your stat window. The only stat you will have to manually add up is Att % from your skills. Do not include Att % from your WSE in this section.">
+                    data-content="Enter your stats while fully buffed as they appear in your stat window.">
                     <div>
                         <h6>Enter Your Stats</h6>
                     </div>
@@ -39,50 +39,7 @@
         </div>
         <div class="form-row">
             <div class="col form-group">
-                <label for="weapon_type">Main Weapon:</label>
-
-                <select class="form-control" name="weapon_type" id="weapon_type">
-                    <option value="ancient_bow">Ancient Bow</option>
-                    <option value="arm_cannon">Arm Cannon</option>
-                    <option value="bladecaster">Bladecaster</option>
-                    <option value="bow">Bow</option>
-                    <option value="cane">Cane</option>
-                    <option value="chain">Chain</option>
-                    <option value="claw">Claw</option>
-                    <option value="crossbow">Crossbow</option>
-                    <option value="dagger">Dagger</option>
-                    <option value="desperado">Desperado</option>
-                    <option value="dual_bowgun">Dual Bowgun</option>
-                    <option value="fan">Fan</option>
-                    <option value="gun">Gun</option>
-                    <option value="hand_cannon">Hand Cannon</option>
-                    <option value="heavy_sword">Heavy Sword</option>
-                    <option value="katana">Katana</option>
-                    <option value="knuckle">Knuckle</option>
-                    <option value="long_sword">Long Sword</option>
-                    <option value="lucent_guantlet">Lucent Guantlet</option>
-                    <option value="one_handed_axe">One-handed Axe</option>
-                    <option value="one_handed_blunt_weapon">One-handed Blunt Weapon</option>
-                    <option value="polearm">Polearm</option>
-                    <option value="psy_limiter">Psy-limiter</option>
-                    <option value="ritual_fan">Ritual Fan</option>
-                    <option value="scepter">Scepter</option>
-                    <option value="shining_rod">Shining Rod</option>
-                    <option value="soul_shooter">Soul Shooter</option>
-                    <option value="spear">Spear</option>
-                    <option value="staff">Staff</option>
-                    <option value="two_handed_axe">Two-handed Axe</option>
-                    <option value="two_handed_blunt_weapon">Two-handed Blunt Weapon</option>
-                    <option value="two_handed_sword">Two-handed Sword</option>
-                    <option value="wand">Wand</option>
-                    <option value="whip_blade">Whip Blade</option>
-                </select>
-
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col form-group">
-                <label for="class">Select a class:</label>
+                <label for="class">Class:</label>
 
                 <select class="form-control" name="class" id="class">
                     <option value="Adele">Adele</option>
@@ -135,18 +92,6 @@
                 </select>
             </div>
             <div class="col form-group">
-                <label for="level"> Level </label>
-                <input class="form-control" type="number" id="level" name="level" min="0" max="275" value=200>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="col form-group">
-                <label for="attack_percent"> Att % (From Skills)</label>
-                <input class="form-control" type="number" id="attack_percent" name="attack_percent" min="0" max="500"
-                    value=140>
-            </div>
-            <div class="col form-group">
                 <label for="boss_percent"> Boss % </label>
                 <input class="form-control" type="number" id="boss_percent" name="boss_percent" min="0" max="500"
                     value=123>
@@ -162,36 +107,16 @@
                 <label for="ied_percent"> Damage % </label>
                 <input class="form-control" type="number" id="damage_percent" name="damage_percent" min="0" max="500"
                     value=70>
-
-
-            </div>
-            <div class="col form-group">
-                <label for="final_damage_percent"> Final Damage % </label>
-                <input class="form-control" type="number" id="final_damage_percent" name="final_damage_percent" min="0"
-                    max="500" value=85>
-            </div>
-        </div>
-        <div class="form-row bottom-margin">
-            <div class="col form-group">
-                <label for="main_stat_amount"> Total Main Stat </label>
-                <input class="form-control" type="number" id="main_stat_amount" name="main_stat_amount" min="0"
-                    max="600000" value=27000>
-
-            </div>
-            <div class="col form-group">
-                <label for="secondary_stat_amount"> Total Secondary Stat </label>
-                <input class="form-control" type="number" id="secondary_stat_amount" name="secondary_stat_amount"
-                    min="0" max="60000" value=5000>
             </div>
         </div>
         <hr>
-        <div class='form-row top-margin bottom-margin top-margin'>
+        <div class='form-row top-margin bottom-margin'>
             <div class='col text-center'>
                 <a tabindex="0" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="popover"
                     data-trigger="focus" title="Check/Fill All That Apply"
-                    data-content="Simply click all the checkboxes that apply to your character. Then, if your main attacking skill has an IED bonus, include the amount in the provided box.">
+                    data-content="Simply click all the link skills that you use on your character.">
                     <div>
-                        <h6>Check/Fill All That Apply</h6>
+                        <h6>Select Your Link Skills</h6>
                     </div>
                     <div class='small'>
                         Click for details
@@ -200,20 +125,47 @@
             </div>
         </div>
         <div class='form-row bottom-margin-big'>
-            <div class="form-check form-check-inline col">
-                <input class="form-check-input" type="checkbox" id="empiricalKnowledge" value="option1">
-                <label class="form-check-label" for="empiricalKnowledge">Empirical Knowledge (Lvl 6)</label>
-            </div>
-            <div class="form-check form-check-inline col">
-                <input class="form-check-input" type="checkbox" id="20IEDNode" value="option2">
-                <label class="form-check-label" for="20IEDNode">+20% IED (Lvl 40+ Node)</label>
-            </div>
-            <div class="col input-group input-group-sm mb-3 top-margin">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">IED %</span>
+            <div class='col text-center'>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
+                        value="option1" checked>
+                    <label class="form-check-label" for="exampleRadios1">
+                        Solus (Level 2)
+                    </label>
                 </div>
-                <input type="text" class="form-control" placeholder="Passively on Main Skill" aria-label="Username"
-                    aria-describedby="basic-addon1">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
+                        value="option2">
+                    <label class="form-check-label" for="exampleRadios2">
+                        Solus (Level 3)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
+                    <label class="form-check-label" for="defaultCheck3">
+                        Unfair Advantage (Level 2)
+                    </label>
+                </div>
+            </div>
+            <div class='col text-center'>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                        Empirical Knowledge (Level 6)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck5">
+                    <label class="form-check-label" for="defaultCheck5">
+                        Thief's Cunning (Level 6)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
+                    <label class="form-check-label" for="defaultCheck4">
+                        Tide of Battle (Level 2)
+                    </label>
+                </div>
             </div>
         </div>
         <hr>
@@ -368,11 +320,22 @@
         </div>
         <div class='form-row'>
             <div class='col text-center'>
-                <label class="radio-inline"><input type="radio" name="optradio" id='optimize' checked>Optimize
-                    WSE</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios3"
+                        value="option1" checked>
+                    <label class="form-check-label" for="exampleRadios3">
+                        Optimize WSE
+                    </label>
+                </div>
             </div>
             <div class='col text-center'>
-                <label class="radio-inline"><input type="radio" name="optradio" id='compare'>Compare WSE</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios4"
+                        value="option2">
+                    <label class="form-check-label" for="exampleRadios4">
+                        Compare WSE
+                    </label>
+                </div>
             </div>
         </div>
         <div class="form-row">

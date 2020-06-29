@@ -13,10 +13,6 @@
     font-weight: 400 !important;
 }
 
-input[type="radio"]{
-    margin: 10;
-}
-
 .bottom-margin {
     margin-bottom: 1rem;
 }
@@ -39,8 +35,4 @@ input[type="radio"]{
 
 .jumbotron {
     padding: 2rem 2rem;
-}
-
-.form-check-inline .form-check-input {
-    margin-right: 1rem;
 }
