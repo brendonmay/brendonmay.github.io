@@ -1,0 +1,46 @@
+.form-container {
+    border-style: solid;
+    border-radius: 15px;
+    border-color: lightgrey;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.smaller {
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+}
+
+input[type="radio"]{
+    margin: 10;
+}
+
+.bottom-margin {
+    margin-bottom: 1rem;
+}
+
+.bottom-margin-big {
+    margin-bottom: 2rem;
+}
+
+.top-margin {
+    margin-top: 1rem;
+}
+
+.left-margin {
+    margin-left: 1rem;
+}
+
+.btn-outline-secondary:hover, .btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle {
+    color: #fff !important;
+}
+
+.jumbotron {
+    padding: 2rem 2rem;
+}
+
+.form-check-inline .form-check-input {
+    margin-right: 1rem;
+}

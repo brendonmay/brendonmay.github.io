@@ -1,0 +1,510 @@
+<!-- 
+  Bootstrap docs: https://getbootstrap.com/docs
+-->
+<script type='module' src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.esm.js"></script>
+
+<script src="jquery-3.4.1.slim.js"></script>
+<script src="popper.js"></script>
+<script src="bootstrap.js"></script>
+<script src="main.js"></script>
+
+<link rel="stylesheet" href="bootstrap.css">
+<link rel="stylesheet" href="font-awesome.css">
+<link rel="stylesheet" href="style.css">
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container text-center">
+        <h1 class="display-4">WSE Calculator</h1>
+        <p class="lead">(Weapon/Secondary/Emblem Calculator)</p>
+        <p class="lead small">This tool is designed to optimize your WSE and to also compare against various WSE options
+        </p>
+    </div>
+</div>
+
+<div class="container form-container rounded">
+    <form id='WSE_form' onsubmit="return false">
+        <div class='form-row top-margin'>
+            <div class='col text-center'>
+                <a tabindex="0" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="popover"
+                    data-trigger="focus" title="Entering Your Stats"
+                    data-content="Enter your stats while fully buffed as they appear in your stat window. The only stat you will have to manually add up is Att % from your skills. Do not include Att % from your WSE in this section.">
+                    <div>
+                        <h6>Enter Your Stats</h6>
+                    </div>
+                    <div class='small'>
+                        Click for details
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="weapon_type">Main Weapon:</label>
+
+                <select class="form-control" name="weapon_type" id="weapon_type">
+                    <option value="ancient_bow">Ancient Bow</option>
+                    <option value="arm_cannon">Arm Cannon</option>
+                    <option value="bladecaster">Bladecaster</option>
+                    <option value="bow">Bow</option>
+                    <option value="cane">Cane</option>
+                    <option value="chain">Chain</option>
+                    <option value="claw">Claw</option>
+                    <option value="crossbow">Crossbow</option>
+                    <option value="dagger">Dagger</option>
+                    <option value="desperado">Desperado</option>
+                    <option value="dual_bowgun">Dual Bowgun</option>
+                    <option value="fan">Fan</option>
+                    <option value="gun">Gun</option>
+                    <option value="hand_cannon">Hand Cannon</option>
+                    <option value="heavy_sword">Heavy Sword</option>
+                    <option value="katana">Katana</option>
+                    <option value="knuckle">Knuckle</option>
+                    <option value="long_sword">Long Sword</option>
+                    <option value="lucent_guantlet">Lucent Guantlet</option>
+                    <option value="one_handed_axe">One-handed Axe</option>
+                    <option value="one_handed_blunt_weapon">One-handed Blunt Weapon</option>
+                    <option value="polearm">Polearm</option>
+                    <option value="psy_limiter">Psy-limiter</option>
+                    <option value="ritual_fan">Ritual Fan</option>
+                    <option value="scepter">Scepter</option>
+                    <option value="shining_rod">Shining Rod</option>
+                    <option value="soul_shooter">Soul Shooter</option>
+                    <option value="spear">Spear</option>
+                    <option value="staff">Staff</option>
+                    <option value="two_handed_axe">Two-handed Axe</option>
+                    <option value="two_handed_blunt_weapon">Two-handed Blunt Weapon</option>
+                    <option value="two_handed_sword">Two-handed Sword</option>
+                    <option value="wand">Wand</option>
+                    <option value="whip_blade">Whip Blade</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="class">Select a class:</label>
+
+                <select class="form-control" name="class" id="class">
+                    <option value="Adele">Adele</option>
+                    <option value="Angelic Buster">Angelic Buster</option>
+                    <option value="Aran">Aran</option>
+                    <option value="Ark">Ark</option>
+                    <option value="Battle Mage">Battle Mage</option>
+                    <option value="Bishop">Bishop</option>
+                    <option value="Blaster">Blaster</option>
+                    <option value="Blaze Wizard">Blaze Wizard</option>
+                    <option value="Beast Tamer">Beast Tamer</option>
+                    <option value="Bowmaster">Bowmaster</option>
+                    <option value="Buccaneer">Buccaneer</option>
+                    <option value="Cadena">Cadena</option>
+                    <option value="Cannoner">Cannoner</option>
+                    <option value="Corsair">Corsair</option>
+                    <option value="Dark Knight">Dark Knight</option>
+                    <option value="Dawn Warrior">Dawn Warrior</option>
+                    <option value="Demon Avenger">Demon Avenger</option>
+                    <option value="Demon Slayer">Demon Slayer</option>
+                    <option value="Dual Blade">Dual Blade</option>
+                    <option value="Evan">Evan</option>
+                    <option value="Fire Poison">Fire Poison</option>
+                    <option value="Hayato">Hayato</option>
+                    <option value="Hero">Hero</option>
+                    <option value="Hoyoung">Hoyoung</option>
+                    <option value="Ice Lightning">Ice Lightning</option>
+                    <option value="Illium">Illium</option>
+                    <option value="Jett">Jett</option>
+                    <option value="Kaiser">Kaiser</option>
+                    <option value="Kanna">Kanna</option>
+                    <option value="Kinesis">Kinesis</option>
+                    <option value="Luminous">Luminous</option>
+                    <option value="Marksmen">Marksmen</option>
+                    <option value="Mechanic">Mechanic</option>
+                    <option value="Mercedes">Mercedes</option>
+                    <option value="Mihile">Mihile</option>
+                    <option value="Night Lord">Night Lord</option>
+                    <option value="Night Walker">Night Walker</option>
+                    <option value="Paladin">Paladin</option>
+                    <option value="Pathfinder" selected>Pathfinder</option>
+                    <option value="Phantom">Phantom</option>
+                    <option value="Shade">Shade</option>
+                    <option value="Shadower">Shadower</option>
+                    <option value="Thunder Breaker">Thunder Breaker</option>
+                    <option value="Wild Hunter">Wild Hunter</option>
+                    <option value="Wind Archer">Wind Archer</option>
+                    <option value="Xenon">Xenon</option>
+                    <option value="Zero">Zero</option>
+                </select>
+            </div>
+            <div class="col form-group">
+                <label for="level"> Level </label>
+                <input class="form-control" type="number" id="level" name="level" min="0" max="275" value=200>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="attack_percent"> Att % (From Skills)</label>
+                <input class="form-control" type="number" id="attack_percent" name="attack_percent" min="0" max="500"
+                    value=140>
+            </div>
+            <div class="col form-group">
+                <label for="boss_percent"> Boss % </label>
+                <input class="form-control" type="number" id="boss_percent" name="boss_percent" min="0" max="500"
+                    value=123>
+            </div>
+            <div class="col form-group">
+                <label for="ied_percent"> IED % </label>
+                <input class="form-control" type="number" id="ied_percent" name="ied_percent" min="0" max="100"
+                    value=91>
+
+
+            </div>
+            <div class="col form-group">
+                <label for="ied_percent"> Damage % </label>
+                <input class="form-control" type="number" id="damage_percent" name="damage_percent" min="0" max="500"
+                    value=70>
+
+
+            </div>
+            <div class="col form-group">
+                <label for="final_damage_percent"> Final Damage % </label>
+                <input class="form-control" type="number" id="final_damage_percent" name="final_damage_percent" min="0"
+                    max="500" value=85>
+            </div>
+        </div>
+        <div class="form-row bottom-margin">
+            <div class="col form-group">
+                <label for="main_stat_amount"> Total Main Stat </label>
+                <input class="form-control" type="number" id="main_stat_amount" name="main_stat_amount" min="0"
+                    max="600000" value=27000>
+
+            </div>
+            <div class="col form-group">
+                <label for="secondary_stat_amount"> Total Secondary Stat </label>
+                <input class="form-control" type="number" id="secondary_stat_amount" name="secondary_stat_amount"
+                    min="0" max="60000" value=5000>
+            </div>
+        </div>
+        <hr>
+        <div class='form-row top-margin bottom-margin top-margin'>
+            <div class='col text-center'>
+                <a tabindex="0" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="popover"
+                    data-trigger="focus" title="Check/Fill All That Apply"
+                    data-content="Simply click all the checkboxes that apply to your character. Then, if your main attacking skill has an IED bonus, include the amount in the provided box.">
+                    <div>
+                        <h6>Check/Fill All That Apply</h6>
+                    </div>
+                    <div class='small'>
+                        Click for details
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class='form-row bottom-margin-big'>
+            <div class="form-check form-check-inline col">
+                <input class="form-check-input" type="checkbox" id="empiricalKnowledge" value="option1">
+                <label class="form-check-label" for="empiricalKnowledge">Empirical Knowledge (Lvl 6)</label>
+            </div>
+            <div class="form-check form-check-inline col">
+                <input class="form-check-input" type="checkbox" id="20IEDNode" value="option2">
+                <label class="form-check-label" for="20IEDNode">+20% IED (Lvl 40+ Node)</label>
+            </div>
+            <div class="col input-group input-group-sm mb-3 top-margin">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">IED %</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Passively on Main Skill" aria-label="Username"
+                    aria-describedby="basic-addon1">
+            </div>
+        </div>
+        <hr>
+        <div class='form-row bottom-margin top-margin'>
+            <div class='col text-center'>
+                <a tabindex="0" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="popover"
+                    data-trigger="focus" title="Entering Your Current WSE"
+                    data-content="Select the potentials from the dropdown menu that are on your current WSE setup. If the option isn't listed, then select N/A.">
+                    <div>
+                        <h6>Enter Your Current WSE</h6>
+                    </div>
+                    <div class='small'>
+                        Click for details
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive row">
+            <table class="table table-striped smaller text-center table-borderless">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Weapon</th>
+                        <th scope="col">Secondary</th>
+                        <th scope="col">Emblem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Lvl</th>
+                        <td>
+                            <select id='wlevel' class="form-control defaultpicker smaller">
+                                <option value='lesser160'>&lt 160</option>
+                                <option value='greater160' selected>160+</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id='slevel' class="form-control defaultpicker smaller">
+                                <option value='lesser160' selected>&lt 160</option>
+                                <option value='greater160'>160+</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id='elevel' class="form-control defaultpicker smaller">
+                                <option value='lesser160' selected>&lt 160</option>
+                                <option value='greater160'>160+</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>
+                            <select id='wline1' class="form-control defaultpicker smaller">
+                                <option value='40boss'>40% Boss</option>
+                                <option value='35boss'>35% Boss</option>
+                                <option value='40ied'>40% IED</option>
+                                <option value='35ied'>35% IED</option>
+                                <option value='13att'>13% ATT</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id='sline1' class="form-control defaultpicker smaller">
+                                <option value='40boss'>40% Boss</option>
+                                <option value='35boss'>35% Boss</option>
+                                <option value='40ied'>40% IED</option>
+                                <option value='35ied'>35% IED</option>
+                                <option value='12att'>12% ATT</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id='eline1' class="form-control defaultpicker smaller">
+                                <option value='40boss'>40% Boss</option>
+                                <option value='35boss'>35% Boss</option>
+                                <option value='40ied'>40% IED</option>
+                                <option value='35ied'>35% IED</option>
+                                <option value='12att'>12% ATT</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>
+                            <select id='wline2' class="form-control defaultpicker smaller">
+                                <option value='30boss'>30% Boss</option>
+                                <option value='20boss'>20% Boss</option>
+                                <option value='30ied'>30% IED</option>
+                                <option value='10att'>10% ATT</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id='sline2' class="form-control defaultpicker smaller">
+                                <option value='30boss'>30% Boss</option>
+                                <option value='20boss'>20% Boss</option>
+                                <option value='30ied'>30% IED</option>
+                                <option value='9att'>9% ATT</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id='eline2' class="form-control defaultpicker smaller">
+                                <option value='30boss'>30% Boss</option>
+                                <option value='20boss'>20% Boss</option>
+                                <option value='30ied'>30% IED</option>
+                                <option value='9att'>9% ATT</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>
+                            <select id='wline3' class="form-control defaultpicker smaller">
+                                <option value='30boss'>30% Boss</option>
+                                <option value='20boss'>20% Boss</option>
+                                <option value='30ied'>30% IED</option>
+                                <option value='10att'>10% ATT</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id='sline3' class="form-control defaultpicker smaller">
+                                <option value='30boss'>30% Boss</option>
+                                <option value='20boss'>20% Boss</option>
+                                <option value='30ied'>30% IED</option>
+                                <option value='9att'>9% ATT</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id='eline3' class="form-control defaultpicker smaller">
+                                <option value='30boss'>30% Boss</option>
+                                <option value='20boss'>20% Boss</option>
+                                <option value='30ied'>30% IED</option>
+                                <option value='9att'>9% ATT</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <div class='form-row top-margin bottom-margin top-margin'>
+            <div class='col text-center'>
+                <a tabindex="0" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="popover"
+                    data-trigger="focus" title="Choosing Your Calculator"
+                    data-content="Select 'Optimize WSE' if you wish to determine which lines will optimize your Hit Damage on end-game bosses. Select 'Compare WSE' if you wish to compare your Hit Damage on end-game bosses given each setup.">
+                    <div>
+                        <h6>Choose Your Calculator</h6>
+                    </div>
+                    <div class='small'>
+                        Click for details
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class='form-row'>
+            <div class='col text-center'>
+                <label class="radio-inline"><input type="radio" name="optradio" id='optimize' checked>Optimize
+                    WSE</label>
+            </div>
+            <div class='col text-center'>
+                <label class="radio-inline"><input type="radio" name="optradio" id='compare'>Compare WSE</label>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class='col text-center'>
+                <button id='calculateButton' type="submit" class="btn btn-dark">Calculate</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="row" hidden>
+    <div class='col'>
+        <h2 class='text-center'>Optimized WSE</h2>
+    </div>
+</div>
+<div class="table-responsive row" hidden>
+    <table class="table table-striped smaller text-center table-borderless">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Weapon</th>
+                <th scope="col">Secondary</th>
+                <th scope="col">Emblem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">Lvl</th>
+                <td>
+                    <select id='wlevel' class="form-control defaultpicker smaller" disabled>
+                        <option value='lesser160'>&lt 160</option>
+                        <option value='greater160' selected>160+</option>
+                    </select>
+                </td>
+                <td>
+                    <select id='slevel' class="form-control defaultpicker smaller" disabled>
+                        <option value='lesser160' selected>&lt 160</option>
+                        <option value='greater160'>160+</option>
+                    </select>
+                </td>
+                <td>
+                    <select id='elevel' class="form-control defaultpicker smaller" disabled>
+                        <option value='lesser160' selected>&lt 160</option>
+                        <option value='greater160'>160+</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">1</th>
+                <td>
+                    <select id='wline1' class="form-control defaultpicker smaller">
+                        <option value='40boss'>40% Boss</option>
+                        <option value='35boss'>35% Boss</option>
+                        <option value='40ied'>40% IED</option>
+                        <option value='35ied'>35% IED</option>
+                        <option value='13att'>13% ATT</option>
+                    </select>
+                </td>
+                <td>
+                    <select id='sline1' class="form-control defaultpicker smaller">
+                        <option value='40boss'>40% Boss</option>
+                        <option value='35boss'>35% Boss</option>
+                        <option value='40ied'>40% IED</option>
+                        <option value='35ied'>35% IED</option>
+                        <option value='12att'>12% ATT</option>
+                    </select>
+                </td>
+                <td>
+                    <select id='eline1' class="form-control defaultpicker smaller">
+                        <option value='40boss'>40% Boss</option>
+                        <option value='35boss'>35% Boss</option>
+                        <option value='40ied'>40% IED</option>
+                        <option value='35ied'>35% IED</option>
+                        <option value='12att'>12% ATT</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>
+                    <select id='wline2' class="form-control defaultpicker smaller">
+                        <option value='30boss'>30% Boss</option>
+                        <option value='20boss'>20% Boss</option>
+                        <option value='30ied'>30% IED</option>
+                        <option value='10att'>10% ATT</option>
+                    </select>
+                </td>
+                <td>
+                    <select id='sline2' class="form-control defaultpicker smaller">
+                        <option value='30boss'>30% Boss</option>
+                        <option value='20boss'>20% Boss</option>
+                        <option value='30ied'>30% IED</option>
+                        <option value='9att'>9% ATT</option>
+                    </select>
+                </td>
+                <td>
+                    <select id='eline2' class="form-control defaultpicker smaller">
+                        <option value='30boss'>30% Boss</option>
+                        <option value='20boss'>20% Boss</option>
+                        <option value='30ied'>30% IED</option>
+                        <option value='9att'>9% ATT</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td>
+                    <select id='wline3' class="form-control defaultpicker smaller">
+                        <option value='30boss'>30% Boss</option>
+                        <option value='20boss'>20% Boss</option>
+                        <option value='30ied'>30% IED</option>
+                        <option value='10att'>10% ATT</option>
+                    </select>
+                </td>
+                <td>
+                    <select id='sline3' class="form-control defaultpicker smaller">
+                        <option value='30boss'>30% Boss</option>
+                        <option value='20boss'>20% Boss</option>
+                        <option value='30ied'>30% IED</option>
+                        <option value='9att'>9% ATT</option>
+                    </select>
+                </td>
+                <td>
+                    <select id='eline3' class="form-control defaultpicker smaller">
+                        <option value='30boss'>30% Boss</option>
+                        <option value='20boss'>20% Boss</option>
+                        <option value='30ied'>30% IED</option>
+                        <option value='9att'>9% ATT</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
