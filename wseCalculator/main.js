@@ -7,7 +7,7 @@ function getUpperShownDamage(attack_percent, damage_percent) {
     var upperActualDamage = getUpperActualDamage(attack_percent);
     var upperShownDamage = upperActualDamage * (1 + damage_percent / 100);
     return upperShownDamage
-    
+
 }
 
 function getHitDamage(boss_percent, attack_percent, damage_percent) {
@@ -22,11 +22,11 @@ function getBossDefMultiplier(ied_percent) {
 }
 
 //Helper Functions
-function determineIED(ied_percent, ied_sources){
+function determineIED(ied_percent, ied_sources) {
     var i = 0;
     var new_ied = ied_percent;
 
-    while (i < ied_sources.length){
+    while (i < ied_sources.length) {
         new_source = ied_sources[i];
         additional_ied = (new_source / 100) * (100 - new_ied);
         new_ied = new_ied + additional_ied;
@@ -36,142 +36,142 @@ function determineIED(ied_percent, ied_sources){
     return new_ied
 }
 
-function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent){
+function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent) {
     var i = 0;
     var new_ied_percent = stripped_ied_percent;
     var new_attack_percent = stripped_attack_percent;
     var new_boss_percent = stripped_boss_percent;
     var new_damage_percent = stripped_damage_percent;
 
-    while (i < new_potential_list.length){
+    while (i < new_potential_list.length) {
         var current_potential = new_potential_list[i];
 
-        if(current_potential == '40boss'){
+        if (current_potential == '40boss') {
             new_boss_percent = new_boss_percent + 40;
         }
-        if(current_potential == '35boss'){
+        if (current_potential == '35boss') {
             new_boss_percent = new_boss_percent + 35;
         }
-        if(current_potential == '30boss'){
+        if (current_potential == '30boss') {
             new_boss_percent = new_boss_percent + 30;
         }
-        if(current_potential == '20boss'){
+        if (current_potential == '20boss') {
             new_boss_percent = new_boss_percent + 20;
         }
-        
 
-        if(current_potential == '13att'){
+
+        if (current_potential == '13att') {
             new_attack_percent = new_attack_percent + 13;
         }
-        if(current_potential == '12att'){
+        if (current_potential == '12att') {
             new_attack_percent = new_attack_percent + 12;
         }
-        if(current_potential == '10att'){
+        if (current_potential == '10att') {
             new_attack_percent = new_attack_percent + 10;
         }
-        if(current_potential == '9att'){
+        if (current_potential == '9att') {
             new_attack_percent = new_attack_percent + 9;
         }
 
-        if(current_potential == '13dmg'){
+        if (current_potential == '13dmg') {
             new_damage_percent = new_damage_percent + 13;
         }
-        if(current_potential == '12dmg'){
+        if (current_potential == '12dmg') {
             new_damage_percent = new_damage_percent + 12;
         }
-        if(current_potential == '10dmg'){
+        if (current_potential == '10dmg') {
             new_damage_percent = new_damage_percent + 10;
         }
-        if(current_potential == '9dmg'){
+        if (current_potential == '9dmg') {
             new_damage_percent = new_damage_percent + 9;
         }
 
 
-        if(current_potential == '40ied'){
+        if (current_potential == '40ied') {
             var current_ied = new_ied_percent;
             new_ied_percent = determineIED(current_ied, [40]);
         }
-        if(current_potential == '35ied'){
+        if (current_potential == '35ied') {
             var current_ied = new_ied_percent;
             new_ied_percent = determineIED(current_ied, [35]);
         }
-        if(current_potential == '30ied'){
+        if (current_potential == '30ied') {
             var current_ied = new_ied_percent;
             new_ied_percent = determineIED(current_ied, [30]);
         }
         i++;
     }
-    return {'new_ied_percent': new_ied_percent, 'new_attack_percent': new_attack_percent, 'new_boss_percent': new_boss_percent, 'new_damage_percent': new_damage_percent}
+    return { 'new_ied_percent': new_ied_percent, 'new_attack_percent': new_attack_percent, 'new_boss_percent': new_boss_percent, 'new_damage_percent': new_damage_percent }
 }
 
-function removePotentialsFromStats(potential_list, current_ied_percent, current_attack_percent, current_boss_percent, current_damage_percent){
+function removePotentialsFromStats(potential_list, current_ied_percent, current_attack_percent, current_boss_percent, current_damage_percent) {
     var i = 0;
     var stripped_ied_percent = current_ied_percent;
     var stripped_attack_percent = current_attack_percent;
     var stripped_boss_percent = current_boss_percent;
     var stripped_damage_percent = current_damage_percent;
 
-    while (i < potential_list.length){
+    while (i < potential_list.length) {
         var current_potential = potential_list[i];
-        
-        if(current_potential == '40boss'){
+
+        if (current_potential == '40boss') {
             stripped_boss_percent = stripped_boss_percent - 40;
         }
-        if(current_potential == '35boss'){
+        if (current_potential == '35boss') {
             stripped_boss_percent = stripped_boss_percent - 35;
         }
-        if(current_potential == '30boss'){
+        if (current_potential == '30boss') {
             stripped_boss_percent = stripped_boss_percent - 30;
         }
-        if(current_potential == '20boss'){
+        if (current_potential == '20boss') {
             stripped_boss_percent = stripped_boss_percent - 20;
         }
 
-        if(current_potential == '13att'){
+        if (current_potential == '13att') {
             stripped_attack_percent = stripped_attack_percent - 13;
         }
-        if(current_potential == '12att'){
+        if (current_potential == '12att') {
             stripped_attack_percent = stripped_attack_percent - 12;
         }
-        if(current_potential == '10att'){
+        if (current_potential == '10att') {
             stripped_attack_percent = stripped_attack_percent - 10;
         }
-        if(current_potential == '9att'){
+        if (current_potential == '9att') {
             stripped_attack_percent = stripped_attack_percent - 9;
         }
 
-        if(current_potential == '13dmg'){
+        if (current_potential == '13dmg') {
             stripped_damage_percent = stripped_damage_percent - 13;
         }
-        if(current_potential == '12dmg'){
+        if (current_potential == '12dmg') {
             stripped_damage_percent = stripped_damage_percent - 12;
         }
-        if(current_potential == '10dmg'){
+        if (current_potential == '10dmg') {
             stripped_damage_percent = stripped_damage_percent - 10;
         }
-        if(current_potential == '9dmg'){
+        if (current_potential == '9dmg') {
             stripped_damage_percent = stripped_damage_percent - 9;
         }
 
-        if(current_potential == '40ied'){
+        if (current_potential == '40ied') {
             var old_ied = stripped_ied_percent;
             stripped_ied_percent = (old_ied - 40) / ((-1 * 40 / 100) + 1)
         }
-        if(current_potential == '35ied'){
+        if (current_potential == '35ied') {
             var old_ied = stripped_ied_percent;
             stripped_ied_percent = (old_ied - 35) / ((-1 * 35 / 100) + 1)
         }
-        if(current_potential == '30ied'){
+        if (current_potential == '30ied') {
             var old_ied = stripped_ied_percent;
             stripped_ied_percent = (old_ied - 30) / ((-1 * 30 / 100) + 1)
         }
 
         i++;
     }
-    return {'stripped_ied_percent': stripped_ied_percent, 'stripped_attack_percent': stripped_attack_percent, 'stripped_boss_percent': stripped_boss_percent, 'stripped_damage_percent': stripped_damage_percent}
+    return { 'stripped_ied_percent': stripped_ied_percent, 'stripped_attack_percent': stripped_attack_percent, 'stripped_boss_percent': stripped_boss_percent, 'stripped_damage_percent': stripped_damage_percent }
 }
 
-function getWSEATTPercent(){
+function getWSEATTPercent() {
     var wep_line_1 = document.getElementById('wline1').value;
     var wep_line_2 = document.getElementById('wline2').value;
     var wep_line_3 = document.getElementById('wline3').value;
@@ -189,19 +189,19 @@ function getWSEATTPercent(){
     var i = 0;
     var WSEATTPercent = 0;
 
-    while (i < potential_list.length){
+    while (i < potential_list.length) {
         var current_potential = potential_list[i];
 
-        if(current_potential == '13att'){
+        if (current_potential == '13att') {
             WSEATTPercent = WSEATTPercent + 13;
         }
-        if(current_potential == '12att'){
+        if (current_potential == '12att') {
             WSEATTPercent = WSEATTPercent + 12;
         }
-        if(current_potential == '10att'){
+        if (current_potential == '10att') {
             WSEATTPercent = WSEATTPercent + 10;
         }
-        if(current_potential == '9att'){
+        if (current_potential == '9att') {
             WSEATTPercent = WSEATTPercent + 9;
         }
         i++;
@@ -217,322 +217,322 @@ function getClassData(maple_class) {
             'iedPercent': [20, 20, 10, 10, 5, 5, 5],
             'dmgPercent': 20,
             'bossPercent': 0
-            },
-            
-            'Angelic Buster': {
+        },
+
+        'Angelic Buster': {
             'attPercent': 4,
             'iedPercent': [20, 10, 10, 10, 20],
             'dmgPercent': 50,
             'bossPercent': 0
-            },
-            
-            'Aran': {
+        },
+
+        'Aran': {
             'attPercent': 4,
             'iedPercent': [49.5], //weighed avg
             'dmgPercent': [52], //weighed avg
             'bossPercent': 0,
-            },
-            
-            'Ark': {
+        },
+
+        'Ark': {
             'attPercent': 4,
             'iedPercent': [20, 20, 20],
             'dmgPercent': 20,
             'bossPercent': 50
-            },
-            
-            'Battle Mage': {
+        },
+
+        'Battle Mage': {
             'attPercent': 39,
             'iedPercent': [20, 20],
             'dmgPercent': 0,
             'bossPercent': 30
-            },
-            
-            'Bishop': {
+        },
+
+        'Bishop': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 60,
             'bossPercent': 10
-            },
-            
-            'Blaster': {
+        },
+
+        'Blaster': {
             'attPercent': 19,
             'iedPercent': [44], //Weighed AVG
             'dmgPercent': 10,
             'bossPercent': 0
-            },
-            
-            'Blaze Wizard': {
+        },
+
+        'Blaze Wizard': {
             'attPercent': 14,
             'iedPercent': [20, 20],
             'dmgPercent': 0,
             'bossPercent': 0
-            },
-            
-            'Beast Tamer': {
+        },
+
+        'Beast Tamer': {
             'attPercent': 15,
             'iedPercent': [20],
             'dmgPercent': 20,
             'bossPercent': 20
-            },
-            
-            'Bowmaster': {
+        },
+
+        'Bowmaster': {
             'attPercent': 29,
             'iedPercent': [20],
             'dmgPercent': 30,
             'bossPercent': 10
-            },
-            
-            'Buccaneer': {
+        },
+
+        'Buccaneer': {
             'attPercent': 4,
             'iedPercent': [20, 25],
             'dmgPercent': 20,
             'bossPercent': 20
-            },
-            
-            'Cadena': {
+        },
+
+        'Cadena': {
             'attPercent': 4,
             'iedPercent': [30, 15], //rounded
             'dmgPercent': 7, //Weighed AVG
             'bossPercent': 7 //Weighed Avg
-            },
-            
-            'Cannoneer': {
+        },
+
+        'Cannoneer': {
             'attPercent': 4,
             'iedPercent': [20, 20, 25],
             'dmgPercent': 60,
             'bossPercent': 0
-            },
-            
-            'Corsair': {
+        },
+
+        'Corsair': {
             'attPercent': 24,
             'iedPercent': [20, 25],
             'dmgPercent': 30,
             'bossPercent': 20
-            },
-            
-            'Dark Knight': {
+        },
+
+        'Dark Knight': {
             'attPercent': 4,
             'iedPercent': [30, 20, 20],
             'dmgPercent': 20,
             'bossPercent': 10
-            },
-            
-            'Dawn Warrior': {
+        },
+
+        'Dawn Warrior': {
             'attPercent': 14,
             'iedPercent': [20, 20],
             'dmgPercent': 20,
             'bossPercent': 0
-            },
-            
-            'Demon Avenger': {
+        },
+
+        'Demon Avenger': {
             'attPercent': 4,
             'iedPercent': [30, 30],
             'dmgPercent': 40,
             'bossPercent': 0
-            },
-            
-            'Demon Slayer': {
+        },
+
+        'Demon Slayer': {
             'attPercent': 4,
             'iedPercent': [43], //weighed avg
             'dmgPercent': 52, //weighed avg
             'bossPercent': 52 //weighed avg
-            },
-            
-            'Dual Blade': {
+        },
+
+        'Dual Blade': {
             'attPercent': 4,
             'iedPercent': [80], //weighed avg
             'dmgPercent': 20,
             'bossPercent': 0
-            },
-            
-            'Evan': {
+        },
+
+        'Evan': {
             'attPercent': 39,
             'iedPercent': [20],
             'dmgPercent': 40,
             'bossPercent': 0
-            },
-            
-            'Fire Poison': {
+        },
+
+        'Fire Poison': {
             'attPercent': 4,
             'iedPercent': [10],
             'dmgPercent': 55,
             'bossPercent': 0
-            },
-            
-            'Hayato': {
+        },
+
+        'Hayato': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': -50,
             'bossPercent': 2
-            },
-            
-            'Hero': {
+        },
+
+        'Hero': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 45,
             'bossPercent': 0
-            },
-            
-            'Hoyoung': {
+        },
+
+        'Hoyoung': {
             'attPercent': 14,
             'iedPercent': [20, 25],
             'dmgPercent': 0,
             'bossPercent': 0
-            },
-            
-            'Ice Lightning': {
+        },
+
+        'Ice Lightning': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 120,
             'bossPercent': 0
-            },
-            
-            'Illium': {
+        },
+
+        'Illium': {
             'attPercent': 14,
             'iedPercent': [12, 20],
             'dmgPercent': 20,
             'bossPercent': 20
-            },
-            
-            'Jett': {
+        },
+
+        'Jett': {
             'attPercent': 29,
             'iedPercent': [20],
             'dmgPercent': 20,
             'bossPercent': 20
-            },
-            
-            'Kaiser': {
+        },
+
+        'Kaiser': {
             'attPercent': 34,
-            'iedPercent':[40, 20],
+            'iedPercent': [40, 20],
             'dmgPercent': 0,
             'bossPercent': 18
-            },
-            
-            'Kanna': {
+        },
+
+        'Kanna': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 0,
             'bossPercent': 0
-            },
-            
-            'Kinesis': {
+        },
+
+        'Kinesis': {
             'attPercent': 14,
             'iedPercent': [20],
             'dmgPercent': 0,
             'bossPercent': 30
-            },
-            
-            'Luminous': {
+        },
+
+        'Luminous': {
             'attPercent': 4,
             'iedPercent': [40, 20],
             'dmgPercent': 20,
             'bossPercent': 0
-            },
-            
-            'Marksmen': {
+        },
+
+        'Marksmen': {
             'attPercent': 4,
             'iedPercent': [20, 50, 20],
             'dmgPercent': 20,
             'bossPercent': 10
-            },
-            
-            'Mechanic': {
+        },
+
+        'Mechanic': {
             'attPercent': 4,
             'iedPercent': [20, 10, 2], //weighed avg
             'dmgPercent': 3, //weighed avg
             'bossPercent': 0
-            },
-            
-            'Mercedes': {
+        },
+
+        'Mercedes': {
             'attPercent': 34,
             'iedPercent': [50, 5], //weighed avg
             'dmgPercent': 60, //weighed avg
             'bossPercent': 0
-            },
-            
-            'Mihile': {
+        },
+
+        'Mihile': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 50,
             'bossPercent': 0
-            },
-            
-            'Night Lord': { 
+        },
+
+        'Night Lord': {
             'attPercent': 4,
             'iedPercent': [30, 20],
             'dmgPercent': 20,
             'bossPercent': 20
-            },
-            
-            'Night Walker': {
+        },
+
+        'Night Walker': {
             'attPercent': 4,
             'iedPercent': [20, 7, 7, 7, 7, 7],
             'dmgPercent': 20,
             'bossPercent': 20
-            },
-            
-            'Paladin': {
+        },
+
+        'Paladin': {
             'attPercent': 4,
             'iedPercent': [44, 20],
             'dmgPercent': 20,
             'bossPercent': 0
-            },
-            
-            'Pathfinder': {
+        },
+
+        'Pathfinder': {
             'attPercent': 24,
             'iedPercent': [20],
             'dmgPercent': 20,
             'bossPercent': 0
-            },
-            
-            'Phantom': {
+        },
+
+        'Phantom': {
             'attPercent': 4,
             'iedPercent': [27], //weighed avg
             'dmgPercent': 4, //weighed avg
             'bossPercent': 0
-            },
-            
-            'Shade': {
+        },
+
+        'Shade': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 40,
             'bossPercent': 20
-            },
-            
-            'Shadower': {
+        },
+
+        'Shadower': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 20,
             'bossPercent': 20
-            },
-            
-            'Thunder Breaker': {
+        },
+
+        'Thunder Breaker': {
             'attPercent': 4,
             'iedPercent': [5, 5, 5, 5, 5, 9, 9, 9, 9, 9, 20, 6],
             'dmgPercent': 55, //weighed avg
             'bossPercent': 0
-            },
-            
-            'Wild Hunter': {
+        },
+
+        'Wild Hunter': {
             'attPercent': 39,
             'iedPercent': [10, 20],
             'dmgPercent': 20,
             'bossPercent': 30
-            },
-            
-            'Wind Archer': {
+        },
+
+        'Wind Archer': {
             'attPercent': 14,
             'iedPercent': [20, 20, 15, 10],
             'dmgPercent': 35,
             'bossPercent': 30
-            },
-            
-            'Xenon': {
+        },
+
+        'Xenon': {
             'attPercent': 4,
             'iedPercent': [30, 10, 20],
             'dmgPercent': 20,
             'bossPercent': 0
-            }
+        }
     }
     return class_data[maple_class]
 }
@@ -543,20 +543,20 @@ document.addEventListener("DOMContentLoaded", function () {
     $(function () {
         $('[data-toggle="popover"]').popover()
     });
-    
+
     $('.popover-dismiss').popover({
         trigger: 'focus'
     });
 
     //checkbox behaviour
     document.getElementById("solus2").addEventListener("click", function () {
-        if (document.getElementById('solus2').checked == true){
+        if (document.getElementById('solus2').checked == true) {
             document.getElementById('solus3').checked = false;
         }
     });
 
     document.getElementById("solus3").addEventListener("click", function () {
-        if (document.getElementById('solus3').checked == true){
+        if (document.getElementById('solus3').checked == true) {
             document.getElementById('solus2').checked = false;
         }
     });
@@ -566,7 +566,7 @@ document.addEventListener("DOMContentLoaded", function () {
         optimizeWSE();
     });
     document.getElementById("new_wlevel").addEventListener("change", function () {
-        if (document.getElementById('new_wlevel').value == 'lesser160'){
+        if (document.getElementById('new_wlevel').value == 'lesser160') {
             $('#new_wline1').empty();
             $('#new_wline1').append("<option value='40boss' selected>40% Boss</option>");
             $('#new_wline1').append("<option value='35boss'>35% Boss</option>");
@@ -606,7 +606,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_wline3').append("<option value='none'>N/A</option>");
 
         }
-        else{
+        else {
             $('#new_wline1').empty();
             $('#new_wline1').append("<option value='40boss' selected>40% Boss</option>");
             $('#new_wline1').append("<option value='35boss'>35% Boss</option>");
@@ -647,89 +647,126 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     document.getElementById("new_slevel").addEventListener("change", function () {
-        if (document.getElementById('new_slevel').value == 'lesser160'){
-            $('#new_sline1').empty();
-            $('#new_sline1').append("<option value='40boss'>40% Boss</option>");
-            $('#new_sline1').append("<option value='35boss' selected>35% Boss</option>");
-            $('#new_sline1').append("<option value='30boss'>30% Boss</option>");
-            $('#new_sline1').append("<option value='40ied'>40% IED</option>");
-            $('#new_sline1').append("<option value='35ied'>35% IED</option>");
-            $('#new_sline1').append("<option value='12att'>12% ATT</option>");
-            $('#new_sline1').append("<option value='12dmg'>12% Damage</option>");
-            $('#new_sline1').append("<option value='none'>N/A</option>");
+        var current_class = document.getElementById('class').value;
+        if (current_class != "Kanna") {
+            if (document.getElementById('new_slevel').value == 'lesser160') {
+                $('#new_sline1').empty();
+                $('#new_sline1').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline1').append("<option value='35boss' selected>35% Boss</option>");
+                $('#new_sline1').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline1').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline1').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline1').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline1').append("<option value='12dmg'>12% Damage</option>");
+                $('#new_sline1').append("<option value='none'>N/A</option>");
 
-            $('#new_sline2').empty();
-            $('#new_sline2').append("<option value='40boss'>40% Boss</option>");
-            $('#new_sline2').append("<option value='35boss'>35% Boss</option>");
-            $('#new_sline2').append("<option value='30boss'>30% Boss</option>");
-            $('#new_sline2').append("<option value='20boss'>20% Boss</option>");
-            $('#new_sline2').append("<option value='40ied'>40% IED</option>");
-            $('#new_sline2').append("<option value='35ied' selected>35% IED</option>");
-            $('#new_sline2').append("<option value='30ied'>30% IED</option>");
-            $('#new_sline2').append("<option value='12att'>12% ATT</option>");
-            $('#new_sline2').append("<option value='9att'>9% ATT</option>");
-            $('#new_sline2').append("<option value='12dmg'>12% Damge</option>");
-            $('#new_sline2').append("<option value='9dmg'>9% Damge</option>");
-            $('#new_sline2').append("<option value='none'>N/A</option>");
+                $('#new_sline2').empty();
+                $('#new_sline2').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline2').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline2').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline2').append("<option value='20boss'>20% Boss</option>");
+                $('#new_sline2').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline2').append("<option value='35ied' selected>35% IED</option>");
+                $('#new_sline2').append("<option value='30ied'>30% IED</option>");
+                $('#new_sline2').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline2').append("<option value='9att'>9% ATT</option>");
+                $('#new_sline2').append("<option value='12dmg'>12% Damge</option>");
+                $('#new_sline2').append("<option value='9dmg'>9% Damge</option>");
+                $('#new_sline2').append("<option value='none'>N/A</option>");
 
-            $('#new_sline3').empty();
-            $('#new_sline3').append("<option value='40boss'>40% Boss</option>");
-            $('#new_sline3').append("<option value='35boss'>35% Boss</option>");
-            $('#new_sline3').append("<option value='30boss'>30% Boss</option>");
-            $('#new_sline3').append("<option value='20boss'>20% Boss</option>");
-            $('#new_sline3').append("<option value='40ied'>40% IED</option>");
-            $('#new_sline3').append("<option value='35ied'>35% IED</option>");
-            $('#new_sline3').append("<option value='30ied' selected>30% IED</option>");
-            $('#new_sline3').append("<option value='12att'>12% ATT</option>");
-            $('#new_sline3').append("<option value='9att'>9% ATT</option>");
-            $('#new_sline3').append("<option value='12dmg'>12% Damage</option>");
-            $('#new_sline3').append("<option value='9dmg'>9% Damage</option>");
-            $('#new_sline3').append("<option value='none'>N/A</option>");
+                $('#new_sline3').empty();
+                $('#new_sline3').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline3').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline3').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline3').append("<option value='20boss'>20% Boss</option>");
+                $('#new_sline3').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline3').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline3').append("<option value='30ied' selected>30% IED</option>");
+                $('#new_sline3').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline3').append("<option value='9att'>9% ATT</option>");
+                $('#new_sline3').append("<option value='12dmg'>12% Damage</option>");
+                $('#new_sline3').append("<option value='9dmg'>9% Damage</option>");
+                $('#new_sline3').append("<option value='none'>N/A</option>");
 
+            }
+            else {
+                $('#new_sline1').empty();
+                $('#new_sline1').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline1').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline1').append("<option value='30boss' selected>30% Boss</option>");
+                $('#new_sline1').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline1').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline1').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline1').append("<option value='13dmg'>13% Damage</option>");
+                $('#new_sline1').append("<option value='none'>N/A</option>");
+
+                $('#new_sline2').empty();
+                $('#new_sline2').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline2').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline2').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline2').append("<option value='20boss'>20% Boss</option>");
+                $('#new_sline2').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline2').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline2').append("<option value='30ied' selected>30% IED</option>");
+                $('#new_sline2').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline2').append("<option value='10att'>10% ATT</option>");
+                $('#new_sline2').append("<option value='13dmg'>13% Damage</option>");
+                $('#new_sline2').append("<option value='10dmg'>10% Damage</option>");
+                $('#new_sline2').append("<option value='none'>N/A</option>");
+
+                $('#new_sline3').empty();
+                $('#new_sline3').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline3').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline3').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline3').append("<option value='20boss'>20% Boss</option>");
+                $('#new_sline3').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline3').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline3').append("<option value='30ied'>30% IED</option>");
+                $('#new_sline3').append("<option value='13att' selected>13% ATT</option>");
+                $('#new_sline3').append("<option value='10att'>10% ATT</option>");
+                $('#new_sline3').append("<option value='13dmg'>13% Damage</option>");
+                $('#new_sline3').append("<option value='10dmg'>10% Damage</option>");
+                $('#new_sline3').append("<option value='none'>N/A</option>");
+            }
         }
-        else{
-            $('#new_sline1').empty();
-            $('#new_sline1').append("<option value='40boss'>40% Boss</option>");
-            $('#new_sline1').append("<option value='35boss'>35% Boss</option>");
-            $('#new_sline1').append("<option value='30boss' selected>30% Boss</option>");
-            $('#new_sline1').append("<option value='40ied'>40% IED</option>");
-            $('#new_sline1').append("<option value='35ied'>35% IED</option>");
-            $('#new_sline1').append("<option value='13att'>13% ATT</option>");
-            $('#new_sline1').append("<option value='13dmg'>13% Damage</option>");
-            $('#new_sline1').append("<option value='none'>N/A</option>");
+        else {
+            if (document.getElementById('new_slevel').value == 'lesser160') {
+                $('#new_sline1').empty();
+                $('#new_sline1').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline1').append("<option value='none'>N/A</option>");
 
-            $('#new_sline2').empty();
-            $('#new_sline2').append("<option value='40boss'>40% Boss</option>");
-            $('#new_sline2').append("<option value='35boss'>35% Boss</option>");
-            $('#new_sline2').append("<option value='30boss'>30% Boss</option>");
-            $('#new_sline2').append("<option value='20boss'>20% Boss</option>");
-            $('#new_sline2').append("<option value='40ied'>40% IED</option>");
-            $('#new_sline2').append("<option value='35ied'>35% IED</option>");
-            $('#new_sline2').append("<option value='30ied' selected>30% IED</option>");
-            $('#new_sline2').append("<option value='13att'>13% ATT</option>");
-            $('#new_sline2').append("<option value='10att'>10% ATT</option>");
-            $('#new_sline2').append("<option value='13dmg'>13% Damage</option>");
-            $('#new_sline2').append("<option value='10dmg'>10% Damage</option>");
-            $('#new_sline2').append("<option value='none'>N/A</option>");
+                $('#new_sline2').empty();
+                $('#new_sline2').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline2').append("<option value='9att'>9% ATT</option>");
+                $('#new_sline2').append("<option value='none'>N/A</option>");
 
-            $('#new_sline3').empty();
-            $('#new_sline3').append("<option value='40boss'>40% Boss</option>");
-            $('#new_sline3').append("<option value='35boss'>35% Boss</option>");
-            $('#new_sline3').append("<option value='30boss'>30% Boss</option>");
-            $('#new_sline3').append("<option value='20boss'>20% Boss</option>");
-            $('#new_sline3').append("<option value='40ied'>40% IED</option>");
-            $('#new_sline3').append("<option value='35ied'>35% IED</option>");
-            $('#new_sline3').append("<option value='30ied'>30% IED</option>");
-            $('#new_sline3').append("<option value='13att' selected>13% ATT</option>");
-            $('#new_sline3').append("<option value='10att'>10% ATT</option>");
-            $('#new_sline3').append("<option value='13dmg'>13% Damage</option>");
-            $('#new_sline3').append("<option value='10dmg'>10% Damage</option>");
-            $('#new_sline3').append("<option value='none'>N/A</option>");
+                $('#new_sline3').empty();
+                $('#new_sline3').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline3').append("<option value='9att'>9% ATT</option>");
+                $('#new_sline3').append("<option value='none'>N/A</option>");
+
+            }
+            else {
+                $('#new_sline1').empty();
+                $('#new_sline1').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline1').append("<option value='none'>N/A</option>");
+
+                $('#new_sline2').empty();
+                $('#new_sline2').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline2').append("<option value='10att'>10% ATT</option>");
+                $('#new_sline2').append("<option value='none'>N/A</option>");
+
+                $('#new_sline3').empty();
+                $('#new_sline3').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline3').append("<option value='10att'>10% ATT</option>");
+                $('#new_sline3').append("<option value='none'>N/A</option>");
+            }
         }
+
     });
     document.getElementById("new_elevel").addEventListener("change", function () {
-        if (document.getElementById('new_elevel').value == 'lesser160'){
-            
+        if (document.getElementById('new_elevel').value == 'lesser160') {
+
             $('#new_eline1').empty();
             $('#new_eline1').append("<option value='40ied'>40% IED</option>");
             $('#new_eline1').append("<option value='35ied'>35% IED</option>");
@@ -758,7 +795,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_eline3').append("<option value='none'>N/A</option>");
 
         }
-        else{
+        else {
             $('#new_eline1').empty();
             $('#new_eline1').append("<option value='40ied'>40% IED</option>");
             $('#new_eline1').append("<option value='35ied'>35% IED</option>");
@@ -788,7 +825,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     document.getElementById("wlevel").addEventListener("change", function () {
-        if (document.getElementById('wlevel').value == 'lesser160'){
+        if (document.getElementById('wlevel').value == 'lesser160') {
             $('#wline1').empty();
             $('#wline1').append("<option value='40boss' selected>40% Boss</option>");
             $('#wline1').append("<option value='35boss'>35% Boss</option>");
@@ -828,7 +865,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#wline3').append("<option value='none'>N/A</option>");
 
         }
-        else{
+        else {
             $('#wline1').empty();
             $('#wline1').append("<option value='40boss' selected>40% Boss</option>");
             $('#wline1').append("<option value='35boss'>35% Boss</option>");
@@ -869,89 +906,125 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     document.getElementById("slevel").addEventListener("change", function () {
-        if (document.getElementById('slevel').value == 'lesser160'){
-            $('#sline1').empty();
-            $('#sline1').append("<option value='40boss'>40% Boss</option>");
-            $('#sline1').append("<option value='35boss' selected>35% Boss</option>");
-            $('#sline1').append("<option value='30boss'>30% Boss</option>");
-            $('#sline1').append("<option value='40ied'>40% IED</option>");
-            $('#sline1').append("<option value='35ied'>35% IED</option>");
-            $('#sline1').append("<option value='12att'>12% ATT</option>");
-            $('#sline1').append("<option value='12dmg'>12% Damage</option>");
-            $('#sline1').append("<option value='none'>N/A</option>");
+        var current_class = document.getElementById('class').value;
+        if (current_class != 'Kanna') {
+            if (document.getElementById('slevel').value == 'lesser160') {
+                $('#sline1').empty();
+                $('#sline1').append("<option value='40boss'>40% Boss</option>");
+                $('#sline1').append("<option value='35boss' selected>35% Boss</option>");
+                $('#sline1').append("<option value='30boss'>30% Boss</option>");
+                $('#sline1').append("<option value='40ied'>40% IED</option>");
+                $('#sline1').append("<option value='35ied'>35% IED</option>");
+                $('#sline1').append("<option value='12att'>12% ATT</option>");
+                $('#sline1').append("<option value='12dmg'>12% Damage</option>");
+                $('#sline1').append("<option value='none'>N/A</option>");
 
-            $('#sline2').empty();
-            $('#sline2').append("<option value='40boss'>40% Boss</option>");
-            $('#sline2').append("<option value='35boss'>35% Boss</option>");
-            $('#sline2').append("<option value='30boss'>30% Boss</option>");
-            $('#sline2').append("<option value='20boss'>20% Boss</option>");
-            $('#sline2').append("<option value='40ied'>40% IED</option>");
-            $('#sline2').append("<option value='35ied' selected>35% IED</option>");
-            $('#sline2').append("<option value='30ied'>30% IED</option>");
-            $('#sline2').append("<option value='12att'>12% ATT</option>");
-            $('#sline2').append("<option value='9att'>9% ATT</option>");
-            $('#sline2').append("<option value='12dmg'>12% Damge</option>");
-            $('#sline2').append("<option value='9dmg'>9% Damge</option>");
-            $('#sline2').append("<option value='none'>N/A</option>");
+                $('#sline2').empty();
+                $('#sline2').append("<option value='40boss'>40% Boss</option>");
+                $('#sline2').append("<option value='35boss'>35% Boss</option>");
+                $('#sline2').append("<option value='30boss'>30% Boss</option>");
+                $('#sline2').append("<option value='20boss'>20% Boss</option>");
+                $('#sline2').append("<option value='40ied'>40% IED</option>");
+                $('#sline2').append("<option value='35ied' selected>35% IED</option>");
+                $('#sline2').append("<option value='30ied'>30% IED</option>");
+                $('#sline2').append("<option value='12att'>12% ATT</option>");
+                $('#sline2').append("<option value='9att'>9% ATT</option>");
+                $('#sline2').append("<option value='12dmg'>12% Damge</option>");
+                $('#sline2').append("<option value='9dmg'>9% Damge</option>");
+                $('#sline2').append("<option value='none'>N/A</option>");
 
-            $('#sline3').empty();
-            $('#sline3').append("<option value='40boss'>40% Boss</option>");
-            $('#sline3').append("<option value='35boss'>35% Boss</option>");
-            $('#sline3').append("<option value='30boss'>30% Boss</option>");
-            $('#sline3').append("<option value='20boss'>20% Boss</option>");
-            $('#sline3').append("<option value='40ied'>40% IED</option>");
-            $('#sline3').append("<option value='35ied'>35% IED</option>");
-            $('#sline3').append("<option value='30ied' selected>30% IED</option>");
-            $('#sline3').append("<option value='12att'>12% ATT</option>");
-            $('#sline3').append("<option value='9att'>9% ATT</option>");
-            $('#sline3').append("<option value='12dmg'>12% Damage</option>");
-            $('#sline3').append("<option value='9dmg'>9% Damage</option>");
-            $('#sline3').append("<option value='none'>N/A</option>");
+                $('#sline3').empty();
+                $('#sline3').append("<option value='40boss'>40% Boss</option>");
+                $('#sline3').append("<option value='35boss'>35% Boss</option>");
+                $('#sline3').append("<option value='30boss'>30% Boss</option>");
+                $('#sline3').append("<option value='20boss'>20% Boss</option>");
+                $('#sline3').append("<option value='40ied'>40% IED</option>");
+                $('#sline3').append("<option value='35ied'>35% IED</option>");
+                $('#sline3').append("<option value='30ied' selected>30% IED</option>");
+                $('#sline3').append("<option value='12att'>12% ATT</option>");
+                $('#sline3').append("<option value='9att'>9% ATT</option>");
+                $('#sline3').append("<option value='12dmg'>12% Damage</option>");
+                $('#sline3').append("<option value='9dmg'>9% Damage</option>");
+                $('#sline3').append("<option value='none'>N/A</option>");
 
+            }
+            else {
+                $('#sline1').empty();
+                $('#sline1').append("<option value='40boss'>40% Boss</option>");
+                $('#sline1').append("<option value='35boss'>35% Boss</option>");
+                $('#sline1').append("<option value='30boss' selected>30% Boss</option>");
+                $('#sline1').append("<option value='40ied'>40% IED</option>");
+                $('#sline1').append("<option value='35ied'>35% IED</option>");
+                $('#sline1').append("<option value='13att'>13% ATT</option>");
+                $('#sline1').append("<option value='13dmg'>13% Damage</option>");
+                $('#sline1').append("<option value='none'>N/A</option>");
+
+                $('#sline2').empty();
+                $('#sline2').append("<option value='40boss'>40% Boss</option>");
+                $('#sline2').append("<option value='35boss'>35% Boss</option>");
+                $('#sline2').append("<option value='30boss'>30% Boss</option>");
+                $('#sline2').append("<option value='20boss'>20% Boss</option>");
+                $('#sline2').append("<option value='40ied'>40% IED</option>");
+                $('#sline2').append("<option value='35ied'>35% IED</option>");
+                $('#sline2').append("<option value='30ied' selected>30% IED</option>");
+                $('#sline2').append("<option value='13att'>13% ATT</option>");
+                $('#sline2').append("<option value='10att'>10% ATT</option>");
+                $('#sline2').append("<option value='13dmg'>13% Damage</option>");
+                $('#sline2').append("<option value='10dmg'>10% Damage</option>");
+                $('#sline2').append("<option value='none'>N/A</option>");
+
+                $('#sline3').empty();
+                $('#sline3').append("<option value='40boss'>40% Boss</option>");
+                $('#sline3').append("<option value='35boss'>35% Boss</option>");
+                $('#sline3').append("<option value='30boss'>30% Boss</option>");
+                $('#sline3').append("<option value='20boss'>20% Boss</option>");
+                $('#sline3').append("<option value='40ied'>40% IED</option>");
+                $('#sline3').append("<option value='35ied'>35% IED</option>");
+                $('#sline3').append("<option value='30ied'>30% IED</option>");
+                $('#sline3').append("<option value='13att' selected>13% ATT</option>");
+                $('#sline3').append("<option value='10att'>10% ATT</option>");
+                $('#sline3').append("<option value='13dmg'>13% Damage</option>");
+                $('#sline3').append("<option value='10dmg'>10% Damage</option>");
+                $('#sline3').append("<option value='none'>N/A</option>");
+            }
         }
-        else{
-            $('#sline1').empty();
-            $('#sline1').append("<option value='40boss'>40% Boss</option>");
-            $('#sline1').append("<option value='35boss'>35% Boss</option>");
-            $('#sline1').append("<option value='30boss' selected>30% Boss</option>");
-            $('#sline1').append("<option value='40ied'>40% IED</option>");
-            $('#sline1').append("<option value='35ied'>35% IED</option>");
-            $('#sline1').append("<option value='13att'>13% ATT</option>");
-            $('#sline1').append("<option value='13dmg'>13% Damage</option>");
-            $('#sline1').append("<option value='none'>N/A</option>");
+        else {
+            if (document.getElementById('slevel').value == 'lesser160') {
+                $('#sline1').empty();
+                $('#sline1').append("<option value='12att'>12% ATT</option>");
+                $('#sline1').append("<option value='none'>N/A</option>");
 
-            $('#sline2').empty();
-            $('#sline2').append("<option value='40boss'>40% Boss</option>");
-            $('#sline2').append("<option value='35boss'>35% Boss</option>");
-            $('#sline2').append("<option value='30boss'>30% Boss</option>");
-            $('#sline2').append("<option value='20boss'>20% Boss</option>");
-            $('#sline2').append("<option value='40ied'>40% IED</option>");
-            $('#sline2').append("<option value='35ied'>35% IED</option>");
-            $('#sline2').append("<option value='30ied' selected>30% IED</option>");
-            $('#sline2').append("<option value='13att'>13% ATT</option>");
-            $('#sline2').append("<option value='10att'>10% ATT</option>");
-            $('#sline2').append("<option value='13dmg'>13% Damage</option>");
-            $('#sline2').append("<option value='10dmg'>10% Damage</option>");
-            $('#sline2').append("<option value='none'>N/A</option>");
+                $('#sline2').empty();
+                $('#sline2').append("<option value='12att'>12% ATT</option>");
+                $('#sline2').append("<option value='9att'>9% ATT</option>");
+                $('#sline2').append("<option value='none'>N/A</option>");
 
-            $('#sline3').empty();
-            $('#sline3').append("<option value='40boss'>40% Boss</option>");
-            $('#sline3').append("<option value='35boss'>35% Boss</option>");
-            $('#sline3').append("<option value='30boss'>30% Boss</option>");
-            $('#sline3').append("<option value='20boss'>20% Boss</option>");
-            $('#sline3').append("<option value='40ied'>40% IED</option>");
-            $('#sline3').append("<option value='35ied'>35% IED</option>");
-            $('#sline3').append("<option value='30ied'>30% IED</option>");
-            $('#sline3').append("<option value='13att' selected>13% ATT</option>");
-            $('#sline3').append("<option value='10att'>10% ATT</option>");
-            $('#sline3').append("<option value='13dmg'>13% Damage</option>");
-            $('#sline3').append("<option value='10dmg'>10% Damage</option>");
-            $('#sline3').append("<option value='none'>N/A</option>");
+                $('#sline3').empty();
+                $('#sline3').append("<option value='12att'>12% ATT</option>");
+                $('#sline3').append("<option value='9att'>9% ATT</option>");
+                $('#sline3').append("<option value='none'>N/A</option>");
+
+            }
+            else {
+                $('#sline1').empty();
+                $('#sline1').append("<option value='13att'>13% ATT</option>");
+                $('#sline1').append("<option value='none'>N/A</option>");
+
+                $('#sline2').empty();
+                $('#sline2').append("<option value='13att'>13% ATT</option>");
+                $('#sline2').append("<option value='10att'>10% ATT</option>");
+                $('#sline2').append("<option value='none'>N/A</option>");
+
+                $('#sline3').empty();
+                $('#sline3').append("<option value='13att' selected>13% ATT</option>");
+                $('#sline3').append("<option value='10att'>10% ATT</option>");
+                $('#sline3').append("<option value='none'>N/A</option>");
+            }
         }
     });
     document.getElementById("elevel").addEventListener("change", function () {
-        if (document.getElementById('elevel').value == 'lesser160'){
-            
+        if (document.getElementById('elevel').value == 'lesser160') {
+
             $('#eline1').empty();
             $('#eline1').append("<option value='40ied'>40% IED</option>");
             $('#eline1').append("<option value='35ied'>35% IED</option>");
@@ -980,7 +1053,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline3').append("<option value='none'>N/A</option>");
 
         }
-        else{
+        else {
             $('#eline1').empty();
             $('#eline1').append("<option value='40ied'>40% IED</option>");
             $('#eline1').append("<option value='35ied'>35% IED</option>");
@@ -1017,9 +1090,236 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     document.getElementById("optimize").addEventListener("change", function () {
         //optimize calculator selected
-        
+
         document.getElementById('compareTable').hidden = true;
         document.getElementById('compareTitle').hidden = true;
+    });
+    document.getElementById("class").addEventListener("change", function () {
+        var current_class = document.getElementById('class').value;
+        if (current_class == 'Kanna'){
+            if (document.getElementById('slevel').value == 'lesser160') {
+                $('#sline1').empty();
+                $('#sline1').append("<option value='12att'>12% ATT</option>");
+                $('#sline1').append("<option value='none'>N/A</option>");
+
+                $('#sline2').empty();
+                $('#sline2').append("<option value='12att'>12% ATT</option>");
+                $('#sline2').append("<option value='9att'>9% ATT</option>");
+                $('#sline2').append("<option value='none'>N/A</option>");
+
+                $('#sline3').empty();
+                $('#sline3').append("<option value='12att'>12% ATT</option>");
+                $('#sline3').append("<option value='9att'>9% ATT</option>");
+                $('#sline3').append("<option value='none'>N/A</option>");
+
+            }
+            if (document.getElementById('slevel').value == 'greater160') {
+                $('#sline1').empty();
+                $('#sline1').append("<option value='13att'>13% ATT</option>");
+                $('#sline1').append("<option value='none'>N/A</option>");
+
+                $('#sline2').empty();
+                $('#sline2').append("<option value='13att'>13% ATT</option>");
+                $('#sline2').append("<option value='10att'>10% ATT</option>");
+                $('#sline2').append("<option value='none'>N/A</option>");
+
+                $('#sline3').empty();
+                $('#sline3').append("<option value='13att' selected>13% ATT</option>");
+                $('#sline3').append("<option value='10att'>10% ATT</option>");
+                $('#sline3').append("<option value='none'>N/A</option>");
+            }
+            if (document.getElementById('new_slevel').value == 'lesser160') {
+                $('#new_sline1').empty();
+                $('#new_sline1').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline1').append("<option value='none'>N/A</option>");
+
+                $('#new_sline2').empty();
+                $('#new_sline2').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline2').append("<option value='9att'>9% ATT</option>");
+                $('#new_sline2').append("<option value='none'>N/A</option>");
+
+                $('#new_sline3').empty();
+                $('#new_sline3').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline3').append("<option value='9att'>9% ATT</option>");
+                $('#new_sline3').append("<option value='none'>N/A</option>");
+
+            }
+            if (document.getElementById('new_slevel').value == 'greater160') {
+                $('#new_sline1').empty();
+                $('#new_sline1').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline1').append("<option value='none'>N/A</option>");
+
+                $('#new_sline2').empty();
+                $('#new_sline2').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline2').append("<option value='10att'>10% ATT</option>");
+                $('#new_sline2').append("<option value='none'>N/A</option>");
+
+                $('#new_sline3').empty();
+                $('#new_sline3').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline3').append("<option value='10att'>10% ATT</option>");
+                $('#new_sline3').append("<option value='none'>N/A</option>");
+            }
+        }
+        else{
+            if (document.getElementById('slevel').value == 'lesser160') {
+                $('#sline1').empty();
+                $('#sline1').append("<option value='40boss'>40% Boss</option>");
+                $('#sline1').append("<option value='35boss' selected>35% Boss</option>");
+                $('#sline1').append("<option value='30boss'>30% Boss</option>");
+                $('#sline1').append("<option value='40ied'>40% IED</option>");
+                $('#sline1').append("<option value='35ied'>35% IED</option>");
+                $('#sline1').append("<option value='12att'>12% ATT</option>");
+                $('#sline1').append("<option value='12dmg'>12% Damage</option>");
+                $('#sline1').append("<option value='none'>N/A</option>");
+
+                $('#sline2').empty();
+                $('#sline2').append("<option value='40boss'>40% Boss</option>");
+                $('#sline2').append("<option value='35boss'>35% Boss</option>");
+                $('#sline2').append("<option value='30boss'>30% Boss</option>");
+                $('#sline2').append("<option value='20boss'>20% Boss</option>");
+                $('#sline2').append("<option value='40ied'>40% IED</option>");
+                $('#sline2').append("<option value='35ied' selected>35% IED</option>");
+                $('#sline2').append("<option value='30ied'>30% IED</option>");
+                $('#sline2').append("<option value='12att'>12% ATT</option>");
+                $('#sline2').append("<option value='9att'>9% ATT</option>");
+                $('#sline2').append("<option value='12dmg'>12% Damge</option>");
+                $('#sline2').append("<option value='9dmg'>9% Damge</option>");
+                $('#sline2').append("<option value='none'>N/A</option>");
+
+                $('#sline3').empty();
+                $('#sline3').append("<option value='40boss'>40% Boss</option>");
+                $('#sline3').append("<option value='35boss'>35% Boss</option>");
+                $('#sline3').append("<option value='30boss'>30% Boss</option>");
+                $('#sline3').append("<option value='20boss'>20% Boss</option>");
+                $('#sline3').append("<option value='40ied'>40% IED</option>");
+                $('#sline3').append("<option value='35ied'>35% IED</option>");
+                $('#sline3').append("<option value='30ied' selected>30% IED</option>");
+                $('#sline3').append("<option value='12att'>12% ATT</option>");
+                $('#sline3').append("<option value='9att'>9% ATT</option>");
+                $('#sline3').append("<option value='12dmg'>12% Damage</option>");
+                $('#sline3').append("<option value='9dmg'>9% Damage</option>");
+                $('#sline3').append("<option value='none'>N/A</option>");
+
+            }
+            if (document.getElementById('slevel').value == 'greater160') {
+                $('#sline1').empty();
+                $('#sline1').append("<option value='40boss'>40% Boss</option>");
+                $('#sline1').append("<option value='35boss'>35% Boss</option>");
+                $('#sline1').append("<option value='30boss' selected>30% Boss</option>");
+                $('#sline1').append("<option value='40ied'>40% IED</option>");
+                $('#sline1').append("<option value='35ied'>35% IED</option>");
+                $('#sline1').append("<option value='13att'>13% ATT</option>");
+                $('#sline1').append("<option value='13dmg'>13% Damage</option>");
+                $('#sline1').append("<option value='none'>N/A</option>");
+
+                $('#sline2').empty();
+                $('#sline2').append("<option value='40boss'>40% Boss</option>");
+                $('#sline2').append("<option value='35boss'>35% Boss</option>");
+                $('#sline2').append("<option value='30boss'>30% Boss</option>");
+                $('#sline2').append("<option value='20boss'>20% Boss</option>");
+                $('#sline2').append("<option value='40ied'>40% IED</option>");
+                $('#sline2').append("<option value='35ied'>35% IED</option>");
+                $('#sline2').append("<option value='30ied' selected>30% IED</option>");
+                $('#sline2').append("<option value='13att'>13% ATT</option>");
+                $('#sline2').append("<option value='10att'>10% ATT</option>");
+                $('#sline2').append("<option value='13dmg'>13% Damage</option>");
+                $('#sline2').append("<option value='10dmg'>10% Damage</option>");
+                $('#sline2').append("<option value='none'>N/A</option>");
+
+                $('#sline3').empty();
+                $('#sline3').append("<option value='40boss'>40% Boss</option>");
+                $('#sline3').append("<option value='35boss'>35% Boss</option>");
+                $('#sline3').append("<option value='30boss'>30% Boss</option>");
+                $('#sline3').append("<option value='20boss'>20% Boss</option>");
+                $('#sline3').append("<option value='40ied'>40% IED</option>");
+                $('#sline3').append("<option value='35ied'>35% IED</option>");
+                $('#sline3').append("<option value='30ied'>30% IED</option>");
+                $('#sline3').append("<option value='13att' selected>13% ATT</option>");
+                $('#sline3').append("<option value='10att'>10% ATT</option>");
+                $('#sline3').append("<option value='13dmg'>13% Damage</option>");
+                $('#sline3').append("<option value='10dmg'>10% Damage</option>");
+                $('#sline3').append("<option value='none'>N/A</option>");
+            }
+            if (document.getElementById('new_slevel').value == 'lesser160') {
+                $('#new_sline1').empty();
+                $('#new_sline1').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline1').append("<option value='35boss' selected>35% Boss</option>");
+                $('#new_sline1').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline1').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline1').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline1').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline1').append("<option value='12dmg'>12% Damage</option>");
+                $('#new_sline1').append("<option value='none'>N/A</option>");
+
+                $('#new_sline2').empty();
+                $('#new_sline2').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline2').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline2').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline2').append("<option value='20boss'>20% Boss</option>");
+                $('#new_sline2').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline2').append("<option value='35ied' selected>35% IED</option>");
+                $('#new_sline2').append("<option value='30ied'>30% IED</option>");
+                $('#new_sline2').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline2').append("<option value='9att'>9% ATT</option>");
+                $('#new_sline2').append("<option value='12dmg'>12% Damge</option>");
+                $('#new_sline2').append("<option value='9dmg'>9% Damge</option>");
+                $('#new_sline2').append("<option value='none'>N/A</option>");
+
+                $('#new_sline3').empty();
+                $('#new_sline3').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline3').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline3').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline3').append("<option value='20boss'>20% Boss</option>");
+                $('#new_sline3').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline3').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline3').append("<option value='30ied' selected>30% IED</option>");
+                $('#new_sline3').append("<option value='12att'>12% ATT</option>");
+                $('#new_sline3').append("<option value='9att'>9% ATT</option>");
+                $('#new_sline3').append("<option value='12dmg'>12% Damage</option>");
+                $('#new_sline3').append("<option value='9dmg'>9% Damage</option>");
+                $('#new_sline3').append("<option value='none'>N/A</option>");
+
+            }
+            if (document.getElementById('new_slevel').value == 'greater160') {
+                $('#new_sline1').empty();
+                $('#new_sline1').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline1').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline1').append("<option value='30boss' selected>30% Boss</option>");
+                $('#new_sline1').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline1').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline1').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline1').append("<option value='13dmg'>13% Damage</option>");
+                $('#new_sline1').append("<option value='none'>N/A</option>");
+
+                $('#new_sline2').empty();
+                $('#new_sline2').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline2').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline2').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline2').append("<option value='20boss'>20% Boss</option>");
+                $('#new_sline2').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline2').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline2').append("<option value='30ied' selected>30% IED</option>");
+                $('#new_sline2').append("<option value='13att'>13% ATT</option>");
+                $('#new_sline2').append("<option value='10att'>10% ATT</option>");
+                $('#new_sline2').append("<option value='13dmg'>13% Damage</option>");
+                $('#new_sline2').append("<option value='10dmg'>10% Damage</option>");
+                $('#new_sline2').append("<option value='none'>N/A</option>");
+
+                $('#new_sline3').empty();
+                $('#new_sline3').append("<option value='40boss'>40% Boss</option>");
+                $('#new_sline3').append("<option value='35boss'>35% Boss</option>");
+                $('#new_sline3').append("<option value='30boss'>30% Boss</option>");
+                $('#new_sline3').append("<option value='20boss'>20% Boss</option>");
+                $('#new_sline3').append("<option value='40ied'>40% IED</option>");
+                $('#new_sline3').append("<option value='35ied'>35% IED</option>");
+                $('#new_sline3').append("<option value='30ied'>30% IED</option>");
+                $('#new_sline3').append("<option value='13att' selected>13% ATT</option>");
+                $('#new_sline3').append("<option value='10att'>10% ATT</option>");
+                $('#new_sline3').append("<option value='13dmg'>13% Damage</option>");
+                $('#new_sline3').append("<option value='10dmg'>10% Damage</option>");
+                $('#new_sline3').append("<option value='none'>N/A</option>");
+            }
+        }
     });
 });
 
@@ -1036,33 +1336,33 @@ function optimizeWSE() {
     var attack_percent = 100;
 
     //Link Skill Stats
-    if (document.getElementById('solus2').checked == true){
+    if (document.getElementById('solus2').checked == true) {
         damage_percent = damage_percent + 11;
     }
 
-    if (document.getElementById('solus3').checked == true){
+    if (document.getElementById('solus3').checked == true) {
         damage_percent = damage_percent + 16;
     }
 
-    if (document.getElementById('unfairAdvantage').checked == true){
+    if (document.getElementById('unfairAdvantage').checked == true) {
         damage_percent = damage_percent + 12;
     }
 
-    if (document.getElementById('empiricalKnowledge').checked == true){
+    if (document.getElementById('empiricalKnowledge').checked == true) {
         var empiricalKnowledgeIED = [3, 3, 3];
         ied_sources = ied_sources.concat(empiricalKnowledgeIED);
         damage_percent = damage_percent + 9;
     }
 
-    if (document.getElementById('thiefCunning').checked == true){
+    if (document.getElementById('thiefCunning').checked == true) {
         damage_percent = damage_percent + 18;
     }
 
-    if (document.getElementById('tideOfBattle').checked == true){
+    if (document.getElementById('tideOfBattle').checked == true) {
         damage_percent = damage_percent + 12;
     }
 
-    if (document.getElementById('magSoul').checked == true){
+    if (document.getElementById('magSoul').checked == true) {
         attack_percent = attack_percent + 3;
     }
 
@@ -1114,23 +1414,23 @@ function optimizeWSE() {
 
     //Current Stats Without WSE
     var withoutWSEStats = removePotentialsFromStats(potential_list, current_ied_percent, current_attack_percent, current_boss_percent, current_damage_percent)
-    
+
     var stripped_ied_percent = withoutWSEStats.stripped_ied_percent;
     var stripped_attack_percent = withoutWSEStats.stripped_attack_percent;
     var stripped_boss_percent = withoutWSEStats.stripped_boss_percent;
     var stripped_damage_percent = withoutWSEStats.stripped_damage_percent;
 
-    if (stripped_ied_percent < 0 || stripped_attack_percent < 0 || stripped_boss_percent < 0 || stripped_damage_percent < 0){
+    if (stripped_ied_percent < 0 || stripped_attack_percent < 0 || stripped_boss_percent < 0 || stripped_damage_percent < 0) {
         //send an error message
         document.getElementById('resultSection').hidden = false;
         document.getElementById('result').innerHTML = `
                 There has been an error. Please make sure you have correctly inputted your stats as they are shown within the stat window. Furthermore, ensure that you have entered your Current WSE correctly.
             `;
-        window.scrollTo(0,document.body.scrollHeight);
+        window.scrollTo(0, document.body.scrollHeight);
         return false
     }
 
-    if (document.getElementById('compare').checked == true){
+    if (document.getElementById('compare').checked == true) {
         //New WSE Potentials
         var new_wep_line_1 = document.getElementById('new_wline1').value;
         var new_wep_line_2 = document.getElementById('new_wline2').value;
@@ -1164,37 +1464,37 @@ function optimizeWSE() {
 
         var dmgRatio = newOutput / currentOutput;
 
-        if (dmgRatio == 1){
+        if (dmgRatio == 1) {
             document.getElementById('resultSection').hidden = false;
             document.getElementById('result').innerHTML = `
                 Hit Damage on Bosses will <strong>not change</strong>.
             `;
-            window.scrollTo(0,document.body.scrollHeight);
+            window.scrollTo(0, document.body.scrollHeight);
         }
-        else if(dmgRatio > 1){
+        else if (dmgRatio > 1) {
             var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
             document.getElementById('resultSection').hidden = false;
             document.getElementById('result').innerHTML = `
                 Hit Damage on Bosses will <strong>increase</strong> by ${output_increase}%.
             `;
-            window.scrollTo(0,document.body.scrollHeight);
+            window.scrollTo(0, document.body.scrollHeight);
         }
-        else if(dmgRatio < 1){
+        else if (dmgRatio < 1) {
             var output_decrease = ((1 - dmgRatio) * 100).toFixed(2);
             document.getElementById('resultSection').hidden = false;
             document.getElementById('result').innerHTML = `
                 Hit Damage on Bosses will <strong>decrease</strong> by ${output_decrease}%.
             `;
-            window.scrollTo(0,document.body.scrollHeight);
+            window.scrollTo(0, document.body.scrollHeight);
         }
 
     }
-    if (document.getElementById('optimize').checked == true){
+    if (document.getElementById('optimize').checked == true) {
         document.getElementById('resultSection').hidden = false;
         document.getElementById('result').innerHTML = `
                 The Optimize WSE Calculator has not been coded yet. Please use the Compare WSE Calculator.
             `;
-        window.scrollTo(0,document.body.scrollHeight);
+        window.scrollTo(0, document.body.scrollHeight);
         return false
     }
 }
