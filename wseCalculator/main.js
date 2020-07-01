@@ -1089,6 +1089,7 @@ function optimizeWSE() {
             `;
             window.scrollTo(0,document.body.scrollHeight);
         }
+        
     }
     if (document.getElementById('optimize').checked == true){
         document.getElementById('resultSection').hidden = false;
