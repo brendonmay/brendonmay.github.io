@@ -1011,7 +1011,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     document.getElementById("compare").addEventListener("change", function () {
         //compare calculator selected
-        //console.log('compare calculator selected');
+        
         document.getElementById('compareTable').hidden = false;
         document.getElementById('compareTitle').hidden = false;
     });
@@ -1115,7 +1115,6 @@ function optimizeWSE() {
     var stripped_attack_percent = withoutWSEStats.stripped_attack_percent;
     var stripped_boss_percent = withoutWSEStats.stripped_boss_percent;
     var stripped_damage_percent = withoutWSEStats.stripped_damage_percent;
-    console.log('stripped_damage_percent:' + stripped_damage_percent)
 
     if (stripped_ied_percent < 0 || stripped_attack_percent < 0 || stripped_boss_percent < 0 || stripped_damage_percent < 0){
         //send an error message
@@ -1148,8 +1147,6 @@ function optimizeWSE() {
         var new_attack_percent = withNewWSEStats.new_attack_percent;
         var new_boss_percent = withNewWSEStats.new_boss_percent;
         var new_damage_percent = withNewWSEStats.new_damage_percent;
-
-        console.log('new_damage_percent:' + new_damage_percent)
 
         //New Dmg Output
         var newBossDefMultiplier = getBossDefMultiplier(new_ied_percent)
