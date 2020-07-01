@@ -333,14 +333,14 @@ function getClassData(maple_class) {
             
             'Demon Slayer': {
             'attPercent': 4,
-            'iedPercent': [43],
-            'dmgPercent': 52,
-            'bossPercent': 52
+            'iedPercent': [43], //weighed avg
+            'dmgPercent': 52, //weighed avg
+            'bossPercent': 52 //weighed avg
             },
             
             'Dual Blade': {
             'attPercent': 4,
-            'iedPercent': [80],
+            'iedPercent': [80], //weighed avg
             'dmgPercent': 20,
             'bossPercent': 0
             },
@@ -445,8 +445,8 @@ function getClassData(maple_class) {
             
             'Mercedes': {
             'attPercent': 34,
-            'iedPercent': [50, 5],
-            'dmgPercent': 60,
+            'iedPercent': [50, 5], //weighed avg
+            'dmgPercent': 60, //weighed avg
             'bossPercent': 0
             },
             
@@ -509,7 +509,7 @@ function getClassData(maple_class) {
             'Thunder Breaker': {
             'attPercent': 4,
             'iedPercent': [5, 5, 5, 5, 5, 9, 9, 9, 9, 9, 20, 6],
-            'dmgPercent': 55, //avg
+            'dmgPercent': 55, //weighed avg
             'bossPercent': 0
             },
             
