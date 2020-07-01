@@ -36,11 +36,12 @@ function determineIED(ied_percent, ied_sources){
     return new_ied
 }
 
-function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent){
+function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent){
     var i = 0;
     var new_ied_percent = stripped_ied_percent;
     var new_attack_percent = stripped_attack_percent;
     var new_boss_percent = stripped_boss_percent;
+    var new_damage_percent = stripped_damage_percent;
 
     while (i < new_potential_list.length){
         var current_potential = new_potential_list[i];
@@ -72,6 +73,19 @@ function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped
             new_attack_percent = new_attack_percent + 9;
         }
 
+        if(current_potential == '13dmg'){
+            new_damage_percent = new_damage_percent + 13;
+        }
+        if(current_potential == '12dmg'){
+            new_damage_percent = new_damage_percent + 12;
+        }
+        if(current_potential == '10dmg'){
+            new_damage_percent = new_damage_percent + 10;
+        }
+        if(current_potential == '9dmg'){
+            new_damage_percent = new_damage_percent + 9;
+        }
+
 
         if(current_potential == '40ied'){
             var current_ied = new_ied_percent;
@@ -87,14 +101,15 @@ function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped
         }
         i++;
     }
-    return {'new_ied_percent': new_ied_percent, 'new_attack_percent': new_attack_percent, 'new_boss_percent': new_boss_percent}
+    return {'new_ied_percent': new_ied_percent, 'new_attack_percent': new_attack_percent, 'new_boss_percent': new_boss_percent, 'new_damage_percent': new_damage_percent}
 }
 
-function removePotentialsFromStats(potential_list, current_ied_percent, current_attack_percent, current_boss_percent){
+function removePotentialsFromStats(potential_list, current_ied_percent, current_attack_percent, current_boss_percent, current_damage_percent){
     var i = 0;
     var stripped_ied_percent = current_ied_percent;
     var stripped_attack_percent = current_attack_percent;
     var stripped_boss_percent = current_boss_percent;
+    var stripped_damage_percent = current_damage_percent;
 
     while (i < potential_list.length){
         var current_potential = potential_list[i];
@@ -125,6 +140,19 @@ function removePotentialsFromStats(potential_list, current_ied_percent, current_
             stripped_attack_percent = stripped_attack_percent - 9;
         }
 
+        if(current_potential == '13dmg'){
+            stripped_damage_percent = stripped_damage_percent - 13;
+        }
+        if(current_potential == '12dmg'){
+            stripped_damage_percent = stripped_damage_percent - 12;
+        }
+        if(current_potential == '10dmg'){
+            stripped_damage_percent = stripped_damage_percent - 10;
+        }
+        if(current_potential == '9dmg'){
+            stripped_damage_percent = stripped_damage_percent - 9;
+        }
+
         if(current_potential == '40ied'){
             var old_ied = stripped_ied_percent;
             stripped_ied_percent = (old_ied - 40) / ((-1 * 40 / 100) + 1)
@@ -140,7 +168,7 @@ function removePotentialsFromStats(potential_list, current_ied_percent, current_
 
         i++;
     }
-    return {'stripped_ied_percent': stripped_ied_percent, 'stripped_attack_percent': stripped_attack_percent, 'stripped_boss_percent': stripped_boss_percent}
+    return {'stripped_ied_percent': stripped_ied_percent, 'stripped_attack_percent': stripped_attack_percent, 'stripped_boss_percent': stripped_boss_percent, 'stripped_damage_percent': stripped_damage_percent}
 }
 
 function getWSEATTPercent(){
@@ -546,6 +574,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_wline1').append("<option value='40ied'>40% IED</option>");
             $('#new_wline1').append("<option value='35ied'>35% IED</option>");
             $('#new_wline1').append("<option value='12att'>12% ATT</option>");
+            $('#new_wline1').append("<option value='12dmg'>12% Damage</option>");
             $('#new_wline1').append("<option value='none'>N/A</option>");
 
             $('#new_wline2').empty();
@@ -558,6 +587,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_wline2').append("<option value='30ied' selected>30% IED</option>");
             $('#new_wline2').append("<option value='12att'>12% ATT</option>");
             $('#new_wline2').append("<option value='9att'>9% ATT</option>");
+            $('#new_wline2').append("<option value='12dmg'>12% Damage</option>");
+            $('#new_wline2').append("<option value='9dmg'>9% Damage</option>");
             $('#new_wline2').append("<option value='none'>N/A</option>");
 
             $('#new_wline3').empty();
@@ -570,6 +601,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_wline3').append("<option value='30ied'>30% IED</option>");
             $('#new_wline3').append("<option value='12att'>12% ATT</option>");
             $('#new_wline3').append("<option value='9att' selected>9% ATT</option>");
+            $('#new_wline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#new_wline3').append("<option value='9dmg'>9% Damage</option>");
             $('#new_wline3').append("<option value='none'>N/A</option>");
 
         }
@@ -581,6 +614,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_wline1').append("<option value='40ied'>40% IED</option>");
             $('#new_wline1').append("<option value='35ied'>35% IED</option>");
             $('#new_wline1').append("<option value='13att'>13% ATT</option>");
+            $('#new_wline1').append("<option value='13dmg'>13% Damage</option>");
             $('#new_wline1').append("<option value='none'>N/A</option>");
 
             $('#new_wline2').empty();
@@ -593,6 +627,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_wline2').append("<option value='30ied' selected>30% IED</option>");
             $('#new_wline2').append("<option value='13att'>13% ATT</option>");
             $('#new_wline2').append("<option value='10att'>10% ATT</option>");
+            $('#new_wline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#new_wline2').append("<option value='10dmg'>10% Damage</option>");
             $('#new_wline2').append("<option value='none'>N/A</option>");
 
             $('#new_wline3').empty();
@@ -605,6 +641,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_wline3').append("<option value='30ied'>30% IED</option>");
             $('#new_wline3').append("<option value='13att'>13% ATT</option>");
             $('#new_wline3').append("<option value='10att' selected>10% ATT</option>");
+            $('#new_wline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#new_wline3').append("<option value='10dmg'>10% Damage</option>");
             $('#new_wline3').append("<option value='none'>N/A</option>");
         }
     });
@@ -617,6 +655,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_sline1').append("<option value='40ied'>40% IED</option>");
             $('#new_sline1').append("<option value='35ied'>35% IED</option>");
             $('#new_sline1').append("<option value='12att'>12% ATT</option>");
+            $('#new_sline1').append("<option value='12dmg'>12% Damage</option>");
             $('#new_sline1').append("<option value='none'>N/A</option>");
 
             $('#new_sline2').empty();
@@ -629,6 +668,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_sline2').append("<option value='30ied'>30% IED</option>");
             $('#new_sline2').append("<option value='12att'>12% ATT</option>");
             $('#new_sline2').append("<option value='9att'>9% ATT</option>");
+            $('#new_sline2').append("<option value='12dmg'>12% Damge</option>");
+            $('#new_sline2').append("<option value='9dmg'>9% Damge</option>");
             $('#new_sline2').append("<option value='none'>N/A</option>");
 
             $('#new_sline3').empty();
@@ -641,6 +682,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_sline3').append("<option value='30ied' selected>30% IED</option>");
             $('#new_sline3').append("<option value='12att'>12% ATT</option>");
             $('#new_sline3').append("<option value='9att'>9% ATT</option>");
+            $('#new_sline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#new_sline3').append("<option value='9dmg'>9% Damage</option>");
             $('#new_sline3').append("<option value='none'>N/A</option>");
 
         }
@@ -652,6 +695,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_sline1').append("<option value='40ied'>40% IED</option>");
             $('#new_sline1').append("<option value='35ied'>35% IED</option>");
             $('#new_sline1').append("<option value='13att'>13% ATT</option>");
+            $('#new_sline1').append("<option value='13dmg'>13% Damage</option>");
             $('#new_sline1').append("<option value='none'>N/A</option>");
 
             $('#new_sline2').empty();
@@ -664,6 +708,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_sline2').append("<option value='30ied' selected>30% IED</option>");
             $('#new_sline2').append("<option value='13att'>13% ATT</option>");
             $('#new_sline2').append("<option value='10att'>10% ATT</option>");
+            $('#new_sline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#new_sline2').append("<option value='10dmg'>10% Damage</option>");
             $('#new_sline2').append("<option value='none'>N/A</option>");
 
             $('#new_sline3').empty();
@@ -676,6 +722,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_sline3').append("<option value='30ied'>30% IED</option>");
             $('#new_sline3').append("<option value='13att' selected>13% ATT</option>");
             $('#new_sline3').append("<option value='10att'>10% ATT</option>");
+            $('#new_sline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#new_sline3').append("<option value='10dmg'>10% Damage</option>");
             $('#new_sline3').append("<option value='none'>N/A</option>");
         }
     });
@@ -686,6 +734,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_eline1').append("<option value='40ied'>40% IED</option>");
             $('#new_eline1').append("<option value='35ied'>35% IED</option>");
             $('#new_eline1').append("<option value='12att' selected>12% ATT</option>");
+            $('#new_eline1').append("<option value='12dmg'>12% Damage</option>");
             $('#new_eline1').append("<option value='none'>N/A</option>");
 
             $('#new_eline2').empty();
@@ -694,6 +743,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_eline2').append("<option value='30ied'>30% IED</option>");
             $('#new_eline2').append("<option value='12att'>12% ATT</option>");
             $('#new_eline2').append("<option value='9att' selected>9% ATT</option>");
+            $('#new_eline2').append("<option value='12dmg'>12% Damage</option>");
+            $('#new_eline2').append("<option value='9dmg'>9% Damage</option>");
             $('#new_eline2').append("<option value='none'>N/A</option>");
 
             $('#new_eline3').empty();
@@ -702,6 +753,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_eline3').append("<option value='30ied'>30% IED</option>");
             $('#new_eline3').append("<option value='12att'>12% ATT</option>");
             $('#new_eline3').append("<option value='9att' selected>9% ATT</option>");
+            $('#new_eline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#new_eline3').append("<option value='9dmg'>9% Damage</option>");
             $('#new_eline3').append("<option value='none'>N/A</option>");
 
         }
@@ -710,6 +763,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_eline1').append("<option value='40ied'>40% IED</option>");
             $('#new_eline1').append("<option value='35ied'>35% IED</option>");
             $('#new_eline1').append("<option value='13att' selected>13% ATT</option>");
+            $('#new_eline1').append("<option value='13dmg'>13% Damage</option>");
             $('#new_eline1').append("<option value='none'>N/A</option>");
 
             $('#new_eline2').empty();
@@ -718,6 +772,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_eline2').append("<option value='30ied'>30% IED</option>");
             $('#new_eline2').append("<option value='13att'>13% ATT</option>");
             $('#new_eline2').append("<option value='10att'>10% ATT</option>");
+            $('#new_eline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#new_eline2').append("<option value='10dmg'>10% Damage</option>");
             $('#new_eline2').append("<option value='none'>N/A</option>");
 
             $('#new_eline3').empty();
@@ -726,6 +782,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#new_eline3').append("<option value='30ied' selected>30% IED</option>");
             $('#new_eline3').append("<option value='13att'>13% ATT</option>");
             $('#new_eline3').append("<option value='10att'>10% ATT</option>");
+            $('#new_eline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#new_eline3').append("<option value='10dmg'>10% Damage</option>");
             $('#new_eline3').append("<option value='none'>N/A</option>");
         }
     });
@@ -738,6 +796,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#wline1').append("<option value='40ied'>40% IED</option>");
             $('#wline1').append("<option value='35ied'>35% IED</option>");
             $('#wline1').append("<option value='12att'>12% ATT</option>");
+            $('#wline1').append("<option value='12dmg'>12% Damage</option>");
             $('#wline1').append("<option value='none'>N/A</option>");
 
             $('#wline2').empty();
@@ -750,6 +809,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#wline2').append("<option value='30ied' selected>30% IED</option>");
             $('#wline2').append("<option value='12att'>12% ATT</option>");
             $('#wline2').append("<option value='9att'>9% ATT</option>");
+            $('#wline2').append("<option value='12dmg'>12% Damage</option>");
+            $('#wline2').append("<option value='9dmg'>9% Damage</option>");
             $('#wline2').append("<option value='none'>N/A</option>");
 
             $('#wline3').empty();
@@ -762,6 +823,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#wline3').append("<option value='30ied'>30% IED</option>");
             $('#wline3').append("<option value='12att'>12% ATT</option>");
             $('#wline3').append("<option value='9att' selected>9% ATT</option>");
+            $('#wline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#wline3').append("<option value='9dmg'>9% Damage</option>");
             $('#wline3').append("<option value='none'>N/A</option>");
 
         }
@@ -773,6 +836,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#wline1').append("<option value='40ied'>40% IED</option>");
             $('#wline1').append("<option value='35ied'>35% IED</option>");
             $('#wline1').append("<option value='13att'>13% ATT</option>");
+            $('#wline1').append("<option value='13dmg'>13% Damage</option>");
             $('#wline1').append("<option value='none'>N/A</option>");
 
             $('#wline2').empty();
@@ -785,6 +849,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#wline2').append("<option value='30ied' selected>30% IED</option>");
             $('#wline2').append("<option value='13att'>13% ATT</option>");
             $('#wline2').append("<option value='10att'>10% ATT</option>");
+            $('#wline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#wline2').append("<option value='10dmg'>10% Damage</option>");
             $('#wline2').append("<option value='none'>N/A</option>");
 
             $('#wline3').empty();
@@ -797,6 +863,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#wline3').append("<option value='30ied'>30% IED</option>");
             $('#wline3').append("<option value='13att'>13% ATT</option>");
             $('#wline3').append("<option value='10att' selected>10% ATT</option>");
+            $('#wline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#wline3').append("<option value='10dmg'>10% Damage</option>");
             $('#wline3').append("<option value='none'>N/A</option>");
         }
     });
@@ -809,6 +877,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#sline1').append("<option value='40ied'>40% IED</option>");
             $('#sline1').append("<option value='35ied'>35% IED</option>");
             $('#sline1').append("<option value='12att'>12% ATT</option>");
+            $('#sline1').append("<option value='12dmg'>12% Damage</option>");
             $('#sline1').append("<option value='none'>N/A</option>");
 
             $('#sline2').empty();
@@ -821,6 +890,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#sline2').append("<option value='30ied'>30% IED</option>");
             $('#sline2').append("<option value='12att'>12% ATT</option>");
             $('#sline2').append("<option value='9att'>9% ATT</option>");
+            $('#sline2').append("<option value='12dmg'>12% Damge</option>");
+            $('#sline2').append("<option value='9dmg'>9% Damge</option>");
             $('#sline2').append("<option value='none'>N/A</option>");
 
             $('#sline3').empty();
@@ -833,6 +904,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#sline3').append("<option value='30ied' selected>30% IED</option>");
             $('#sline3').append("<option value='12att'>12% ATT</option>");
             $('#sline3').append("<option value='9att'>9% ATT</option>");
+            $('#sline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#sline3').append("<option value='9dmg'>9% Damage</option>");
             $('#sline3').append("<option value='none'>N/A</option>");
 
         }
@@ -844,6 +917,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#sline1').append("<option value='40ied'>40% IED</option>");
             $('#sline1').append("<option value='35ied'>35% IED</option>");
             $('#sline1').append("<option value='13att'>13% ATT</option>");
+            $('#sline1').append("<option value='13dmg'>13% Damage</option>");
             $('#sline1').append("<option value='none'>N/A</option>");
 
             $('#sline2').empty();
@@ -856,6 +930,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#sline2').append("<option value='30ied' selected>30% IED</option>");
             $('#sline2').append("<option value='13att'>13% ATT</option>");
             $('#sline2').append("<option value='10att'>10% ATT</option>");
+            $('#sline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#sline2').append("<option value='10dmg'>10% Damage</option>");
             $('#sline2').append("<option value='none'>N/A</option>");
 
             $('#sline3').empty();
@@ -868,6 +944,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#sline3').append("<option value='30ied'>30% IED</option>");
             $('#sline3').append("<option value='13att' selected>13% ATT</option>");
             $('#sline3').append("<option value='10att'>10% ATT</option>");
+            $('#sline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#sline3').append("<option value='10dmg'>10% Damage</option>");
             $('#sline3').append("<option value='none'>N/A</option>");
         }
     });
@@ -878,6 +956,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline1').append("<option value='40ied'>40% IED</option>");
             $('#eline1').append("<option value='35ied'>35% IED</option>");
             $('#eline1').append("<option value='12att' selected>12% ATT</option>");
+            $('#eline1').append("<option value='12dmg'>12% Damage</option>");
             $('#eline1').append("<option value='none'>N/A</option>");
 
             $('#eline2').empty();
@@ -886,6 +965,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline2').append("<option value='30ied'>30% IED</option>");
             $('#eline2').append("<option value='12att'>12% ATT</option>");
             $('#eline2').append("<option value='9att' selected>9% ATT</option>");
+            $('#eline2').append("<option value='12dmg'>12% Damage</option>");
+            $('#eline2').append("<option value='9dmg'>9% Damage</option>");
             $('#eline2').append("<option value='none'>N/A</option>");
 
             $('#eline3').empty();
@@ -894,6 +975,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline3').append("<option value='30ied'>30% IED</option>");
             $('#eline3').append("<option value='12att'>12% ATT</option>");
             $('#eline3').append("<option value='9att' selected>9% ATT</option>");
+            $('#eline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#eline3').append("<option value='9dmg'>9% Damage</option>");
             $('#eline3').append("<option value='none'>N/A</option>");
 
         }
@@ -902,6 +985,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline1').append("<option value='40ied'>40% IED</option>");
             $('#eline1').append("<option value='35ied'>35% IED</option>");
             $('#eline1').append("<option value='13att' selected>13% ATT</option>");
+            $('#eline1').append("<option value='13dmg'>13% Damage</option>");
             $('#eline1').append("<option value='none'>N/A</option>");
 
             $('#eline2').empty();
@@ -910,6 +994,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline2').append("<option value='30ied'>30% IED</option>");
             $('#eline2').append("<option value='13att'>13% ATT</option>");
             $('#eline2').append("<option value='10att'>10% ATT</option>");
+            $('#eline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#eline2').append("<option value='10dmg'>10% Damage</option>");
             $('#eline2').append("<option value='none'>N/A</option>");
 
             $('#eline3').empty();
@@ -918,6 +1004,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline3').append("<option value='30ied' selected>30% IED</option>");
             $('#eline3').append("<option value='13att'>13% ATT</option>");
             $('#eline3').append("<option value='10att'>10% ATT</option>");
+            $('#eline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#eline3').append("<option value='10dmg'>10% Damage</option>");
             $('#eline3').append("<option value='none'>N/A</option>");
         }
     });
@@ -1021,13 +1109,15 @@ function optimizeWSE() {
     var potential_list = [wep_line_1, wep_line_2, wep_line_3, sec_line_1, sec_line_2, sec_line_3, emb_line_1, emb_line_2, emb_line_3];
 
     //Current Stats Without WSE
-    var withoutWSEStats = removePotentialsFromStats(potential_list, current_ied_percent, current_attack_percent, current_boss_percent)
+    var withoutWSEStats = removePotentialsFromStats(potential_list, current_ied_percent, current_attack_percent, current_boss_percent, current_damage_percent)
     
     var stripped_ied_percent = withoutWSEStats.stripped_ied_percent;
     var stripped_attack_percent = withoutWSEStats.stripped_attack_percent;
     var stripped_boss_percent = withoutWSEStats.stripped_boss_percent;
+    var stripped_damage_percent = withoutWSEStats.stripped_damage_percent;
+    console.log('stripped_damage_percent:' + stripped_damage_percent)
 
-    if (stripped_ied_percent < 0 || stripped_attack_percent < 0 || stripped_boss_percent < 0){
+    if (stripped_ied_percent < 0 || stripped_attack_percent < 0 || stripped_boss_percent < 0 || stripped_damage_percent < 0){
         //send an error message
         document.getElementById('resultSection').hidden = false;
         document.getElementById('result').innerHTML = `
@@ -1053,14 +1143,17 @@ function optimizeWSE() {
 
         var new_potential_list = [new_wep_line_1, new_wep_line_2, new_wep_line_3, new_sec_line_1, new_sec_line_2, new_sec_line_3, new_emb_line_1, new_emb_line_2, new_emb_line_3];
 
-        var withNewWSEStats = AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent);
+        var withNewWSEStats = AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent);
         var new_ied_percent = withNewWSEStats.new_ied_percent;
         var new_attack_percent = withNewWSEStats.new_attack_percent;
         var new_boss_percent = withNewWSEStats.new_boss_percent;
+        var new_damage_percent = withNewWSEStats.new_damage_percent;
+
+        console.log('new_damage_percent:' + new_damage_percent)
 
         //New Dmg Output
         var newBossDefMultiplier = getBossDefMultiplier(new_ied_percent)
-        var newHitDamage = getHitDamage(new_boss_percent, new_attack_percent, current_damage_percent)
+        var newHitDamage = getHitDamage(new_boss_percent, new_attack_percent, new_damage_percent)
 
         var newOutput = newBossDefMultiplier * newHitDamage;
 
@@ -1089,7 +1182,7 @@ function optimizeWSE() {
             `;
             window.scrollTo(0,document.body.scrollHeight);
         }
-        
+
     }
     if (document.getElementById('optimize').checked == true){
         document.getElementById('resultSection').hidden = false;
