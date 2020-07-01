@@ -1011,7 +1011,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     document.getElementById("compare").addEventListener("change", function () {
         //compare calculator selected
-        
+
         document.getElementById('compareTable').hidden = false;
         document.getElementById('compareTitle').hidden = false;
     });
@@ -1033,7 +1033,7 @@ function optimizeWSE() {
     var boss_percent = parseInt(document.getElementById('boss_percent').value);
     var ied_percent = parseInt(document.getElementById('ied_percent').value) - 0.5; //due to rounding up in game
     var damage_percent = parseInt(document.getElementById('damage_percent').value);
-    var attack_percent = 0;
+    var attack_percent = 100;
 
     //Link Skill Stats
     if (document.getElementById('solus2').checked == true){
@@ -1078,7 +1078,7 @@ function optimizeWSE() {
     ied_sources = ied_sources.concat(class_ied);
 
     //Current Stats With WSE
-    current_damage_percent = damage_percent + class_dmg;
+    current_damage_percent = damage_percent + class_dmg + 100;
     current_boss_percent = boss_percent + class_boss;
     current_ied_percent = determineIED(ied_percent, ied_sources);
 
@@ -1092,6 +1092,10 @@ function optimizeWSE() {
     var currentHitDamage = getHitDamage(current_boss_percent, current_attack_percent, current_damage_percent)
 
     var currentOutput = currentBossDefMultiplier * currentHitDamage;
+
+    //console.log('ied with Current WSE = ' + current_ied_percent);
+    //console.log('attk % with current WSE = ' + current_attack_percent);
+    //console.log('boss def multiplier with current WSE = ' + currentBossDefMultiplier);
 
     //WSE Potentials
     var wep_line_1 = document.getElementById('wline1').value;
@@ -1153,6 +1157,10 @@ function optimizeWSE() {
         var newHitDamage = getHitDamage(new_boss_percent, new_attack_percent, new_damage_percent)
 
         var newOutput = newBossDefMultiplier * newHitDamage;
+
+        //console.log('ied with New WSE = ' + new_ied_percent);
+        //console.log('attk % with new WSE = ' + new_attack_percent);
+        //console.log('boss def multiplier with new WSE = ' + newBossDefMultiplier);
 
         var dmgRatio = newOutput / currentOutput;
 
