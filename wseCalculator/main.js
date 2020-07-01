@@ -360,7 +360,7 @@ function getClassData(maple_class) {
             },
             
             'Hayato': {
-            'attPercent': 10,
+            'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': -50,
             'bossPercent': 2
