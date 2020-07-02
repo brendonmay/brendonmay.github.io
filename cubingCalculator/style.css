@@ -53,7 +53,7 @@
     padding: 0;
     display: flex;
     justify-content: center;
-    background: linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.4)), url("https://sugarcreek.net/wp-content/uploads/REACH-Header-Blue-Background.jpg") no-repeat;
+    background:linear-gradient(-45deg, rgba(1,34,70,1) 10%, rgba(19,82,115,1) 90%);
     background-size: cover;
 }
 
@@ -106,7 +106,10 @@
     justify-content: space-between;
 }
 
-.navbar-brand:hover, .navbar-text:hover{
+.remove-bottom-margin{
+    margin-bottom: 0!important;
+}
+.nav-item:hover, .navbar-text:hover{
     color:#eb8034!important
 }
 .statBox {

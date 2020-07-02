@@ -6,8 +6,8 @@ body{
     font-family: 'Roboto';
 }
 
-.navbar-brand:hover, .navbar-text:hover{
-    color:black!important
+.nav-item:hover, .navbar-text:hover{
+    color:white!important
 }
 
 .spinner-background {

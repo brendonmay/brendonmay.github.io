@@ -37,6 +37,6 @@
     padding: 2rem 2rem;
 }
 
-.navbar-brand:hover, .navbar-text:hover{
+.nav-item:hover, .navbar-text:hover, .active{
     color:#eb8034!important
 }
