@@ -1475,7 +1475,7 @@ function optimizeWSE() {
             var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
             document.getElementById('resultSection').hidden = false;
             document.getElementById('result').innerHTML = `
-                Hit Damage on Bosses will <strong>increase</strong> by ${output_increase}%.
+                Hit Damage on Bosses will <span style='color:green'><strong>increase</strong></span> by ${output_increase}%.
             `;
             window.scrollTo(0, document.body.scrollHeight);
         }
@@ -1483,7 +1483,7 @@ function optimizeWSE() {
             var output_decrease = ((1 - dmgRatio) * 100).toFixed(2);
             document.getElementById('resultSection').hidden = false;
             document.getElementById('result').innerHTML = `
-                Hit Damage on Bosses will <strong>decrease</strong> by ${output_decrease}%.
+                Hit Damage on Bosses will <span style='color:red'><strong>decrease</strong></span> by ${output_decrease}%.
             `;
             window.scrollTo(0, document.body.scrollHeight);
         }
