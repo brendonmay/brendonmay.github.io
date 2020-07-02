@@ -1378,7 +1378,7 @@ function optimizeWSE() {
     ied_sources = ied_sources.concat(class_ied);
 
     //Current Stats With WSE
-    current_damage_percent = damage_percent + class_dmg + 100;
+    current_damage_percent = damage_percent + class_dmg;
     current_boss_percent = boss_percent + class_boss;
     current_ied_percent = determineIED(ied_percent, ied_sources);
 
