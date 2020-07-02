@@ -6,6 +6,10 @@ body{
     font-family: 'Roboto';
 }
 
+.navbar-brand:hover, .navbar-text:hover{
+    color:black!important
+}
+
 .spinner-background {
   background: grey;
     width: 100%;
