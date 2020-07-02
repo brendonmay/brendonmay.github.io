@@ -69,9 +69,14 @@ C.rarityOutlineColors = ["#55AAFF", "#CC66FF", "#FFCC00", "#00FF00"];
 //https://www.reddit.com/r/Maplestory/comments/6pisgw/details_on_when_its_more_costefficient_to_use/
 C.lineTierRate = [1, 0.1, 0.05]; //P(>1PrimeRED) = 14%
 C.lineTierRateBlack = [1, 0.2, 0.1]; //P(>1PrimeBLACK) = 26%
+
 C.noTierRate = [0, 0, 0, 0];
+
 C.redCubeTierRate = [0.1, 0.05, 0.025, 0];
 C.blackCubeTierRate = [0.2, 0.1, 0.05, 0];
+
+C.redCubeTierRateDMT = [0.2, 0.1, 0.05, 0];
+C.blackCubeTierRateDMT = [0.4, 0.2, 0.1, 0];
 
 C.category = {};
 C.category.hat = 0;
@@ -569,11 +574,23 @@ function performExperiment(cubeType, itemLevel, itemCategory, desiredResult, sta
   var diffMultReduct = 0.725;
 
   if (cubeType == 'red') {
-    tierRate = C.redCubeTierRate;
     primeRate = C.lineTierRate;
+    if(document.getElementById('DMT').checked == true){
+      //DMT Tier rate
+      tierRate = C.redCubeTierRateDMT;
+    }
+    else{
+      tierRate = C.redCubeTierRate;
+    }
   } else {
-    tierRate = C.blackCubeTierRate;
     primeRate = C.lineTierRateBlack;
+    if(document.getElementById('DMT').checked == true){
+      //DMT Tier Rate
+      tierRate = C.blackCubeTierRateDMT;
+    }
+    else{
+      tierRate = C.blackCubeTierRate;
+    }
   }
   var notSuccessful = true;
   while (notSuccessful) {
