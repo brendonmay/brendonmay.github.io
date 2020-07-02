@@ -109,7 +109,7 @@
 .remove-bottom-margin{
     margin-bottom: 0!important;
 }
-.nav-item:hover, .navbar-text:hover{
+.nav-item:hover, .navbar-text:hover, .active{
     color:#eb8034!important
 }
 .statBox {
