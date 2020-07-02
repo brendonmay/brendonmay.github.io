@@ -1464,7 +1464,7 @@ function optimizeWSE() {
 
         var dmgRatio = newOutput / currentOutput;
 
-        if (dmgRatio == 1) {
+        if (dmgRatio == 1 || parseInt(((dmgRatio - 1) * 100).toFixed(2)) == '0.00') {
             document.getElementById('resultSection').hidden = false;
             document.getElementById('result').innerHTML = `
                 Hit Damage on Bosses will <strong>not change</strong>.
