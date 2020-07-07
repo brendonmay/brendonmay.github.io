@@ -389,7 +389,7 @@ function getClassData(maple_class) {
 
         'Illium': {
             'attPercent': 14,
-            'iedPercent': [12, 20],
+            'iedPercent': [4, 4, 4, 20],
             'dmgPercent': 20,
             'bossPercent': 20
         },
