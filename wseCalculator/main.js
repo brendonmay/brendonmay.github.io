@@ -229,7 +229,7 @@ function getClassData(maple_class) {
         'Aran': {
             'attPercent': 4,
             'iedPercent': [49.5], //weighed avg
-            'dmgPercent': [52], //weighed avg
+            'dmgPercent': 52, //weighed avg
             'bossPercent': 0,
         },
 
