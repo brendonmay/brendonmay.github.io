@@ -210,6 +210,213 @@ function getWSEATTPercent() {
     return WSEATTPercent
 }
 
+function generatePossibleLineCombinations(item_type, item_level) {
+    var first_lines_160 = ["40boss", "13att", "40ied"];
+    var other_lines_160 = ["30boss", "10att", "30ied"];
+    var first_lines_160_emblem = ["13att", "40ied"];
+    var other_lines_160_emblem = ["10att", "30ied"];
+
+    var first_lines_150 = ["40boss", "12att", "40ied"];
+    var other_lines_150 = ["30boss", "9att", "30ied"];
+    var first_lines_150_emblem = ["12att", "40ied"];
+    var other_lines_150_emblem = ["9att", "30ied"];
+
+    var combinations = [];
+
+    if (item_level >= 160) {
+        if (item_type == "emblem") {
+            var first_lines = first_lines_160_emblem;
+            var other_lines = other_lines_160_emblem;
+        }
+        else {
+            var first_lines = first_lines_160;
+            var other_lines = other_lines_160;
+        }
+    }
+    else {
+        if (item_type == "emblem") {
+            var first_lines = first_lines_150_emblem;
+            var other_lines = other_lines_150_emblem;
+        }
+        else {
+            var first_lines = first_lines_150;
+            var other_lines = other_lines_150;
+        }
+    }
+    var i = 0;
+    while (i < first_lines.length) {
+        var specific_combination = [];
+        var line_1 = first_lines[i];
+        var j = 0;
+        while (j < other_lines.length) {
+            var line_2 = other_lines[j];
+            var k = 0;
+            while (k < other_lines.length) {
+                var line_3 = other_lines[k];
+                specific_combination = [line_1, line_2, line_3];
+                combinations.push(specific_combination);
+                k++;
+            }
+            j++;
+        }
+        i++;
+    }
+    return combinations
+}
+
+function determineAllWSECombinations(weapon_combinations, emblem_combinations, secondary_combinations) {
+    var combinations = [];
+
+    var i = 0;
+    while (i < weapon_combinations.length) {
+        var specific_combination = [];
+        var weapon_lines = weapon_combinations[i];
+        var j = 0;
+        while (j < secondary_combinations.length) {
+            var secondary_lines = secondary_combinations[j];
+            var k = 0;
+            while (k < emblem_combinations.length) {
+                var emblem_lines = emblem_combinations[k];
+                specific_combination = [weapon_lines, secondary_lines, emblem_lines];
+                combinations.push(specific_combination);
+                k++;
+            }
+            j++;
+        }
+        i++;
+    }
+
+    return combinations
+}
+
+function determineOptimizedWSE(weapon_level, secondary_level, emblem_level, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent) {
+    var weapon_combinations = generatePossibleLineCombinations("weapon", weapon_level);
+    var emblem_combinations = generatePossibleLineCombinations("emblem", emblem_level);
+    if (weapon_level == secondary_level) {
+        secondary_combinations = weapon_combinations;
+    }
+    else {
+        var secondary_combinations = generatePossibleLineCombinations("secondary", secondary_level);
+    }
+
+    wse_combinations = determineAllWSECombinations(weapon_combinations, emblem_combinations, secondary_combinations);
+    //0 = wep, 1 = sec, 2 = emb
+    var best_combination = [];
+    var highest_output = 0;
+    var number_of_att_lines = 10;
+    var total_options = 0;
+
+    var i = 0;
+    while (i < wse_combinations.length) {
+        var specific_wse_combination = wse_combinations[i];
+
+        //New WSE Potentials
+        var new_wep_line_1 = specific_wse_combination[0][0];
+        var new_wep_line_2 = specific_wse_combination[0][1];
+        var new_wep_line_3 = specific_wse_combination[0][2];
+
+        var new_sec_line_1 = specific_wse_combination[1][0];
+        var new_sec_line_2 = specific_wse_combination[1][1];
+        var new_sec_line_3 = specific_wse_combination[1][2];
+
+        var new_emb_line_1 = specific_wse_combination[2][0];
+        var new_emb_line_2 = specific_wse_combination[2][1];
+        var new_emb_line_3 = specific_wse_combination[2][2];
+
+        var new_potential_list = [new_wep_line_1, new_wep_line_2, new_wep_line_3, new_sec_line_1, new_sec_line_2, new_sec_line_3, new_emb_line_1, new_emb_line_2, new_emb_line_3];
+
+        var withNewWSEStats = AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent);
+        var new_ied_percent = withNewWSEStats.new_ied_percent;
+        var new_attack_percent = withNewWSEStats.new_attack_percent;
+        var new_boss_percent = withNewWSEStats.new_boss_percent;
+        var new_damage_percent = withNewWSEStats.new_damage_percent;
+
+        //New Dmg Output
+        var newBossDefMultiplier = getBossDefMultiplier(new_ied_percent)
+        var newHitDamage = getHitDamage(new_boss_percent, new_attack_percent, new_damage_percent)
+
+        var newOutput = newBossDefMultiplier * newHitDamage;
+
+        if (newOutput == highest_output) {
+            //suggest the one with less attack lines
+            var newOutput_att_lines = determineNumberofLines(wse_combinations[i], 'att');
+            if (newOutput_att_lines < number_of_att_lines && newOutput_att_lines > 3) {
+                //exclude any that is 3 line boss or 3 line IED
+                if (!(anyTripleLineStat(wse_combinations[i], 'boss') || anyTripleLineStat(wse_combinations[i], 'ied') || determineNumberofLines(wse_combinations[i], 'ied') > 3)) {
+                    highest_output = newOutput;
+                    best_combination = wse_combinations[i];
+                    number_of_att_lines = newOutput_att_lines;
+                    total_options++;
+                    //console.log(best_combination)
+                }
+
+            }
+        }
+
+        if (newOutput > highest_output) {
+            var newOutput_att_lines = determineNumberofLines(wse_combinations[i], 'att');
+            //exclude any that is 3 line boss or 3 line IED
+            if (!(anyTripleLineStat(wse_combinations[i], 'boss') || anyTripleLineStat(wse_combinations[i], 'ied') || determineNumberofLines(wse_combinations[i], 'ied') > 3)) {
+                highest_output = newOutput;
+                best_combination = wse_combinations[i];
+                number_of_att_lines = newOutput_att_lines;
+                total_options = 1;
+                //console.log("total options reset")
+            }
+        }
+
+        i++;
+    }
+    console.log(best_combination);
+    console.log(total_options);
+    console.log(anyTripleLineStat(best_combination, 'boss'))
+    return { 'optimal_lines': best_combination, 'highest_output': highest_output }
+
+}
+
+function anyTripleLineStat(combination, stat) {
+    var i = 0;
+    while (i < combination.length) {
+        var current_item = combination[i];
+        var number_of_lines = 0
+        var j = 0;
+        while (j < current_item.length) {
+            var current_line = current_item[j];
+            //check if current_line contains stat
+            if (current_line.includes(stat)) {
+                number_of_lines++
+            }
+            j++;
+        }
+
+        if (number_of_lines == 3) {
+            return true
+        }
+
+        i++
+    }
+    return false
+}
+
+function determineNumberofLines(combination, stat) {
+    var number_of_lines = 0
+    var i = 0;
+    while (i < combination.length) {
+        var current_item = combination[i];
+        var j = 0;
+        while (j < current_item.length) {
+            var current_line = current_item[j];
+            //check if current_line contains stat
+            if (current_line.includes(stat)) {
+                number_of_lines++
+            }
+            j++;
+        }
+        i++
+    }
+    return number_of_lines
+
+}
 function getClassData(maple_class) {
     var class_data = {
         'Adele': {
@@ -1085,18 +1292,73 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("compare").addEventListener("change", function () {
         //compare calculator selected
 
-        document.getElementById('compareTable').hidden = false;
+        document.getElementById('new_wlevel').disabled = false;
+        document.getElementById('new_wline1').disabled = false;
+        document.getElementById('new_wline2').disabled = false;
+        document.getElementById('new_wline3').disabled = false;
+
+        document.getElementById('new_slevel').disabled = false;
+        document.getElementById('new_sline1').disabled = false;
+        document.getElementById('new_sline2').disabled = false;
+        document.getElementById('new_sline3').disabled = false;
+
+        document.getElementById('new_elevel').disabled = false;
+        document.getElementById('new_eline1').disabled = false;
+        document.getElementById('new_eline2').disabled = false;
+        document.getElementById('new_eline3').disabled = false;
+
+        document.getElementById('optimizeTitle').hidden = true;
         document.getElementById('compareTitle').hidden = false;
     });
     document.getElementById("optimize").addEventListener("change", function () {
         //optimize calculator selected
 
-        document.getElementById('compareTable').hidden = true;
+        //Weapon
+        document.getElementById('new_wlevel').disabled = true;
+        document.getElementById('new_wlevel').value = document.getElementById('wlevel').value;
+
+        document.getElementById('new_wline1').disabled = true;
+        document.getElementById('new_wline1').value = 'none';
+
+        document.getElementById('new_wline2').disabled = true;
+        document.getElementById('new_wline2').value = 'none';
+
+        document.getElementById('new_wline3').disabled = true;
+        document.getElementById('new_wline3').value = 'none';
+
+        //Secondary
+        document.getElementById('new_slevel').disabled = true;
+        document.getElementById('new_slevel').value = document.getElementById('slevel').value;
+
+        document.getElementById('new_sline1').disabled = true;
+        document.getElementById('new_sline1').value = 'none';
+
+        document.getElementById('new_sline2').disabled = true;
+        document.getElementById('new_sline2').value = 'none';
+
+        document.getElementById('new_sline3').disabled = true;
+        document.getElementById('new_sline3').value = 'none';
+
+        //Emblem
+        document.getElementById('new_elevel').disabled = true;
+        document.getElementById('new_elevel').value = document.getElementById('elevel').value;
+
+        document.getElementById('new_eline1').disabled = true;
+        document.getElementById('new_eline1').value = 'none';
+
+        document.getElementById('new_eline2').disabled = true;
+        document.getElementById('new_eline2').value = 'none';
+
+        document.getElementById('new_eline3').disabled = true;
+        document.getElementById('new_eline3').value = 'none';
+
+        document.getElementById('optimizeTitle').hidden = false;
         document.getElementById('compareTitle').hidden = true;
+
     });
     document.getElementById("class").addEventListener("change", function () {
         var current_class = document.getElementById('class').value;
-        if (current_class == 'Kanna'){
+        if (current_class == 'Kanna') {
             if (document.getElementById('slevel').value == 'lesser160') {
                 $('#sline1').empty();
                 $('#sline1').append("<option value='12att'>12% ATT</option>");
@@ -1160,7 +1422,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 $('#new_sline3').append("<option value='none'>N/A</option>");
             }
         }
-        else{
+        else {
             if (document.getElementById('slevel').value == 'lesser160') {
                 $('#sline1').empty();
                 $('#sline1').append("<option value='40boss'>40% Boss</option>");
@@ -1490,11 +1752,58 @@ function optimizeWSE() {
 
     }
     if (document.getElementById('optimize').checked == true) {
-        document.getElementById('resultSection').hidden = false;
-        document.getElementById('result').innerHTML = `
-                The Optimize WSE Calculator has not been coded yet. Please use the Compare WSE Calculator.
+        var weapon_level = 160;
+        var secondary_level = 160;
+        var emblem_level = 160;
+
+        //get item levels
+        if (document.getElementById('wlevel').value == 'lesser160') {
+            var weapon_level = 150;
+        }
+        if (document.getElementById('slevel').value == 'lesser160') {
+            var secondary_level = 150;
+        }
+        if (document.getElementById('elevel').value == 'lesser160') {
+            var emblem_level = 150;
+        }
+
+
+        var results = determineOptimizedWSE(weapon_level, secondary_level, emblem_level, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent);
+        var optimal_lines = results.optimal_lines;
+        var optimal_output = results.highest_output;
+
+        //update UI with optimized Lines
+        document.getElementById('new_wline1').value = optimal_lines[0][0];
+        document.getElementById('new_wline2').value = optimal_lines[0][1];
+        document.getElementById('new_wline3').value = optimal_lines[0][2];
+
+        document.getElementById('new_sline1').value = optimal_lines[1][0];
+        document.getElementById('new_sline2').value = optimal_lines[1][1];
+        document.getElementById('new_sline3').value = optimal_lines[1][2];
+
+        document.getElementById('new_eline1').value = optimal_lines[2][0];
+        document.getElementById('new_eline2').value = optimal_lines[2][1];
+        document.getElementById('new_eline3').value = optimal_lines[2][2];
+
+
+        //determine damage increase
+        var dmgRatio = optimal_output / currentOutput;
+
+        if (dmgRatio == 1 || parseInt(((dmgRatio - 1) * 100).toFixed(2)) == '0.00') {
+            document.getElementById('resultSection').hidden = false;
+            document.getElementById('result').innerHTML = `
+                Hit Damage on Bosses will <strong>not change</strong>.
             `;
-        window.scrollTo(0, document.body.scrollHeight);
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+        else if (dmgRatio > 1) {
+            var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
+            document.getElementById('resultSection').hidden = false;
+            document.getElementById('result').innerHTML = `
+                Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
+            `;
+            window.scrollTo(0, document.body.scrollHeight);
+        }
         return false
     }
 }

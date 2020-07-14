@@ -8,8 +8,11 @@ a:hover {
 }
 
 * {
-    color: #fff;
     transition: 0.3s;
+}
+
+.form-group, .table, .form-row, .display-4 {
+    color: #fff;
 }
 
 .navbar {
@@ -17,7 +20,7 @@ a:hover {
 }
 
 .form-container {
-    background: #16191c;
+    background: #2a2e33;
     border-radius: 8px;
     border: 5px solid #21262a;
     padding: 15px 35px;
@@ -212,7 +215,7 @@ table {
 
 .popover-header {
     border-radius: 10px 10px 0 0;
-    background: #12171b;
+    background: #0c0f11;
     color: #9bff8a;
     border-bottom: 0;
 }
@@ -249,16 +252,6 @@ table {
 .checkbox > input:checked {
     border: 1px solid #9bff8a;
     background-color: #9bff8a;
-}
-
-.checkbox > input:checked + span::before {
-    content: '\2713';
-    display: block;
-    text-align: center;
-    color: #333;
-    position: absolute;
-    left: -1.2rem;
-    top: 0.4rem;
 }
 
 .form-check {
@@ -320,7 +313,7 @@ hr {
 }
 
 .btnSubmit {
-    background: linear-gradient(-45deg, rgba(33,222,155,1) 0%, rgba(184,218,97,1) 100%);
+    background: linear-gradient(-45deg, rgb(26, 175, 123) 0%, rgb(152, 180, 80) 100%);
     font-size: 18px;
     transition: 0.6s;
     padding: 10px 15px;
@@ -346,4 +339,8 @@ hr {
 
 .contData:hover {
     color: #71e19d;
+}
+
+.form-control:disabled {
+    background-color: rgb(70, 73, 70)
 }

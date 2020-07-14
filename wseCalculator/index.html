@@ -120,19 +120,19 @@
             <div class="col-sm-12 col-md-6 form-group">
                 <label for="boss_percent"> Boss % </label>
                 <input class="form-control" type="number" id="boss_percent" name="boss_percent" min="0" max="500"
-                       value=257>
+                       value=282>
             </div>
             <div class="col-sm-12 col-md-6 form-group">
                 <label for="ied_percent"> IED % </label>
                 <input class="form-control" type="number" id="ied_percent" name="ied_percent" min="0" max="100"
-                       value=93>
+                       value=95>
 
 
             </div>
             <div class="col-sm-12 col-md-6 form-group">
                 <label for="ied_percent"> Damage % </label>
                 <input class="form-control" type="number" id="damage_percent" name="damage_percent" min="0"
-                       max="500" value=180>
+                       max="500" value=170>
             </div>
         </div>
         <hr>
@@ -224,12 +224,13 @@
             </div>
         </div>
         <div class='form-row'>
-            <div class='col text-center' hidden>
+            <div class='col text-center'>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios1" id="optimize"
-                           value="option1">
-                    <label class="form-check-label" for="optimize">
-                        Optimize WSE
+                    <label class="form-check-label checkbox2" for="optimize">
+                        <input class="form-check-input" type="radio" name="exampleRadios1" id="optimize"
+                            value="option1">
+                    
+                            <span>Optimize WSE</span>
                     </label>
                 </div>
             </div>
@@ -430,13 +431,25 @@
             </div>
 
             <div class="col-sm-12 col-md-6 noPadding">
-            <div class='form-row bottom-margin top-margin'>
+            <div id='calcBtn' class='form-row bottom-margin top-margin'>
                 <div class='col text-center' id='compareTitle'>
                     <a tabindex="0" class="btn btnStep btn-outline-secondary btn-sm" role="button" data-toggle="popover"
-                       data-trigger="focus" title="Entering Your Current WSE"
+                       data-trigger="focus" title="Entering Your Desired WSE"
                        data-content="Select the potentials from the dropdown menu that you would like to compare against.">
                         <div class="btnDiv">
-                            <h6>Step 4. Enter Your Desired WSE</h6>
+                            <h6>Step 5. Enter Your Desired WSE</h6>
+                        </div>
+                        <div class="btnDiv small">
+                            Click for details
+                        </div>
+                    </a>
+                </div>
+                <div class='col text-center' id='optimizeTitle' hidden>
+                    <a tabindex="0" class="btn btnStep btn-outline-secondary btn-sm" role="button" data-toggle="popover"
+                       data-trigger="focus" title="Your Optimized WSE"
+                       data-content="After you click 'calculate', the table below will populate with the potentials that will optimize your damage given your current stats.">
+                        <div class="btnDiv">
+                            <h6>Optimized WSE Lines</h6>
                         </div>
                         <div class="btnDiv small">
                             Click for details
@@ -464,7 +477,7 @@
                         <td>
                             <select id='new_slevel' class="form-control defaultpicker smaller">
                                 <option value='lesser160' selected>Lvl &lt 160</option>
-                                <option value='greater160'>160+</option>
+                                <option value='greater160'>Lvl 160+</option>
                             </select>
                         </td>
                         <td>
