@@ -172,7 +172,7 @@ textarea:focus, input:focus{
 
 .form-control:focus {
     background: rgba(0, 0, 0, .6);
-    color: #e7dddd;
+    color: #fff9f9;
 }
 
 tr {
