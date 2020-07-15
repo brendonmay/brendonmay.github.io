@@ -1036,7 +1036,7 @@ function update_new_elevel() {
 document.addEventListener("DOMContentLoaded", function () {
     //initialize 
     $(function () {
-        $('[data-toggle="popover"]').popover()
+        $('[data-toggle="popover"]').popover({html: true})
     });
 
     $('.popover-dismiss').popover({
@@ -1716,11 +1716,16 @@ document.addEventListener("DOMContentLoaded", function () {
 function optimizeWSE() {
     //ied source
     var ied_sources = [];
+    var pro_mode = false;
 
     // Stats from Stat Window
     var maple_class = document.getElementById('class').value;
     var boss_percent = parseInt(document.getElementById('boss_percent').value);
-    var ied_percent = parseInt(document.getElementById('ied_percent').value) - 0.5; //due to rounding up in game
+    var ied_percent = document.getElementById('ied_percent').value - 0.5; //due to rounding up in game
+    if (document.getElementById('ied_percent').value.includes('.')){
+        pro_mode = true;
+        ied_percent = document.getElementById('ied_percent').value;
+    }
     var damage_percent = parseInt(document.getElementById('damage_percent').value);
     var attack_percent = 100;
 
@@ -1764,7 +1769,9 @@ function optimizeWSE() {
     var class_boss = class_data.bossPercent;
 
     //update ied_sources
-    ied_sources = ied_sources.concat(class_ied);
+    if (pro_mode == false){
+        ied_sources = ied_sources.concat(class_ied);
+    }
 
     //Current Stats With WSE
     current_damage_percent = damage_percent + class_dmg;
@@ -1887,15 +1894,15 @@ function optimizeWSE() {
 
         //get item levels
         if (document.getElementById('wlevel').value == 'lesser160') {
-            console.log('weapon is less than 160');
+            //console.log('weapon is less than 160');
             var weapon_level = 150;
         }
         if (document.getElementById('slevel').value == 'lesser160') {
-            console.log('secondary is less than 160');
+            //console.log('secondary is less than 160');
             var secondary_level = 150;
         }
         if (document.getElementById('elevel').value == 'lesser160') {
-            console.log('emblem is less than 160');
+            //console.log('emblem is less than 160');
             var emblem_level = 150;
         }
 
