@@ -210,6 +210,57 @@ function getWSEATTPercent() {
     return WSEATTPercent
 }
 
+function haveSamePotentialLines(item1, item2) {
+    if (item1[0] == item2[0] || item1[0] == item2[1] || item1[0] == item2[2]) {
+        if (item1[1] == item2[0] || item1[1] == item2[1] || item1[1] == item2[2]) {
+            if (item1[2] == item2[0] || item1[2] == item2[1] || item1[2] == item2[2]) {
+                return true
+            }
+        }
+
+    }
+    return false
+}
+
+function doesPlayerPossess(item_type, lines) {
+    if (item_type == 'weapon') {
+        var index = 0;
+        var player_line1 = document.getElementById('wline1').value;
+        var player_line2 = document.getElementById('wline2').value;
+        var player_line3 = document.getElementById('wline3').value;
+    }
+    if (item_type == 'secondary') {
+        var index = 1;
+        var player_line1 = document.getElementById('sline1').value;
+        var player_line2 = document.getElementById('sline2').value;
+        var player_line3 = document.getElementById('sline3').value;
+    }
+    if (item_type == 'emblem') {
+        var index = 2;
+        var player_line1 = document.getElementById('eline1').value;
+        var player_line2 = document.getElementById('eline2').value;
+        var player_line3 = document.getElementById('eline3').value;
+    }
+
+    var player_combination = [player_line1, player_line2, player_line3]
+
+    return haveSamePotentialLines(player_combination, lines[index])
+}
+
+function numberOfItemsPlayerPossesses(lines) {
+    var total = 0
+    if (doesPlayerPossess('weapon', lines)) {
+        total++
+    }
+    if (doesPlayerPossess('secondary', lines)) {
+        total++
+    }
+    if (doesPlayerPossess('emblem', lines)) {
+        total++
+    }
+    return total
+}
+
 function generatePossibleLineCombinations(item_type, item_level, maple_class) {
     var first_lines_160 = ["40boss", "13att", "40ied"];
     var other_lines_160 = ["30boss", "10att", "30ied"];
@@ -345,6 +396,8 @@ function determineOptimizedWSE(weapon_level, secondary_level, emblem_level, stri
     var triple_att_secondary = false;
     var triple_att_emblem = true;
     var number_of_3L_att = 3;
+    var numberOfItemsPlayerHas = 0;
+    //var itemPossessionInCurrentSetup = false;
 
     var i = 0;
     while (i < wse_combinations.length) {
@@ -378,38 +431,42 @@ function determineOptimizedWSE(weapon_level, secondary_level, emblem_level, stri
         var newOutput = newBossDefMultiplier * newHitDamage;
 
         if (newOutput == highest_output) {
-            //suggest the one with less attack lines
-            //console.log('current best: ' + best_combination);
-            //console.log('contender: ' + wse_combinations[i]);
-            var newOutput_att_lines = determineNumberofLines(wse_combinations[i], 'att');
-            if (newOutput_att_lines <= number_of_att_lines && newOutput_att_lines > 3) {
-                //exclude any that is 3 line boss or 3 line IED
-                if (!(anyTripleLineStat(wse_combinations[i], 'boss') || anyTripleLineStat(wse_combinations[i], 'ied') || determineNumberofLines(wse_combinations[i], 'ied') > 3)) {
-                    var new_number_of_3L_att_items = numberOfTripleLineAtt(wse_combinations[i]);
-                    //prioritize less triple attk items
-                    if (new_number_of_3L_att_items <= number_of_3L_att) {
-                        var attResults = anyTripleLineAtt(wse_combinations[i]);
-                        //prefer to have attk lines on emblem
-                        if ((attResults.weapon || attResults.secondary) && !attResults.emblem) {
-                            //skip
-                        }
-                        else {
-                            //console.log('we made so ');
-                            //console.log('contender: ' + wse_combinations[i]);
-                            highest_output = newOutput;
-                            best_combination = wse_combinations[i];
-                            number_of_att_lines = newOutput_att_lines;
-                            total_options++;
-                            tied_combinations.push(best_combination);
+            //prefer to keep the setup whereby you already have an item in possession
+            var NewNumberOfItemsPlayerHas = numberOfItemsPlayerPossesses(wse_combinations[i]);
+            if (NewNumberOfItemsPlayerHas >= numberOfItemsPlayerHas) {
+                //suggest the one with less attack lines
+                var newOutput_att_lines = determineNumberofLines(wse_combinations[i], 'att');
+                if (newOutput_att_lines <= number_of_att_lines && newOutput_att_lines > 3) {
+                    //exclude any that is 3 line boss or 3 line IED
+                    if (!(anyTripleLineStat(wse_combinations[i], 'boss') || anyTripleLineStat(wse_combinations[i], 'ied') || determineNumberofLines(wse_combinations[i], 'ied') > 3)) {
+                        var new_number_of_3L_att_items = numberOfTripleLineAtt(wse_combinations[i]);
+                        //prioritize less triple attk items
+                        if (new_number_of_3L_att_items <= number_of_3L_att) {
+                            var attResults = anyTripleLineAtt(wse_combinations[i]);
+                            //prefer to have attk lines on emblem
+                            if ((attResults.weapon || attResults.secondary) && !attResults.emblem) {
+                                //skip
+                            }
+                            else {
+                                //console.log('we made so ');
+                                //console.log('contender: ' + wse_combinations[i]);
+                                highest_output = newOutput;
+                                best_combination = wse_combinations[i];
+                                number_of_att_lines = newOutput_att_lines;
+                                total_options++;
+                                tied_combinations.push(best_combination);
 
-                            triple_att_weapon = attResults.weapon;
-                            triple_att_secondary = attResults.secondary;
-                            triple_att_emblem = attResults.emblem;
-                            number_of_3L_att = new_number_of_3L_att_items
+                                triple_att_weapon = attResults.weapon;
+                                triple_att_secondary = attResults.secondary;
+                                triple_att_emblem = attResults.emblem;
+                                number_of_3L_att = new_number_of_3L_att_items;
+
+                                numberOfItemsPlayerHas = NewNumberOfItemsPlayerHas;
+                            }
                         }
                     }
-                }
 
+                }
             }
         }
 
@@ -429,17 +486,21 @@ function determineOptimizedWSE(weapon_level, secondary_level, emblem_level, stri
                 tied_combinations = [];
                 tied_combinations.push(best_combination);
                 number_of_3L_att = numberOfTripleLineAtt(wse_combinations[i]);
-                console.log(best_combination);
+                //console.log(best_combination);
                 //console.log('the above was added as it was the best')
                 //console.log('total_options reset')
+
+                //check how many items player possesses
+                numberOfItemsPlayerHas = numberOfItemsPlayerPossesses(best_combination);
+                //console.log(numberOfItemsPlayerHas)
             }
         }
 
         i++;
     }
     //console.log(best_combination);
-    console.log(total_options);
-    console.log(tied_combinations);
+    //console.log(total_options);
+    //console.log(tied_combinations);
     //console.log(anyTripleLineStat(best_combination, 'boss'))
     return { 'optimal_lines': best_combination, 'highest_output': highest_output }
 
