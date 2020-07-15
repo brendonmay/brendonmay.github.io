@@ -227,6 +227,25 @@ function generatePossibleLineCombinations(item_type, item_level, maple_class) {
 
     var combinations = [];
 
+    if (item_type == 'weapon'){
+        var current_line1 = document.getElementById('wline1').value;
+        var current_line2 = document.getElementById('wline2').value;
+        var current_line3 = document.getElementById('wline3').value;
+    }
+    if (item_type == 'secondary'){
+        var current_line1 = document.getElementById('sline1').value;
+        var current_line2 = document.getElementById('sline2').value;
+        var current_line3 = document.getElementById('sline3').value;
+    }
+    if (item_type == 'emblem'){
+        var current_line1 = document.getElementById('eline1').value;
+        var current_line2 = document.getElementById('eline2').value;
+        var current_line3 = document.getElementById('eline3').value;
+    }
+
+    var current_combination = [current_line1, current_line2, current_line3]
+    combinations.push(current_combination);
+
     if (item_level >= 160) {
         if (item_type == "emblem") {
             var first_lines = first_lines_160_emblem;
