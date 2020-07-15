@@ -1852,8 +1852,10 @@ function optimizeWSE() {
         //console.log('boss def multiplier with new WSE = ' + newBossDefMultiplier);
 
         var dmgRatio = newOutput / currentOutput;
+        //console.log(dmgRatio)
+        var dmgIncrease = ((dmgRatio - 1) * 100).toFixed(2);
 
-        if (dmgRatio == 1 || parseInt(((dmgRatio - 1) * 100).toFixed(2)) == '0.00') {
+        if (dmgRatio == 1 || dmgIncrease == '0.00') {
             document.getElementById('resultSection').hidden = false;
             document.getElementById('result').innerHTML = `
                 Hit Damage on Bosses will <strong>not change</strong>.
@@ -1902,7 +1904,7 @@ function optimizeWSE() {
         var optimal_lines = results.optimal_lines;
         var optimal_output = results.highest_output;
 
-        console.log(optimal_lines)
+        //console.log(optimal_lines)
 
         //update UI with optimized Lines
         document.getElementById('new_wline1').value = optimal_lines[0][0];
@@ -1917,11 +1919,11 @@ function optimizeWSE() {
         document.getElementById('new_eline2').value = optimal_lines[2][1];
         document.getElementById('new_eline3').value = optimal_lines[2][2];
 
-
         //determine damage increase
         var dmgRatio = optimal_output / currentOutput;
+        var dmgIncrease = ((dmgRatio - 1) * 100).toFixed(2);
 
-        if (dmgRatio == 1 || parseInt(((dmgRatio - 1) * 100).toFixed(2)) == '0.00') {
+        if (dmgRatio == 1 || dmgIncrease == '0.00') {
             document.getElementById('resultSection').hidden = false;
             document.getElementById('result').innerHTML = `
                 You already obtain a fully optimized WSE!
@@ -1944,6 +1946,19 @@ function optimizeWSE() {
             document.getElementById('result').innerHTML = `
                 You already obtain a fully optimized WSE!
             `;
+
+            document.getElementById('new_wline1').value = document.getElementById('wline1').value
+            document.getElementById('new_wline2').value = document.getElementById('wline2').value
+            document.getElementById('new_wline3').value = document.getElementById('wline3').value
+
+            document.getElementById('new_sline1').value = document.getElementById('sline1').value
+            document.getElementById('new_sline2').value = document.getElementById('sline2').value
+            document.getElementById('new_sline3').value = document.getElementById('sline3').value
+
+            document.getElementById('new_eline1').value = document.getElementById('eline1').value
+            document.getElementById('new_eline2').value = document.getElementById('eline2').value
+            document.getElementById('new_eline3').value = document.getElementById('eline3').value
+
             window.scrollTo(0, document.body.scrollHeight);
         }
 
