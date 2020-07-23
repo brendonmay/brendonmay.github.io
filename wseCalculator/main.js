@@ -1935,6 +1935,10 @@ function optimizeWSE() {
         attack_percent = attack_percent + 3;
     }
 
+    if(document.getElementById('lionBadge').checked == true){
+        attack_percent = attack_percent + 1;
+    }
+
     // class_data
     var class_data = getClassData(maple_class)
 
