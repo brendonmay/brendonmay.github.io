@@ -802,8 +802,8 @@ function getClassData(maple_class) {
         'Kaiser': {
             'attPercent': 34,
             'iedPercent': [40, 20],
-            'dmgPercent': 0,
-            'bossPercent': 18
+            'dmgPercent': 10, //+ 10 weighed avg final form
+            'bossPercent': 26 //+8 weighed avg from final form
         },
 
         'Kanna': {
