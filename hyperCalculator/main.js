@@ -2565,7 +2565,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log('optimization failed, its weaker, here is the decrease: ' + output_decrease)
                 // document.getElementById('resultSection').hidden = false;
                 document.getElementById('result').innerHTML = `
-                    Optimization Failed! You will lose ${output_decrease}% 
+                    Optimization Failed! You will lose ${output_decrease}%. Please contact developer. 
                 `;
 
                 window.scrollTo(0, document.body.scrollHeight);
