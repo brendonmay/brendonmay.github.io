@@ -3571,21 +3571,33 @@ function optimizeWSE() {
     var stripped_ied_percent = (current_ied_percent - hyper_ied) / ((-1 * hyper_ied / 100) + 1);
     var stripped_attack = attack - hyper_att;
     if(maple_class == 'Kanna'){
-        var hp_hyper = document.getElementById('hp').value * 2;
+        var hp_hyper = parseInt(document.getElementById('hp').value);
         var hp_percent = (document.getElementById('hp_perc').value)/100;
-        var new_hp_percent = (hp_percent - hp_hyper)/100;
-        var new_hp = document.getElementById('kanna_hp').value * (new_hp_percent) / (hp_percent) ;
+        //console.log('old hp perc: ' + hp_percent)
+        var new_hp_percent = (hp_percent * 100 - hp_hyper)/100;
+        //console.log('new hp perc: ' + new_hp_percent)
+        var new_hp = parseInt(document.getElementById('kanna_hp').value) * (new_hp_percent) / (hp_percent);
+        //console.log('new hp: ' + new_hp)
         var diff = document.getElementById('kanna_hp').value - new_hp;
         var att_loss = Math.floor(diff/700);
+        //console.log('attack loss: ' + att_loss)
         var stripped_attack = stripped_attack - att_loss;
+        //console.log('stripped att: ' + stripped_attack);
         //here
     }
     var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
     var stripped_crit_dmg = critical_damage - hyper_crit_dmg;
-    var flat_hp = document.getElementById('hp_arcane').value;
+    var flat_hp = parseInt(document.getElementById('hp_arcane').value);
     if (primary_stat_type == "HP") {
-        stripped_primary = flat_hp + (primary_stat - flat_hp) * (1 - hyper_primary / 100);
+        var hp_hyper = parseInt(document.getElementById('hp').value);
+        var hp_percent = (document.getElementById('hp_perc').value)/100;
+        //console.log('old hp perc: ' + hp_percent)
+        var new_hp_percent = (hp_percent * 100 - hp_hyper)/100;
+        //console.log('new hp perc: ' + new_hp_percent)
+        var new_hp = flat_hp + (primary_stat - flat_hp) * (new_hp_percent) / (hp_percent);
+        stripped_primary = new_hp;
+        //console.log('new hp: ' + new_hp)
     }
     else {
         var stripped_primary = primary_stat - hyper_primary;
