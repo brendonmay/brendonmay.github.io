@@ -57,7 +57,6 @@ var new_information = {
 };
 
 function calculateDamageCommon(primary, secondary, cdmg, boss, dmg, ied, att, pdr) {
-    console.log(primary, secondary, cdmg, boss, dmg, ied, att, pdr)
     return (4 * primary + secondary) * (1.35 + cdmg) * (1.00 + boss + dmg) * att * Math.max(0, 1 - (pdr * (1 - ied)));
 }
 function calculateDamageLuk2(primary, secondary1, secondary2, cdmg, boss, dmg, ied, att, pdr) {
@@ -3571,6 +3570,14 @@ function optimizeWSE() {
 
     var stripped_ied_percent = (current_ied_percent - hyper_ied) / ((-1 * hyper_ied / 100) + 1);
     var stripped_attack = attack - hyper_att;
+    if(maple_class == 'Kanna'){
+        var hp_hyper = document.getElementById('hp').value * 2;
+        var new_hp = document.getElementById('kanna_hp').value * (1 - hp_hyper/100);
+        var diff = document.getElementById('kanna_hp').value - new_hp;
+        var att_loss = Math.floor(diff/700);
+        var stripped_attack = stripped_attack - att_loss;
+        //here
+    }
     var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
     var stripped_crit_dmg = critical_damage - hyper_crit_dmg;
