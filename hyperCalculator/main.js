@@ -73,7 +73,7 @@ function calculateDamageDA(purehp, hp, str, cdmg, boss, dmg, ied, att, pdr) {
 let workers = [];
 let progress = [];
 let bestScore = [-1, -1];
-let bestResult = {};    
+let bestResult = {};
 let currentScore = [-1, -1];
 
 for (let i = 0; i <= 15; ++i) {
@@ -107,17 +107,17 @@ for (let i = 0; i <= 15; ++i) {
 }
 //initializing workers end 
 
-window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, secondary_stat, maple_class, level) => {
+window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, secondary_stat, maple_class, level, attack_percent) => {
     // document.getElementById('progress').innerHTML = 'Initializing...';
     // document.getElementById('result').innerHTML = '';
     // document.getElementById('calc').disabled = true;
 
     let points = transferLockedOptions();
     let att = attack; //+document.getElementById('att').value;
-    let dmg = damage/100; //+document.getElementById('dmg').value / 100;
-    let boss = bossDmg/100;//+document.getElementById('boss').value / 100;
-    let ied = ignoreDef/100;//+document.getElementById('ied').value / 100;
-    let cdmg = critDmg/100;//+document.getElementById('cdmg').value / 100;
+    let dmg = damage / 100; //+document.getElementById('dmg').value / 100;
+    let boss = bossDmg / 100;//+document.getElementById('boss').value / 100;
+    let ied = ignoreDef / 100;//+document.getElementById('ied').value / 100;
+    let cdmg = critDmg / 100;//+document.getElementById('cdmg').value / 100;
     let pdr = 3; //+document.getElementById('pdr').value / 100;
     let type = "";
     if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") type = 'luk2';
@@ -145,11 +145,20 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
         secondary2: 0,
         hp: primary_stat,
         flathp: 0, //update this
-        php: 545 + 90 * level,
+        php: 0, //percent hp
         level: level,
-        str: secondary_stat
+        str: secondary_stat,
+        patt: attack_percent, //update this, percent att
+        int: primary_stat,
+        luk: secondary_stat
     };
-    
+
+    /*if (maple_class == "Kanna") {
+        message.type = 'KANNA';
+        message.hp = document.getElementById('kanna_hp').value;
+        console.log(message.hp)
+    }*/
+
     // } else if (type == 'KANNA') {
     //     message.hp = +document.getElementById('kanna-hp').value;
     //     message.flathp = +document.getElementById('kanna-flathp').value;
@@ -1799,14 +1808,16 @@ function getClassData(maple_class) {
             'attPercent': 14,
             'iedPercent': [20, 20, 10, 10, 5, 5, 5],
             'dmgPercent': 20,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Angelic Buster': {
             'attPercent': 4,
             'iedPercent': [20, 10, 10, 10, 20],
             'dmgPercent': 50,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Aran': {
@@ -1814,244 +1825,279 @@ function getClassData(maple_class) {
             'iedPercent': [49.5], //weighed avg
             'dmgPercent': 52, //weighed avg
             'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Ark': {
             'attPercent': 4,
             'iedPercent': [20, 20, 20],
             'dmgPercent': 20,
-            'bossPercent': 50
+            'bossPercent': 50,
+            'critDmg': 0
         },
 
         'Battle Mage': {
             'attPercent': 39,
             'iedPercent': [20, 20],
             'dmgPercent': 0,
-            'bossPercent': 30
+            'bossPercent': 30,
+            'critDmg': 0
         },
 
         'Bishop': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 60,
-            'bossPercent': 10
+            'bossPercent': 10,
+            'critDmg': 0
         },
 
         'Blaster': {
             'attPercent': 19,
             'iedPercent': [44], //Weighed AVG
             'dmgPercent': 10,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Blaze Wizard': {
             'attPercent': 14,
             'iedPercent': [20, 20],
             'dmgPercent': 0,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Beast Tamer': {
             'attPercent': 15,
             'iedPercent': [20],
             'dmgPercent': 20,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Bowmaster': {
             'attPercent': 29,
             'iedPercent': [20],
             'dmgPercent': 30,
-            'bossPercent': 10
+            'bossPercent': 10,
+            'critDmg': 0
         },
 
         'Buccaneer': {
             'attPercent': 4,
             'iedPercent': [20, 25],
             'dmgPercent': 20,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Cadena': {
             'attPercent': 4,
             'iedPercent': [30, 15], //rounded
             'dmgPercent': 7, //Weighed AVG
-            'bossPercent': 7 //Weighed Avg
+            'bossPercent': 7, //Weighed AVG
+            'critDmg': 0
         },
 
         'Cannoneer': {
             'attPercent': 4,
             'iedPercent': [20, 20, 25],
             'dmgPercent': 60,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Corsair': {
             'attPercent': 24,
             'iedPercent': [20, 25],
             'dmgPercent': 30,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Dark Knight': {
             'attPercent': 4,
             'iedPercent': [30, 20, 20],
             'dmgPercent': 20,
-            'bossPercent': 10
+            'bossPercent': 10,
+            'critDmg': 0
         },
 
         'Dawn Warrior': {
             'attPercent': 14,
             'iedPercent': [20, 20],
             'dmgPercent': 20,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Demon Avenger': {
             'attPercent': 4,
             'iedPercent': [30, 30],
             'dmgPercent': 40,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Demon Slayer': {
             'attPercent': 4,
             'iedPercent': [43], //weighed avg
             'dmgPercent': 52, //weighed avg
-            'bossPercent': 52 //weighed avg
+            'bossPercent': 52, //weighed avg
+            'critDmg': 0
         },
 
         'Dual Blade': {
             'attPercent': 4,
             'iedPercent': [80], //weighed avg
             'dmgPercent': 20,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Evan': {
             'attPercent': 39,
             'iedPercent': [20],
             'dmgPercent': 40,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Fire Poison': {
             'attPercent': 4,
             'iedPercent': [10],
             'dmgPercent': 55,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Hayato': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': -50,
-            'bossPercent': 2
+            'bossPercent': 2,
+            'critDmg': 49.995
         },
 
         'Hero': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 45,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Hoyoung': {
             'attPercent': 14,
             'iedPercent': [20, 25],
             'dmgPercent': 0,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Ice Lightning': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 120,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Illium': {
             'attPercent': 14,
             'iedPercent': [4, 4, 4, 20],
             'dmgPercent': 20,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Jett': {
             'attPercent': 29,
             'iedPercent': [20],
             'dmgPercent': 20,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Kaiser': {
             'attPercent': 34,
             'iedPercent': [40, 20],
             'dmgPercent': 10, //+ 10 weighed avg final form
-            'bossPercent': 26 //+8 weighed avg from final form
+            'bossPercent': 26, //+8 weighed from final form
+            'critDmg': 0
         },
 
         'Kanna': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 0,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Kinesis': {
             'attPercent': 14,
             'iedPercent': [20],
             'dmgPercent': 0,
-            'bossPercent': 30
+            'bossPercent': 30,
+            'critDmg': 0
         },
 
         'Luminous': {
             'attPercent': 4,
             'iedPercent': [40, 20],
             'dmgPercent': 20,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Marksmen': {
             'attPercent': 4,
             'iedPercent': [20, 50, 20],
             'dmgPercent': 20,
-            'bossPercent': 10
+            'bossPercent': 10,
+            'critDmg': 0
         },
 
         'Mechanic': {
             'attPercent': 4,
             'iedPercent': [20, 10, 2], //weighed avg
             'dmgPercent': 3, //weighed avg
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Mercedes': {
             'attPercent': 34,
             'iedPercent': [50, 5], //weighed avg
             'dmgPercent': 60, //weighed avg
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Mihile': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 50,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Night Lord': {
             'attPercent': 4,
             'iedPercent': [30, 20],
             'dmgPercent': 20,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Night Walker': {
             'attPercent': 4,
             'iedPercent': [20, 7, 7, 7, 7, 7],
             'dmgPercent': 20,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Paladin': {
@@ -2065,56 +2111,64 @@ function getClassData(maple_class) {
             'attPercent': 24,
             'iedPercent': [20],
             'dmgPercent': 20,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Phantom': {
             'attPercent': 4,
             'iedPercent': [27], //weighed avg
             'dmgPercent': 4, //weighed avg
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Shade': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 40,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Shadower': {
             'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 20,
-            'bossPercent': 20
+            'bossPercent': 20,
+            'critDmg': 0
         },
 
         'Thunder Breaker': {
             'attPercent': 4,
             'iedPercent': [5, 5, 5, 5, 5, 9, 9, 9, 9, 9, 20, 6],
             'dmgPercent': 55, //weighed avg
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Wild Hunter': {
             'attPercent': 39,
             'iedPercent': [10, 20],
             'dmgPercent': 20,
-            'bossPercent': 30
+            'bossPercent': 30,
+            'critDmg': 0
         },
 
         'Wind Archer': {
             'attPercent': 14,
             'iedPercent': [20, 20, 15, 10],
             'dmgPercent': 35,
-            'bossPercent': 30
+            'bossPercent': 30,
+            'critDmg': 0
         },
 
         'Xenon': {
             'attPercent': 4,
             'iedPercent': [30, 10, 20],
             'dmgPercent': 20,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         }
     }
     return class_data[maple_class]
@@ -2452,7 +2506,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    document.getElementById('result').addEventListener("DOMSubtreeModified", function() {
+    document.getElementById('result').addEventListener("DOMSubtreeModified", function () {
         var isFinished = document.getElementById('result').innerHTML == "Finished";
 
         if (isFinished) {
@@ -2478,7 +2532,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             var maple_class = document.getElementById('class').value;
 
-            if (maple_class == "Xenon"){
+            if (maple_class == "Xenon") {
                 document.getElementById('nstrSelect').value = bestResult.primary1;
                 nupdatePoints(document.getElementById('nstrSelect'));
 
@@ -2488,7 +2542,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('nlukSelect').value = bestResult.primary3;
                 nupdatePoints(document.getElementById('nlukSelect'));
             }
-            else if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower"){
+            else if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
                 document.getElementById('nlukSelect').value = bestResult.primary;
                 nupdatePoints(document.getElementById('nlukSelect'));
 
@@ -2498,40 +2552,57 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('ndexSelect').value = bestResult.secondary2;
                 nupdatePoints(document.getElementById('ndexSelect'));
             }
-            else{
+            else if (maple_class == "Demon Avenger") {
+                document.getElementById('nhpSelect').value = bestResult.hp;
+                nupdatePoints(document.getElementById('nhpSelect'));
+
+                document.getElementById('nstrSelect').value = bestResult.str;
+                nupdatePoints(document.getElementById('nstrSelect'));
+            }
+            /*else if (maple_class == "Kanna"){
+                document.getElementById('nhpSelect').value = bestResult.hp;
+                nupdatePoints(document.getElementById('nhpSelect'));
+
+                document.getElementById('nlukSelect').value = bestResult.luk;
+                nupdatePoints(document.getElementById('nlukSelect'));
+
+                document.getElementById('nintSelect').value = bestResult.int;
+                nupdatePoints(document.getElementById('nintSelect'));
+            }*/
+            else {
                 var stat_types = getPrimaryAndSecondaryStatType(maple_class);
                 var primary_stat_type = stat_types.primaryStatType;
                 var secondary_stat_type = stat_types.secondaryStatType;
 
-                if (primary_stat_type == "LUK"){
+                if (primary_stat_type == "LUK") {
                     document.getElementById('nlukSelect').value = bestResult.primary;
                     nupdatePoints(document.getElementById('nlukSelect'));
                 }
-                if (primary_stat_type == "DEX"){
+                if (primary_stat_type == "DEX") {
                     document.getElementById('ndexSelect').value = bestResult.primary;
                     nupdatePoints(document.getElementById('ndexSelect'));
                 }
-                if (primary_stat_type == "STR"){
+                if (primary_stat_type == "STR") {
                     document.getElementById('nstrSelect').value = bestResult.primary;
                     nupdatePoints(document.getElementById('nstrSelect'));
                 }
-                if (primary_stat_type == "INT"){
+                if (primary_stat_type == "INT") {
                     document.getElementById('nintSelect').value = bestResult.primary;
                     nupdatePoints(document.getElementById('nintSelect'));
                 }
-                if (secondary_stat_type == "LUK"){
+                if (secondary_stat_type == "LUK") {
                     document.getElementById('nlukSelect').value = bestResult.secondary;
                     nupdatePoints(document.getElementById('nlukSelect'));
                 }
-                if (secondary_stat_type == "DEX"){
+                if (secondary_stat_type == "DEX") {
                     document.getElementById('ndexSelect').value = bestResult.secondary;
                     nupdatePoints(document.getElementById('ndexSelect'));
                 }
-                if (secondary_stat_type == "STR"){
+                if (secondary_stat_type == "STR") {
                     document.getElementById('nstrSelect').value = bestResult.secondary;
                     nupdatePoints(document.getElementById('nstrSelect'));
                 }
-                if (secondary_stat_type == "INT"){
+                if (secondary_stat_type == "INT") {
                     document.getElementById('nintSelect').value = bestResult.secondary;
                     nupdatePoints(document.getElementById('nintSelect'));
                 }
@@ -2996,6 +3067,13 @@ document.addEventListener("DOMContentLoaded", function () {
         update_new_slevel(maple_class);
         update_new_wlevel();
 
+        /*if (maple_class == "Kanna") {
+            document.getElementById('kanna_hp_div').hidden = false;
+        }
+        else{
+            document.getElementById('kanna_hp_div').hidden = true;
+        }*/
+
         var stat_types = getPrimaryAndSecondaryStatType(maple_class);
         var primary_stat = stat_types.primaryStatType;
         var secondary_stat = stat_types.secondaryStatType;
@@ -3249,6 +3327,58 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //Main Function
 function optimizeWSE() {
+    //clear old optimized stats
+    document.getElementById('nhpSelect').value = 0;
+    nupdatePoints(document.getElementById('nhpSelect'));
+
+    document.getElementById('nstrSelect').value = 0;
+    nupdatePoints(document.getElementById('nstrSelect'));
+
+    document.getElementById('ndexSelect').value = 0;
+    nupdatePoints(document.getElementById('ndexSelect'));
+
+    document.getElementById('nintSelect').value = 0;
+    nupdatePoints(document.getElementById('nintSelect'));
+
+    document.getElementById('nlukSelect').value = 0;
+    nupdatePoints(document.getElementById('nlukSelect'));
+
+    document.getElementById('nmpSelect').value = 0;
+    nupdatePoints(document.getElementById('nmpSelect'));
+
+    document.getElementById('ncritRateSelect').value = 0;
+    nupdatePoints(document.getElementById('ncritRateSelect'));
+
+    document.getElementById('ndemForSelect').value = 0;
+    nupdatePoints(document.getElementById('ndemForSelect'));
+
+    document.getElementById('ncritDmgSelect').value = 0;
+    nupdatePoints(document.getElementById('ncritDmgSelect'));
+
+    document.getElementById('nignDefSelect').value = 0;
+    nupdatePoints(document.getElementById('nignDefSelect'));
+
+    document.getElementById('ndamageSelect').value = 0;
+    nupdatePoints(document.getElementById('ndamageSelect'));
+
+    document.getElementById('nbDamageSelect').value = 0;
+    nupdatePoints(document.getElementById('nbDamageSelect'));
+
+    document.getElementById('nstatResistSelect').value = 0;
+    nupdatePoints(document.getElementById('nstatResistSelect'));
+
+    document.getElementById('nstanceSelect').value = 0;
+    nupdatePoints(document.getElementById('nstanceSelect'));
+
+    document.getElementById('nattPowerSelect').value = 0;
+    nupdatePoints(document.getElementById('nattPowerSelect'));
+
+    document.getElementById('nbonusExpSelect').value = 0;
+    nupdatePoints(document.getElementById('nbonusExpSelect'));
+
+    document.getElementById('narcForceSelect').value = 0;
+    nupdatePoints(document.getElementById('narcForceSelect'));
+
     //ied source
     var ied_sources = [];
     var pro_mode = false;
@@ -3322,6 +3452,9 @@ function optimizeWSE() {
     var class_dmg = class_data.dmgPercent;
     var class_att = class_data.attPercent;
     var class_boss = class_data.bossPercent;
+    var class_crit_dmg = class_data.critDmg
+
+    critical_damage = critical_damage + class_crit_dmg
 
     //update ied_sources
     if (pro_mode == false) {
@@ -3411,7 +3544,12 @@ function optimizeWSE() {
     var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
     var stripped_crit_dmg = critical_damage - hyper_crit_dmg;
-    var stripped_primary = primary_stat - hyper_primary;
+    if (primary_stat_type == "HP") {
+        stripped_primary = primary_stat * (1 - hyper_primary / 100);
+    }
+    else {
+        var stripped_primary = primary_stat - hyper_primary;
+    }
     var stripped_secondary = secondary_stat - hyper_secondary;
     var stripped_stat_value = getStatValue(maple_class, stripped_primary, stripped_secondary, level)
 
@@ -3505,23 +3643,22 @@ function optimizeWSE() {
         window.scrollTo(0, document.body.scrollHeight);
 
         if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
-            currentScore = calculateDamageLuk2(primary_stat, secondary_stat, 0, critical_damage/100, current_boss_percent/100, current_damage_percent/100, current_ied_percent/100, attack, 3);
+            currentScore = calculateDamageLuk2(primary_stat, secondary_stat, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3);
         }
         else if (maple_class == "Xenon") {
-            currentScore = calculateDamageXenon(primary_stat, 0 , 0, critical_damage/100, current_boss_percent/100, current_damage_percent/100, current_ied_percent/100, attack, 3)
+            currentScore = calculateDamageXenon(primary_stat, 0, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3)
         }
         else if (maple_class == "Demon Avenger") {
             var pureHP = 545 + 90 * level;
-            currentScore = calculateDamageDA(pureHP, primary_stat, secondary_stat, critical_damage/100, current_boss_percent/100, current_damage_percent/100, current_ied_percent/100, attack, 3)
+            currentScore = calculateDamageDA(pureHP, primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3)
         }
-        
         else {
-            currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage/100, current_boss_percent/100, current_damage_percent/100, current_ied_percent/100, attack, 3);
+            currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3);
         }
 
         console.log(currentScore);
 
-        calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level);
+        calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent);
 
         return false
     }
