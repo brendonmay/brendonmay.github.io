@@ -148,7 +148,7 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
         secondary2: 0,
         hp: primary_stat,
         flathp: 0, //update this
-        php: 378/100, //percent hp, 378 is 21%/item
+        php: 0, //percent hp, 378 is 21%/item
         level: level,
         str: secondary_stat,
         patt: attack_percent/100,
@@ -160,10 +160,14 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
     if (maple_class == "Kanna") {
         message.type = 'KANNA';
         message.hp = document.getElementById('kanna_hp').value;
+        var percent_hp = document.getElementById('hp_perc').value;
+        message.php = percent_hp / 100;
     }
     if (maple_class == "Demon Avenger"){
         var percent_hp = document.getElementById('hp_perc').value;
+        var flat_hp = document.getElementById('hp_arcane').value;
         message.php = percent_hp / 100;
+        message.flathp = flat_hp;
     }
 
     // } else if (type == 'KANNA') {
@@ -3082,6 +3086,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (maple_class == "Demon Avenger") {
+            document.getElementById('hp_arcane_div').hidden = false;
+        }
+        else{
+            document.getElementById('hp_arcane_div').hidden = true;
+        }
+
+        if (maple_class == "Demon Avenger" || maple_class == "Kanna") {
             document.getElementById('hp_perc_div').hidden = false;
         }
         else{
@@ -3558,8 +3569,9 @@ function optimizeWSE() {
     var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
     var stripped_crit_dmg = critical_damage - hyper_crit_dmg;
+    var flat_hp = document.getElementById('hp_arcane').value;
     if (primary_stat_type == "HP") {
-        stripped_primary = primary_stat * (1 - hyper_primary / 100);
+        stripped_primary = flat_hp + (primary_stat - flat_hp) * (1 - hyper_primary / 100);
     }
     else {
         var stripped_primary = primary_stat - hyper_primary;
