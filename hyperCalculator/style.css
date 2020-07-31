@@ -15,6 +15,16 @@ a:hover {
     color: #fff;
 }
 
+.tableCheckBox{
+    text-align: center !important; /* center checkbox horizontally */
+    vertical-align: middle !important; /* center checkbox vertically */
+}
+
+.title-color{
+    text-decoration: underline;
+    text-decoration-color: #e0ca05;
+}
+
 .navbar {
     background: #16191c !important;
 }
@@ -63,7 +73,7 @@ a:hover {
 }
 
 .nav-item:hover, .navbar-text:hover, .active{
-    color: #9bff8a !important
+    color: #e0ca05 !important
 }
 
 .footer {
@@ -90,7 +100,7 @@ html {
 
 .display-4>span {
     font-weight: 900;
-    color: #9bff8a;
+    color: #e0ca05;
 }
 
 .lead {
@@ -107,58 +117,53 @@ html {
 
 .btnStep {
     padding: 5px 7px;
-    border: 1px solid #9bff8a;
+    border: 1px solid #e0ca05;
 }
 
 .btnStep:focus {
     padding: 5px 7px;
-    border: 1px solid #9bff8a !important;
+    border: 1px solid #e0ca05 !important;
 }
 
 .btnStep>div>h6 {
-    color: #9bff8a;
+    color: #e0ca05;
     margin-bottom: 5px;
 }
 
 .btnStep>div {
-    color: #9bff8a;
+    color: #e0ca05;
     font-size: 16px;
 }
 
 .btnStep:hover {
-    border: 1px solid #7af4ff;
+    border: 1px solid #aadb24;
     background: #0b2331;
 }
 
 .btnStep:hover .btnDiv {
-    color: #7af4ff;
+    color: #aadb24;
 }
 
 .btnStep:hover .btnDiv>h6 {
-    color: #7af4ff;
+    color: #aadb24;
 }
 
 .btnStep:active {
     background: #0b2331 !important;
-    border: 1px solid #7af4ff !important;
+    border: 1px solid #aadb24 !important;
 }
 
 .btnStep:visited {
     background: #0b2331 !important;
-    border: 1px solid #7af4ff !important;
+    border: 1px solid #aadb24 !important;
 }
 
 .btnStep:active .btnDiv {
-    color: #7af4ff;
+    color: #aadb24;
 }
 
 .btnStep:active .btnDiv>h6 {
-    color: #7af4ff;
-}
-
-.title-color{
-    text-decoration: underline;
-    text-decoration-color: #9bff8a;
+    color: #aadb24;
 }
 
 textarea:focus, input:focus{
@@ -221,7 +226,7 @@ table {
 .popover-header {
     border-radius: 10px 10px 0 0;
     background: #0c0f11;
-    color: #9bff8a;
+    color: #e0ca05;
     border-bottom: 0;
 }
 
@@ -246,7 +251,7 @@ table {
     -moz-appearance: none;
     -o-appearance: none;
     appearance: none;
-    border: 1px solid #9bff8a;
+    border: 1px solid #e0ca05;
     outline: none;
     transition-duration: 0.3s;
     background: none;
@@ -255,8 +260,8 @@ table {
 }
 
 .checkbox > input:checked {
-    border: 1px solid #9bff8a;
-    background-color: #9bff8a;
+    border: 1px solid #e0ca05;
+    background-color: #e0ca05;
 }
 
 .form-check {
@@ -291,6 +296,12 @@ hr {
     padding: 0.25rem;
 }
 
+input[type="checkbox"]:disabled {
+    background: gray !important;
+    border: 1px solid #d4d4d5 !important;
+}
+
+
 .checkbox2 > input {
     height: 15px;
     width: 15px;
@@ -299,18 +310,17 @@ hr {
     -moz-appearance: none;
     -o-appearance: none;
     appearance: none;
-    border: 1px solid #9bff8a;
+    border: 1px solid #e0ca05;
     outline: none;
     transition-duration: 0.3s;
     background: none;
     cursor: pointer;
     margin-top: 9px;
-    margin-left: -1rem;
 }
 
 .checkbox2 > input:checked {
-    border: 1px solid #9bff8a;
-    background-color: #9bff8a;
+    border: 1px solid #e0ca05;
+    background-color: #e0ca05;
 }
 
 .noPadding {
@@ -318,7 +328,7 @@ hr {
 }
 
 .btnSubmit {
-    background: linear-gradient(-45deg, rgb(26, 175, 123) 0%, rgb(152, 180, 80) 100%);
+    background: linear-gradient(-45deg, rgb(96, 148, 27) 0%, rgb(89, 104, 53) 100%);
     font-size: 18px;
     transition: 0.6s;
     padding: 10px 15px;
@@ -328,22 +338,32 @@ hr {
     box-shadow: 0 !important;
 }
 
+.btnSubmit:disabled {
+    cursor: pointer;
+    transform: none;
+}
+
+.btnSubmit:disabled:hover {
+    cursor: progress;
+    transform: none;
+}
+
 .btnSubmit:hover {
     filter:hue-rotate(30deg);
     transform: scale(1.1);
 }
 
 .nav-item:hover .small>ion-icon {
-    color: #9bff8a !important;
+    color: #e0ca05 !important;
 }
 
 .contData {
-    color: #9bff8a;
+    color: #e0ca05;
     transition: .3s;
 }
 
 .contData:hover {
-    color: #71e19d;
+    color: #e0ca05;
 }
 
 .form-control:disabled {
