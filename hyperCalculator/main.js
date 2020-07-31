@@ -108,7 +108,7 @@ for (let i = 0; i <= 15; ++i) {
 }
 //initializing workers end 
 
-window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, secondary_stat, maple_class, level, attack_percent) => {
+window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, secondary_stat, maple_class, level, attack_percent, bossDef) => {
     // document.getElementById('progress').innerHTML = 'Initializing...';
     // document.getElementById('result').innerHTML = '';
     // document.getElementById('calc').disabled = true;
@@ -119,12 +119,14 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
     let boss = bossDmg / 100;//+document.getElementById('boss').value / 100;
     let ied = ignoreDef / 100;//+document.getElementById('ied').value / 100;
     let cdmg = critDmg / 100;//+document.getElementById('cdmg').value / 100;
-    let pdr = 3; //+document.getElementById('pdr').value / 100;
+    let pdr = bossDef; //+document.getElementById('pdr').value / 100;
     let type = "";
     if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") type = 'luk2';
     else if (maple_class == "Xenon") type = 'XENON';
     else if (maple_class == "Demon Avenger") type = 'DA';
     else type = "normal";
+
+    let mobbing = document.getElementById('mobbing').checked;
 
     // let type = document.getElementById('job').value;
 
@@ -151,7 +153,8 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
         str: secondary_stat,
         patt: attack_percent/100,
         int: primary_stat,
-        luk: secondary_stat
+        luk: secondary_stat,
+        mob: mobbing
     };
 
     if (maple_class == "Kanna") {
@@ -2992,27 +2995,6 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline3').append("<option value='none' selected>N/A</option>");
         }
     });
-    document.getElementById("compare").addEventListener("change", function () {
-        //compare calculator selected
-
-        document.getElementById('new_wlevel').disabled = false;
-        document.getElementById('new_wline1').disabled = false;
-        document.getElementById('new_wline2').disabled = false;
-        document.getElementById('new_wline3').disabled = false;
-
-        document.getElementById('new_slevel').disabled = false;
-        document.getElementById('new_sline1').disabled = false;
-        document.getElementById('new_sline2').disabled = false;
-        document.getElementById('new_sline3').disabled = false;
-
-        document.getElementById('new_elevel').disabled = false;
-        document.getElementById('new_eline1').disabled = false;
-        document.getElementById('new_eline2').disabled = false;
-        document.getElementById('new_eline3').disabled = false;
-
-        document.getElementById('optimizeTitle').hidden = true;
-        document.getElementById('compareTitle').hidden = false;
-    });
     document.getElementById("optimize").addEventListener("change", function () {
         //optimize calculator selected
         //FIX THIS SECTION
@@ -3652,34 +3634,38 @@ function optimizeWSE() {
         }
 
     }*/
-    if (document.getElementById('optimize').checked == true) {
+    
         //console.log(optimal_lines)
         //var optimal_output = optimizeHypers(strippedOutput, stripped_ied_percent, stripped_attack, stripped_boss_percent, stripped_damage_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, multiplier, current_attack_percent);
+
+        var pdr = 3;
+
+        if(document.getElementById('mobbing').checked) pdr = 0;
 
         document.getElementById('resultSection').hidden = false;
         window.scrollTo(0, document.body.scrollHeight);
 
         if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
-            currentScore = calculateDamageLuk2(primary_stat, secondary_stat, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3);
+            currentScore = calculateDamageLuk2(primary_stat, secondary_stat, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
         }
         else if (maple_class == "Xenon") {
-            currentScore = calculateDamageXenon(primary_stat, 0, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3)
+            currentScore = calculateDamageXenon(primary_stat, 0, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr)
         }
         else if (maple_class == "Demon Avenger") {
             var pureHP = 545 + 90 * level;
-            currentScore = calculateDamageDA(pureHP, primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3)
+            currentScore = calculateDamageDA(pureHP, primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr)
         }
         else {
-            currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3);
+            currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
         }
 
         console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack: ' + attack + ", stat_value: " + stat_value + ", att percent: " + current_attack_percent)
         console.log('old score: ' + currentScore);
 
-        calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent);
+        calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
 
         return false
-    }
+    
 }
 
 

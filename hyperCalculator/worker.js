@@ -17,10 +17,19 @@ let hpGain = (level) => 0.02 * level;
 let cdmgGain = (level) => 0.01 * level;
 let iedGain = (level) => 0.03 * level;
 let dmgGain = (level) => 0.03 * level;
-let bossGain = (level) => 0.03 * Math.min(level, 5) + 0.04 * Math.max(0, level - 5);
+
+function bossGain(level, mobbing) {
+    if (mobbing) {
+        return 0;
+    } else {
+       return 0.03 * Math.min(level, 5) + 0.04 * Math.max(0, level - 5);
+    }
+}
+
+// let bossGain = (level, mobbing) => 
 let attGain = (level) => 3 * level;
 
-function calculateOptimalCommon(data, progress, cb) {
+function calculateOptimalCommon(data, progress, cb, mobbing) {
     let optimalConfig = {};
     let optimalDamage = -100.0;
     let counters = [];
@@ -41,7 +50,7 @@ function calculateOptimalCommon(data, progress, cb) {
             data.primary + statGain(counters[6]),
             data.secondary + statGain(counters[0]),
             data.cdmg + cdmgGain(counters[3]),
-            data.boss + bossGain(counters[1]),
+            data.boss + bossGain(counters[1], mobbing),
             data.dmg + dmgGain(counters[2]),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
             data.att + attGain(counters[5]),
@@ -78,7 +87,7 @@ function calculateOptimalCommon(data, progress, cb) {
     progress(100.0);
 }
 
-function calculateOptimalLuk2(data, progress, cb) {
+function calculateOptimalLuk2(data, progress, cb, mobbing) {
     let optimalConfig = {};
     let optimalDamage = -100.0;
     let counters = [];
@@ -100,7 +109,7 @@ function calculateOptimalLuk2(data, progress, cb) {
             data.secondary1 + statGain(counters[0]),
             data.secondary2 + statGain(counters[1]),
             data.cdmg + cdmgGain(counters[4]),
-            data.boss + bossGain(counters[2]),
+            data.boss + bossGain(counters[2], mobbing),
             data.dmg + dmgGain(counters[3]),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[5]))),
             data.att + attGain(counters[6]),
@@ -138,7 +147,7 @@ function calculateOptimalLuk2(data, progress, cb) {
     progress(100.0);
 }
 
-function calculateOptimalXenon(data, progress, cb) {
+function calculateOptimalXenon(data, progress, cb, mobbing) {
     let optimalConfig = {};
     let optimalDamage = -100.0;
     let counters = [];
@@ -160,7 +169,7 @@ function calculateOptimalXenon(data, progress, cb) {
             data.primary2 + statGain(counters[6]),
             data.primary3 + statGain(counters[7]),
             data.cdmg + cdmgGain(counters[3]),
-            data.boss + bossGain(counters[1]),
+            data.boss + bossGain(counters[1], mobbing),
             data.dmg + dmgGain(counters[2]),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
             data.att + attGain(counters[0]),
@@ -198,7 +207,7 @@ function calculateOptimalXenon(data, progress, cb) {
     progress(100.0);
 }
 
-function calculateOptimalDA(data, progress, cb) {
+function calculateOptimalDA(data, progress, cb, mobbing) {
     let optimalConfig = {};
     let optimalDamage = -100.0;
     let counters = [];
@@ -221,7 +230,7 @@ function calculateOptimalDA(data, progress, cb) {
             (data.hp - data.flathp) / (1.00 + data.php) * (1.00 + data.php + hpGain(counters[6])) + data.flathp,
             data.str + statGain(counters[0]),
             data.cdmg + cdmgGain(counters[4]),
-            data.boss + bossGain(counters[2]),
+            data.boss + bossGain(counters[2], mobbing),
             data.dmg + dmgGain(counters[3]),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[5]))),
             data.att + attGain(counters[1]),
@@ -258,7 +267,7 @@ function calculateOptimalDA(data, progress, cb) {
     progress(100.0);
 }
 
-function calculateOptimalKanna(data, progress, cb) {
+function calculateOptimalKanna(data, progress, cb, mobbing) {
     let optimalConfig = {};
     let optimalDamage = -100.0;
     let counters = [];
@@ -279,7 +288,7 @@ function calculateOptimalKanna(data, progress, cb) {
             data.int + statGain(counters[6]),
             data.luk + statGain(counters[0]),
             data.cdmg + cdmgGain(counters[3]),
-            data.boss + bossGain(counters[1]),
+            data.boss + bossGain(counters[1], mobbing),
             data.dmg + dmgGain(counters[2]),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
             Math.floor((data.att + attGain(counters[5])) * data.patt +
@@ -332,7 +341,8 @@ self.addEventListener('message', (e) => {
     }
     calculate(data,
         (progress) => { self.postMessage({ progress: progress, i: data.i }); },
-        (result) => { self.postMessage({ result: result }); }
+        (result) => { self.postMessage({ result: result }); },
+        data.mob
     );
 });
 
