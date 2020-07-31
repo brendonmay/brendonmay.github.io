@@ -3500,6 +3500,11 @@ function optimizeWSE() {
     var stat_value = getStatValue(maple_class, primary_stat, secondary_stat, level);
     var attack = Math.floor(determineAttAmount(upperShownDamage, multiplier, stat_value, current_damage_percent, final_damage_percent) / (current_attack_percent / 100));
 
+    /*if (maple_class == "Kanna"){
+        var total_hp = document.getElementById('kanna_hp').value;
+        attack = attack + total_hp/700;
+    } */
+
     //Determine Damage Output
     var currentBossDefMultiplier = getBossDefMultiplier(current_ied_percent);
     var currentHitDamage = getTrueHitDamage(current_boss_percent, current_attack_percent, current_damage_percent, critical_damage, multiplier, stat_value, attack);
