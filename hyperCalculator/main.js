@@ -57,6 +57,7 @@ var new_information = {
 };
 
 function calculateDamageCommon(primary, secondary, cdmg, boss, dmg, ied, att, pdr) {
+    console.log(primary, secondary, cdmg, boss, dmg, ied, att, pdr)
     return (4 * primary + secondary) * (1.35 + cdmg) * (1.00 + boss + dmg) * att * Math.max(0, 1 - (pdr * (1 - ied)));
 }
 function calculateDamageLuk2(primary, secondary1, secondary2, cdmg, boss, dmg, ied, att, pdr) {
@@ -145,19 +146,22 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
         secondary2: 0,
         hp: primary_stat,
         flathp: 0, //update this
-        php: 0, //percent hp
+        php: 378/100, //percent hp, 378 is 21%/item
         level: level,
         str: secondary_stat,
-        patt: attack_percent, //update this, percent att
+        patt: attack_percent/100,
         int: primary_stat,
         luk: secondary_stat
     };
 
-    /*if (maple_class == "Kanna") {
+    if (maple_class == "Kanna") {
         message.type = 'KANNA';
         message.hp = document.getElementById('kanna_hp').value;
-        console.log(message.hp)
-    }*/
+    }
+    if (maple_class == "Demon Avenger"){
+        var percent_hp = document.getElementById('hp_perc').value;
+        message.php = percent_hp / 100;
+    }
 
     // } else if (type == 'KANNA') {
     //     message.hp = +document.getElementById('kanna-hp').value;
@@ -486,7 +490,7 @@ function optimizeHypers(currentOutput, stripped_ied_percent, stripped_attack, st
         }
         var go = true;
 
-        console.log(other_options)
+        //console.log(other_options)
         //check if from other_options, summing 2 or more elements satisfy point_cost < highest_value_points and value > highest_value
 
         if (go) {
@@ -2510,7 +2514,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var isFinished = document.getElementById('result').innerHTML == "Finished";
 
         if (isFinished) {
-            console.log("old score: " + currentScore);
+            //console.log("old score: " + currentScore);
             console.log("optimal score: " + bestScore[0]);
             console.log(bestResult);
 
@@ -2559,7 +2563,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('nstrSelect').value = bestResult.str;
                 nupdatePoints(document.getElementById('nstrSelect'));
             }
-            /*else if (maple_class == "Kanna"){
+            else if (maple_class == "Kanna"){
                 document.getElementById('nhpSelect').value = bestResult.hp;
                 nupdatePoints(document.getElementById('nhpSelect'));
 
@@ -2568,7 +2572,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 document.getElementById('nintSelect').value = bestResult.int;
                 nupdatePoints(document.getElementById('nintSelect'));
-            }*/
+            }
             else {
                 var stat_types = getPrimaryAndSecondaryStatType(maple_class);
                 var primary_stat_type = stat_types.primaryStatType;
@@ -2613,8 +2617,8 @@ document.addEventListener("DOMContentLoaded", function () {
             var dmgRatio = bestScore[0] / currentScore;
             var dmgIncrease = ((dmgRatio - 1) * 100).toFixed(2);
 
-            console.log(dmgRatio);
-            console.log(dmgIncrease);
+            //console.log(dmgRatio);
+            //console.log(dmgIncrease);
 
             if (dmgRatio == 1 || dmgIncrease == '0.00') {
                 document.getElementById('resultSection').hidden = false;
@@ -2627,15 +2631,21 @@ document.addEventListener("DOMContentLoaded", function () {
             else if (dmgRatio > 1) {
                 var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
                 document.getElementById('resultSection').hidden = false;
-                document.getElementById('result').innerHTML = `
-                    Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
+                if (currentScore == 0){
+                    document.getElementById('result').innerHTML = `
+                    Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> significantly! Refer to the above table for your optimal setup.
                 `;
-                window.scrollTo(0, document.body.scrollHeight);
+                }
+                else{
+                    document.getElementById('result').innerHTML = `
+                        Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
+                    `;
+                    window.scrollTo(0, document.body.scrollHeight);
+                }
             }
 
             else if (dmgRatio < 1) {
                 var output_decrease = ((1 - dmgRatio) * 100).toFixed(2);
-                console.log('optimization failed, its weaker, here is the decrease: ' + output_decrease)
                 // document.getElementById('resultSection').hidden = false;
                 document.getElementById('result').innerHTML = `
                     Optimization Failed! You will lose ${output_decrease}%. Please contact developer. 
@@ -3067,12 +3077,19 @@ document.addEventListener("DOMContentLoaded", function () {
         update_new_slevel(maple_class);
         update_new_wlevel();
 
-        /*if (maple_class == "Kanna") {
+        if (maple_class == "Kanna") {
             document.getElementById('kanna_hp_div').hidden = false;
         }
         else{
             document.getElementById('kanna_hp_div').hidden = true;
-        }*/
+        }
+
+        if (maple_class == "Demon Avenger") {
+            document.getElementById('hp_perc_div').hidden = false;
+        }
+        else{
+            document.getElementById('hp_perc_div').hidden = true;
+        }
 
         var stat_types = getPrimaryAndSecondaryStatType(maple_class);
         var primary_stat = stat_types.primaryStatType;
@@ -3483,7 +3500,7 @@ function optimizeWSE() {
 
     var currentOutput = currentBossDefMultiplier * currentHitDamage;
 
-    console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack: ' + attack + ", stat_value: " + stat_value + "att percent: " + current_attack_percent)
+    
     //console.log('oldOutput ' + currentOutput)    
 
     //console.log('ied with Current WSE = ' + current_ied_percent);
@@ -3656,7 +3673,8 @@ function optimizeWSE() {
             currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, 3);
         }
 
-        console.log(currentScore);
+        console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack: ' + attack + ", stat_value: " + stat_value + ", att percent: " + current_attack_percent)
+        console.log('old score: ' + currentScore);
 
         calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent);
 
