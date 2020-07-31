@@ -2615,7 +2615,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-
+            var mobbing = document.getElementById('mobbing').checked;
             //determine damage increase
             var dmgRatio = bestScore[0] / currentScore;
             var dmgIncrease = ((dmgRatio - 1) * 100).toFixed(2);
@@ -2626,7 +2626,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (dmgRatio == 1 || dmgIncrease == '0.00') {
                 document.getElementById('resultSection').hidden = false;
                 document.getElementById('result').innerHTML = `
-                    You already obtain a fully optimized WSE!
+                    You already obtain a fully optimized configuration!
                 `;
                 window.scrollTo(0, document.body.scrollHeight);
             }
@@ -2635,16 +2635,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
                 document.getElementById('resultSection').hidden = false;
                 if (currentScore == 0){
-                    document.getElementById('result').innerHTML = `
-                    Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> significantly! Refer to the above table for your optimal setup.
-                `;
+                    if (mobbing){
+                        document.getElementById('result').innerHTML = `
+                        Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> significantly! Refer to the above table for your optimal setup.
+                    `;
+                    }
+                    else{
+                        document.getElementById('result').innerHTML = `
+                        Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> significantly! Refer to the above table for your optimal setup.
+                    `;
+                    }
                 }
                 else{
-                    document.getElementById('result').innerHTML = `
+                    if (mobbing){
+                        document.getElementById('result').innerHTML = `
+                        Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
+                    `;
+                    }
+                    else{
+                        document.getElementById('result').innerHTML = `
                         Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
                     `;
-                    window.scrollTo(0, document.body.scrollHeight);
+                    }
+                    
                 }
+                window.scrollTo(0, document.body.scrollHeight);
             }
 
             else if (dmgRatio < 1) {
