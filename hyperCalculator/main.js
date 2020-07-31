@@ -3573,7 +3573,7 @@ function optimizeWSE() {
     if(maple_class == 'Kanna'){
         var hp_hyper = document.getElementById('hp').value * 2;
         var hp_percent = (document.getElementById('hp_perc').value)/100;
-        var new_hp_percent = (hp_percent - hp_hyper).100;
+        var new_hp_percent = (hp_percent - hp_hyper)/100;
         var new_hp = document.getElementById('kanna_hp').value * (new_hp_percent) / (hp_percent) ;
         var diff = document.getElementById('kanna_hp').value - new_hp;
         var att_loss = Math.floor(diff/700);
