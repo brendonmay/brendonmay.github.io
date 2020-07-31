@@ -954,8 +954,8 @@ function getPrimaryAndSecondaryStatType(maple_class) {
             'secondaryStatType': 'DEX'
         },
         'Ark': {
-            'primaryStatType': 'DEX',
-            'secondaryStatType': 'STR'
+            'primaryStatType': 'STR',
+            'secondaryStatType': 'DEX'
         },
         'Battle Mage': {
             'primaryStatType': 'INT',
@@ -1135,43 +1135,45 @@ function getPrimaryAndSecondaryStatType(maple_class) {
 
 function getMultiplier(weapon_type, maple_class) {
     var Multipliers = {
-        'claw': 1.75,
-        'arm_cannon': 1.70,
-        'knuckle': 1.70,
-        'soul_shooter': 1.70,
-        'cannon': 1.50,
-        'gun': 1.50,
-        'spear': 1.49,
-        'polearm': 1.49,
-        'great_sword': 1.49,
-        'cross_bow': 1.35,
-        'fan': 1.35,
-        'two_hand_sword': 1.34,
-        'whip_blade': 1.3125,
-        'bow': 1.30,
-        'dagger': 1.30,
-        'katara': 1.30,
-        'dual_bowgun': 1.30,
-        'cane': 1.30,
-        'desperado': 1.30,
-        'energy_chain': 1.30,
-        'ancient_bow': 1.30,
-        'ritual_fan': 1.30,
-        'bladecaster': 1.30,
-        'katana': 1.25,
-        'one_hand_sword': 1.20,
-        'one_hand_axe': 1.20,
-        'one_hand_axe_hero': 1.30,
-        'two-hand_axe': 1.34,
-        'two_hand_axe_hero': 1.44,
-        'one_hand_blunt': 1.20,
-        'shining_rod': 1.20,
-        'psy_limiter': 1.20,
-        'lucent_gauntlet': 1.20,
-        'wand_adventure': 1.20,
-        'staff_adventure': 1.20,
-        'wand': 1.00,
-        'staff': 1.00,
+        'ancient_bow': 1.30, //good
+        'arm_cannon': 1.70, //good
+        'bladecaster': 1.30,//good
+        'bow': 1.30, //good
+        'cane': 1.30, //good
+        'cannon': 1.50, //good
+        'claw': 1.75, //good
+        'cross_bow': 1.35, //good
+        'dagger': 1.30, //good
+        'desperado': 1.30, //good
+        'dual_bowgun': 1.30, //good
+        'energy_chain': 1.30, //good
+        'fan': 1.35, //good
+        'gun': 1.50, //good
+        'heavy_sword': 1.49, //good
+        'katana': 1.25, //good
+        'knuckle': 1.70, //good
+        'long_sword': 1.34, //good
+        'lucent_gauntlet': 1.20, //good
+        'one_hand_axe': 1.20, //good
+        'one_hand_axe_hero': 1.30, //good
+        'one_hand_blunt': 1.20, //good
+        'one_hand_sword': 1.20, //good
+        'polearm': 1.49, //good
+        'psy_limiter': 1.20, //good
+        'ritual_fan': 1.30, //good
+        'scepter': 1.34, //good
+        'shining_rod': 1.20, //good
+        'soul_shooter': 1.70, //good
+        'spear': 1.49, //good
+        'staff': 1.00, //good
+        'staff_adventure': 1.20, //good
+        'two_hand_axe': 1.34, //good
+        'two_hand_axe_hero': 1.44, //good
+        'two_hand_blunt': 1.34, //good
+        'two_hand_sword': 1.34, //good
+        'wand': 1.00, //good
+        'wand_adventure': 1.20, //good
+        'whip_blade': 1.3125, //good
     };
 
     if (maple_class == 'Hero') {
