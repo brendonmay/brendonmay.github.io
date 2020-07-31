@@ -328,7 +328,7 @@ input[type="checkbox"]:disabled {
 }
 
 .btnSubmit {
-    background: linear-gradient(-45deg, rgb(96, 148, 27) 0%, rgb(89, 104, 53) 100%);
+    background: linear-gradient(-45deg, #9b8c02 0%, rgb(90, 100, 1) 80%);
     font-size: 18px;
     transition: 0.6s;
     padding: 10px 15px;
@@ -349,7 +349,6 @@ input[type="checkbox"]:disabled {
 }
 
 .btnSubmit:hover {
-    filter:hue-rotate(30deg);
     transform: scale(1.1);
 }
 
