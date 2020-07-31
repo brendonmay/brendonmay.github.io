@@ -3698,6 +3698,11 @@ function optimizeWSE() {
         document.getElementById('resultSection').hidden = false;
         window.scrollTo(0, document.body.scrollHeight);
 
+        if (pdr == 0){
+            current_boss_percent = 0;
+            stripped_boss_percent = 0;
+        }
+
         if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
             currentScore = calculateDamageLuk2(primary_stat, secondary_stat, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
         }
@@ -3715,6 +3720,7 @@ function optimizeWSE() {
         console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack: ' + attack + ", stat_value: " + stat_value + ", att percent: " + current_attack_percent)
         console.log('old score: ' + currentScore);
 
+        console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack + ", att percent: " + current_attack_percent)
         calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
 
         return false
