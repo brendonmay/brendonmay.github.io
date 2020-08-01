@@ -3416,7 +3416,7 @@ function optimizeWSE() {
     var ied_percent = document.getElementById('ied_percent').value - 0.5; //due to rounding up in game
     if (document.getElementById('ied_percent').value.includes('.')) {
         pro_mode = true;
-        ied_percent = document.getElementById('ied_percent').value;
+        ied_percent = parseFloat(document.getElementById('ied_percent').value);
     }
     var damage_percent = parseInt(document.getElementById('damage_percent').value);
     var primary_stat = parseInt(document.getElementById('primary_stat').value);
