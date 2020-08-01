@@ -158,13 +158,13 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
 
     if (maple_class == "Kanna") {
         message.type = 'KANNA';
-        message.hp = document.getElementById('kanna_hp').value;
-        var percent_hp = document.getElementById('hp_perc').value;
+        message.hp = parseInt(document.getElementById('kanna_hp').value);
+        var percent_hp = parseInt(document.getElementById('hp_perc').value);
         message.php = percent_hp / 100;
     }
     if (maple_class == "Demon Avenger"){
-        var percent_hp = document.getElementById('hp_perc').value;
-        var flat_hp = document.getElementById('hp_arcane').value;
+        var percent_hp = parseInt(document.getElementById('hp_perc').value);
+        var flat_hp = parseInt(document.getElementById('hp_arcane').value);
         message.php = percent_hp / 100;
         message.flathp = flat_hp;
     }
@@ -3424,7 +3424,7 @@ function optimizeWSE() {
     var attack_percent = 100;
     var level = parseInt(document.getElementById('level').value);
     var upperShownDamage = parseInt(document.getElementById('upper_shown_damage').value);
-    var critical_damage = parseInt(document.getElementById('critical_damage').value);
+    var critical_damage = parseFloat(document.getElementById('critical_damage').value);
 
     //Link Skill Stats
     if (document.getElementById('solus2').checked == true) {
@@ -3572,18 +3572,21 @@ function optimizeWSE() {
     var stripped_attack = attack - hyper_att;
     if(maple_class == 'Kanna'){
         var hp_hyper = parseInt(document.getElementById('hp').value);
-        var hp_percent = (document.getElementById('hp_perc').value)/100;
+        var hp_percent = 1 + (parseInt(document.getElementById('hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
+        console.log('hp perc: ' + hp_percent)
+        
         //console.log('old hp perc: ' + hp_percent)
         var new_hp_percent = (hp_percent * 100 - hp_hyper)/100;
         //console.log('new hp perc: ' + new_hp_percent)
         var new_hp = parseInt(document.getElementById('kanna_hp').value) * (new_hp_percent) / (hp_percent);
         //console.log('new hp: ' + new_hp)
-        var diff = document.getElementById('kanna_hp').value - new_hp;
+        var diff = parseInt(document.getElementById('kanna_hp').value) - new_hp;
         var att_loss = Math.floor(diff/700);
         //console.log('attack loss: ' + att_loss)
-        var stripped_attack = stripped_attack - att_loss;
+        stripped_attack = stripped_attack - att_loss;
         //console.log('stripped att: ' + stripped_attack);
         //here
+        
     }
     var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
@@ -3591,9 +3594,9 @@ function optimizeWSE() {
     var flat_hp = parseInt(document.getElementById('hp_arcane').value);
     if (primary_stat_type == "HP") {
         var hp_hyper = parseInt(document.getElementById('hp').value);
-        var hp_percent = (document.getElementById('hp_perc').value)/100;
-        //console.log('old hp perc: ' + hp_percent)
-        var new_hp_percent = (hp_percent * 100 - hp_hyper)/100;
+        var hp_percent = 1 + (parseInt(document.getElementById('hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
+        console.log('hp perc: ' + hp_percent)
+        var new_hp_percent = ((hp_percent * 100) - hp_hyper)/100;
         //console.log('new hp perc: ' + new_hp_percent)
         var new_hp = flat_hp + (primary_stat - flat_hp) * (new_hp_percent) / (hp_percent);
         stripped_primary = new_hp;
@@ -3713,16 +3716,33 @@ function optimizeWSE() {
             var pureHP = 545 + 90 * level;
             currentScore = calculateDamageDA(pureHP, primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr)
         }
+        else if (maple_class == "Kanna") {
+            currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack * current_attack_percent / 100, pdr);
+        }
         else {
             currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
         }
 
-        console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack: ' + attack + ", stat_value: " + stat_value + ", att percent: " + current_attack_percent)
-        console.log('old score: ' + currentScore);
+        if (maple_class != "Kanna"){
+            console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack (without %): ' + attack  + ", stat_value: " + stat_value + ', attk percent: ' + current_attack_percent)
+            console.log('old score: ' + currentScore);
 
-        console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack + ", att percent: " + current_attack_percent)
-        calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
+            console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack)
+        }
+        else{
+            console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack (with %): ' + attack * current_attack_percent/100  + ", stat_value: " + stat_value + ', attk percent: ' + current_attack_percent)
+            console.log('old score: ' + currentScore);
 
+            console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack * current_attack_percent/100)
+        }
+        
+        
+        if (maple_class == "Kanna") {
+            calculate(stripped_attack * current_attack_percent / 100, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
+        }
+        else{
+            calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
+        }
         return false
     
 }

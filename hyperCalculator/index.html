@@ -190,21 +190,21 @@
                     <input class="form-control" type="number" id="final_damage_percent" name="final_damage_percent"
                         min="0" max="500" value=25>
                 </div>
-                <div class="col-sm-12 col-md form-group">
+                <div class="col-sm-12 col-md-4 form-group">
                     <div id='critical_damage_label'>
                         <label for="critical_damage"> Critical Damage % </label>
                     </div>
                     <input class="form-control" type="number" id="critical_damage" name="critical_damage" min="0"
                         max="300" value=98>
                 </div>
-                <div class="col-sm-12 col-md form-group">
+                <div class="col-sm-12 col-md-4 form-group">
                     <div id='primary_label'>
                         <label for="primary_stat"> LUK </label>
                     </div>
-                    <input class="form-control" type="number" id="primary_stat" name="primary_stat" min="0" max="150000"
+                    <input class="form-control" type="number" id="primary_stat" name="primary_stat" min="0" max="1000000"
                         value=44995>
                 </div>
-                <div class="col-sm-12 col-md form-group">
+                <div class="col-sm-12 col-md-4 form-group">
                     <div id='secondary_label'>
                         <label for="secondary_stat"> DEX </label>
                     </div>
@@ -220,7 +220,7 @@
                 </div>
                 <div class="col-sm-12 col-md form-group" hidden id='hp_perc_div'>
                     <div id='hp_perc_label'>
-                        <label for="hp_perc"> HP % (Sum all Lines) </label>
+                        <label for="hp_perc"> HP % (From Potentials on Gear) </label>
                     </div>
                     <input class="form-control" type="number" id="hp_perc" name="hp_perc" min="0"
                         max="150000" value=0>
@@ -763,7 +763,7 @@
                 <div class='col text-center'>
                     <a tabindex="0" class="btn btnStep btn-outline-secondary btn-sm" role="button" data-toggle="popover"
                         data-trigger="focus" title="Enter Your Current Hyper Stats"
-                        data-content="Fill in the table below with the hyper stat point distribution currently on your character. If you would like to lock a particular stat distribution for your optimization, then check the corresponding checkbox.">
+                        data-content="Fill in the table below with the hyper stat point distribution currently on your character. If you insert points into a locked stat, then the same amount of points will be used in the optimization.">
                         <div class="btnDiv">
                             <h6>Step 5. Enter Your Current Hyper Stats</h6>
                         </div>
@@ -803,7 +803,7 @@
                                     <th>Stat</th>
                                     <th>Level</th>
                                     <th>Stat Amount</th>
-                                    <th>Lock</th>
+                                    <th>Locked</th>
                                 </tr>
                                 <tr>
                                     <td>STR</td>
@@ -899,7 +899,7 @@
                                     <td id="demFor"></td>
                                     <td class='tableCheckBox'>
                                         <label class="checkbox2" for="demForLock">
-                                            <input type="checkbox" id="demForLock" value="">
+                                            <input checked disabled type="checkbox" id="demForLock" value="">
                                         </label>
                                     </td>
                                 </tr>
@@ -913,7 +913,7 @@
                                     <td id="critRate"></td>
                                     <td class='tableCheckBox'>
                                         <label class="checkbox2" for="critRateLock">
-                                            <input type="checkbox" id="critRateLock" value="">
+                                            <input checked disabled type="checkbox" id="critRateLock" value="">
                                         </label>
                                     </td>
                                 </tr>
@@ -983,7 +983,7 @@
                                     <td id="statResist"></td>
                                     <td class='tableCheckBox'>
                                         <label class="checkbox2" for="statResistLock">
-                                            <input type="checkbox" id="statResistLock" value="">
+                                            <input checked disabled type="checkbox" id="statResistLock" value="">
                                         </label>
                                     </td>
                                 </tr>
@@ -997,7 +997,7 @@
                                     <td id="stance"></td>
                                     <td class='tableCheckBox'>
                                         <label class="checkbox2" for="stanceLock">
-                                            <input type="checkbox" id="stanceLock" value="">
+                                            <input checked disabled type="checkbox" id="stanceLock" value="">
                                         </label>
                                     </td>
                                 </tr>
@@ -1025,7 +1025,7 @@
                                     <td id="bonusExp"></td>
                                     <td class='tableCheckBox'>
                                         <label class="checkbox2" for="bonusExpLock">
-                                            <input type="checkbox" id="bonusExpLock" value="">
+                                            <input checked disabled type="checkbox" id="bonusExpLock" value="">
                                         </label>
                                     </td>
                                 </tr>
@@ -1040,7 +1040,7 @@
                                     <td id="arcForce"></td>
                                     <td class='tableCheckBox'>
                                         <label class="checkbox2" for="arcForceLock">
-                                            <input type="checkbox" id="arcForceLock" value="">
+                                            <input checked disabled type="checkbox" id="arcForceLock" value="">
                                         </label>
                                     </td>
                                 </tr>
@@ -1278,3 +1278,8 @@
         </div>
     </div>
 </body>
+<footer class="footer">
+    <div class="container text-center">
+        <span style='color: white'><ion-icon name="heart"></ion-icon></span><span class="text-muted">Made by SuckHard   <span style='color: white'><ion-icon name="git-branch-outline"></ion-icon></span> Forked from walletstory   <span style='color: white'><ion-icon name="color-wand"></ion-icon></span> Styled by Taha</span>
+    </div>
+</footer>

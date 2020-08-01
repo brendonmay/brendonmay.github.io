@@ -296,10 +296,7 @@ hr {
     padding: 0.25rem;
 }
 
-input[type="checkbox"]:disabled {
-    background: gray !important;
-    border: 1px solid #d4d4d5 !important;
-}
+
 
 
 .checkbox2 > input {

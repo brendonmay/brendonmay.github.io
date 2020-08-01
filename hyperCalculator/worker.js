@@ -68,8 +68,16 @@ function calculateOptimalCommon(data, progress, cb, mobbing) {
                 'primary': counters[6],
                 'extra points': data.points,
                 'score': damage,
+                'primary_base': data.primary + statGain(counters[6]),
+                'secondary_base': data.secondary + statGain(counters[0]),
+                'cdmg_base': data.cdmg + cdmgGain(counters[3]),
+                'boss_base': data.boss + bossGain(counters[1], mobbing),
+                'ied_base': (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
+                'dmg_base': data.dmg + dmgGain(counters[2]),
+                'att_base':  data.att + attGain(counters[5])
             };
             cb(optimalConfig);
+            // (primary, secondary, cdmg, boss, dmg, ied, att, pdr)
         }
     })))));
     for (let j = 0; j <= data.i; ++j) {
@@ -222,7 +230,7 @@ function calculateOptimalDA(data, progress, cb, mobbing) {
             counters.pop();
         }
         data.points = oldPoints;
-    };
+    }; //purehp, hp, str, cdmg, boss, dmg, ied, att, pdr
 
     let inner = loop(loop(loop(loop(loop(() => {
         let damage = calculateDamageDA(
@@ -248,6 +256,13 @@ function calculateOptimalDA(data, progress, cb, mobbing) {
                 'hp': counters[6],
                 'extra points': data.points,
                 'score': damage,
+                'hp_base': (data.hp - data.flathp) / (1.00 + data.php) * (1.00 + data.php + hpGain(counters[6])) + data.flathp,
+                'str_base': data.str + statGain(counters[0]),
+                'cdmg_base': data.cdmg + cdmgGain(counters[4]),
+                'boss_base': data.boss + bossGain(counters[2], mobbing),
+                'dmg_base': data.dmg + dmgGain(counters[3]),
+                'ied_base': (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[5]))),
+                'att_base': data.att + attGain(counters[1]),
             };
             cb(optimalConfig);
         }
@@ -284,6 +299,11 @@ function calculateOptimalKanna(data, progress, cb, mobbing) {
     };
 
     let inner = loop(loop(loop(loop(loop(loop(() => {
+        var hp_with_percent = data.hp - data.flathp;
+        var att_removal = Math.floor((data.hp/700));
+        var hp_without_percent = hp_with_percent / (1 + data.php);
+        var new_hp = (hp_without_percent) * (1 + data.php + hpGain(counters[7])) + data.flathp;
+        var att_boost = Math.floor(new_hp / 700); //come back
         let damage = calculateDamageCommon(
             data.int + statGain(counters[6]),
             data.luk + statGain(counters[0]),
@@ -291,8 +311,9 @@ function calculateOptimalKanna(data, progress, cb, mobbing) {
             data.boss + bossGain(counters[1], mobbing),
             data.dmg + dmgGain(counters[2]),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
-            Math.floor((data.att + attGain(counters[5])) * data.patt +
-                Math.floor(((data.hp - data.flathp) / (1.00 + data.php) * (1.00 + data.php + hpGain(counters[7])) + data.flathp) / 700)),
+            Math.floor(((data.att / data.patt) - att_removal + attGain(counters[5]) + att_boost) * data.patt),
+            //Total attack is divided by attk percent to determine base attack. We remove the old HP att gain and replace with the new one. Also add in new hyper stat gain. Then reapply percent attack.
+                
             data.pdr
         );
         if (optimalDamage < damage) {
@@ -308,6 +329,13 @@ function calculateOptimalKanna(data, progress, cb, mobbing) {
                 'hp': counters[7],
                 'extra points': data.points,
                 'score': damage,
+                'base_int': data.int + statGain(counters[6]),
+                'base_luk': data.luk + statGain(counters[0]),
+                'base_cdmg': data.cdmg + cdmgGain(counters[3]),
+                'base_boss': data.boss + bossGain(counters[1], mobbing),
+                'base_dmg': data.dmg + dmgGain(counters[2]),
+                'base_ied': (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
+                'base_att': Math.floor((data.att + attGain(counters[5])) * data.patt + att_boost)
             };
             cb(optimalConfig);
         }
