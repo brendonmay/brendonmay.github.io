@@ -296,9 +296,6 @@ hr {
     padding: 0.25rem;
 }
 
-
-
-
 .checkbox2 > input {
     height: 15px;
     width: 15px;
@@ -318,6 +315,18 @@ hr {
 .checkbox2 > input:checked {
     border: 1px solid #e0ca05;
     background-color: #e0ca05;
+    
+}
+
+.checkbox2 > input:checked + span::before {
+    content: '\2713';
+    font-weight: 900;
+    display: block;
+    text-align: center;
+    color: black;
+    position: absolute;
+    left: 0.15rem;
+    top: 0.37rem;
 }
 
 .noPadding {
