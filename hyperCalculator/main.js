@@ -3696,12 +3696,12 @@ function optimizeWSE() {
 
         var pdr = 3;
 
-        if(document.getElementById('mobbing').checked) pdr = 0;
+        if(document.getElementById('mobbing').checked) pdr = 0.1;
 
         document.getElementById('resultSection').hidden = false;
         window.scrollTo(0, document.body.scrollHeight);
 
-        if (pdr == 0){
+        if (pdr != 3){
             current_boss_percent = 0;
             stripped_boss_percent = 0;
         }
