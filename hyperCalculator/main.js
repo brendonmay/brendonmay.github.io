@@ -56,6 +56,195 @@ var new_information = {
     specialIncr: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 };
 
+function exportToJsonFile(jsonData, name) {
+    let dataStr = JSON.stringify(jsonData);
+    let dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    let exportFileDefaultName = name + ' Hyper Data.json';
+
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+}
+
+function handleFileSelect(event) {
+    const reader = new FileReader()
+    reader.onload = handleFileLoad;
+    reader.readAsText(event.target.files[0]);
+    document.getElementById('importdata').checked = false;
+    document.getElementById('file_div').hidden = true;
+}
+
+function handleFileLoad(event) { //here
+    var json = event.target.result;
+    var obj = JSON.parse(json);
+
+    var obj_values = obj.obj_values; //ex: {id1: value1, id2: value2}
+    var obj_hyper_values = obj.obj_hyper_values;
+    var obj_wse_level = obj.obj_wse_level; //ex: {id1: value1, id2: value2}
+    var obj_wse_lines = obj.obj_wse_lines; //ex: {id1: value1, id2: value2}
+    var obj_checked = obj.obj_checked; //ex: {id1: true, id2: false}
+
+    var k = 0;
+    var i = 0;
+    var current_obj
+    while (k < 5) {
+        if (k == 0) current_obj = obj_values;
+        else if (k == 1) current_obj = obj_wse_level;
+        else if (k == 2) current_obj = obj_checked;
+        else if (k == 3) current_obj = obj_wse_lines;
+        else if (k == 4) current_obj = obj_hyper_values;
+
+        i = 0;
+        var id_values = Object.keys(current_obj);
+        while (i < id_values.length) {
+            var id = id_values[i];
+            var value = current_obj[id];
+            if (id == 'level'){
+                document.getElementById(id).value = value;
+                calcHyperStatPoints();
+                ncalcHyperStatPoints();
+                var new_level = value;
+                document.getElementById('current_level').innerHTML = `${new_level}`;
+                document.getElementById('ncurrent_level').innerHTML = `${new_level}`;
+            }
+            if (id == 'class'){
+                document.getElementById(id).value = value;
+                var maple_class = value;
+                if (maple_class == "Kanna") {
+                    document.getElementById('kanna_hp_div').hidden = false;
+                }
+                else {
+                    document.getElementById('kanna_hp_div').hidden = true;
+                }
+        
+                if (maple_class == "Demon Avenger") {
+                    document.getElementById('hp_arcane_div').hidden = false;
+                }
+                else {
+                    document.getElementById('hp_arcane_div').hidden = true;
+                }
+        
+                if (maple_class == "Demon Avenger" || maple_class == "Kanna") {
+                    document.getElementById('hp_perc_div').hidden = false;
+                }
+                else {
+                    document.getElementById('hp_perc_div').hidden = true;
+                }
+        
+                var stat_types = getPrimaryAndSecondaryStatType(maple_class);
+                var primary_stat = stat_types.primaryStatType;
+                var secondary_stat = stat_types.secondaryStatType;
+        
+                document.getElementById('primary_label').innerHTML = `<label for="primary_stat"> ${primary_stat} </label>`;
+                document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
+        
+                if (maple_class == "Xenon") {
+                    document.getElementById('secondary_stat').value = 0;
+                    document.getElementById('secondary_stat').disabled = true;
+                }
+                else {
+                    document.getElementById('secondary_stat').disabled = false;
+                }
+            }
+            if (k != 2) document.getElementById(id).value = value;
+            if (k == 4) {
+                document.getElementById(id).value = value;
+                updatePoints(document.getElementById(id));
+            }
+            if (k == 2) document.getElementById(id).checked = value;
+            i++;
+        }
+        if (k == 1) {
+            updateWeaponLines();
+            updateSecondaryLines();
+            updateEmblemLines();
+        }
+        k++;
+    }
+}
+function generateExportObject(maple_class) {
+    var obj = {};
+
+    //each of these will be a stored in obj which will be exported to JSON
+    //key is ID, value is value
+    var obj_values = {}; //ex: {id1: value1, id2: value2}
+    var obj_hyper_values = {};
+    var obj_wse_level = {}; //ex: {id1: value1, id2: value2}
+    var obj_wse_lines = {}; //ex: {id1: value1, id2: value2}
+    //key is ID, value is true or false (.checked == true)
+    var obj_checked = {}; //ex: {id1: true, id2: false}
+
+
+    //collection of IDs to collect data on
+    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp']
+    var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
+    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock']
+    var id_wse_level = ['wlevel', 'slevel', 'elevel'];
+    var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
+
+    var i = 0
+    while (i < id_values.length) {
+        var id = id_values[i];
+        var value = document.getElementById(id).value;
+        obj_values[id] = value;
+        i++;
+    }
+    i = 0
+    while (i < id_hyper_values.length) {
+        var id = id_hyper_values[i];
+        var value = document.getElementById(id).value;
+        obj_hyper_values[id] = value;
+        i++;
+    }
+    i = 0
+    while (i < id_checked.length) {
+        var id = id_checked[i];
+        var checked = document.getElementById(id).checked;
+        obj_checked[id] = checked;
+        i++;
+    }
+    i = 0
+    while (i < id_wse_level.length) {
+        var id = id_wse_level[i];
+        var value = document.getElementById(id).value;
+        obj_wse_level[id] = value;
+        i++;
+    }
+    i = 0
+    var items = Object.keys(id_wse_lines)
+    while (i < items.length) {
+        var item = items[i];
+        var k = 0;
+        var lines = id_wse_lines[item];
+        while (k < lines.length) {
+            var id = lines[k];
+            var value = document.getElementById(id).value;;
+            obj_wse_lines[id] = value;
+            k++;
+        }
+        i++;
+    }
+    obj.obj_values = obj_values;
+    obj.obj_hyper_values = obj_hyper_values;
+    obj.obj_wse_level = obj_wse_level;
+    obj.obj_wse_lines = obj_wse_lines;
+    obj.obj_checked = obj_checked;
+
+    exportToJsonFile(obj, maple_class)
+    // var json = JSON.stringify(obj);
+    // console.log(json);
+
+    //for importing:
+    //once you fill in weapon levels, update the possible lines before assigning values to lines
+    //once you put in all the values for hyper stats, update the points
+}
+
+function importCharacter(JSON) {
+    //parse the JSON, store the data into obj
+}
+
 function calculateDamageCommon(primary, secondary, cdmg, boss, dmg, ied, att, pdr) {
     return (4 * primary + secondary) * (1.35 + cdmg) * (1.00 + boss + dmg) * att * Math.max(0, 1 - (pdr * (1 - ied)));
 }
@@ -150,7 +339,7 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
         php: 0, //percent hp, 378 is 21%/item
         level: level,
         str: secondary_stat,
-        patt: attack_percent/100,
+        patt: attack_percent / 100,
         int: primary_stat,
         luk: secondary_stat,
         mob: mobbing
@@ -162,7 +351,7 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
         var percent_hp = parseInt(document.getElementById('hp_perc').value);
         message.php = percent_hp / 100;
     }
-    if (maple_class == "Demon Avenger"){
+    if (maple_class == "Demon Avenger") {
         var percent_hp = parseInt(document.getElementById('hp_perc').value);
         var flat_hp = parseInt(document.getElementById('hp_arcane').value);
         message.php = percent_hp / 100;
@@ -2183,6 +2372,321 @@ function getClassData(maple_class) {
     }
     return class_data[maple_class]
 }
+function updateSecondaryLines() {
+    var current_class = document.getElementById('class').value;
+    if (current_class != 'Kanna') {
+        if (document.getElementById('slevel').value == 'lesser160') {
+            if (document.getElementById('optimize').checked == true) {
+                document.getElementById('new_slevel').value = 'lesser160';
+                update_new_slevel(current_class);
+                update_new_wlevel();
+                update_new_elevel();
+
+            }
+            $('#sline1').empty();
+            $('#sline1').append("<option value='40boss'>40% Boss</option>");
+            $('#sline1').append("<option value='35boss'>35% Boss</option>");
+            $('#sline1').append("<option value='30boss'>30% Boss</option>");
+            $('#sline1').append("<option value='40ied'>40% IED</option>");
+            $('#sline1').append("<option value='35ied'>35% IED</option>");
+            $('#sline1').append("<option value='12att'>12% ATT</option>");
+            $('#sline1').append("<option value='12dmg'>12% Damage</option>");
+            $('#sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#sline2').empty();
+            $('#sline2').append("<option value='40boss'>40% Boss</option>");
+            $('#sline2').append("<option value='35boss'>35% Boss</option>");
+            $('#sline2').append("<option value='30boss'>30% Boss</option>");
+            $('#sline2').append("<option value='20boss'>20% Boss</option>");
+            $('#sline2').append("<option value='40ied'>40% IED</option>");
+            $('#sline2').append("<option value='35ied'>35% IED</option>");
+            $('#sline2').append("<option value='30ied'>30% IED</option>");
+            $('#sline2').append("<option value='12att'>12% ATT</option>");
+            $('#sline2').append("<option value='9att'>9% ATT</option>");
+            $('#sline2').append("<option value='12dmg'>12% Damge</option>");
+            $('#sline2').append("<option value='9dmg'>9% Damge</option>");
+            $('#sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#sline3').empty();
+            $('#sline3').append("<option value='40boss'>40% Boss</option>");
+            $('#sline3').append("<option value='35boss'>35% Boss</option>");
+            $('#sline3').append("<option value='30boss'>30% Boss</option>");
+            $('#sline3').append("<option value='20boss'>20% Boss</option>");
+            $('#sline3').append("<option value='40ied'>40% IED</option>");
+            $('#sline3').append("<option value='35ied'>35% IED</option>");
+            $('#sline3').append("<option value='30ied'>30% IED</option>");
+            $('#sline3').append("<option value='12att'>12% ATT</option>");
+            $('#sline3').append("<option value='9att'>9% ATT</option>");
+            $('#sline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#sline3').append("<option value='9dmg'>9% Damage</option>");
+            $('#sline3').append("<option value='none' selected>N/A</option>");
+
+        }
+        else {
+            if (document.getElementById('optimize').checked == true) {
+                document.getElementById('new_slevel').value = 'greater160';
+                update_new_slevel(current_class);
+
+                update_new_wlevel();
+                update_new_elevel();
+            }
+            $('#sline1').empty();
+            $('#sline1').append("<option value='40boss'>40% Boss</option>");
+            $('#sline1').append("<option value='35boss'>35% Boss</option>");
+            $('#sline1').append("<option value='30boss'>30% Boss</option>");
+            $('#sline1').append("<option value='40ied'>40% IED</option>");
+            $('#sline1').append("<option value='35ied'>35% IED</option>");
+            $('#sline1').append("<option value='13att'>13% ATT</option>");
+            $('#sline1').append("<option value='13dmg'>13% Damage</option>");
+            $('#sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#sline2').empty();
+            $('#sline2').append("<option value='40boss'>40% Boss</option>");
+            $('#sline2').append("<option value='35boss'>35% Boss</option>");
+            $('#sline2').append("<option value='30boss'>30% Boss</option>");
+            $('#sline2').append("<option value='20boss'>20% Boss</option>");
+            $('#sline2').append("<option value='40ied'>40% IED</option>");
+            $('#sline2').append("<option value='35ied'>35% IED</option>");
+            $('#sline2').append("<option value='30ied'>30% IED</option>");
+            $('#sline2').append("<option value='13att'>13% ATT</option>");
+            $('#sline2').append("<option value='10att'>10% ATT</option>");
+            $('#sline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#sline2').append("<option value='10dmg'>10% Damage</option>");
+            $('#sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#sline3').empty();
+            $('#sline3').append("<option value='40boss'>40% Boss</option>");
+            $('#sline3').append("<option value='35boss'>35% Boss</option>");
+            $('#sline3').append("<option value='30boss'>30% Boss</option>");
+            $('#sline3').append("<option value='20boss'>20% Boss</option>");
+            $('#sline3').append("<option value='40ied'>40% IED</option>");
+            $('#sline3').append("<option value='35ied'>35% IED</option>");
+            $('#sline3').append("<option value='30ied'>30% IED</option>");
+            $('#sline3').append("<option value='13att'>13% ATT</option>");
+            $('#sline3').append("<option value='10att'>10% ATT</option>");
+            $('#sline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#sline3').append("<option value='10dmg'>10% Damage</option>");
+            $('#sline3').append("<option value='none' selected>N/A</option>");
+        }
+    }
+    else {
+        if (document.getElementById('slevel').value == 'lesser160') {
+            if (document.getElementById('optimize').checked == true) {
+                document.getElementById('new_slevel').value = 'lesser160';
+                update_new_slevel(current_class);
+                update_new_wlevel();
+                update_new_elevel();
+            }
+            $('#sline1').empty();
+            $('#sline1').append("<option value='12att'>12% ATT</option>");
+            $('#sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#sline2').empty();
+            $('#sline2').append("<option value='12att'>12% ATT</option>");
+            $('#sline2').append("<option value='9att'>9% ATT</option>");
+            $('#sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#sline3').empty();
+            $('#sline3').append("<option value='12att'>12% ATT</option>");
+            $('#sline3').append("<option value='9att'>9% ATT</option>");
+            $('#sline3').append("<option value='none' selected>N/A</option>");
+
+        }
+        else {
+            if (document.getElementById('optimize').checked == true) {
+                document.getElementById('new_slevel').value = 'greater160';
+                update_new_slevel(current_class);
+                update_new_wlevel();
+                update_new_elevel();
+            }
+            $('#sline1').empty();
+            $('#sline1').append("<option value='13att'>13% ATT</option>");
+            $('#sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#sline2').empty();
+            $('#sline2').append("<option value='13att'>13% ATT</option>");
+            $('#sline2').append("<option value='10att'>10% ATT</option>");
+            $('#sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#sline3').empty();
+            $('#sline3').append("<option value='13att'>13% ATT</option>");
+            $('#sline3').append("<option value='10att'>10% ATT</option>");
+            $('#sline3').append("<option value='none' selected>N/A</option>");
+        }
+    }
+}
+function updateEmblemLines() {
+    if (document.getElementById('elevel').value == 'lesser160') {
+        if (document.getElementById('optimize').checked == true) {
+            document.getElementById('new_elevel').value = 'lesser160';
+            update_new_elevel();
+
+            update_new_wlevel();
+
+            var maple_class = document.getElementById('class').value;
+            update_new_slevel(maple_class);
+        }
+
+        $('#eline1').empty();
+        $('#eline1').append("<option value='40ied'>40% IED</option>");
+        $('#eline1').append("<option value='35ied'>35% IED</option>");
+        $('#eline1').append("<option value='12att'>12% ATT</option>");
+        $('#eline1').append("<option value='12dmg'>12% Damage</option>");
+        $('#eline1').append("<option value='none' selected>N/A</option>");
+
+        $('#eline2').empty();
+        $('#eline2').append("<option value='40ied'>40% IED</option>");
+        $('#eline2').append("<option value='35ied'>35% IED</option>");
+        $('#eline2').append("<option value='30ied'>30% IED</option>");
+        $('#eline2').append("<option value='12att'>12% ATT</option>");
+        $('#eline2').append("<option value='9att'>9% ATT</option>");
+        $('#eline2').append("<option value='12dmg'>12% Damage</option>");
+        $('#eline2').append("<option value='9dmg'>9% Damage</option>");
+        $('#eline2').append("<option value='none' selected>N/A</option>");
+
+        $('#eline3').empty();
+        $('#eline3').append("<option value='40ied'>40% IED</option>");
+        $('#eline3').append("<option value='35ied'>35% IED</option>");
+        $('#eline3').append("<option value='30ied'>30% IED</option>");
+        $('#eline3').append("<option value='12att'>12% ATT</option>");
+        $('#eline3').append("<option value='9att'>9% ATT</option>");
+        $('#eline3').append("<option value='12dmg'>12% Damage</option>");
+        $('#eline3').append("<option value='9dmg'>9% Damage</option>");
+        $('#eline3').append("<option value='none' selected>N/A</option>");
+
+    }
+    else {
+        if (document.getElementById('optimize').checked == true) {
+            document.getElementById('new_elevel').value = 'greater160';
+            update_new_elevel();
+
+            update_new_wlevel();
+            var maple_class = document.getElementById('class').value;
+            update_new_slevel(maple_class);
+        }
+        $('#eline1').empty();
+        $('#eline1').append("<option value='40ied'>40% IED</option>");
+        $('#eline1').append("<option value='35ied'>35% IED</option>");
+        $('#eline1').append("<option value='13att'>13% ATT</option>");
+        $('#eline1').append("<option value='13dmg'>13% Damage</option>");
+        $('#eline1').append("<option value='none' selected>N/A</option>");
+
+        $('#eline2').empty();
+        $('#eline2').append("<option value='40ied'>40% IED</option>");
+        $('#eline2').append("<option value='35ied'>35% IED</option>");
+        $('#eline2').append("<option value='30ied'>30% IED</option>");
+        $('#eline2').append("<option value='13att'>13% ATT</option>");
+        $('#eline2').append("<option value='10att'>10% ATT</option>");
+        $('#eline2').append("<option value='13dmg'>13% Damage</option>");
+        $('#eline2').append("<option value='10dmg'>10% Damage</option>");
+        $('#eline2').append("<option value='none' selected>N/A</option>");
+
+        $('#eline3').empty();
+        $('#eline3').append("<option value='40ied'>40% IED</option>");
+        $('#eline3').append("<option value='35ied'>35% IED</option>");
+        $('#eline3').append("<option value='30ied'>30% IED</option>");
+        $('#eline3').append("<option value='13att'>13% ATT</option>");
+        $('#eline3').append("<option value='10att'>10% ATT</option>");
+        $('#eline3').append("<option value='13dmg'>13% Damage</option>");
+        $('#eline3').append("<option value='10dmg'>10% Damage</option>");
+        $('#eline3').append("<option value='none' selected>N/A</option>");
+    }
+}
+function updateWeaponLines() {
+    if (document.getElementById('wlevel').value == 'lesser160') {
+        if (document.getElementById('optimize').checked == true) {
+            document.getElementById('new_wlevel').value = 'lesser160';
+            update_new_wlevel_lesser();
+            update_new_elevel();
+            var maple_class = document.getElementById('class').value;
+            update_new_slevel(maple_class);
+        }
+        $('#wline1').empty();
+        $('#wline1').append("<option value='40boss'>40% Boss</option>");
+        $('#wline1').append("<option value='35boss'>35% Boss</option>");
+        $('#wline1').append("<option value='30boss'>30% Boss</option>");
+        $('#wline1').append("<option value='40ied'>40% IED</option>");
+        $('#wline1').append("<option value='35ied'>35% IED</option>");
+        $('#wline1').append("<option value='12att'>12% ATT</option>");
+        $('#wline1').append("<option value='12dmg'>12% Damage</option>");
+        $('#wline1').append("<option value='none' selected>N/A</option>");
+
+        $('#wline2').empty();
+        $('#wline2').append("<option value='40boss'>40% Boss</option>");
+        $('#wline2').append("<option value='35boss'>35% Boss</option>");
+        $('#wline2').append("<option value='30boss'>30% Boss</option>");
+        $('#wline2').append("<option value='20boss'>20% Boss</option>");
+        $('#wline2').append("<option value='40ied'>40% IED</option>");
+        $('#wline2').append("<option value='35ied'>35% IED</option>");
+        $('#wline2').append("<option value='30ied'>30% IED</option>");
+        $('#wline2').append("<option value='12att'>12% ATT</option>");
+        $('#wline2').append("<option value='9att'>9% ATT</option>");
+        $('#wline2').append("<option value='12dmg'>12% Damage</option>");
+        $('#wline2').append("<option value='9dmg'>9% Damage</option>");
+        $('#wline2').append("<option value='none' selected>N/A</option>");
+
+        $('#wline3').empty();
+        $('#wline3').append("<option value='40boss'>40% Boss</option>");
+        $('#wline3').append("<option value='35boss'>35% Boss</option>");
+        $('#wline3').append("<option value='30boss'>30% Boss</option>");
+        $('#wline3').append("<option value='20boss'>20% Boss</option>");
+        $('#wline3').append("<option value='40ied'>40% IED</option>");
+        $('#wline3').append("<option value='35ied'>35% IED</option>");
+        $('#wline3').append("<option value='30ied'>30% IED</option>");
+        $('#wline3').append("<option value='12att'>12% ATT</option>");
+        $('#wline3').append("<option value='9att'>9% ATT</option>");
+        $('#wline3').append("<option value='12dmg'>12% Damage</option>");
+        $('#wline3').append("<option value='9dmg'>9% Damage</option>");
+        $('#wline3').append("<option value='none' selected>N/A</option>");
+
+    }
+    else {
+        if (document.getElementById('optimize').checked == true) {
+            document.getElementById('new_wlevel').value = 'greater160';
+            update_new_wlevel_greater();
+            update_new_elevel();
+            var maple_class = document.getElementById('class').value;
+            update_new_slevel(maple_class);
+        }
+        $('#wline1').empty();
+        $('#wline1').append("<option value='40boss'>40% Boss</option>");
+        $('#wline1').append("<option value='35boss'>35% Boss</option>");
+        $('#wline1').append("<option value='30boss'>30% Boss</option>");
+        $('#wline1').append("<option value='40ied'>40% IED</option>");
+        $('#wline1').append("<option value='35ied'>35% IED</option>");
+        $('#wline1').append("<option value='13att'>13% ATT</option>");
+        $('#wline1').append("<option value='13dmg'>13% Damage</option>");
+        $('#wline1').append("<option value='none' selected>N/A</option>");
+
+        $('#wline2').empty();
+        $('#wline2').append("<option value='40boss'>40% Boss</option>");
+        $('#wline2').append("<option value='35boss'>35% Boss</option>");
+        $('#wline2').append("<option value='30boss'>30% Boss</option>");
+        $('#wline2').append("<option value='20boss'>20% Boss</option>");
+        $('#wline2').append("<option value='40ied'>40% IED</option>");
+        $('#wline2').append("<option value='35ied'>35% IED</option>");
+        $('#wline2').append("<option value='30ied'>30% IED</option>");
+        $('#wline2').append("<option value='13att'>13% ATT</option>");
+        $('#wline2').append("<option value='10att'>10% ATT</option>");
+        $('#wline2').append("<option value='13dmg'>13% Damage</option>");
+        $('#wline2').append("<option value='10dmg'>10% Damage</option>");
+        $('#wline2').append("<option value='none' selected>N/A</option>");
+
+        $('#wline3').empty();
+        $('#wline3').append("<option value='40boss'>40% Boss</option>");
+        $('#wline3').append("<option value='35boss'>35% Boss</option>");
+        $('#wline3').append("<option value='30boss'>30% Boss</option>");
+        $('#wline3').append("<option value='20boss'>20% Boss</option>");
+        $('#wline3').append("<option value='40ied'>40% IED</option>");
+        $('#wline3').append("<option value='35ied'>35% IED</option>");
+        $('#wline3').append("<option value='30ied'>30% IED</option>");
+        $('#wline3').append("<option value='13att'>13% ATT</option>");
+        $('#wline3').append("<option value='10att'>10% ATT</option>");
+        $('#wline3').append("<option value='13dmg'>13% Damage</option>");
+        $('#wline3').append("<option value='10dmg'>10% Damage</option>");
+        $('#wline3').append("<option value='none' selected>N/A</option>");
+    }
+}
 function update_new_wlevel_lesser() {
     $('#new_wline1').empty();
     $('#new_wline1').append("<option value='40boss'>40% Boss</option>");
@@ -2507,6 +3011,25 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     //event listeners
+    function listenForExport() {
+        document.getElementById('export').addEventListener('click', function () {
+            var maple_class = document.getElementById('class').value;
+            generateExportObject(maple_class);
+            return false
+        });
+    }
+
+    document.getElementById('importdata').addEventListener('change', function () {
+        if (document.getElementById('importdata').checked == true) {
+            document.getElementById('file_div').hidden = false;
+        }
+        else {
+            document.getElementById('file_div').hidden = true;
+        }
+    });
+
+    document.getElementById('customFile').addEventListener('change', handleFileSelect, false);
+
     document.getElementById("level").addEventListener("change", function () {
         calcHyperStatPoints();
         ncalcHyperStatPoints();
@@ -2569,7 +3092,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('nstrSelect').value = bestResult.str;
                 nupdatePoints(document.getElementById('nstrSelect'));
             }
-            else if (maple_class == "Kanna"){
+            else if (maple_class == "Kanna") {
                 document.getElementById('nhpSelect').value = bestResult.hp;
                 nupdatePoints(document.getElementById('nhpSelect'));
 
@@ -2622,6 +3145,7 @@ document.addEventListener("DOMContentLoaded", function () {
             //determine damage increase
             var dmgRatio = bestScore[0] / currentScore;
             var dmgIncrease = ((dmgRatio - 1) * 100).toFixed(2);
+            var maple_class = document.getElementById('class').value;
 
             //console.log(dmgRatio);
             //console.log(dmgIncrease);
@@ -2637,31 +3161,34 @@ document.addEventListener("DOMContentLoaded", function () {
             else if (dmgRatio > 1) {
                 var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
                 document.getElementById('resultSection').hidden = false;
-                if (currentScore == 0){
-                    if (mobbing){
+                if (currentScore == 0) {
+                    if (mobbing) {
                         document.getElementById('result').innerHTML = `
                         Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> significantly! Refer to the above table for your optimal setup.
                     `;
                     }
-                    else{
+                    else {
                         document.getElementById('result').innerHTML = `
                         Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> significantly! Refer to the above table for your optimal setup.
                     `;
                     }
                 }
-                else{
-                    if (mobbing){
+                else {
+                    if (mobbing) {
                         document.getElementById('result').innerHTML = `
-                        Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
+                        Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.<br><a href="#" id='export'>Click
+                        Here</a> to export you character data.
                     `;
                     }
-                    else{
+                    else {
                         document.getElementById('result').innerHTML = `
-                        Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
+                        Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.<br><a href="#" id='export'>Click
+                        Here</a> to export you character data.
                     `;
                     }
-                    
+
                 }
+                listenForExport();
                 window.scrollTo(0, document.body.scrollHeight);
             }
 
@@ -3080,21 +3607,21 @@ document.addEventListener("DOMContentLoaded", function () {
         if (maple_class == "Kanna") {
             document.getElementById('kanna_hp_div').hidden = false;
         }
-        else{
+        else {
             document.getElementById('kanna_hp_div').hidden = true;
         }
 
         if (maple_class == "Demon Avenger") {
             document.getElementById('hp_arcane_div').hidden = false;
         }
-        else{
+        else {
             document.getElementById('hp_arcane_div').hidden = true;
         }
 
         if (maple_class == "Demon Avenger" || maple_class == "Kanna") {
             document.getElementById('hp_perc_div').hidden = false;
         }
-        else{
+        else {
             document.getElementById('hp_perc_div').hidden = true;
         }
 
@@ -3351,6 +3878,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //Main Function
 function optimizeWSE() {
+    var fr = new FileReader();
     //clear old optimized stats
     document.getElementById('nhpSelect').value = 0;
     nupdatePoints(document.getElementById('nhpSelect'));
@@ -3512,7 +4040,7 @@ function optimizeWSE() {
 
     var currentOutput = currentBossDefMultiplier * currentHitDamage;
 
-    
+
     //console.log('oldOutput ' + currentOutput)    
 
     //console.log('ied with Current WSE = ' + current_ied_percent);
@@ -3570,23 +4098,23 @@ function optimizeWSE() {
 
     var stripped_ied_percent = (current_ied_percent - hyper_ied) / ((-1 * hyper_ied / 100) + 1);
     var stripped_attack = attack - hyper_att;
-    if(maple_class == 'Kanna'){
+    if (maple_class == 'Kanna') {
         var hp_hyper = parseInt(document.getElementById('hp').value);
         var hp_percent = 1 + (parseInt(document.getElementById('hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
         console.log('hp perc: ' + hp_percent)
-        
+
         //console.log('old hp perc: ' + hp_percent)
-        var new_hp_percent = (hp_percent * 100 - hp_hyper)/100;
+        var new_hp_percent = (hp_percent * 100 - hp_hyper) / 100;
         //console.log('new hp perc: ' + new_hp_percent)
         var new_hp = parseInt(document.getElementById('kanna_hp').value) * (new_hp_percent) / (hp_percent);
         //console.log('new hp: ' + new_hp)
         var diff = parseInt(document.getElementById('kanna_hp').value) - new_hp;
-        var att_loss = Math.floor(diff/700);
+        var att_loss = Math.floor(diff / 700);
         //console.log('attack loss: ' + att_loss)
         stripped_attack = stripped_attack - att_loss;
         //console.log('stripped att: ' + stripped_attack);
-        //here
         
+
     }
     var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
@@ -3596,7 +4124,7 @@ function optimizeWSE() {
         var hp_hyper = parseInt(document.getElementById('hp').value);
         var hp_percent = 1 + (parseInt(document.getElementById('hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
         console.log('hp perc: ' + hp_percent)
-        var new_hp_percent = ((hp_percent * 100) - hp_hyper)/100;
+        var new_hp_percent = ((hp_percent * 100) - hp_hyper) / 100;
         //console.log('new hp perc: ' + new_hp_percent)
         var new_hp = flat_hp + (primary_stat - flat_hp) * (new_hp_percent) / (hp_percent);
         stripped_primary = new_hp;
@@ -3690,61 +4218,61 @@ function optimizeWSE() {
         }
 
     }*/
-    
-        //console.log(optimal_lines)
-        //var optimal_output = optimizeHypers(strippedOutput, stripped_ied_percent, stripped_attack, stripped_boss_percent, stripped_damage_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, multiplier, current_attack_percent);
 
-        var pdr = 3;
+    //console.log(optimal_lines)
+    //var optimal_output = optimizeHypers(strippedOutput, stripped_ied_percent, stripped_attack, stripped_boss_percent, stripped_damage_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, multiplier, current_attack_percent);
 
-        if(document.getElementById('mobbing').checked) pdr = 0.1;
+    var pdr = 3;
 
-        document.getElementById('resultSection').hidden = false;
-        window.scrollTo(0, document.body.scrollHeight);
+    if (document.getElementById('mobbing').checked) pdr = 0.1;
 
-        if (pdr != 3){
-            current_boss_percent = 0;
-            stripped_boss_percent = 0;
-        }
+    document.getElementById('resultSection').hidden = false;
+    window.scrollTo(0, document.body.scrollHeight);
 
-        if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
-            currentScore = calculateDamageLuk2(primary_stat, secondary_stat, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
-        }
-        else if (maple_class == "Xenon") {
-            currentScore = calculateDamageXenon(primary_stat, 0, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr)
-        }
-        else if (maple_class == "Demon Avenger") {
-            var pureHP = 545 + 90 * level;
-            currentScore = calculateDamageDA(pureHP, primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr)
-        }
-        else if (maple_class == "Kanna") {
-            currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack * current_attack_percent / 100, pdr);
-        }
-        else {
-            currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
-        }
+    if (pdr != 3) {
+        current_boss_percent = 0;
+        stripped_boss_percent = 0;
+    }
 
-        if (maple_class != "Kanna"){
-            console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack (without %): ' + attack  + ", stat_value: " + stat_value + ', attk percent: ' + current_attack_percent)
-            console.log('old score: ' + currentScore);
+    if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
+        currentScore = calculateDamageLuk2(primary_stat, secondary_stat, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
+    }
+    else if (maple_class == "Xenon") {
+        currentScore = calculateDamageXenon(primary_stat, 0, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr)
+    }
+    else if (maple_class == "Demon Avenger") {
+        var pureHP = 545 + 90 * level;
+        currentScore = calculateDamageDA(pureHP, primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr)
+    }
+    else if (maple_class == "Kanna") {
+        currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack * current_attack_percent / 100, pdr);
+    }
+    else {
+        currentScore = calculateDamageCommon(primary_stat, secondary_stat, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
+    }
 
-            console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack)
-        }
-        else{
-            console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack (with %): ' + attack * current_attack_percent/100  + ", stat_value: " + stat_value + ', attk percent: ' + current_attack_percent)
-            console.log('old score: ' + currentScore);
+    if (maple_class != "Kanna") {
+        console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack (without %): ' + attack + ", stat_value: " + stat_value + ', attk percent: ' + current_attack_percent)
+        console.log('old score: ' + currentScore);
 
-            console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack * current_attack_percent/100)
-        }
-        
-        
-        if (maple_class == "Kanna") {
-            calculate(stripped_attack * current_attack_percent / 100, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
-        }
-        else{
-            calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
-        }
-        return false
-    
+        console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack)
+    }
+    else {
+        console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack (with %): ' + attack * current_attack_percent / 100 + ", stat_value: " + stat_value + ', attk percent: ' + current_attack_percent)
+        console.log('old score: ' + currentScore);
+
+        console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack * current_attack_percent / 100)
+    }
+
+
+    if (maple_class == "Kanna") {
+        calculate(stripped_attack * current_attack_percent / 100, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
+    }
+    else {
+        calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
+    }
+    return false
+
 }
 
 
