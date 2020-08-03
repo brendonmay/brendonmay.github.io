@@ -3177,13 +3177,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (mobbing) {
                         document.getElementById('result').innerHTML = `
                         Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.<br><a href="#" id='export'>Click
-                        Here</a> to export you character data.
+                        Here</a> to export your character data.
                     `;
                     }
                     else {
                         document.getElementById('result').innerHTML = `
                         Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.<br><a href="#" id='export'>Click
-                        Here</a> to export you character data.
+                        Here</a> to export your character data.
                     `;
                     }
 
