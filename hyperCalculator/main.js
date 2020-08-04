@@ -2096,7 +2096,7 @@ function getClassData(maple_class) {
             'iedPercent': [30, 15], //rounded
             'dmgPercent': 7, //Weighed AVG
             'bossPercent': 7, //Weighed AVG
-            'critDmg': 0
+            'critDmg': 80 //average 8 stacks (cheap shot 2) 10% each
         },
 
         'Cannoneer': {
