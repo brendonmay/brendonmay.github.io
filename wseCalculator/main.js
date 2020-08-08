@@ -930,6 +930,13 @@ function getClassData(maple_class) {
             'iedPercent': [30, 10, 20],
             'dmgPercent': 20,
             'bossPercent': 0
+        },
+
+        'Zero': { //assuming in beta mode
+            'attPercent': 4,
+            'iedPercent': [20, 50, 15], //nodes, armor split, 15% average between forms
+            'dmgPercent': -14, // 10 stacks, -24 to average between modes
+            'bossPercent': -15, //average between modes
         }
     }
     return class_data[maple_class]
@@ -1228,6 +1235,23 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("solus3").addEventListener("click", function () {
         if (document.getElementById('solus3').checked == true) {
             document.getElementById('solus2').checked = false;
+        }
+    });
+
+    document.getElementById("reboot").addEventListener("click", function () {
+        if (document.getElementById('reboot').checked == true) {
+            document.getElementById('nonreboot').checked = false;
+            document.getElementById('bonusAttPerc').value = 0;
+            document.getElementById('bonusDiv').hidden = true;
+            document.getElementById('bonusTitle').hidden = true;
+        }
+    });
+
+    document.getElementById("nonreboot").addEventListener("click", function () {
+        if (document.getElementById('nonreboot').checked == true) {
+            document.getElementById('reboot').checked = false;
+            document.getElementById('bonusDiv').hidden = false;
+            document.getElementById('bonusTitle').hidden = false;
         }
     });
 
@@ -1672,6 +1696,13 @@ document.addEventListener("DOMContentLoaded", function () {
         update_new_slevel(maple_class);
         update_new_wlevel();
 
+        if (maple_class == "Zero"){
+            document.getElementById('zeromessage').hidden = false;
+        }
+        else{
+            document.getElementById('zeromessage').hidden = true;
+        }
+
         var current_class = document.getElementById('class').value;
         document.getElementById('wline1').value = 'none';
         document.getElementById('wline2').value = 'none';
@@ -1967,6 +1998,9 @@ function optimizeWSE() {
     if (document.getElementById('badge3').checked == true) {
         attack_percent = attack_percent + 3;
     }
+
+    attack_percent = attack_percent + parseInt(document.getElementById('familiarAttPerc').value);
+    if(document.getElementById('bonusAttPerc')) attack_percent = attack_percent + parseInt(document.getElementById('bonusAttPerc').value);
 
     // class_data
     var class_data = getClassData(maple_class)

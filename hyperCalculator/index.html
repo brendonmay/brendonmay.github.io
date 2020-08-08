@@ -63,7 +63,7 @@
                 <div class='col text-center'>
                     <a tabindex="0" class="btn btnStep btn-outline-secondary btn-sm" role="button" data-toggle="popover"
                         data-trigger="focus" title="Entering Your Stats"
-                        data-content="Enter your stats while fully buffed as they appear in your stat window. <br> <br><strong>Activating Pro-Mode:</strong> If you have gone through the trouble to calculate your exact IED%, then input it up to two decimal places (do not include IED sources from the link skills listed below). <br> <br><strong>Demon Avengers:</strong> If your HP is over 500,000 hover over your stat window entry to find your true HP value.">
+                        data-content="Enter your stats while fully buffed as they appear in your stat window (including familiars). <br> <br><strong>Activating Pro-Mode:</strong> If you have gone through the trouble to calculate your exact IED%, then input it up to two decimal places (do not include IED sources from the link skills listed below). <br> <br><strong>Demon Avengers:</strong> If your HP is over 500,000 hover over your stat window entry to find your true HP value.">
                         <div class="btnDiv">
                             <h6>Step 1. Enter Your Stats</h6>
                         </div>
@@ -145,7 +145,7 @@
                         <option value="Wild Hunter">Wild Hunter</option>
                         <option value="Wind Archer">Wind Archer</option>
                         <option value="Xenon">Xenon</option>
-                        <!-- <option value="Zero">Zero</option> -->
+                        <option value="Zero">Zero</option>
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-3 form-group">
@@ -168,7 +168,7 @@
                         <option value="heavy_sword">Heavy Sword</option>
                         <option value="katana">Katana</option>
                         <option value="knuckle">Knuckle</option>
-                        <option value="long_sword">Long Sword</option>
+                        <!-- <option value="long_sword">Long Sword</option> -->
                         <option value="lucent_gauntlet">Lucent Guantlet</option>
                         <option value="one_hand_axe">One-handed Axe</option>
                         <option value="one_hand_blunt">One-handed Mace</option>
@@ -256,6 +256,9 @@
                     <input class="form-control" type="number" id="hp_arcane" name="hp_arcane" min="0" max="300000"
                         value=184000>
                 </div>
+                <div class="col form-group text-center top-margin" id='zeromessage' hidden>
+                    <div class='text-center'>Please ensure you are in <u>Beta Mode</u> fully buffed and standing still when inputting your stats.</div>
+                </div>    
             </div>
             <hr>
             <div class='form-row top-margin bottom-margin'>
@@ -359,6 +362,18 @@
                 <div class='col-md-12 text-center'></div>
                 <div class='col-md-12 text-center'></div>
                 <div class='col-md-12 d-flex justify-content-center title-color'>
+                    <h5>Familiar Lines</h5>
+                </div>
+                <div class='col-md-12 text-center d-flex justify-content-center'>
+                    <div class="form-check">
+                        <label for="familiarAttPerc"> Total Attack % </label>
+                    <input class="form-control" type="number" id="familiarAttPerc" name="familiarAttPerc"
+                        min="0" max="100" value=0>
+                    </div>
+                </div>
+                <div class='col-md-12 text-center'></div>
+                <div class='col-md-12 text-center'></div>
+                <div class='col-md-12 d-flex justify-content-center title-color'>
                     <h5>Magnificent Soul Effect</h5>
                 </div>
 
@@ -376,7 +391,7 @@
                 <div class="col-sm-12 col-md-12 noPadding">
                     <div class='form-row bottom-margin top-margin'>
 
-                        <div class='col text-center'>
+                        <div class='col-12 text-center'>
                             <a tabindex="0" class="btn btnStep btn-outline-secondary btn-sm" role="button"
                                 data-toggle="popover" data-trigger="focus" title="Entering Your Current WSE"
                                 data-content="Select the potentials from the dropdown menu that are on your current WSE setup. If the option isn't listed, then select N/A.">
@@ -387,6 +402,23 @@
                                     Click for details
                                 </div>
                             </a>
+                        </div>
+                        <div class='col-md-6 text-center d-flex justify-content-center top-margin'>
+                            <div class="form-check">
+                                <label class="form-check-label checkbox" for="reboot">
+                                    <input class="form-check-input" type="checkbox" value='' id="reboot" checked>
+                                    <span>Reboot</span>
+                                </label>
+                            </div>
+                        </div>
+        
+                        <div class='col-md-6 text-center d-flex justify-content-center top-margin'>
+                            <div class="form-check">
+                                <label class="form-check-label checkbox" for="nonreboot">
+                                    <input class="form-check-input" type="checkbox" id="nonreboot" value="">
+                                    <span>Non-Reboot</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive col-sm-12 noPadding">
@@ -745,6 +777,22 @@
                         </table>
                     </div>
                 </div>
+                <div class='col-md-12 text-center'></div>
+                <div class='col-md-12 text-center'></div>
+                <div class='col-md-12 d-flex justify-content-center title-color'>
+                    <div id='bonusTitle' hidden>
+                        <h5>Bonus Potentials</h5>
+                    </div>
+                </div>
+                <div class='col-md-12 text-center d-flex justify-content-center'>
+                    <div class="form-check"  id='bonusDiv' hidden>
+                        <label for="bonusAttPerc"> Total Attack % </label>
+                    <input class="form-control" type="number" id="bonusAttPerc" name="bonusAttPerc"
+                        min="0" max="200" value=0>
+                    </div>
+                </div>
+                <div class='col-md-12 text-center'></div>
+                <div class='col-md-12 text-center'></div>
             </div>
             <hr>
             <div class='form-row top-margin bottom-margin top-margin'>

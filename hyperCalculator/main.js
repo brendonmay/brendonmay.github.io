@@ -132,6 +132,13 @@ function handleFileLoad(event) { //here
                 else {
                     document.getElementById('hp_perc_div').hidden = true;
                 }
+
+                if (maple_class == "Zero"){
+                    document.getElementById('zeromessage').hidden = false;
+                }
+                else{
+                    document.getElementById('zeromessage').hidden = true;
+                }
         
                 var stat_types = getPrimaryAndSecondaryStatType(maple_class);
                 var primary_stat = stat_types.primaryStatType;
@@ -154,6 +161,20 @@ function handleFileLoad(event) { //here
                 updatePoints(document.getElementById(id));
             }
             if (k == 2) document.getElementById(id).checked = value;
+            if (id == 'reboot'){
+                if (value){
+                    document.getElementById('bonusAttPerc').value = 0;
+                    document.getElementById('bonusDiv').hidden = true;
+                    document.getElementById('bonusTitle').hidden = true;
+                }
+            }
+            if (id == 'nonreboot'){
+                if (value){
+                    document.getElementById('reboot').checked = false;
+                    document.getElementById('bonusDiv').hidden = false;
+                    document.getElementById('bonusTitle').hidden = false;
+                }
+            }
             i++;
         }
         if (k == 1) {
@@ -178,9 +199,9 @@ function generateExportObject(maple_class) {
 
 
     //collection of IDs to collect data on
-    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp']
+    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
-    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock']
+    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
     var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
 
@@ -2368,7 +2389,17 @@ function getClassData(maple_class) {
             'dmgPercent': 20,
             'bossPercent': 0,
             'critDmg': 0
+        },
+
+        'Zero': { //assuming in beta mode
+            'attPercent': 4,
+            'iedPercent': [20, 50, 15], //nodes, armor split, 15% average between forms
+            'dmgPercent': -14, // 10 stacks, -24 to average between modes
+            'bossPercent': -15, //average between modes
+            'critDmg': 25 //average between modes
         }
+        //alpha: 30IED, 50% crit dmg
+        //beta: 30% boss, 48% dmg
     }
     return class_data[maple_class]
 }
@@ -2988,6 +3019,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    document.getElementById("reboot").addEventListener("click", function () {
+        if (document.getElementById('reboot').checked == true) {
+            document.getElementById('nonreboot').checked = false;
+            document.getElementById('bonusAttPerc').value = 0;
+            document.getElementById('bonusDiv').hidden = true;
+            document.getElementById('bonusTitle').hidden = true;
+        }
+    });
+
+    document.getElementById("nonreboot").addEventListener("click", function () {
+        if (document.getElementById('nonreboot').checked == true) {
+            document.getElementById('reboot').checked = false;
+            document.getElementById('bonusDiv').hidden = false;
+            document.getElementById('bonusTitle').hidden = false;
+        }
+    });
 
     document.getElementById("badge1").addEventListener("click", function () {
         if (document.getElementById('badge1').checked == true) {
@@ -3604,6 +3651,13 @@ document.addEventListener("DOMContentLoaded", function () {
         update_new_slevel(maple_class);
         update_new_wlevel();
 
+        if (maple_class == "Zero"){
+            document.getElementById('zeromessage').hidden = false;
+        } //work here
+        else{
+            document.getElementById('zeromessage').hidden = true;
+        }
+
         if (maple_class == "Kanna") {
             document.getElementById('kanna_hp_div').hidden = false;
         }
@@ -3996,6 +4050,10 @@ function optimizeWSE() {
     if (document.getElementById('badge3').checked == true) {
         attack_percent = attack_percent + 3;
     }
+
+    attack_percent = attack_percent + parseInt(document.getElementById('familiarAttPerc').value) 
+    
+    if(document.getElementById('bonusAttPerc')) attack_percent = attack_percent + parseInt(document.getElementById('bonusAttPerc').value);
 
     // class_data
     var class_data = getClassData(maple_class)
