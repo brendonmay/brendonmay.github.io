@@ -163,7 +163,8 @@
                         max="500" value=170>
                 </div>
                 <div class="col form-group text-center top-margin" id='zeromessage' hidden>
-                    <div class='text-center'>Please ensure you are in <u>Beta Mode</u> fully buffed and standing still when inputting your stats.</div>
+                    <div class='text-center'>Please ensure you are in <u>Beta Mode</u> fully buffed and standing still
+                        when inputting your stats.</div>
                 </div>
             </div>
             <hr>
@@ -705,10 +706,13 @@
             <div class="form-row">
                 <div class='col-md-12 d-flex justify-content-center title-color'>
                     <div id='bonusTitle' hidden>
+                        <h5>Bonus Potentials</h5>
+                    </div>
+                    <div id='currentBonusTitle' hidden>
                         <h5>Current Bonus Potentials</h5>
                     </div>
                 </div>
-                <div class='col-md-12 text-center d-flex justify-content-center bottom-margin'>
+                <div class='col-md-12 d-flex justify-content-center'>
                     <div class="form-check" id='bonusDiv' hidden>
                         <label for="bonusAttPerc"> Total Attack % </label>
                         <input class="form-control" type="number" id="bonusAttPerc" name="bonusAttPerc" min="0"
@@ -716,13 +720,453 @@
                     </div>
                 </div>
             </div>
+            <div class='form-row top-margin'>
+                <div class="col-sm-12 col-md-6 noPadding">
+
+                    <div class="table-responsive col-sm-12 noPadding" id='bonustable1' hidden>
+                        <table class="table table-striped smaller text-center table-borderless">
+                            <thead>
+                                <tr>
+
+                                    <th scope="col">Weapon</th>
+                                    <th scope="col">Secondary</th>
+                                    <th scope="col">Emblem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        <select id='b_wline1' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_sline1' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_eline1' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <select id='b_wline2' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_sline2' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_eline2' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <select id='b_wline3' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_sline3' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_eline3' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 noPadding" hidden id='bonustable2'>
+                    <div class="table-responsive col-sm-12 noPadding" id='compareTable'>
+                        <table class="table table-striped smaller text-center table-borderless">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Weapon</th>
+                                    <th scope="col">Secondary</th>
+                                    <th scope="col">Emblem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select id='b_new_wline1' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_new_sline1' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_new_eline1' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <select id='b_new_wline2' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_new_sline2' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_new_eline2' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <select id='b_new_wline3' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_new_sline3' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id='b_new_eline3' class="form-control defaultpicker smaller">
+                                            <option value='18boss'>18% Boss</option>
+                                            <option value='12boss'>12% Boss</option>
+                                            <option value='3boss'>3% Boss</option>
+                                            <option value='5ied'>5% IED</option>
+                                            <option value='4ied'>4% IED</option>
+                                            <option value='3ied'>3% IED</option>
+                                            <option value='13att'>13% ATT</option>
+                                            <option value='12att'>12% ATT</option>
+                                            <option value='10att'>10% ATT</option>
+                                            <option value='9att'>9% ATT</option>
+                                            <option value='7att'>7% ATT</option>
+                                            <option value='6att'>6% ATT</option>
+                                            <option value='13dmg'>13% Damage</option>
+                                            <option value='12dmg'>12% Damage</option>
+                                            <option value='10dmg'>10% Damage</option>
+                                            <option value='9dmg'>9% Damage</option>
+                                            <option value='7dmg'>7% Damage</option>
+                                            <option value='6dmg'>6% Damage</option>
+                                            <option value='none' selected>N/A</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <hr>
-            <div class='form-row'>
+            <div class='form-row bottom-margin'>
                 <div class='col text-center top-margin'>
                     <button id='calculateButton' type="submit" class="btn btn-dark btnSubmit">Calculate</button>
                 </div>
             </div>
         </form>
+    </div>
     </div>
 
     <div class="container form-container rounded bottom-margin" id='resultSection' hidden>

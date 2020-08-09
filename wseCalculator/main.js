@@ -59,6 +59,18 @@ function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped
             new_boss_percent = new_boss_percent + 20;
         }
 
+        if (current_potential == '18boss') {
+            new_boss_percent = new_boss_percent + 18;
+        }
+        if (current_potential == '12boss') {
+            new_boss_percent = new_boss_percent + 12;
+        }
+        if (current_potential == '3boss') {
+            new_boss_percent = new_boss_percent + 3;
+        }
+
+
+
 
         if (current_potential == '13att') {
             new_attack_percent = new_attack_percent + 13;
@@ -71,6 +83,13 @@ function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped
         }
         if (current_potential == '9att') {
             new_attack_percent = new_attack_percent + 9;
+        }
+
+        if (current_potential == '7att') {
+            new_attack_percent = new_attack_percent + 7;
+        }
+        if (current_potential == '6att') {
+            new_attack_percent = new_attack_percent + 6;
         }
 
         if (current_potential == '13dmg') {
@@ -86,6 +105,13 @@ function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped
             new_damage_percent = new_damage_percent + 9;
         }
 
+        if (current_potential == '7dmg') {
+            new_damage_percent = new_damage_percent + 7;
+        }
+        if (current_potential == '6dmg') {
+            new_damage_percent = new_damage_percent + 6;
+        }
+
 
         if (current_potential == '40ied') {
             var current_ied = new_ied_percent;
@@ -99,6 +125,20 @@ function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped
             var current_ied = new_ied_percent;
             new_ied_percent = determineIED(current_ied, [30]);
         }
+
+        if (current_potential == '5ied') {
+            var current_ied = new_ied_percent;
+            new_ied_percent = determineIED(current_ied, [5]);
+        }
+        if (current_potential == '4ied') {
+            var current_ied = new_ied_percent;
+            new_ied_percent = determineIED(current_ied, [4]);
+        }
+        if (current_potential == '3ied') {
+            var current_ied = new_ied_percent;
+            new_ied_percent = determineIED(current_ied, [3]);
+        }
+
         i++;
     }
     return { 'new_ied_percent': new_ied_percent, 'new_attack_percent': new_attack_percent, 'new_boss_percent': new_boss_percent, 'new_damage_percent': new_damage_percent }
@@ -127,6 +167,16 @@ function removePotentialsFromStats(potential_list, current_ied_percent, current_
             stripped_boss_percent = stripped_boss_percent - 20;
         }
 
+        if (current_potential == '18boss') {
+            stripped_boss_percent = stripped_boss_percent - 18;
+        }
+        if (current_potential == '12boss') {
+            stripped_boss_percent = stripped_boss_percent - 12;
+        }
+        if (current_potential == '3boss') {
+            stripped_boss_percent = stripped_boss_percent - 3;
+        }
+
         if (current_potential == '13att') {
             stripped_attack_percent = stripped_attack_percent - 13;
         }
@@ -138,6 +188,13 @@ function removePotentialsFromStats(potential_list, current_ied_percent, current_
         }
         if (current_potential == '9att') {
             stripped_attack_percent = stripped_attack_percent - 9;
+        }
+
+        if (current_potential == '7att') {
+            stripped_attack_percent = stripped_attack_percent - 7;
+        }
+        if (current_potential == '6att') {
+            stripped_attack_percent = stripped_attack_percent - 6;
         }
 
         if (current_potential == '13dmg') {
@@ -153,6 +210,13 @@ function removePotentialsFromStats(potential_list, current_ied_percent, current_
             stripped_damage_percent = stripped_damage_percent - 9;
         }
 
+        if (current_potential == '7dmg') {
+            stripped_damage_percent = stripped_damage_percent - 7;
+        }
+        if (current_potential == '6dmg') {
+            stripped_damage_percent = stripped_damage_percent - 6;
+        }
+
         if (current_potential == '40ied') {
             var old_ied = stripped_ied_percent;
             stripped_ied_percent = (old_ied - 40) / ((-1 * 40 / 100) + 1)
@@ -164,6 +228,19 @@ function removePotentialsFromStats(potential_list, current_ied_percent, current_
         if (current_potential == '30ied') {
             var old_ied = stripped_ied_percent;
             stripped_ied_percent = (old_ied - 30) / ((-1 * 30 / 100) + 1)
+        }
+
+        if (current_potential == '5ied') {
+            var old_ied = stripped_ied_percent;
+            stripped_ied_percent = (old_ied - 5) / ((-1 * 5 / 100) + 1)
+        }
+        if (current_potential == '4ied') {
+            var old_ied = stripped_ied_percent;
+            stripped_ied_percent = (old_ied - 4) / ((-1 * 4 / 100) + 1)
+        }
+        if (current_potential == '3ied') {
+            var old_ied = stripped_ied_percent;
+            stripped_ied_percent = (old_ied - 3) / ((-1 * 3 / 100) + 1)
         }
 
         i++;
@@ -1244,14 +1321,31 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('bonusAttPerc').value = 0;
             document.getElementById('bonusDiv').hidden = true;
             document.getElementById('bonusTitle').hidden = true;
+            document.getElementById('bonustable1').hidden = true;
+            document.getElementById('bonustable2').hidden = true;
+            document.getElementById('currentBonusTitle').hidden = true;
         }
     });
 
     document.getElementById("nonreboot").addEventListener("click", function () {
         if (document.getElementById('nonreboot').checked == true) {
             document.getElementById('reboot').checked = false;
-            document.getElementById('bonusDiv').hidden = false;
-            document.getElementById('bonusTitle').hidden = false;
+            if (document.getElementById('compare').checked == true) {
+                document.getElementById('bonusTitle').hidden = false;
+                document.getElementById('bonustable1').hidden = false;
+                document.getElementById('bonustable2').hidden = false;
+
+                document.getElementById('currentBonusTitle').hidden = true;
+                document.getElementById('bonusDiv').hidden = true;
+            }
+            else {
+                document.getElementById('currentBonusTitle').hidden = false;
+                document.getElementById('bonusDiv').hidden = false;
+
+                document.getElementById('bonusTitle').hidden = true;
+                document.getElementById('bonustable1').hidden = true;
+                document.getElementById('bonustable2').hidden = true;
+            }
         }
     });
 
@@ -1613,6 +1707,24 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     document.getElementById("compare").addEventListener("change", function () {
         //compare calculator selected
+        if (document.getElementById('nonreboot').checked == true) {
+            if (document.getElementById('compare').checked == true) {
+                document.getElementById('bonusTitle').hidden = false;
+                document.getElementById('bonustable1').hidden = false;
+                document.getElementById('bonustable2').hidden = false;
+
+                document.getElementById('currentBonusTitle').hidden = true;
+                document.getElementById('bonusDiv').hidden = true;
+            }
+            else {
+                document.getElementById('currentBonusTitle').hidden = false;
+                document.getElementById('bonusDiv').hidden = false;
+
+                document.getElementById('bonusTitle').hidden = true;
+                document.getElementById('bonustable1').hidden = true;
+                document.getElementById('bonustable2').hidden = true;
+            }
+        }
 
         document.getElementById('new_wlevel').disabled = false;
         document.getElementById('new_wline1').disabled = false;
@@ -1635,6 +1747,24 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("optimize").addEventListener("change", function () {
         //optimize calculator selected
         //FIX THIS SECTION
+        if (document.getElementById('nonreboot').checked == true) {
+            if (document.getElementById('compare').checked == true) {
+                document.getElementById('bonusTitle').hidden = false;
+                document.getElementById('bonustable1').hidden = false;
+                document.getElementById('bonustable2').hidden = false;
+
+                document.getElementById('currentBonusTitle').hidden = true;
+                document.getElementById('bonusDiv').hidden = true;
+            }
+            else {
+                document.getElementById('currentBonusTitle').hidden = false;
+                document.getElementById('bonusDiv').hidden = false;
+
+                document.getElementById('bonusTitle').hidden = true;
+                document.getElementById('bonustable1').hidden = true;
+                document.getElementById('bonustable2').hidden = true;
+            }
+        }
 
         //Weapon
         document.getElementById('new_wlevel').disabled = true;
@@ -1696,10 +1826,10 @@ document.addEventListener("DOMContentLoaded", function () {
         update_new_slevel(maple_class);
         update_new_wlevel();
 
-        if (maple_class == "Zero"){
+        if (maple_class == "Zero") {
             document.getElementById('zeromessage').hidden = false;
         }
-        else{
+        else {
             document.getElementById('zeromessage').hidden = true;
         }
 
@@ -1713,6 +1843,58 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('eline3').value = 'none';
 
         if (current_class == 'Kanna') {
+            //fix bonus pot
+            $('#b_sline1').empty();
+            $('#b_sline1').append("<option value='13att'>13% ATT</option>");
+            $('#b_sline1').append("<option value='12att'>12% ATT</option>");
+            $('#b_sline1').append("<option value='10att'>10% ATT</option>");
+            $('#b_sline1').append("<option value='9att'>9% ATT</option>");
+            $('#b_sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#b_sline2').empty();
+            $('#b_sline2').append("<option value='13att'>13% ATT</option>");
+            $('#b_sline2').append("<option value='12att'>12% ATT</option>");
+            $('#b_sline2').append("<option value='10att'>10% ATT</option>");
+            $('#b_sline2').append("<option value='9att'>9% ATT</option>");
+            $('#b_sline2').append("<option value='7att'>7% ATT</option>");
+            $('#b_sline2').append("<option value='6att'>6% ATT</option>");
+            $('#b_sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#b_sline3').empty();
+            $('#b_sline3').append("<option value='13att'>13% ATT</option>");
+            $('#b_sline3').append("<option value='12att'>12% ATT</option>");
+            $('#b_sline3').append("<option value='10att'>10% ATT</option>");
+            $('#b_sline3').append("<option value='9att'>9% ATT</option>");
+            $('#b_sline3').append("<option value='7att'>7% ATT</option>");
+            $('#b_sline3').append("<option value='6att'>6% ATT</option>");
+            $('#b_sline3').append("<option value='none' selected>N/A</option>");
+
+            ////////////////////////////////////////////////////////////////////
+            $('#b_new_sline1').empty();
+            $('#b_new_sline1').append("<option value='13att'>13% ATT</option>");
+            $('#b_new_sline1').append("<option value='12att'>12% ATT</option>");
+            $('#b_new_sline1').append("<option value='10att'>10% ATT</option>");
+            $('#b_new_sline1').append("<option value='9att'>9% ATT</option>");
+            $('#b_new_sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#b_new_sline2').empty();
+            $('#b_new_sline2').append("<option value='13att'>13% ATT</option>");
+            $('#b_new_sline2').append("<option value='12att'>12% ATT</option>");
+            $('#b_new_sline2').append("<option value='10att'>10% ATT</option>");
+            $('#b_new_sline2').append("<option value='9att'>9% ATT</option>");
+            $('#b_new_sline2').append("<option value='7att'>7% ATT</option>");
+            $('#b_new_sline2').append("<option value='6att'>6% ATT</option>");
+            $('#b_new_sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#b_new_sline3').empty();
+            $('#b_new_sline3').append("<option value='13att'>13% ATT</option>");
+            $('#b_new_sline3').append("<option value='12att'>12% ATT</option>");
+            $('#b_new_sline3').append("<option value='10att'>10% ATT</option>");
+            $('#b_new_sline3').append("<option value='9att'>9% ATT</option>");
+            $('#b_new_sline3').append("<option value='7att'>7% ATT</option>");
+            $('#b_new_sline3').append("<option value='6att'>6% ATT</option>");
+            $('#b_new_sline3').append("<option value='none' selected>N/A</option>");
+
             if (document.getElementById('slevel').value == 'lesser160') {
                 $('#sline1').empty();
                 $('#sline1').append("<option value='12att'>12% ATT</option>");
@@ -1777,6 +1959,128 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
         else {
+            //fix bonus pot
+            $('#b_sline1').empty();
+            $('#b_sline1').append("<option value='18boss'>18% Boss</option>");
+            $('#b_sline1').append("<option value='12boss'>12% Boss</option>");
+            $('#b_sline1').append("<option value='3boss'>3% Boss</option>");
+            $('#b_sline1').append("<option value='5ied'>5% IED</option>");
+            $('#b_sline1').append("<option value='4ied'>4% IED</option>");
+            $('#b_sline1').append("<option value='3ied'>3% IED</option>");
+            $('#b_sline1').append("<option value='13att'>13% ATT</option>");
+            $('#b_sline1').append("<option value='12att'>12% ATT</option>");
+            $('#b_sline1').append("<option value='10att'>10% ATT</option>");
+            $('#b_sline1').append("<option value='9att'>9% ATT</option>");
+            $('#b_sline1').append("<option value='13dmg'>13% Damage</option>");
+            $('#b_sline1').append("<option value='12dmg'>12% Damage</option>");
+            $('#b_sline1').append("<option value='10dmg'>10% Damage</option>");
+            $('#b_sline1').append("<option value='9dmg'>9% Damage</option>");
+            $('#b_sline1').append("<option value='none' selected>N/A</option>");
+
+
+            $('#b_sline2').empty();
+            $('#b_sline2').append("<option value='18boss'>18% Boss</option>");
+            $('#b_sline2').append("<option value='12boss'>12% Boss</option>");
+            $('#b_sline2').append("<option value='3boss'>3% Boss</option>");
+            $('#b_sline2').append("<option value='5ied'>5% IED</option>");
+            $('#b_sline2').append("<option value='4ied'>4% IED</option>");
+            $('#b_sline2').append("<option value='3ied'>3% IED</option>");
+            $('#b_sline2').append("<option value='13att'>13% ATT</option>");
+            $('#b_sline2').append("<option value='12att'>12% ATT</option>");
+            $('#b_sline2').append("<option value='10att'>10% ATT</option>");
+            $('#b_sline2').append("<option value='9att'>9% ATT</option>");
+            $('#b_sline2').append("<option value='7att'>7% ATT</option>");
+            $('#b_sline2').append("<option value='6att'>6% ATT</option>");
+            $('#b_sline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#b_sline2').append("<option value='12dmg'>12% Damage</option>");
+            $('#b_sline2').append("<option value='10dmg'>10% Damage</option>");
+            $('#b_sline2').append("<option value='9dmg'>9% Damage</option>");
+            $('#b_sline2').append("<option value='7dmg'>7% Damage</option>");
+            $('#b_sline2').append("<option value='6dmg'>6% Damage</option>");
+            $('#b_sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#b_sline3').empty();
+            $('#b_sline3').append("<option value='18boss'>18% Boss</option>");
+            $('#b_sline3').append("<option value='12boss'>12% Boss</option>");
+            $('#b_sline3').append("<option value='3boss'>3% Boss</option>");
+            $('#b_sline3').append("<option value='5ied'>5% IED</option>");
+            $('#b_sline3').append("<option value='4ied'>4% IED</option>");
+            $('#b_sline3').append("<option value='3ied'>3% IED</option>");
+            $('#b_sline3').append("<option value='13att'>13% ATT</option>");
+            $('#b_sline3').append("<option value='12att'>12% ATT</option>");
+            $('#b_sline3').append("<option value='10att'>10% ATT</option>");
+            $('#b_sline3').append("<option value='9att'>9% ATT</option>");
+            $('#b_sline3').append("<option value='7att'>7% ATT</option>");
+            $('#b_sline3').append("<option value='6att'>6% ATT</option>");
+            $('#b_sline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#b_sline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#b_sline3').append("<option value='10dmg'>10% Damage</option>");
+            $('#b_sline3').append("<option value='9dmg'>9% Damage</option>");
+            $('#b_sline3').append("<option value='7dmg'>7% Damage</option>");
+            $('#b_sline3').append("<option value='6dmg'>6% Damage</option>");
+            $('#b_sline3').append("<option value='none' selected>N/A</option>");
+
+            /////////////////////////////////////////////////////////////////
+            $('#b_new_sline1').empty();
+            $('#b_new_sline1').append("<option value='18boss'>18% Boss</option>");
+            $('#b_new_sline1').append("<option value='12boss'>12% Boss</option>");
+            $('#b_new_sline1').append("<option value='3boss'>3% Boss</option>");
+            $('#b_new_sline1').append("<option value='5ied'>5% IED</option>");
+            $('#b_new_sline1').append("<option value='4ied'>4% IED</option>");
+            $('#b_new_sline1').append("<option value='3ied'>3% IED</option>");
+            $('#b_new_sline1').append("<option value='13att'>13% ATT</option>");
+            $('#b_new_sline1').append("<option value='12att'>12% ATT</option>");
+            $('#b_new_sline1').append("<option value='10att'>10% ATT</option>");
+            $('#b_new_sline1').append("<option value='9att'>9% ATT</option>");
+            $('#b_new_sline1').append("<option value='13dmg'>13% Damage</option>");
+            $('#b_new_sline1').append("<option value='12dmg'>12% Damage</option>");
+            $('#b_new_sline1').append("<option value='10dmg'>10% Damage</option>");
+            $('#b_new_sline1').append("<option value='9dmg'>9% Damage</option>");
+            $('#b_new_sline1').append("<option value='none' selected>N/A</option>");
+
+
+            $('#b_new_sline2').empty();
+            $('#b_new_sline2').append("<option value='18boss'>18% Boss</option>");
+            $('#b_new_sline2').append("<option value='12boss'>12% Boss</option>");
+            $('#b_new_sline2').append("<option value='3boss'>3% Boss</option>");
+            $('#b_new_sline2').append("<option value='5ied'>5% IED</option>");
+            $('#b_new_sline2').append("<option value='4ied'>4% IED</option>");
+            $('#b_new_sline2').append("<option value='3ied'>3% IED</option>");
+            $('#b_new_sline2').append("<option value='13att'>13% ATT</option>");
+            $('#b_new_sline2').append("<option value='12att'>12% ATT</option>");
+            $('#b_new_sline2').append("<option value='10att'>10% ATT</option>");
+            $('#b_new_sline2').append("<option value='9att'>9% ATT</option>");
+            $('#b_new_sline2').append("<option value='7att'>7% ATT</option>");
+            $('#b_new_sline2').append("<option value='6att'>6% ATT</option>");
+            $('#b_new_sline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#b_new_sline2').append("<option value='12dmg'>12% Damage</option>");
+            $('#b_new_sline2').append("<option value='10dmg'>10% Damage</option>");
+            $('#b_new_sline2').append("<option value='9dmg'>9% Damage</option>");
+            $('#b_new_sline2').append("<option value='7dmg'>7% Damage</option>");
+            $('#b_new_sline2').append("<option value='6dmg'>6% Damage</option>");
+            $('#b_new_sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#b_new_sline3').empty();
+            $('#b_new_sline3').append("<option value='18boss'>18% Boss</option>");
+            $('#b_new_sline3').append("<option value='12boss'>12% Boss</option>");
+            $('#b_new_sline3').append("<option value='3boss'>3% Boss</option>");
+            $('#b_new_sline3').append("<option value='5ied'>5% IED</option>");
+            $('#b_new_sline3').append("<option value='4ied'>4% IED</option>");
+            $('#b_new_sline3').append("<option value='3ied'>3% IED</option>");
+            $('#b_new_sline3').append("<option value='13att'>13% ATT</option>");
+            $('#b_new_sline3').append("<option value='12att'>12% ATT</option>");
+            $('#b_new_sline3').append("<option value='10att'>10% ATT</option>");
+            $('#b_new_sline3').append("<option value='9att'>9% ATT</option>");
+            $('#b_new_sline3').append("<option value='7att'>7% ATT</option>");
+            $('#b_new_sline3').append("<option value='6att'>6% ATT</option>");
+            $('#b_new_sline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#b_new_sline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#b_new_sline3').append("<option value='10dmg'>10% Damage</option>");
+            $('#b_new_sline3').append("<option value='9dmg'>9% Damage</option>");
+            $('#b_new_sline3').append("<option value='7dmg'>7% Damage</option>");
+            $('#b_new_sline3').append("<option value='6dmg'>6% Damage</option>");
+            $('#b_new_sline3').append("<option value='none' selected>N/A</option>");
+
             if (document.getElementById('slevel').value == 'lesser160') {
                 $('#sline1').empty();
                 $('#sline1').append("<option value='40boss'>40% Boss</option>");
@@ -2000,7 +2304,6 @@ function optimizeWSE() {
     }
 
     attack_percent = attack_percent + parseInt(document.getElementById('familiarAttPerc').value);
-    if(document.getElementById('bonusAttPerc')) attack_percent = attack_percent + parseInt(document.getElementById('bonusAttPerc').value);
 
     // class_data
     var class_data = getClassData(maple_class)
@@ -2024,6 +2327,10 @@ function optimizeWSE() {
     current_attack_percent = attack_percent + class_att;
     var added_attack_percent_from_WSE = getWSEATTPercent();
     current_attack_percent = current_attack_percent + added_attack_percent_from_WSE;
+
+    if (document.getElementById('optimize').checked && document.getElementById('nonreboot').checked){
+        current_attack_percent = current_attack_percent + parseInt(document.getElementById('bonusAttPerc').value);
+    } 
 
     //Determine Damage Output
     var currentBossDefMultiplier = getBossDefMultiplier(current_ied_percent)
@@ -2058,6 +2365,30 @@ function optimizeWSE() {
     var stripped_boss_percent = withoutWSEStats.stripped_boss_percent;
     var stripped_damage_percent = withoutWSEStats.stripped_damage_percent;
 
+    //strip bonus pots
+    if(document.getElementById('nonreboot').checked && document.getElementById('compare').checked){
+        var b_wep_line_1 = document.getElementById('b_wline1').value;
+        var b_wep_line_2 = document.getElementById('b_wline2').value;
+        var b_wep_line_3 = document.getElementById('b_wline3').value;
+
+        var b_sec_line_1 = document.getElementById('b_sline1').value;
+        var b_sec_line_2 = document.getElementById('b_sline2').value;
+        var b_sec_line_3 = document.getElementById('b_sline3').value;
+
+        var b_emb_line_1 = document.getElementById('b_eline1').value;
+        var b_emb_line_2 = document.getElementById('b_eline2').value;
+        var b_emb_line_3 = document.getElementById('b_eline3').value;
+
+        var b_potential_list = [b_wep_line_1, b_wep_line_2, b_wep_line_3, b_sec_line_1, b_sec_line_2, b_sec_line_3, b_emb_line_1, b_emb_line_2, b_emb_line_3];
+
+        var b_withoutWSEStats = removePotentialsFromStats(b_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent)
+
+        stripped_ied_percent = b_withoutWSEStats.stripped_ied_percent;
+        stripped_attack_percent = b_withoutWSEStats.stripped_attack_percent;
+        stripped_boss_percent = b_withoutWSEStats.stripped_boss_percent;
+        stripped_damage_percent = b_withoutWSEStats.stripped_damage_percent;
+    }
+
     if (stripped_ied_percent < 0 || stripped_attack_percent < 0 || stripped_boss_percent < 0 || stripped_damage_percent < 0) {
         //send an error message
         document.getElementById('resultSection').hidden = false;
@@ -2089,6 +2420,29 @@ function optimizeWSE() {
         var new_attack_percent = withNewWSEStats.new_attack_percent;
         var new_boss_percent = withNewWSEStats.new_boss_percent;
         var new_damage_percent = withNewWSEStats.new_damage_percent;
+
+        //check if non-reboot
+        if (document.getElementById('nonreboot').checked) {
+            var b_new_wep_line_1 = document.getElementById('b_new_wline1').value;
+            var b_new_wep_line_2 = document.getElementById('b_new_wline2').value;
+            var b_new_wep_line_3 = document.getElementById('b_new_wline3').value;
+
+            var b_new_sec_line_1 = document.getElementById('b_new_sline1').value;
+            var b_new_sec_line_2 = document.getElementById('b_new_sline2').value;
+            var b_new_sec_line_3 = document.getElementById('b_new_sline3').value;
+
+            var b_new_emb_line_1 = document.getElementById('b_new_eline1').value;
+            var b_new_emb_line_2 = document.getElementById('b_new_eline2').value;
+            var b_new_emb_line_3 = document.getElementById('b_new_eline3').value;
+
+            var b_new_potential_list = [b_new_wep_line_1, b_new_wep_line_2, b_new_wep_line_3, b_new_sec_line_1, b_new_sec_line_2, b_new_sec_line_3, b_new_emb_line_1, b_new_emb_line_2, b_new_emb_line_3];
+
+            var b_withNewWSEStats = AddPotentialsToStats(b_new_potential_list, new_ied_percent, new_attack_percent, new_boss_percent, new_damage_percent);
+            new_ied_percent = b_withNewWSEStats.new_ied_percent;
+            new_attack_percent = b_withNewWSEStats.new_attack_percent;
+            new_boss_percent = b_withNewWSEStats.new_boss_percent;
+            new_damage_percent = b_withNewWSEStats.new_damage_percent;
+        }
 
         //New Dmg Output
         var newBossDefMultiplier = getBossDefMultiplier(new_ied_percent)
