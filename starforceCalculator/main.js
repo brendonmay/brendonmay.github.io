@@ -152,8 +152,8 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
     var probability_decrease = rates[current_star][2];
     var probability_boom = rates[current_star][3];
 
-    if (sauna) {
-        if (current_star >= 12 && current_star <= 14) {
+    if (sauna) { //here
+        if ((current_star >= 12 && current_star <= 14) || (item_type == 'tyrant' && (current_star >= 5 && current_star <= 7))) {
             probability_decrease = probability_decrease + probability_boom;
             probability_boom = 0;
         }
@@ -543,8 +543,9 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("30").disabled = true;
             document.getElementById("30").checked = false;
     
-            document.getElementById("sauna").disabled = true;
-            document.getElementById("sauna").checked = false;
+            // document.getElementById("sauna").disabled = true;
+            // document.getElementById("sauna").checked = false;
+            document.getElementById("sauna-text").innerText="No Boom Event (Up to 8 stars) ";
     
             document.getElementById("plus2").disabled = true;
             document.getElementById("plus2").checked = false;
@@ -563,6 +564,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("5_10_15").disabled = false;
             document.getElementById("30").disabled = false;
             document.getElementById("sauna").disabled = false;
+            document.getElementById("sauna-text").innerText="No Boom Event (Up to 15 stars) ";
             document.getElementById("plus2").disabled = false;
             document.getElementById('error-container').style.display = '';
             document.getElementById('error-msg').innerHTML =
