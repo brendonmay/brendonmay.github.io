@@ -56,29 +56,10 @@ var new_information = {
     specialIncr: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 };
 
-function exportToJsonFile(jsonData, name) {
-    let dataStr = JSON.stringify(jsonData);
-    let dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
-    let exportFileDefaultName = name + ' Hyper Data.json';
-
-    let linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-}
-
-function handleFileSelect(event) {
-    const reader = new FileReader()
-    reader.onload = handleFileLoad;
-    reader.readAsText(event.target.files[0]);
-    document.getElementById('importdata').checked = false;
-    document.getElementById('file_div').hidden = true;
-}
-
-function handleFileLoad(event) { //here
-    var json = event.target.result;
-    var obj = JSON.parse(json);
+function loadLocalStorage() { 
+    //var json = event.target.result;
+    var json = window.localStorage.getItem('data'); //here
+    var obj = JSON.parse(json); 
 
     var obj_values = obj.obj_values; //ex: {id1: value1, id2: value2}
     var obj_hyper_values = obj.obj_hyper_values;
@@ -185,7 +166,7 @@ function handleFileLoad(event) { //here
         k++;
     }
 }
-function generateExportObject(maple_class) {
+function saveToLocalStorage(maple_class) {
     var obj = {};
 
     //each of these will be a stored in obj which will be exported to JSON
@@ -253,17 +234,17 @@ function generateExportObject(maple_class) {
     obj.obj_wse_lines = obj_wse_lines;
     obj.obj_checked = obj_checked;
 
-    exportToJsonFile(obj, maple_class)
+    //exportToJsonFile(obj, maple_class);
+
+    //store to localstorage
+    window.localStorage.clear(); //here
+    window.localStorage.setItem('data', JSON.stringify(obj)); //here
     // var json = JSON.stringify(obj);
     // console.log(json);
 
     //for importing:
     //once you fill in weapon levels, update the possible lines before assigning values to lines
     //once you put in all the values for hyper stats, update the points
-}
-
-function importCharacter(JSON) {
-    //parse the JSON, store the data into obj
 }
 
 function calculateDamageCommon(primary, secondary, cdmg, boss, dmg, ied, att, pdr) {
@@ -3006,6 +2987,10 @@ document.addEventListener("DOMContentLoaded", function () {
         trigger: 'focus'
     });
 
+    if (window.localStorage.getItem('data') !== null){
+        loadLocalStorage(); //load data from localstorage //here
+    }
+
     //checkbox behaviour
     document.getElementById("solus2").addEventListener("click", function () {
         if (document.getElementById('solus2').checked == true) {
@@ -3058,24 +3043,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     //event listeners
-    function listenForExport() {
-        document.getElementById('export').addEventListener('click', function () {
-            var maple_class = document.getElementById('class').value;
-            generateExportObject(maple_class);
-            return false
-        });
-    }
-
-    document.getElementById('importdata').addEventListener('change', function () {
-        if (document.getElementById('importdata').checked == true) {
-            document.getElementById('file_div').hidden = false;
-        }
-        else {
-            document.getElementById('file_div').hidden = true;
-        }
-    });
-
-    document.getElementById('customFile').addEventListener('change', handleFileSelect, false);
 
     document.getElementById("level").addEventListener("change", function () {
         calcHyperStatPoints();
@@ -3223,19 +3190,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 else {
                     if (mobbing) {
                         document.getElementById('result').innerHTML = `
-                        Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.<br><a href="#" id='export'>Click
-                        Here</a> to export your character data.
+                        Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
                     `;
                     }
                     else {
                         document.getElementById('result').innerHTML = `
-                        Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.<br><a href="#" id='export'>Click
-                        Here</a> to export your character data.
+                        Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
                     `;
                     }
 
                 }
-                listenForExport();
                 window.scrollTo(0, document.body.scrollHeight);
             }
 
@@ -4286,6 +4250,7 @@ function optimizeWSE() {
 
     document.getElementById('resultSection').hidden = false;
     window.scrollTo(0, document.body.scrollHeight);
+    saveToLocalStorage(maple_class);
 
     if (pdr != 3) {
         current_boss_percent = 0;
