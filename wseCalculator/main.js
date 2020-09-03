@@ -1,3 +1,519 @@
+function loadLocalStorage() {
+    //var json = event.target.result;
+    var json = window.localStorage.getItem('data');
+    var obj = JSON.parse(json);
+
+    var obj_values = obj.obj_values; //ex: {id1: value1, id2: value2}
+    var obj_wse_level = obj.obj_wse_level; //ex: {id1: value1, id2: value2}
+    var obj_wse_lines = obj.obj_wse_lines; //ex: {id1: value1, id2: value2}
+    var obj_checked = obj.obj_checked; //ex: {id1: true, id2: false}
+
+    var k = 0;
+    var i = 0;
+    var current_obj
+    while (k < 4) {
+        if (k == 0) current_obj = obj_values;
+        else if (k == 1) current_obj = obj_wse_level;
+        else if (k == 2) current_obj = obj_checked;
+        else if (k == 3) current_obj = obj_wse_lines;
+        //else if (k == 4) current_obj = obj_hyper_values;
+
+        i = 0;
+        var id_values = Object.keys(current_obj);
+        while (i < id_values.length) {
+            var id = id_values[i];
+            var value = current_obj[id];
+            if (id == 'level') {
+                document.getElementById(id).value = value;
+            }
+            if (id == 'class') {
+                document.getElementById(id).value = value;
+                var maple_class = value;
+
+                if (maple_class == "Zero") {
+                    document.getElementById('zeromessage').hidden = false;
+                }
+                else {
+                    document.getElementById('zeromessage').hidden = true;
+                }
+            }
+            if (k != 2) document.getElementById(id).value = value;
+            if (k == 2) document.getElementById(id).checked = value;
+            if (id == 'reboot') { 
+                if (value) {
+                    document.getElementById('nonreboot').checked = false;
+                    document.getElementById('bonusAttPerc').value = 0;
+                    document.getElementById('bonusDiv').hidden = true;
+                    document.getElementById('bonusTitle').hidden = true;
+                    document.getElementById('bonustable1').hidden = true;
+                    document.getElementById('bonustable2').hidden = true;
+                    document.getElementById('currentBonusTitle').hidden = true;
+
+                    if (document.getElementById('optimize').checked == true) {
+                        //disable
+                        //Weapon
+                        document.getElementById('new_wlevel').disabled = true;
+                        document.getElementById('new_wline1').disabled = true;
+                        document.getElementById('new_wline2').disabled = true;
+                        document.getElementById('new_wline3').disabled = true;
+
+                        //Secondary
+                        document.getElementById('new_slevel').disabled = true;
+                        document.getElementById('new_sline1').disabled = true;
+                        document.getElementById('new_sline2').disabled = true;
+                        document.getElementById('new_sline3').disabled = true;
+
+                        //Emblem
+                        document.getElementById('new_elevel').disabled = true;
+                        document.getElementById('new_eline1').disabled = true;
+                        document.getElementById('new_eline2').disabled = true;
+                        document.getElementById('new_eline3').disabled = true;
+
+                        document.getElementById('optimizeTitle').hidden = false;
+                        document.getElementById('compareTitle').hidden = true;
+                    }
+                }
+            }
+            if (id == 'nonreboot') { 
+                if (value) {
+                    document.getElementById('reboot').checked = false;
+                    if (document.getElementById('compare').checked == true) {
+                        document.getElementById('bonusTitle').hidden = false;
+                        document.getElementById('bonustable1').hidden = false;
+                        document.getElementById('bonustable2').hidden = false;
+
+                        document.getElementById('currentBonusTitle').hidden = true;
+                        document.getElementById('bonusDiv').hidden = true;
+                    }
+                    else {
+                        document.getElementById('currentBonusTitle').hidden = false;
+                        document.getElementById('bonusDiv').hidden = false;
+
+                        document.getElementById('bonusTitle').hidden = true;
+                        document.getElementById('bonustable1').hidden = true;
+                        document.getElementById('bonustable2').hidden = true;
+
+
+                        //disable
+                        //Weapon
+                        document.getElementById('new_wlevel').disabled = true;
+                        document.getElementById('new_wline1').disabled = true;
+                        document.getElementById('new_wline2').disabled = true;
+                        document.getElementById('new_wline3').disabled = true;
+
+                        //Secondary
+                        document.getElementById('new_slevel').disabled = true;
+                        document.getElementById('new_sline1').disabled = true;
+                        document.getElementById('new_sline2').disabled = true;
+                        document.getElementById('new_sline3').disabled = true;
+
+                        //Emblem
+                        document.getElementById('new_elevel').disabled = true;
+                        document.getElementById('new_eline1').disabled = true;
+                        document.getElementById('new_eline2').disabled = true;
+                        document.getElementById('new_eline3').disabled = true;
+
+                        document.getElementById('optimizeTitle').hidden = false;
+                        document.getElementById('compareTitle').hidden = true;
+
+                    }
+                }
+            }
+            i++;
+        }
+        if (k == 1) {
+            updateWeaponLines();
+            updateSecondaryLines();
+            updateEmblemLines();
+            update_new_elevel();
+            update_new_slevel();
+            update_new_wlevel();
+        }
+        k++;
+    }
+}
+function saveToLocalStorage(maple_class) {
+    var obj = {};
+
+    //each of these will be a stored in obj which will be exported to JSON
+    //key is ID, value is value
+    var obj_values = {}; //ex: {id1: value1, id2: value2}
+    var obj_wse_level = {}; //ex: {id1: value1, id2: value2}
+    var obj_wse_lines = {}; //ex: {id1: value1, id2: value2}
+    //key is ID, value is true or false (.checked == true)
+    var obj_checked = {}; //ex: {id1: true, id2: false}
+
+
+    //collection of IDs to collect data on
+    var id_values = ['class', 'boss_percent', 'ied_percent', 'damage_percent', 'familiarAttPerc', 'bonusAttPerc']
+    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'optimize', 'compare', 'reboot', 'nonreboot']
+    var id_wse_level = ['wlevel', 'slevel', 'elevel', 'new_wlevel', 'new_slevel', 'new_elevel'];
+    var id_wse_lines = {
+        'weapon': ['wline1', 'wline2', 'wline3', 'new_wline1', 'new_wline2', 'new_wline3', 'b_wline1', 'b_wline2', 'b_wline3', 'b_new_wline1', 'b_new_wline2', 'b_new_wline3'],
+        'secondary': ['sline1', 'sline2', 'sline3', 'new_sline1', 'new_sline2', 'new_sline3', 'b_sline1', 'b_sline2', 'b_sline3', 'b_new_sline1', 'b_new_sline2', 'b_new_sline3'],
+        'emblem': ['eline1', 'eline2', 'eline3', 'new_eline1', 'new_eline2', 'new_eline3', 'b_eline1', 'b_eline2', 'b_eline3', 'b_new_eline1', 'b_new_eline2', 'b_new_eline3']
+    }
+
+    var i = 0
+    while (i < id_values.length) {
+        var id = id_values[i];
+        var value = document.getElementById(id).value;
+        obj_values[id] = value;
+        i++;
+    }
+    i = 0
+    while (i < id_checked.length) {
+        var id = id_checked[i];
+        var checked = document.getElementById(id).checked;
+        obj_checked[id] = checked;
+        i++;
+    }
+    i = 0
+    while (i < id_wse_level.length) {
+        var id = id_wse_level[i];
+        var value = document.getElementById(id).value;
+        obj_wse_level[id] = value;
+        i++;
+    }
+    i = 0
+    var items = Object.keys(id_wse_lines)
+    while (i < items.length) {
+        var item = items[i];
+        var k = 0;
+        var lines = id_wse_lines[item];
+        while (k < lines.length) {
+            var id = lines[k];
+            var value = document.getElementById(id).value;;
+            obj_wse_lines[id] = value;
+            k++;
+        }
+        i++;
+    }
+    obj.obj_values = obj_values;
+    obj.obj_wse_level = obj_wse_level;
+    obj.obj_wse_lines = obj_wse_lines;
+    obj.obj_checked = obj_checked;
+
+    window.localStorage.clear();
+    window.localStorage.setItem('data', JSON.stringify(obj));
+}
+
+function updateSecondaryLines() {
+    var current_class = document.getElementById('class').value;
+    if (current_class != 'Kanna') {
+        if (document.getElementById('slevel').value == 'lesser160') {
+            if (document.getElementById('optimize').checked == true) {
+                document.getElementById('new_slevel').value = 'lesser160';
+                update_new_slevel(current_class);
+                update_new_wlevel();
+                update_new_elevel();
+
+            }
+            $('#sline1').empty();
+            $('#sline1').append("<option value='40boss'>40% Boss</option>");
+            $('#sline1').append("<option value='35boss'>35% Boss</option>");
+            $('#sline1').append("<option value='30boss'>30% Boss</option>");
+            $('#sline1').append("<option value='40ied'>40% IED</option>");
+            $('#sline1').append("<option value='35ied'>35% IED</option>");
+            $('#sline1').append("<option value='12att'>12% ATT</option>");
+            $('#sline1').append("<option value='12dmg'>12% Damage</option>");
+            $('#sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#sline2').empty();
+            $('#sline2').append("<option value='40boss'>40% Boss</option>");
+            $('#sline2').append("<option value='35boss'>35% Boss</option>");
+            $('#sline2').append("<option value='30boss'>30% Boss</option>");
+            $('#sline2').append("<option value='20boss'>20% Boss</option>");
+            $('#sline2').append("<option value='40ied'>40% IED</option>");
+            $('#sline2').append("<option value='35ied'>35% IED</option>");
+            $('#sline2').append("<option value='30ied'>30% IED</option>");
+            $('#sline2').append("<option value='12att'>12% ATT</option>");
+            $('#sline2').append("<option value='9att'>9% ATT</option>");
+            $('#sline2').append("<option value='12dmg'>12% Damge</option>");
+            $('#sline2').append("<option value='9dmg'>9% Damge</option>");
+            $('#sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#sline3').empty();
+            $('#sline3').append("<option value='40boss'>40% Boss</option>");
+            $('#sline3').append("<option value='35boss'>35% Boss</option>");
+            $('#sline3').append("<option value='30boss'>30% Boss</option>");
+            $('#sline3').append("<option value='20boss'>20% Boss</option>");
+            $('#sline3').append("<option value='40ied'>40% IED</option>");
+            $('#sline3').append("<option value='35ied'>35% IED</option>");
+            $('#sline3').append("<option value='30ied'>30% IED</option>");
+            $('#sline3').append("<option value='12att'>12% ATT</option>");
+            $('#sline3').append("<option value='9att'>9% ATT</option>");
+            $('#sline3').append("<option value='12dmg'>12% Damage</option>");
+            $('#sline3').append("<option value='9dmg'>9% Damage</option>");
+            $('#sline3').append("<option value='none' selected>N/A</option>");
+
+        }
+        else {
+            if (document.getElementById('optimize').checked == true) {
+                document.getElementById('new_slevel').value = 'greater160';
+                update_new_slevel(current_class);
+
+                update_new_wlevel();
+                update_new_elevel();
+            }
+            $('#sline1').empty();
+            $('#sline1').append("<option value='40boss'>40% Boss</option>");
+            $('#sline1').append("<option value='35boss'>35% Boss</option>");
+            $('#sline1').append("<option value='30boss'>30% Boss</option>");
+            $('#sline1').append("<option value='40ied'>40% IED</option>");
+            $('#sline1').append("<option value='35ied'>35% IED</option>");
+            $('#sline1').append("<option value='13att'>13% ATT</option>");
+            $('#sline1').append("<option value='13dmg'>13% Damage</option>");
+            $('#sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#sline2').empty();
+            $('#sline2').append("<option value='40boss'>40% Boss</option>");
+            $('#sline2').append("<option value='35boss'>35% Boss</option>");
+            $('#sline2').append("<option value='30boss'>30% Boss</option>");
+            $('#sline2').append("<option value='20boss'>20% Boss</option>");
+            $('#sline2').append("<option value='40ied'>40% IED</option>");
+            $('#sline2').append("<option value='35ied'>35% IED</option>");
+            $('#sline2').append("<option value='30ied'>30% IED</option>");
+            $('#sline2').append("<option value='13att'>13% ATT</option>");
+            $('#sline2').append("<option value='10att'>10% ATT</option>");
+            $('#sline2').append("<option value='13dmg'>13% Damage</option>");
+            $('#sline2').append("<option value='10dmg'>10% Damage</option>");
+            $('#sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#sline3').empty();
+            $('#sline3').append("<option value='40boss'>40% Boss</option>");
+            $('#sline3').append("<option value='35boss'>35% Boss</option>");
+            $('#sline3').append("<option value='30boss'>30% Boss</option>");
+            $('#sline3').append("<option value='20boss'>20% Boss</option>");
+            $('#sline3').append("<option value='40ied'>40% IED</option>");
+            $('#sline3').append("<option value='35ied'>35% IED</option>");
+            $('#sline3').append("<option value='30ied'>30% IED</option>");
+            $('#sline3').append("<option value='13att'>13% ATT</option>");
+            $('#sline3').append("<option value='10att'>10% ATT</option>");
+            $('#sline3').append("<option value='13dmg'>13% Damage</option>");
+            $('#sline3').append("<option value='10dmg'>10% Damage</option>");
+            $('#sline3').append("<option value='none' selected>N/A</option>");
+        }
+    }
+    else {
+        if (document.getElementById('slevel').value == 'lesser160') {
+            if (document.getElementById('optimize').checked == true) {
+                document.getElementById('new_slevel').value = 'lesser160';
+                update_new_slevel(current_class);
+                update_new_wlevel();
+                update_new_elevel();
+            }
+            $('#sline1').empty();
+            $('#sline1').append("<option value='12att'>12% ATT</option>");
+            $('#sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#sline2').empty();
+            $('#sline2').append("<option value='12att'>12% ATT</option>");
+            $('#sline2').append("<option value='9att'>9% ATT</option>");
+            $('#sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#sline3').empty();
+            $('#sline3').append("<option value='12att'>12% ATT</option>");
+            $('#sline3').append("<option value='9att'>9% ATT</option>");
+            $('#sline3').append("<option value='none' selected>N/A</option>");
+
+        }
+        else {
+            if (document.getElementById('optimize').checked == true) {
+                document.getElementById('new_slevel').value = 'greater160';
+                update_new_slevel(current_class);
+                update_new_wlevel();
+                update_new_elevel();
+            }
+            $('#sline1').empty();
+            $('#sline1').append("<option value='13att'>13% ATT</option>");
+            $('#sline1').append("<option value='none' selected>N/A</option>");
+
+            $('#sline2').empty();
+            $('#sline2').append("<option value='13att'>13% ATT</option>");
+            $('#sline2').append("<option value='10att'>10% ATT</option>");
+            $('#sline2').append("<option value='none' selected>N/A</option>");
+
+            $('#sline3').empty();
+            $('#sline3').append("<option value='13att'>13% ATT</option>");
+            $('#sline3').append("<option value='10att'>10% ATT</option>");
+            $('#sline3').append("<option value='none' selected>N/A</option>");
+        }
+    }
+}
+function updateEmblemLines() {
+    if (document.getElementById('elevel').value == 'lesser160') {
+        if (document.getElementById('optimize').checked == true) {
+            document.getElementById('new_elevel').value = 'lesser160';
+            update_new_elevel();
+
+            update_new_wlevel();
+
+            var maple_class = document.getElementById('class').value;
+            update_new_slevel(maple_class);
+        }
+
+        $('#eline1').empty();
+        $('#eline1').append("<option value='40ied'>40% IED</option>");
+        $('#eline1').append("<option value='35ied'>35% IED</option>");
+        $('#eline1').append("<option value='12att'>12% ATT</option>");
+        $('#eline1').append("<option value='12dmg'>12% Damage</option>");
+        $('#eline1').append("<option value='none' selected>N/A</option>");
+
+        $('#eline2').empty();
+        $('#eline2').append("<option value='40ied'>40% IED</option>");
+        $('#eline2').append("<option value='35ied'>35% IED</option>");
+        $('#eline2').append("<option value='30ied'>30% IED</option>");
+        $('#eline2').append("<option value='12att'>12% ATT</option>");
+        $('#eline2').append("<option value='9att'>9% ATT</option>");
+        $('#eline2').append("<option value='12dmg'>12% Damage</option>");
+        $('#eline2').append("<option value='9dmg'>9% Damage</option>");
+        $('#eline2').append("<option value='none' selected>N/A</option>");
+
+        $('#eline3').empty();
+        $('#eline3').append("<option value='40ied'>40% IED</option>");
+        $('#eline3').append("<option value='35ied'>35% IED</option>");
+        $('#eline3').append("<option value='30ied'>30% IED</option>");
+        $('#eline3').append("<option value='12att'>12% ATT</option>");
+        $('#eline3').append("<option value='9att'>9% ATT</option>");
+        $('#eline3').append("<option value='12dmg'>12% Damage</option>");
+        $('#eline3').append("<option value='9dmg'>9% Damage</option>");
+        $('#eline3').append("<option value='none' selected>N/A</option>");
+
+    }
+    else {
+        if (document.getElementById('optimize').checked == true) {
+            document.getElementById('new_elevel').value = 'greater160';
+            update_new_elevel();
+
+            update_new_wlevel();
+            var maple_class = document.getElementById('class').value;
+            update_new_slevel(maple_class);
+        }
+        $('#eline1').empty();
+        $('#eline1').append("<option value='40ied'>40% IED</option>");
+        $('#eline1').append("<option value='35ied'>35% IED</option>");
+        $('#eline1').append("<option value='13att'>13% ATT</option>");
+        $('#eline1').append("<option value='13dmg'>13% Damage</option>");
+        $('#eline1').append("<option value='none' selected>N/A</option>");
+
+        $('#eline2').empty();
+        $('#eline2').append("<option value='40ied'>40% IED</option>");
+        $('#eline2').append("<option value='35ied'>35% IED</option>");
+        $('#eline2').append("<option value='30ied'>30% IED</option>");
+        $('#eline2').append("<option value='13att'>13% ATT</option>");
+        $('#eline2').append("<option value='10att'>10% ATT</option>");
+        $('#eline2').append("<option value='13dmg'>13% Damage</option>");
+        $('#eline2').append("<option value='10dmg'>10% Damage</option>");
+        $('#eline2').append("<option value='none' selected>N/A</option>");
+
+        $('#eline3').empty();
+        $('#eline3').append("<option value='40ied'>40% IED</option>");
+        $('#eline3').append("<option value='35ied'>35% IED</option>");
+        $('#eline3').append("<option value='30ied'>30% IED</option>");
+        $('#eline3').append("<option value='13att'>13% ATT</option>");
+        $('#eline3').append("<option value='10att'>10% ATT</option>");
+        $('#eline3').append("<option value='13dmg'>13% Damage</option>");
+        $('#eline3').append("<option value='10dmg'>10% Damage</option>");
+        $('#eline3').append("<option value='none' selected>N/A</option>");
+    }
+}
+function updateWeaponLines() {
+    if (document.getElementById('wlevel').value == 'lesser160') {
+        if (document.getElementById('optimize').checked == true) {
+            document.getElementById('new_wlevel').value = 'lesser160';
+            update_new_wlevel_lesser();
+            update_new_elevel();
+            var maple_class = document.getElementById('class').value;
+            update_new_slevel(maple_class);
+        }
+        $('#wline1').empty();
+        $('#wline1').append("<option value='40boss'>40% Boss</option>");
+        $('#wline1').append("<option value='35boss'>35% Boss</option>");
+        $('#wline1').append("<option value='30boss'>30% Boss</option>");
+        $('#wline1').append("<option value='40ied'>40% IED</option>");
+        $('#wline1').append("<option value='35ied'>35% IED</option>");
+        $('#wline1').append("<option value='12att'>12% ATT</option>");
+        $('#wline1').append("<option value='12dmg'>12% Damage</option>");
+        $('#wline1').append("<option value='none' selected>N/A</option>");
+
+        $('#wline2').empty();
+        $('#wline2').append("<option value='40boss'>40% Boss</option>");
+        $('#wline2').append("<option value='35boss'>35% Boss</option>");
+        $('#wline2').append("<option value='30boss'>30% Boss</option>");
+        $('#wline2').append("<option value='20boss'>20% Boss</option>");
+        $('#wline2').append("<option value='40ied'>40% IED</option>");
+        $('#wline2').append("<option value='35ied'>35% IED</option>");
+        $('#wline2').append("<option value='30ied'>30% IED</option>");
+        $('#wline2').append("<option value='12att'>12% ATT</option>");
+        $('#wline2').append("<option value='9att'>9% ATT</option>");
+        $('#wline2').append("<option value='12dmg'>12% Damage</option>");
+        $('#wline2').append("<option value='9dmg'>9% Damage</option>");
+        $('#wline2').append("<option value='none' selected>N/A</option>");
+
+        $('#wline3').empty();
+        $('#wline3').append("<option value='40boss'>40% Boss</option>");
+        $('#wline3').append("<option value='35boss'>35% Boss</option>");
+        $('#wline3').append("<option value='30boss'>30% Boss</option>");
+        $('#wline3').append("<option value='20boss'>20% Boss</option>");
+        $('#wline3').append("<option value='40ied'>40% IED</option>");
+        $('#wline3').append("<option value='35ied'>35% IED</option>");
+        $('#wline3').append("<option value='30ied'>30% IED</option>");
+        $('#wline3').append("<option value='12att'>12% ATT</option>");
+        $('#wline3').append("<option value='9att'>9% ATT</option>");
+        $('#wline3').append("<option value='12dmg'>12% Damage</option>");
+        $('#wline3').append("<option value='9dmg'>9% Damage</option>");
+        $('#wline3').append("<option value='none' selected>N/A</option>");
+
+    }
+    else {
+        if (document.getElementById('optimize').checked == true) {
+            document.getElementById('new_wlevel').value = 'greater160';
+            update_new_wlevel_greater();
+            update_new_elevel();
+            var maple_class = document.getElementById('class').value;
+            update_new_slevel(maple_class);
+        }
+        $('#wline1').empty();
+        $('#wline1').append("<option value='40boss'>40% Boss</option>");
+        $('#wline1').append("<option value='35boss'>35% Boss</option>");
+        $('#wline1').append("<option value='30boss'>30% Boss</option>");
+        $('#wline1').append("<option value='40ied'>40% IED</option>");
+        $('#wline1').append("<option value='35ied'>35% IED</option>");
+        $('#wline1').append("<option value='13att'>13% ATT</option>");
+        $('#wline1').append("<option value='13dmg'>13% Damage</option>");
+        $('#wline1').append("<option value='none' selected>N/A</option>");
+
+        $('#wline2').empty();
+        $('#wline2').append("<option value='40boss'>40% Boss</option>");
+        $('#wline2').append("<option value='35boss'>35% Boss</option>");
+        $('#wline2').append("<option value='30boss'>30% Boss</option>");
+        $('#wline2').append("<option value='20boss'>20% Boss</option>");
+        $('#wline2').append("<option value='40ied'>40% IED</option>");
+        $('#wline2').append("<option value='35ied'>35% IED</option>");
+        $('#wline2').append("<option value='30ied'>30% IED</option>");
+        $('#wline2').append("<option value='13att'>13% ATT</option>");
+        $('#wline2').append("<option value='10att'>10% ATT</option>");
+        $('#wline2').append("<option value='13dmg'>13% Damage</option>");
+        $('#wline2').append("<option value='10dmg'>10% Damage</option>");
+        $('#wline2').append("<option value='none' selected>N/A</option>");
+
+        $('#wline3').empty();
+        $('#wline3').append("<option value='40boss'>40% Boss</option>");
+        $('#wline3').append("<option value='35boss'>35% Boss</option>");
+        $('#wline3').append("<option value='30boss'>30% Boss</option>");
+        $('#wline3').append("<option value='20boss'>20% Boss</option>");
+        $('#wline3').append("<option value='40ied'>40% IED</option>");
+        $('#wline3').append("<option value='35ied'>35% IED</option>");
+        $('#wline3').append("<option value='30ied'>30% IED</option>");
+        $('#wline3').append("<option value='13att'>13% ATT</option>");
+        $('#wline3').append("<option value='10att'>10% ATT</option>");
+        $('#wline3').append("<option value='13dmg'>13% Damage</option>");
+        $('#wline3').append("<option value='10dmg'>10% Damage</option>");
+        $('#wline3').append("<option value='none' selected>N/A</option>");
+    }
+}
+
 function getUpperActualDamage(attack_percent) {
     var upperActualDamage = attack_percent / 100;
     return upperActualDamage
@@ -68,10 +584,6 @@ function AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped
         if (current_potential == '3boss') {
             new_boss_percent = new_boss_percent + 3;
         }
-
-
-
-
         if (current_potential == '13att') {
             new_attack_percent = new_attack_percent + 13;
         }
@@ -1301,6 +1813,9 @@ document.addEventListener("DOMContentLoaded", function () {
     $('.popover-dismiss').popover({
         trigger: 'focus'
     });
+    if (window.localStorage.getItem('data') !== null) {
+        loadLocalStorage();
+    }
 
     //checkbox behaviour
     document.getElementById("solus2").addEventListener("click", function () {
@@ -2328,9 +2843,9 @@ function optimizeWSE() {
     var added_attack_percent_from_WSE = getWSEATTPercent();
     current_attack_percent = current_attack_percent + added_attack_percent_from_WSE;
 
-    if (document.getElementById('optimize').checked && document.getElementById('nonreboot').checked){
+    if (document.getElementById('optimize').checked && document.getElementById('nonreboot').checked) {
         current_attack_percent = current_attack_percent + parseInt(document.getElementById('bonusAttPerc').value);
-    } 
+    }
 
     //Determine Damage Output
     var currentBossDefMultiplier = getBossDefMultiplier(current_ied_percent)
@@ -2366,7 +2881,7 @@ function optimizeWSE() {
     var stripped_damage_percent = withoutWSEStats.stripped_damage_percent;
 
     //strip bonus pots
-    if(document.getElementById('nonreboot').checked && document.getElementById('compare').checked){
+    if (document.getElementById('nonreboot').checked && document.getElementById('compare').checked) {
         var b_wep_line_1 = document.getElementById('b_wline1').value;
         var b_wep_line_2 = document.getElementById('b_wline2').value;
         var b_wep_line_3 = document.getElementById('b_wline3').value;
@@ -2378,6 +2893,20 @@ function optimizeWSE() {
         var b_emb_line_1 = document.getElementById('b_eline1').value;
         var b_emb_line_2 = document.getElementById('b_eline2').value;
         var b_emb_line_3 = document.getElementById('b_eline3').value;
+
+        //here
+        //if Kanna and secondary != ATT, set equal to 'none' isATT
+        if (maple_class == "Kanna"){
+            if (b_sec_line_1 != '6att' && b_sec_line_1 != '7att' && b_sec_line_1 != '9att' && b_sec_line_1 != '10att' && b_sec_line_1 != '12att' && b_sec_line_1 != '13att' ){
+                b_sec_line_1 = 'none';
+            }
+            if (b_sec_line_2 != '6att' && b_sec_line_2 != '7att' && b_sec_line_2 != '9att' && b_sec_line_2 != '10att' && b_sec_line_2 != '12att' && b_sec_line_2 != '13att' ){
+                b_sec_line_2 = 'none';
+            }
+            if (b_sec_line_3 != '6att' && b_sec_line_3 != '7att' && b_sec_line_3 != '9att' && b_sec_line_3 != '10att' && b_sec_line_3 != '12att' && b_sec_line_3 != '13att' ){
+                b_sec_line_3 = 'none';
+            }
+        }
 
         var b_potential_list = [b_wep_line_1, b_wep_line_2, b_wep_line_3, b_sec_line_1, b_sec_line_2, b_sec_line_3, b_emb_line_1, b_emb_line_2, b_emb_line_3];
 
@@ -2435,6 +2964,18 @@ function optimizeWSE() {
             var b_new_emb_line_2 = document.getElementById('b_new_eline2').value;
             var b_new_emb_line_3 = document.getElementById('b_new_eline3').value;
 
+            if (maple_class == "Kanna"){
+                if (b_new_sec_line_1 != '6att' && b_new_sec_line_1 != '7att' && b_new_sec_line_1 != '9att' && b_new_sec_line_1 != '10att' && b_new_sec_line_1 != '12att' && b_new_sec_line_1 != '13att' ){
+                    b_new_sec_line_1 = 'none';
+                }
+                if (b_new_sec_line_2 != '6att' && b_new_sec_line_2 != '7att' && b_new_sec_line_2 != '9att' && b_new_sec_line_2 != '10att' && b_new_sec_line_2 != '12att' && b_new_sec_line_2 != '13att' ){
+                    b_new_sec_line_2 = 'none';
+                }
+                if (b_new_sec_line_3 != '6att' && b_new_sec_line_3 != '7att' && b_new_sec_line_3 != '9att' && b_new_sec_line_3 != '10att' && b_new_sec_line_3 != '12att' && b_new_sec_line_3 != '13att' ){
+                    b_new_sec_line_3 = 'none';
+                }
+            }
+
             var b_new_potential_list = [b_new_wep_line_1, b_new_wep_line_2, b_new_wep_line_3, b_new_sec_line_1, b_new_sec_line_2, b_new_sec_line_3, b_new_emb_line_1, b_new_emb_line_2, b_new_emb_line_3];
 
             var b_withNewWSEStats = AddPotentialsToStats(b_new_potential_list, new_ied_percent, new_attack_percent, new_boss_percent, new_damage_percent);
@@ -2481,6 +3022,7 @@ function optimizeWSE() {
             `;
             window.scrollTo(0, document.body.scrollHeight);
         }
+        saveToLocalStorage();
 
     }
     if (document.getElementById('optimize').checked == true) {
@@ -2564,6 +3106,7 @@ function optimizeWSE() {
 
             window.scrollTo(0, document.body.scrollHeight);
         }
+        saveToLocalStorage();
 
         return false
     }

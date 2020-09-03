@@ -234,17 +234,8 @@ function saveToLocalStorage(maple_class) {
     obj.obj_wse_lines = obj_wse_lines;
     obj.obj_checked = obj_checked;
 
-    //exportToJsonFile(obj, maple_class);
-
-    //store to localstorage
     window.localStorage.clear(); //here
     window.localStorage.setItem('data', JSON.stringify(obj)); //here
-    // var json = JSON.stringify(obj);
-    // console.log(json);
-
-    //for importing:
-    //once you fill in weapon levels, update the possible lines before assigning values to lines
-    //once you put in all the values for hyper stats, update the points
 }
 
 function calculateDamageCommon(primary, secondary, cdmg, boss, dmg, ied, att, pdr) {
