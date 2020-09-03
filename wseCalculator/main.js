@@ -194,7 +194,6 @@ function saveToLocalStorage(maple_class) {
     obj.obj_wse_lines = obj_wse_lines;
     obj.obj_checked = obj_checked;
 
-    window.localStorage.clear();
     window.localStorage.setItem('wsedata', JSON.stringify(obj));
 }
 
