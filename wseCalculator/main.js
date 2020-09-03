@@ -1,6 +1,6 @@
 function loadLocalStorage() {
     //var json = event.target.result;
-    var json = window.localStorage.getItem('data');
+    var json = window.localStorage.getItem('wsedata');
     var obj = JSON.parse(json);
 
     var obj_values = obj.obj_values; //ex: {id1: value1, id2: value2}
@@ -195,7 +195,7 @@ function saveToLocalStorage(maple_class) {
     obj.obj_checked = obj_checked;
 
     window.localStorage.clear();
-    window.localStorage.setItem('data', JSON.stringify(obj));
+    window.localStorage.setItem('wsedata', JSON.stringify(obj));
 }
 
 function updateSecondaryLines() {
@@ -1813,7 +1813,7 @@ document.addEventListener("DOMContentLoaded", function () {
     $('.popover-dismiss').popover({
         trigger: 'focus'
     });
-    if (window.localStorage.getItem('data') !== null) {
+    if (window.localStorage.getItem('wsedata') !== null) {
         loadLocalStorage();
     }
 
