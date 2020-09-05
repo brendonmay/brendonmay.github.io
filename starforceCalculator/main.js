@@ -152,7 +152,7 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
     var probability_decrease = rates[current_star][2];
     var probability_boom = rates[current_star][3];
 
-    if (sauna) { //here
+    if (sauna) {
         if ((current_star >= 12 && current_star <= 14) || (item_type == 'tyrant' && (current_star >= 5 && current_star <= 7))) {
             probability_decrease = probability_decrease + probability_boom;
             probability_boom = 0;
@@ -197,17 +197,22 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
     }
 }
 
-function performExperiment(current_stars, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus) {
-    /** returns [total_mesos, total_booms] */
+function performExperiment(current_stars, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE) {
+    /** returns [total_mesos, total_booms]  or [AEE_amount, total_booms]*/
     var current_star = current_stars;
     var total_mesos = 0;
     var total_booms = 0;
     var decrease_count = 0;
 
     while (current_star < desired_star) {
-        var chanceTime = checkChanceTime(decrease_count);
-
-        total_mesos = total_mesos + attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chanceTime, item_type);
+        if (useAEE){
+            total_mesos++;
+            var chanceTime = false;
+        }
+        else{
+            var chanceTime = checkChanceTime(decrease_count); 
+            total_mesos = total_mesos + attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chanceTime, item_type);
+        }
 
         if (chanceTime) {
             var outcome = "Success";
@@ -218,7 +223,8 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
             else{
                 current_star++
             }
-        } else {
+        } 
+        else {
             var outcome = determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type);
 
             if (outcome == "Success") {
@@ -249,7 +255,7 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
     return [total_mesos, total_booms]
 }
 
-function repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus) {
+function repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE) {
     //* return [average_cost, average_booms, meso_result_list, boom_result_list] */
     var total_mesos = 0;
     var total_booms = 0;
@@ -259,11 +265,11 @@ function repeatExperiment(total_trials, current_star, desired_star, rates, item_
     var meso_result_list_divided = [];
 
     while (current_trial < total_trials) {
-        var trial_mesos = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus)[0];
+        var trial_mesos = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE)[0];
         meso_result_list.push(trial_mesos);
         meso_result_list_divided.push(trial_mesos / 1000000000);
 
-        var trial_booms = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus)[1];
+        var trial_booms = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE)[1];
         boom_result_list.push(trial_booms);
 
         total_mesos = total_mesos + trial_mesos;
@@ -322,7 +328,8 @@ function do_stuff() {
     let item_type = document.getElementById('item_type').value;
     let current_star = parseInt(document.getElementById('cur_stars').value);
     let desired_star = parseInt(document.getElementById('target_stars').value);
-    if (item_type == 'normal'&& (desired_star > 25 || desired_star < 0 || current_star < 0)){
+    
+    if (item_type == 'normal' && (desired_star > 25 || desired_star < 0 || current_star < 0)){
     		document.getElementById('result').style.display='none';
         document.getElementById('graphhere').style.display='none';
         document.getElementById('error-container').style.display='';
@@ -330,7 +337,7 @@ function do_stuff() {
             `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 25.</p>`
         return false
     }
-    if (item_type == 'tyrant'&& (desired_star > 15 || desired_star < 0 || current_star < 0)){
+    if (item_type == 'tyrant' && (desired_star > 15 || desired_star < 0 || current_star < 0)){
     		document.getElementById('result').style.display='none';
         document.getElementById('graphhere').style.display='none';
         document.getElementById('error-container').style.display='';
@@ -338,14 +345,15 @@ function do_stuff() {
             `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 15.</p>`
         return false
     }
-    let boom_protect = document.getElementById('safeguard').value == 'yes';
+    var boom_protect = document.getElementById('safeguard').value == 'yes';
     var star_catch_value = document.getElementById('starcatching').value;
-    let mvp = document.getElementById('mvp').value;
-    let total_trials = document.getElementById('trials').value;
+    var mvp = document.getElementById('mvp').value;
+    var total_trials = document.getElementById('trials').value;
     var thirty_off = document.getElementById('30').checked;
     var five_ten_fifteen = document.getElementById('5_10_15').checked;
     var sauna = document.getElementById('sauna').checked;
     var two_plus = document.getElementById('plus2').checked;
+    var useAEE = document.getElementById('AEE').checked;
 
     var silver = false;
     var gold = false;
@@ -353,23 +361,44 @@ function do_stuff() {
     var star_catch = false;
 
     if (item_type == 'tyrant'){
-        rates = [
-            [0.5, 0.5, 0, 0], //0 stars
-            [0.5, 0, 0.5, 0], //1 stars
-            [0.45, 0, 0.55, 0], //2 stars
-            [0.4, 0, 0.6, 0], //3 stars
-            [0.4, 0, 0.6, 0], //4 stars
-            [0.4, 0, 0.582, 0.018], //5 stars
-            [0.4, 0, 0.57, 0.03], //6 stars
-            [0.4, 0, 0.558, 0.042], //7 stars
-            [0.4, 0, 0.54, 0.06], //8 stars
-            [0.37, 0, 0.5355, 0.0945], //9 stars
-            [0.35, 0, 0.52, 0.13], //10 stars
-            [0.35, 0, 0.4875, 0.1625], //11 stars
-            [0.03, 0, 0.485, 0.485], //12 stars
-            [0.02, 0, 0.49, 0.49], //13 stars
-            [0.01, 0, 0.495, 0.495], //14 stars
-        ]
+        if(useAEE){
+            rates = [ 
+                [1, 0, 0, 0], //0 stars
+                [0.9, 0.1, 0, 0], //1 stars
+                [0.8, 0.2, 0, 0], //2 stars
+                [0.7, 0.3, 0, 0], //3 stars
+                [0.6, 0.4, 0, 0], //4 stars
+                [0.5, 0.5, 0, 0], //5 stars
+                [0.4, 0.6, 0, 0], //6 stars
+                [0.3, 0.7, 0, 0], //7 stars
+                [0.2, 0.8, 0, 0], //8 stars
+                [0.1, 0.9, 0, 0], //9 stars
+                [0.05, 0.95, 0, 0], //10 stars
+                [0.04, 0.96, 0, 0], //11 stars
+                [0.03, 0.97, 0, 0], //12 stars
+                [0.02, 0.98, 0, 0], //13 stars
+                [0.01, 0.99, 0, 0], //14 stars
+            ]
+        }
+        else{
+            rates = [
+                [0.5, 0.5, 0, 0], //0 stars
+                [0.5, 0, 0.5, 0], //1 stars
+                [0.45, 0, 0.55, 0], //2 stars
+                [0.4, 0, 0.6, 0], //3 stars
+                [0.4, 0, 0.6, 0], //4 stars
+                [0.4, 0, 0.582, 0.018], //5 stars
+                [0.4, 0, 0.57, 0.03], //6 stars
+                [0.4, 0, 0.558, 0.042], //7 stars
+                [0.4, 0, 0.54, 0.06], //8 stars
+                [0.37, 0, 0.5355, 0.0945], //9 stars
+                [0.35, 0, 0.52, 0.13], //10 stars
+                [0.35, 0, 0.4875, 0.1625], //11 stars
+                [0.03, 0, 0.485, 0.485], //12 stars
+                [0.02, 0, 0.49, 0.49], //13 stars
+                [0.01, 0, 0.495, 0.495], //14 stars
+            ]
+        }
     }
 
     if (star_catch_value == "mult") {
@@ -385,7 +414,7 @@ function do_stuff() {
         diamond = true;
     }
 		
-    var result = repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus);
+    var result = repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE);
     //result = [average_cost, average_booms, meso_result_list, boom_result_list, median_cost, median_booms, max_cost, min_cost, max_booms, min_booms, meso_std, boom_std, meso_result_list_divided]
     var average_mesos = result[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     var average_booms = result[1];
@@ -411,6 +440,20 @@ function do_stuff() {
     var eighty_fifth_percentile_boom = (percentile(boom_result_list, 0.85).toFixed(0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     var ninty_fifth_percentile_boom = (percentile(boom_result_list, 0.95).toFixed(0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+    if (useAEE){ //here
+        var x_axis = 'Number of AEEs';
+        var bar_data = meso_result_list;
+        var stat_title = 'AEE Stats';
+        var percentile_title = 'AEE Percentiles';
+        var currency = 'AEEs'
+    }
+    else{
+        var x_axis = 'Meso Cost (in Billions)';
+        var bar_data = meso_result_list_divided;
+        var stat_title = 'Mesos Stats';
+        var percentile_title = 'Mesos Percentiles';
+        var currency = 'mesos'
+    }
     Highcharts.chart('container', {
         title: {
             text: 'Frequency Histogram'
@@ -425,7 +468,7 @@ function do_stuff() {
             opposite: true
         }, {
             title: {
-                text: 'Meso Cost (in Billions)'
+                text: x_axis
             },
             alignTicks: false,
             opposite: false
@@ -470,7 +513,7 @@ function do_stuff() {
             name: '',
             type: 'scatter',
             visible: false,
-            data: meso_result_list_divided,
+            data: bar_data,
             id: 's1',
             marker: {
                 radius: 0
@@ -480,11 +523,13 @@ function do_stuff() {
 		document.getElementById("graphhere").style.display = '';
     document.getElementById('result').style.display='';
     document.getElementById('error-container').style.display='none';
-    document.getElementById('result').innerHTML =
+
+    if(!useAEE){
+        document.getElementById('result').innerHTML =
         `
 <div class="container secondarycon">
   <div class=" statBox statBox1" style="background-color:#aaa;">
-    <h2 style="text-align:center;">Mesos Stats</h2>
+    <h2 style="text-align:center;">${stat_title}</h2>
     	<p style="text-align:center;"">
     		Average cost: ${average_mesos}<br />
         Median cost: ${median_cost}<br />
@@ -492,11 +537,11 @@ function do_stuff() {
     	</p>
   </div>
   <div class=" statBox statBox2" style="background-color:#bbb;">
-    <h2 style="text-align:center;">Mesos Percentiles</h2>
+    <h2 style="text-align:center;">${percentile_title}</h2>
     <p style="text-align:center;"">
-    	75% chance within ${seventy_fifth_percentile} mesos<br />
-    	85% chance within ${eighty_fifth_percentile} mesos<br />
-    	95% chance within ${ninty_fifth_percentile} mesos<br />
+    	75% chance within ${seventy_fifth_percentile} ${currency}<br />
+    	85% chance within ${eighty_fifth_percentile} ${currency}<br />
+    	95% chance within ${ninty_fifth_percentile} ${currency}<br />
     </p>
   </div>
   
@@ -518,6 +563,30 @@ function do_stuff() {
   </div>
 </div>
     `
+    }
+    else{
+        document.getElementById('result').innerHTML =
+        `
+<div class="container secondarycon">
+  <div class=" statBox statBox1" style="background-color:#aaa;">
+    <h2 style="text-align:center;">${stat_title}</h2>
+    	<p style="text-align:center;"">
+    		Average cost: ${average_mesos}<br />
+        Median cost: ${median_cost}<br />
+        Range of cost: ${min_cost} - ${max_cost}<br />
+    	</p>
+  </div>
+  <div class=" statBox statBox2" style="background-color:#bbb;">
+    <h2 style="text-align:center;">${percentile_title}</h2>
+    <p style="text-align:center;"">
+    	75% chance within ${seventy_fifth_percentile} ${currency}<br />
+    	85% chance within ${eighty_fifth_percentile} ${currency}<br />
+    	95% chance within ${ninty_fifth_percentile} ${currency}<br />
+    </p>
+  </div>
+</div>
+    `
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -525,9 +594,26 @@ document.addEventListener("DOMContentLoaded", function () {
         loaderOn();
       setTimeout(loaderOff, 100);
     });
+    //add event listener for when AEE is clicked, disable starcatching (no star catching)
+    document.getElementById('AEE').addEventListener('change', function(){
+        if (document.getElementById('AEE').checked){
+            document.getElementById('starcatching').disabled = true;
+            document.getElementById('starcatching').value = 'none';
+            document.getElementById('sauna').checked = false;
+            document.getElementById('sauna').disabled = true;
+            document.getElementById('trials').value = 10000;
 
+        }
+        else{
+            document.getElementById('starcatching').disabled = false;
+            document.getElementById('sauna').disabled = false;
+            document.getElementById('trials').value = 1000;
+        }
+    })
     $('select').on('change', function() {
         if (document.getElementById("tyrant").selected){
+            //enable AEE checkbox to be clicked
+            document.getElementById('AEE').disabled = false;
             document.getElementById("safeguard").disabled = true;
             document.getElementById("safeguard").value = 'no';
     
@@ -542,6 +628,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
             document.getElementById("30").disabled = true;
             document.getElementById("30").checked = false;
+
+            document.getElementById('target_stars').value = 12;
     
             // document.getElementById("sauna").disabled = true;
             // document.getElementById("sauna").checked = false;
@@ -555,9 +643,13 @@ document.addEventListener("DOMContentLoaded", function () {
     
         }
         if (document.getElementById("normal").selected){
+            //disable AEE checkbox from being clicked
+            document.getElementById('AEE').disabled = true;
             document.getElementById("safeguard").disabled = false;
     
             document.getElementById("mvp").disabled = false;
+
+            document.getElementById('target_stars').value = 22;
     
             document.getElementById("level").disabled = false;
     

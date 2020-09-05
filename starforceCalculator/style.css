@@ -55,15 +55,7 @@ body{
    to {transform: rotate(359deg);}
 }
 
-.col {
-    border: solid 1px #6c757d;
-    padding: 20px;
-}
 
-.column-q {
-    padding: 20px;
-    /* Should be removed. Only for demonstration */
-}
 
 /* Clear floats after the columns */
 
