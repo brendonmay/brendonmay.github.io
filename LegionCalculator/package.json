@@ -28,6 +28,6 @@
     "build": "npm run clean && npx webpack --config webpack.config.prod.cjs",
     "clean": "rimraf dist/prod",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   }
 }
