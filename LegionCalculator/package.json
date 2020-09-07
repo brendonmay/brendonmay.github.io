@@ -1,6 +1,7 @@
 {
   "name": "legion_solver",
   "version": "1.0.0",
+  "homepage": "https://brendonmay.github.io/LegionSolver/",
   "description": "",
   "type": "module",
   "private": true,
