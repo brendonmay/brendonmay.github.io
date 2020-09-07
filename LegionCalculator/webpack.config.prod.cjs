@@ -5,7 +5,7 @@ module.exports = {
     entry: './src/main.js',
     output: {
         filename: '[name].[contenthash].js',
-        path: path.resolve(__dirname, 'dist', 'prod')
+        path: path.resolve(__dirname)
     },
     mode: 'production',
     module: {
