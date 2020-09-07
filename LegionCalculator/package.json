@@ -26,8 +26,6 @@
   "scripts": {
     "webpack": "npx webpack --config webpack.config.dev.cjs",
     "build": "npm run clean && npx webpack --config webpack.config.prod.cjs",
-    "clean": "rimraf dist/prod",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "clean": "rimraf dist/prod"
   }
 }
