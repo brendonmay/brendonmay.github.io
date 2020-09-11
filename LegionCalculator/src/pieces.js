@@ -214,7 +214,9 @@ if (pieceAmounts) {
     updateCurrentPieces();
 }
 
-document.getElementById('pieceForm').addEventListener("input", updateCurrentPieces);
+document.getElementById('pieceForm').addEventListener("input", function(){
+    updateCurrentPieces();
+});
 
 function updateCurrentPieces() {
     for (let piece of pieces) {
@@ -227,6 +229,10 @@ function updateCurrentPieces() {
     localStorage.setItem("currentPieces", JSON.stringify(currentPieces));
 
     document.getElementById('currentPiecesValue').innerText = `${currentPieces}`;
+
+    //here
+    //console.log('piece amount (attackers) = ' + JSON.parse(localStorage.getItem('pieceAmounts')).reduce((a, b) => a + b, 0)); //amount of attackers
+    //console.log('currentPieces (square amount) = ' + JSON.parse(localStorage.getItem('currentPieces'))); //amount of squares
 }
 
 document.getElementById("clearPieces").addEventListener("click", clearPieces);
