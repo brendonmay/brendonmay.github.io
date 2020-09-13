@@ -357,6 +357,7 @@ function calculateOptimalKanna(data, progress, cb, mobbing) {
 
 self.addEventListener('message', (e) => {
     let data = e.data;
+    let final = data.final;
     let calculate = calculateOptimalCommon;
     if (data.type == 'luk2') {
         calculate = calculateOptimalLuk2;
@@ -368,7 +369,7 @@ self.addEventListener('message', (e) => {
         calculate = calculateOptimalKanna;
     }
     calculate(data,
-        (progress) => { self.postMessage({ progress: progress, i: data.i }); },
+        (progress) => { self.postMessage({ progress: progress, i: data.i, final: final }); },
         (result) => { self.postMessage({ result: result }); },
         data.mob
     );

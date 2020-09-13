@@ -150,7 +150,7 @@ for (let i = 0; i < 2; i++) {
 }
 
 for (let i = 0; i < pieces.length; i++) {
-    let row = '<td class="pieceCell"></td>'.repeat(pieces[i].shape[0].length);
+    let row = '<td class="pieceCell" style="background: #2a2e33;"></td>'.repeat(pieces[i].shape[0].length);
     let grid = `<tr>${row}</tr>`.repeat(pieces[i].shape.length);
     document.querySelector('#pieceForm form').innerHTML += `<div class="piece">
         <div id="pieceDescription${i+1}"></div>
@@ -159,7 +159,7 @@ for (let i = 0; i < pieces.length; i++) {
                 <tbody>${grid}</tbody>
             </table>
         </label>
-        <input id="piece${i+1}" type="number" min=0 value=0>
+        <input class="form-control" id="piece${i+1}" type="number" min=0 value=0>
     </div>`;
 
     document.getElementById(`pieceDisplay${i+1}`).style.borderCollapse = 'collapse';
@@ -229,6 +229,10 @@ function updateCurrentPieces() {
     localStorage.setItem("currentPieces", JSON.stringify(currentPieces));
 
     document.getElementById('currentPiecesValue').innerText = `${currentPieces}`;
+
+    var assigned_attackers = (pieces.map(piece => piece.amount)).reduce((a, b) => a + b, 0);
+    localStorage.setItem("assigned_attackers", JSON.stringify(assigned_attackers));
+    document.getElementById('attackersAssignedValue').innerText = `${assigned_attackers}`;
 
     //here
     //console.log('piece amount (attackers) = ' + JSON.parse(localStorage.getItem('pieceAmounts')).reduce((a, b) => a + b, 0)); //amount of attackers

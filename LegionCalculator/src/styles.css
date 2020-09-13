@@ -57,7 +57,7 @@ form {
 }
 
 #darkModeLabel {
-    padding-top: 10px;
+    padding-top: 0px;
 }
 
 #iterationTime {
@@ -201,10 +201,22 @@ a:hover {
 .btn-outline-secondary:hover, .btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle {
     color: #fff !important;
 }
+.no-bottom-margin{
+    margin-bottom: 0;
+}
+
+.no-padding{
+    padding:0
+}
+
+.padding-7px{
+    padding: 7px
+}
 
 .jumbotron {
     padding: 4rem 2rem;
     /* background: linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.75)), url(bg.jpg); */
+    background: #2a2e33;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -510,4 +522,14 @@ hr {
 
 .form-control:disabled {
     background-color: rgb(70, 73, 70)
+}
+
+.v-center {
+    display: flex;
+    align-items: center;
+ }
+
+ .col-centered{
+    float: none;
+    margin: 0 auto;
 }

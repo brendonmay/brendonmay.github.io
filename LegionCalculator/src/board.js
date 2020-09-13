@@ -5,7 +5,7 @@ import { i18n } from './i18n.js';
 
 document.getElementById('disableBoard').addEventListener('click', function () {
     //here
-
+   
     //introduce checks to ensure given their legion level that they are indicating the correct number of attackers
     //have them write in their old legion stat boosts to determine a damage gain from BIS distribution
 
@@ -15,8 +15,38 @@ document.getElementById('disableBoard').addEventListener('click', function () {
     //3. Determine which permutation is the one which raises dmg the most; build it into hyper stat optimization algorithm
     //4. buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss); setup board to be solved with best stats
     //5. Solve the board
-    
+
+    //buildBoard(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss)
+    // document.getElementById("clearBoard").click();
+    // buildBoard(35, 10, 0, 10, 10, 10);
+
 })
+
+
+document.getElementById('result').addEventListener("DOMSubtreeModified", function () {
+    var goBuild = document.getElementById('result').innerHTML == 'Step 3/6. Building Legion Board...';
+
+    if (goBuild) {
+        
+        var board_stat = parseInt(JSON.parse(localStorage.getItem('board_stat')))
+        var board_attack = parseInt(JSON.parse(localStorage.getItem('board_attack')))
+        var board_ied = parseFloat(JSON.parse(localStorage.getItem('board_ied')))
+        var board_crit_rate = 5; //here fix this
+        var board_cdmg = parseFloat(JSON.parse(localStorage.getItem('board_cdmg')))
+        var board_boss = parseInt(JSON.parse(localStorage.getItem('board_boss')))
+
+        document.getElementById("clearBoard").click();
+        buildBoard(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss);
+
+        //move to step 4
+        document.getElementById('result').innerHTML = 'Step 4/6. Solving Legion Board...';
+        runSolver();
+        
+
+
+    }
+});
+
 
 function initialBoardTemplate(crit_rate_amount) {
     var row = 10;
@@ -28,93 +58,74 @@ function initialBoardTemplate(crit_rate_amount) {
     }
 }
 
-function allStatCombinations(crit_rate_amount) { 
-    //all will contain at least 5 attk and 25 stat
-    //here try to avoid relying on localstorage
-    var currentPieces = JSON.parse(localStorage.getItem('currentPieces')); //currentPieces = # of blocks to fill
-    var remaining_blocks = currentPieces - crit_rate_amount - 12; //5 from stat, 5 from attack on intial board setup, 2 for the center 2 blocks
-    var blocks_per_stat = JSON.parse(localStorage.getItem('blocksPerStat'));
-    //var stat_types = ['ied', 'boss', 'crit_dmg', 'stat', 'attack']
-
-    //strategy, find all combinations, before committing them to the array of all combinations, check they meet the proper conditions
-    //in regards to crit rate and ied
-
-    var combinations = [];
-    for (var ied_counter = 0; ied_counter <= blocks_per_stat; ied_counter++) {
-        var boss_counter = 0;
-        var crit_dmg_counter = 0;
-        var stat_counter = 5;
-        var attack_counter = 5;
-        for (boss_counter = 0; boss_counter <= blocks_per_stat; boss_counter++) {
-            crit_dmg_counter = 0;
-            stat_counter = 5;
-            attack_counter = 5;
-            if (ied_counter >= remaining_blocks) {
-                if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
-                    new_combination = newCombination(ied_counter, boss_counter, crit_dmg_counter, stat_counter, attack_counter, crit_rate_amount)
-                    combinations.push(new_combination);
-                }
-                break;
-            }
-            for (crit_dmg_counter = 0; crit_dmg_counter <= blocks_per_stat; crit_dmg_counter++) {
-                stat_counter = 5;
-                attack_counter = 5;
-                if (ied_counter + boss_counter >= remaining_blocks) {
-                    if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
-                        var new_combination = newCombination(ied_counter, boss_counter, crit_dmg_counter, stat_counter, attack_counter, crit_rate_amount)
-                        combinations.push(new_combination);
-                    }
-                    break;
-                }
-                for (stat_counter = 5; stat_counter <= 15; stat_counter++) {
-                    attack_counter = 5;
-                    if (ied_counter + boss_counter + crit_dmg_counter >= remaining_blocks) {
-                        if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
-                            var new_combination = newCombination(ied_counter, boss_counter, crit_dmg_counter, stat_counter, attack_counter, crit_rate_amount)
-                            combinations.push(new_combination);
-                        }
-                        break;
-                    }
-                    for (attack_counter = 5; attack_counter <= 15; attack_counter++) {
-                        if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
-                            var new_combination = newCombination(ied_counter, boss_counter, crit_dmg_counter, stat_counter, attack_counter, crit_rate_amount)
-                            combinations.push(new_combination);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    //console.log(combinations);
-    return combinations
-
-}
-
-function isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount){
-    // if crit => 1 critdmg box before IED box 
-    if (crit_rate_amount > 0 && ied_counter > 0){
-        return crit_dmg_counter > 0
-    }
-
-    //else 1 IED box before 1 critdmg box
-    if (crit_rate_amount == 0 && crit_dmg_counter > 0){
-        return ied_counter > 0
+function isFirstPiece(legion_group) {
+    //run initial check if its first block assigned in group
+    var i = 0;
+    while (i < legion_group.length) {
+        var row = legion_group[i].x;
+        var column = legion_group[i].y;
+        if (board[row][column] == 0) return false
+        i++;
     }
 
     return true
 }
-
-function newCombination(ied_counter, boss_counter, crit_dmg_counter, stat_counter, attack_counter, crit_rate_amount) {
-    var new_combination = {
-        ied: ied_counter,
-        boss: boss_counter,
-        crit_dmg: crit_dmg_counter * 0.5,
-        stat: stat_counter * 5,
-        attack: attack_counter,
-        crit_rate: crit_rate_amount
+function isValidSpace(row, column, group_number) {
+    //need to check that spot is unlocked on legion board
+    //here this region should work but isnt tested (checking youre within restrictions)
+    var layers_unlocked = JSON.parse(localStorage.getItem('layersUnlocked')); //avoid using local storage
+    var layer_data = {
+        0: { row_span: [5, 14], col_span: [5, 16] },
+        1: { row_span: [4, 15], col_span: [4, 17] },
+        2: { row_span: [3, 16], col_span: [3, 18] },
+        3: { row_span: [2, 17], col_span: [2, 19] },
+        4: { row_span: [1, 18], col_span: [1, 20] },
+        5: { row_span: [0, 19], col_span: [0, 21] }
     }
 
-    return new_combination
+    var restrictions = layer_data[parseInt(layers_unlocked)];
+
+    if (row < restrictions.row_span[0] || row > restrictions.row_span[1] || column < restrictions.col_span[0] || column > restrictions.col_span[1]) {
+        return false
+    }
+
+    //check left
+    if (column - 1 >= 0) {
+        if (group_number == findGroupNumber(row, column - 1)) {
+            if (board[row][column - 1] == 0) {
+                return true
+            }
+        }
+
+    }
+    //check right
+    if (column + 1 <= 21) {
+        if (group_number == findGroupNumber(row, column + 1)) {
+            if (board[row][column + 1] == 0) {
+                return true
+            }
+        }
+
+    }
+    //check down
+    if (row + 1 <= 19) {
+        if (group_number == findGroupNumber(row + 1, column)) {
+            if (board[row + 1][column] == 0) {
+                return true
+            }
+        }
+
+    }
+    //check up
+    if (row - 1 >= 0) {
+        if (group_number == findGroupNumber(row - 1, column)) {
+            if (board[row - 1][column] == 0) {
+                return true
+            }
+        }
+
+    }
+    return false
 }
 
 function buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss) {
@@ -122,7 +133,7 @@ function buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss) {
     var has_crit_rate = crit_rate != 0
     initialBoardTemplate(has_crit_rate);
 
-    var stat_blocks = (stat - 25) / 5;
+    var stat_blocks = (stat / 5) - 5;
     var attack_blocks = attack - 5;
     var IED_blocks = IED;
     var crit_rate_blocks = crit_rate;
@@ -184,78 +195,8 @@ function buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss) {
     }
 }
 
-function isFirstPiece(legion_group) {
-    //run initial check if its first block assigned in group
-    var i = 0;
-    while (i < legion_group.length) {
-        var row = legion_group[i].x;
-        var column = legion_group[i].y;
-        if (board[row][column] == 0) return false
-        i++;
-    }
-
-    return true
-}
-function isValidSpace(row, column, group_number) {
-    //need to check that spot is unlocked on legion board
-    //here this region should work but isnt tested (checking youre within restrictions)
-    var layers_unlocked = JSON.parse(localStorage.getItem('layersUnlocked')); //avoid using local storage
-    var layer_data = {
-        0: {row_span: [5, 14], col_span: [5, 16]},
-        1: {row_span: [4, 15], col_span: [4, 17]},
-        2: {row_span: [3, 16], col_span: [3, 18]},
-        3: {row_span: [2, 17], col_span: [2, 19]},
-        4: {row_span: [1, 18], col_span: [1, 20]},
-        5: {row_span: [0, 19], col_span: [0, 21]}
-    }
-
-    var restrictions = layer_data[parseInt(layers_unlocked)];
-
-    if (row  < restrictions.row_span[0] || row  > restrictions.row_span[1] || column < restrictions.col_span[0] || column > restrictions.col_span[1]){
-        return false
-    }
-
-    //check left
-    if (column - 1 >= 0) {
-        if (group_number == findGroupNumber(row, column - 1)) {
-            if (board[row][column - 1] == 0) {
-                return true
-            }
-        }
-
-    }
-    //check right
-    if (column + 1 <= 21) {
-        if (group_number == findGroupNumber(row, column + 1)) {
-            if (board[row][column + 1] == 0) {
-                return true
-            }
-        }
-
-    }
-    //check up
-    if (row + 1 >= 0) {
-        if (group_number == findGroupNumber(row + 1, column)) {
-            if (board[row + 1][column] == 0) {
-                return true
-            }
-        }
-
-    }
-    //check down
-    if (row - 1 <= 19) {
-        if (group_number == findGroupNumber(row + 1, column)) {
-            if (board[row + 1][column] == 0) {
-                return true
-            }
-        }
-
-    }
-    return false
-}
-
 //i = row #, j = col #
-let board = JSON.parse(localStorage.getItem("legionBoard"));//rows (0-21), columns (0-19)
+let board = JSON.parse(localStorage.getItem("legionBoard"));//rows (0-19), columns (0-21)
 if (!board) {
     board = [];
     for (let i = 0; i < 20; i++) {
@@ -316,33 +257,33 @@ document.getElementById("boardButton").addEventListener("click", handleButton);
 document.getElementById("resetButton").addEventListener("click", reset);
 document.getElementById("darkMode").addEventListener("click", activateDarkMode);
 
-let dragging = false;
-let dragValue;
-for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[0].length; j++) {
-        let grid = getLegionCell(i, j)
+// let dragging = false;
+// let dragValue;
+// for (let i = 0; i < board.length; i++) {
+//     for (let j = 0; j < board[0].length; j++) {
+//         let grid = getLegionCell(i, j)
 
-        grid.addEventListener("mousedown", () => {
-            dragValue = board[i][j] == 0 ? -1 : 0;
-            setBoard(i, j, dragValue); // dragValue = 0 (filled), dragValue = -1 (not filled)
-            dragging = true;
-        });
-        grid.addEventListener("mouseover", () => {
-            if (dragging) {
-                setBoard(i, j, dragValue);
-            } else {
-                hoverOverBoard(i, j);
-            }
-        });
-        grid.addEventListener("mouseout", () => {
-            if (!dragging) {
-                hoverOffBoard(i, j);
-            }
-        });
-    }
-}
-document.documentElement.addEventListener("mouseup", () => { dragging = false });
-document.getElementById("legion").addEventListener("dragstart", (evt) => evt.preventDefault());
+//         grid.addEventListener("mousedown", () => {
+//             dragValue = board[i][j] == 0 ? -1 : 0;
+//             setBoard(i, j, dragValue); // dragValue = 0 (filled), dragValue = -1 (not filled)
+//             dragging = true;
+//         });
+//         grid.addEventListener("mouseover", () => {
+//             if (dragging) {
+//                 setBoard(i, j, dragValue);
+//             } else {
+//                 hoverOverBoard(i, j);
+//             }
+//         });
+//         grid.addEventListener("mouseout", () => {
+//             if (!dragging) {
+//                 hoverOffBoard(i, j);
+//             }
+//         });
+//     }
+// }
+// document.documentElement.addEventListener("mouseup", () => { dragging = false });
+// document.getElementById("legion").addEventListener("dragstart", (evt) => evt.preventDefault());
 
 function setLegionGroups() {
     for (let i = 0; i < board.length / 4; i++) {
@@ -583,23 +524,23 @@ function activateDarkMode() {
     localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
     let cell;
     let switchTo;
-    if (isDarkMode) {
+    // if (isDarkMode) {
         switchTo = 'white';
-        document.getElementById("body").style.backgroundColor = 'rgb(54, 57, 63)';
-        for (let i = 0; i < pieces.length; i++) {
-            document.getElementById(`piece${i + 1}`).style.backgroundColor = 'silver';
-        }
+        // document.getElementById("body").style.backgroundColor = 'rgb(54, 57, 63)';
+        // for (let i = 0; i < pieces.length; i++) {
+        //     document.getElementById(`piece${i + 1}`).style.backgroundColor = 'silver';
+        // }
         pieceColours.set(-1, 'grey');
         pieceColours.set(0, 'rgb(50, 50, 50)');
-    } else {
-        switchTo = 'black';
-        document.getElementById("body").style.backgroundColor = 'white';
-        for (let i = 0; i < pieces.length; i++) {
-            document.getElementById(`piece${i + 1}`).style.backgroundColor = 'white';
-        }
-        pieceColours.set(-1, 'white');
-        pieceColours.set(0, 'grey');
-    }
+    // } else {
+    //     switchTo = 'black';
+    //     document.getElementById("body").style.backgroundColor = 'white';
+    //     for (let i = 0; i < pieces.length; i++) {
+    //         document.getElementById(`piece${i + 1}`).style.backgroundColor = 'white';
+    //     }
+    //     pieceColours.set(-1, 'white');
+    //     pieceColours.set(0, 'grey');
+    // }
     colourBoard();
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[0].length; j++) {
@@ -618,7 +559,7 @@ function activateDarkMode() {
             }
         }
     }
-    document.getElementById("body").style.color = switchTo;
+    // document.getElementById("body").style.color = switchTo;
 }
 
 function activateBigClick() {
@@ -761,6 +702,7 @@ async function runSolver() {
     document.getElementById("timeValue").innerText = `${new Date().getTime() - finishedSolver.time}ms`;
     if (success) {
         colourBoard();
+        document.getElementById('result').innerHTML = 'Step 5/6. Configuring Hyper Stats...';
     }
     return success;
 }
