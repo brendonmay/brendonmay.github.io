@@ -3067,7 +3067,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (startSecondHyperOptimization){
             var maple_class = document.getElementById('class').value;
             var current_attack_percent = parseInt(JSON.parse(localStorage.getItem('current_attack_percent')));
-            console.log(current_attack_percent);
             var level = parseInt(document.getElementById('level').value); //here get this
             var pdr = 3;
 
@@ -3096,11 +3095,6 @@ document.addEventListener("DOMContentLoaded", function () {
             var final_dmg = optimal_setup.dmg - dmg_to_remove
             var final_cdmg = optimal_setup.cdmg - cdmg_to_remove
             var final_ied = (optimal_setup.ied - ied_to_remove) / ((-1 * ied_to_remove / 100) + 1)
-
-            console.log (final_boss)
-            console.log (final_dmg)
-            console.log (final_cdmg)
-            console.log ('final ied: ' + final_ied)
 
             //here
             console.log(optimal_setup)
