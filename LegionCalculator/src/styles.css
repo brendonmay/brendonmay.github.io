@@ -478,6 +478,54 @@ hr {
     top: 0.37rem;
 }
 
+#hasLabPiece, #totalAttackers, #attackersAssigned{
+    text-align: center
+}
+
+.checkbox3 {
+    display: inline-flex;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox3 > span {
+    color: #fff;
+    padding: 0.25rem;
+}
+
+.checkbox3 > input {
+    height: 15px;
+    width: 15px;
+    border-radius: 250000px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    border: 1px solid #e0ca05;
+    outline: none;
+    transition-duration: 0.3s;
+    background: none;
+    cursor: pointer;
+    margin-top: 9px;
+}
+
+.checkbox3 > input:checked {
+    border: 1px solid #e0ca05;
+    background-color: #e0ca05;
+    
+}
+
+.checkbox3 > input:checked + span::before {
+    content: '\2713';
+    font-weight: 900;
+    display: block;
+    text-align: center;
+    color: black;
+    position: absolute;
+    left: -1.1em;
+    top: 0.27rem;
+}
+
 .noPadding {
     padding: 0;
 }

@@ -126,8 +126,8 @@ if (getCurrentLanguage() == 'GMS') {
 }
 
 let pieceColours = new Map();
-pieceColours.set(-1, 'white');
-pieceColours.set(0, 'grey');
+pieceColours.set(-1, 'grey');
+pieceColours.set(0, 'rgb(50, 50, 50)');
 for (let i = 0; i < 2; i++) {
     pieceColours.set(1 + i * 18, 'lightpink');
     pieceColours.set(2 + i * 18, 'lightcoral');
@@ -231,6 +231,7 @@ function updateCurrentPieces() {
     document.getElementById('currentPiecesValue').innerText = `${currentPieces}`;
 
     var assigned_attackers = (pieces.map(piece => piece.amount)).reduce((a, b) => a + b, 0);
+    //assigned_attackers = assigned_attackers - remove lab pieces
     localStorage.setItem("assigned_attackers", JSON.stringify(assigned_attackers));
     document.getElementById('attackersAssignedValue').innerText = `${assigned_attackers}`;
 

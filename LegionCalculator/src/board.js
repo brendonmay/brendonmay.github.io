@@ -5,7 +5,7 @@ import { i18n } from './i18n.js';
 
 document.getElementById('disableBoard').addEventListener('click', function () {
     //here
-   
+
     //introduce checks to ensure given their legion level that they are indicating the correct number of attackers
     //have them write in their old legion stat boosts to determine a damage gain from BIS distribution
 
@@ -27,23 +27,21 @@ document.getElementById('result').addEventListener("DOMSubtreeModified", functio
     var goBuild = document.getElementById('result').innerHTML == 'Step 3/6. Building Legion Board...';
 
     if (goBuild) {
-        
+
         var board_stat = parseInt(JSON.parse(localStorage.getItem('board_stat')))
         var board_attack = parseInt(JSON.parse(localStorage.getItem('board_attack')))
         var board_ied = parseFloat(JSON.parse(localStorage.getItem('board_ied')))
-        var board_crit_rate = 5; //here fix this
+        var board_crit_rate = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks')));
         var board_cdmg = parseFloat(JSON.parse(localStorage.getItem('board_cdmg')))
         var board_boss = parseInt(JSON.parse(localStorage.getItem('board_boss')))
 
-        document.getElementById("clearBoard").click();
+        // document.getElementById("clearBoard").click();
+        // clearBoard();
         buildBoard(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss);
 
         //move to step 4
         document.getElementById('result').innerHTML = 'Step 4/6. Solving Legion Board...';
         runSolver();
-        
-
-
     }
 });
 
@@ -130,6 +128,19 @@ function isValidSpace(row, column, group_number) {
 
 function buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss) {
     //attack >= 5 and stat >= 25
+    board = [];
+    for (let i = 0; i < 20; i++) {
+        board[i] = [];
+        for (let j = 0; j < 22; j++) {
+            board[i][j] = -1;
+        }
+    }
+    boardFilled = 0;
+    localStorage.setItem("legionBoard", JSON.stringify(board));
+    localStorage.setItem("boardFilled", JSON.stringify(0));
+
+    resetBoard();
+
     var has_crit_rate = crit_rate != 0
     initialBoardTemplate(has_crit_rate);
 
@@ -196,16 +207,16 @@ function buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss) {
 }
 
 //i = row #, j = col #
-let board = JSON.parse(localStorage.getItem("legionBoard"));//rows (0-19), columns (0-21)
-if (!board) {
-    board = [];
-    for (let i = 0; i < 20; i++) {
-        board[i] = [];
-        for (let j = 0; j < 22; j++) {
-            board[i][j] = -1;
-        }
+//let board = JSON.parse(localStorage.getItem("legionBoard"));//rows (0-19), columns (0-21)
+//if (!board) {
+let board = [];
+for (let i = 0; i < 20; i++) {
+    board[i] = [];
+    for (let j = 0; j < 22; j++) {
+        board[i][j] = -1;
     }
 }
+//}
 let legionSolvers = [];
 
 const states = {
@@ -242,13 +253,14 @@ if (localStorage.getItem("isBigClick")) {
     }
 }
 
-let isLiveSolve = false;
-if (localStorage.getItem("isLiveSolve")) {
-    document.getElementById("liveSolve").checked = JSON.parse(localStorage.getItem("isLiveSolve"));
-    if (JSON.parse(localStorage.getItem("isLiveSolve"))) {
-        activateLiveSolve();
-    }
-}
+//activateLiveSolve();
+
+// if (localStorage.getItem("isLiveSolve")) {
+//     document.getElementById("liveSolve").checked = JSON.parse(localStorage.getItem("isLiveSolve"));
+//     if (JSON.parse(localStorage.getItem("isLiveSolve"))) {
+//         activateLiveSolve();
+//     }
+// }
 
 document.getElementById("bigClick").addEventListener("click", activateBigClick);
 document.getElementById("liveSolve").addEventListener("click", activateLiveSolve);
@@ -342,14 +354,13 @@ function setLegionBorders() {
         getLegionCell(3 * board.length / 4, i).style.borderTopWidth = '3px';
     }
 }
-
-let isDarkMode = false;
-if (localStorage.getItem("isDarkMode")) {
-    document.getElementById("darkMode").checked = JSON.parse(localStorage.getItem("isDarkMode"));
-    if (JSON.parse(localStorage.getItem("isDarkMode"))) {
-        activateDarkMode();
-    }
-}
+//let isDarkMode = false;
+// if (localStorage.getItem("isDarkMode")) {
+//     document.getElementById("darkMode").checked = JSON.parse(localStorage.getItem("isDarkMode"));
+//     if (JSON.parse(localStorage.getItem("isDarkMode"))) {
+//         activateDarkMode();
+//     }
+// }
 
 
 function findGroupNumber(i, j) {
@@ -520,20 +531,20 @@ function colourBoard() {
 }
 
 function activateDarkMode() {
-    isDarkMode = !isDarkMode;
-    localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
+    // isDarkMode = !isDarkMode;
+    // localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
     let cell;
     let switchTo;
     // if (isDarkMode) {
-        switchTo = 'white';
-        // document.getElementById("body").style.backgroundColor = 'rgb(54, 57, 63)';
-        // for (let i = 0; i < pieces.length; i++) {
-        //     document.getElementById(`piece${i + 1}`).style.backgroundColor = 'silver';
-        // }
-        pieceColours.set(-1, 'grey');
-        pieceColours.set(0, 'rgb(50, 50, 50)');
+    switchTo = 'white';
+    // document.getElementById("body").style.backgroundColor = 'rgb(54, 57, 63)';
+    // for (let i = 0; i < pieces.length; i++) {
+    //     document.getElementById(`piece${i + 1}`).style.backgroundColor = 'silver';
+    // }
+    pieceColours.set(-1, 'grey');
+    pieceColours.set(0, 'rgb(50, 50, 50)');
     // } else {
-    //     switchTo = 'black';
+    //switchTo = 'black';
     //     document.getElementById("body").style.backgroundColor = 'white';
     //     for (let i = 0; i < pieces.length; i++) {
     //         document.getElementById(`piece${i + 1}`).style.backgroundColor = 'white';
@@ -568,9 +579,7 @@ function activateBigClick() {
 }
 
 function activateLiveSolve() {
-    isLiveSolve = !isLiveSolve;
-    localStorage.setItem("isLiveSolve", JSON.stringify(isLiveSolve));
-    if (isLiveSolve && state != states.COMPLETED) {
+    if (state != states.COMPLETED) {
         colourBoard();
     }
 }
@@ -617,7 +626,9 @@ async function handleButton(evt) {
 }
 
 async function runSolver() {
+    activateLiveSolve()
     if (boardFilled == 0 && currentPieces > 0) {
+        console.log('run solver stopping')
         return false;
     }
     let downBoard = [];
@@ -708,9 +719,7 @@ async function runSolver() {
 }
 
 function onBoardUpdated() {
-    if (isLiveSolve) {
-        colourBoard();
-    }
+    colourBoard();
 }
 
 export { pieceColours };

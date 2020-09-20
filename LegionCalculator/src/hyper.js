@@ -61,6 +61,53 @@ var new_information = {
     specialIncr: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 };
 
+function loadValues() {
+    if (localStorage.getItem("total_attackers")) {
+        var total_attackers = JSON.parse(localStorage.getItem("total_attackers"));
+        document.getElementById('totalAttackersValue').innerText = `${total_attackers}`;
+    }
+    if (localStorage.getItem("legion_level")) {
+        var legion_level = parseInt(JSON.parse(localStorage.getItem("legion_level")));
+        document.getElementById('legionLevel').value = legion_level;
+    }
+    if (localStorage.getItem("assigned_attackers")) {
+        var assigned_attackers = parseInt(JSON.parse(localStorage.getItem("assigned_attackers")));
+        document.getElementById('attackersAssignedValue').innerText = `${assigned_attackers}`;
+    }
+
+}
+
+function critRateSplit(desired_crit_bonus) {
+    var hyper_crit_dmg_point = 0
+    var legion_crit_blocks = 0
+
+    var blocks_per_stat = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
+
+    if (desired_crit_bonus >= blocks_per_stat + 15) {
+        legion_crit_blocks = blocks_per_stat;
+        hyper_crit_dmg_point = 10;
+    }
+
+    else if (desired_crit_bonus <= 7) hyper_crit_dmg_point = desired_crit_bonus
+
+    else { //here ensure this is working
+        hyper_crit_dmg_point = 7;
+        desired_crit_bonus = desired_crit_bonus - hyper_crit_dmg_point;
+        if (blocks_per_stat >= desired_crit_bonus) legion_crit_blocks = desired_crit_bonus;
+        else {
+            legion_crit_blocks = blocks_per_stat;
+            desired_crit_bonus = desired_crit_bonus - blocks_per_stat;
+            hyper_crit_dmg_point = hyper_crit_dmg_point + desired_crit_bonus;
+            if (hyper_crit_dmg_point > 15) hyper_crit_dmg_point = 15
+        }
+    }
+
+    localStorage.setItem("hyper_crit_dmg_point", JSON.stringify(hyper_crit_dmg_point));
+    localStorage.setItem("legion_crit_blocks", JSON.stringify(legion_crit_blocks));
+
+    return { hyper_crit_dmg_point: hyper_crit_dmg_point, legion_crit_blocks: legion_crit_blocks }
+}
+
 function loadLocalStorage() {
     //var json = event.target.result;
     var json = localStorage.getItem('data');
@@ -185,9 +232,9 @@ function saveToLocalStorage(maple_class) {
 
 
     //collection of IDs to collect data on
-    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc', 'bossDmgBonus', 'iedBonus', 'cdmgBonus', 'critBonus', 'attBonus', 'primaryBonus']
+    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc', 'bossDmgBonus', 'iedBonus', 'cdmgBonus', 'critBonus', 'attBonus', 'primaryBonus', 'current_crit_bonus', 'desired_total_crit', 'legionLevel']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
-    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
+    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot', 'hasLab']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
     var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
 
@@ -414,13 +461,12 @@ function transferLockedOptions() {
         nupdatePoints(document.getElementById('ndemForSelect'));
         available_points = parseInt(document.getElementById('ncurrentPoints').innerHTML);
     }
-    if (critRateLock.checked == true) {
-        var value = document.getElementById('critRate').value;
-        document.getElementById('ncritRate').innerHTML = `${value}`;
-        document.getElementById('ncritRateSelect').value = (document.getElementById('critRateSelect').value);
-        nupdatePoints(document.getElementById('ncritRateSelect'));
-        available_points = parseInt(document.getElementById('ncurrentPoints').innerHTML);
-    }
+    //here
+    //document.getElementById('ncritRate').innerHTML = `${value}`;
+    document.getElementById('ncritRateSelect').value = parseInt(JSON.parse(localStorage.getItem('hyper_crit_dmg_point')));
+    nupdatePoints(document.getElementById('ncritRateSelect'));
+    available_points = parseInt(document.getElementById('ncurrentPoints').innerHTML);
+
     if (statResistLock.checked == true) {
         var value = document.getElementById('statResist').value;
         document.getElementById('nstatResist').innerHTML = `${value}`;
@@ -2984,6 +3030,8 @@ document.addEventListener("DOMContentLoaded", function () {
     init();
     ninit();
 
+    loadValues();
+
     //initialize 
     $(function () {
         $('[data-toggle="popover"]').popover({ html: true })
@@ -3064,33 +3112,33 @@ document.addEventListener("DOMContentLoaded", function () {
         var beginLegionOptimization = document.getElementById('result').innerHTML == 'Step 2/6. Optimizing Legion Board...';
         var startSecondHyperOptimization = document.getElementById('result').innerHTML == 'Step 5/6. Configuring Hyper Stats...'
 
-        if (startSecondHyperOptimization){
+        if (startSecondHyperOptimization) {
             var maple_class = document.getElementById('class').value;
             var current_attack_percent = parseInt(JSON.parse(localStorage.getItem('current_attack_percent')));
-            var level = parseInt(document.getElementById('level').value); //here get this
+            var level = parseInt(document.getElementById('level').value);
             var pdr = 3;
 
             var extra_boss_points = parseInt(points_to_be_removed.boss);
             var extra_cdmg_points = parseInt(points_to_be_removed.cdmg);
             var extra_dmg_points = parseInt(points_to_be_removed.dmg);
             var extra_ied_points = parseInt(points_to_be_removed.ied);
-            
+
             if (extra_boss_points > 10) extra_boss_points = 10;
             if (extra_cdmg_points > 10) extra_cdmg_points = 10;
             if (extra_dmg_points > 10) extra_dmg_points = 10;
             if (extra_ied_points > 10) extra_ied_points = 10;
 
-            if (extra_boss_points > 5){
+            if (extra_boss_points > 5) {
                 var boss_to_remove = (3 * 5) + (extra_boss_points - 5) * 4;
             }
-            else{
+            else {
                 var boss_to_remove = 3 * extra_boss_points;
             }
 
             var cdmg_to_remove = extra_cdmg_points;
             var dmg_to_remove = extra_dmg_points * 3;
             var ied_to_remove = extra_ied_points * 3;
-            
+
             var final_boss = optimal_setup.boss - boss_to_remove
             var final_dmg = optimal_setup.dmg - dmg_to_remove
             var final_cdmg = optimal_setup.cdmg - cdmg_to_remove
@@ -3100,7 +3148,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(optimal_setup)
             if (maple_class == "Kanna") {
                 calculate(optimal_setup.attack * current_attack_percent / 100, final_dmg, final_boss, final_ied, final_cdmg, optimal_setup.primary, optimal_setup.secondary, maple_class, level, current_attack_percent, pdr, true);
-        
+
             }
             else {
                 calculate(optimal_setup.attack, final_dmg, final_boss, final_ied, final_cdmg, optimal_setup.primary, optimal_setup.secondary, maple_class, level, current_attack_percent, pdr, true);
@@ -3140,13 +3188,13 @@ document.addEventListener("DOMContentLoaded", function () {
             var secondary = parseInt(JSON.parse(localStorage.getItem('stripped_secondary')));
 
             if (initial_boss_points > 10) {
-                new_boss = new_boss - diff_data.boss[initial_boss_points]/100 + 35/100;
+                new_boss = new_boss - diff_data.boss[initial_boss_points] / 100 + 35 / 100;
             }
             if (initial_cdmg_points > 10) {
-                new_cdmg = new_cdmg - diff_data.cdmg[initial_cdmg_points]/100 + 10/100;
+                new_cdmg = new_cdmg - diff_data.cdmg[initial_cdmg_points] / 100 + 10 / 100;
             }
             if (initial_dmg_points > 10) {
-                new_dmg = new_dmg - diff_data.dmg[initial_dmg_points]/100 + 30/100;
+                new_dmg = new_dmg - diff_data.dmg[initial_dmg_points] / 100 + 30 / 100;
             }
             if (initial_ied_points > 10) {
                 var stripped_ied = ((new_ied * 100) - diff_data.ied[initial_ied_points]) / ((-1 * diff_data.ied[initial_ied_points] / 100) + 1);
@@ -3157,7 +3205,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var pdr = 3;
 
             //here
-            var crit_rate_amount = 5 //collect this data properly
+            var crit_rate_amount = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks'))); //collect this data properly
             //assume 3 ATT = 3 stat
             optimal_setup = allStatCombinations(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary); //optimizes legion board
             //move to step 3
@@ -3167,7 +3215,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var board_stat = optimal_setup.primary_bonus
             var board_attack = optimal_setup.att_bonus
             var board_ied = optimal_setup.ied_bonus
-            var board_crit_rate = 5; //here fix this
+            var board_crit_rate = crit_rate_amount
             var board_cdmg = optimal_setup.cdmg_bonus
             var board_boss = optimal_setup.boss_bonus
 
@@ -3327,12 +3375,20 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             else if (dmgRatio < 1) {
-                var output_decrease = ((1 - dmgRatio) * 100).toFixed(2);
-                // document.getElementById('resultSection').hidden = false;
-                document.getElementById('result').innerHTML = `
+
+                //4. if desired crit > current crit, dmg will go down, fix results message
+                if (weaker) {
+                    document.getElementById('result').innerHTML = `
+                    Your legion board and hyper stats have successfully been optimized! 
+                `;
+                }
+                else {
+                    var output_decrease = ((1 - dmgRatio) * 100).toFixed(2);
+                    // document.getElementById('resultSection').hidden = false;
+                    document.getElementById('result').innerHTML = `
                     Optimization Failed! You will lose ${output_decrease}%. Please contact developer. 
                 `;
-
+                }
                 window.scrollTo(0, document.body.scrollHeight);
             }
 
@@ -4098,9 +4154,9 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                     var boss = new_boss + boss_counter;
                     var cdmg = new_cdmg + crit_dmg_counter * 0.5;
                     var attack = new_att + attack_counter + (1.67 * stat_counter); //here approximating to avoid summing % stat 
-                    
+
                     var new_output = determineDamageOutput(maple_class, primary, secondary, cdmg, boss, new_dmg, ied, attack, pdr);
-                    if (new_output > optimal_dmg){
+                    if (new_output > optimal_dmg) {
                         optimal_setup = {
                             primary: primary,
                             primary_bonus: stat_counter * 5,
@@ -4132,9 +4188,9 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                         var boss = new_boss + boss_counter;
                         var cdmg = new_cdmg + crit_dmg_counter * 0.5;
                         var attack = new_att + attack_counter + (1.67 * stat_counter);
-                       
+
                         var new_output = determineDamageOutput(maple_class, primary, secondary, cdmg, boss, new_dmg, ied, attack, pdr);
-                        if (new_output > optimal_dmg){
+                        if (new_output > optimal_dmg) {
                             optimal_setup = {
                                 primary: primary,
                                 primary_bonus: stat_counter * 5,
@@ -4153,7 +4209,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                             }
                             optimal_dmg = new_output;
                         }
-                        
+
                     }
                     break;
                 }
@@ -4166,9 +4222,9 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                             var boss = new_boss + boss_counter;
                             var cdmg = new_cdmg + crit_dmg_counter * 0.5;
                             var attack = new_att + attack_counter + (1.67 * stat_counter);
-                           
+
                             var new_output = determineDamageOutput(maple_class, primary, secondary, cdmg, boss, new_dmg, ied, attack, pdr);
-                            if (new_output > optimal_dmg){
+                            if (new_output > optimal_dmg) {
                                 optimal_setup = {
                                     primary: primary,
                                     primary_bonus: stat_counter * 5,
@@ -4187,7 +4243,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                                 }
                                 optimal_dmg = new_output;
                             }
-                            
+
                         }
                         break;
                     }
@@ -4198,9 +4254,9 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                             var boss = new_boss + boss_counter;
                             var cdmg = new_cdmg + crit_dmg_counter * 0.5;
                             var attack = new_att + attack_counter + (1.67 * stat_counter);
-                            
+
                             var new_output = determineDamageOutput(maple_class, primary, secondary, cdmg, boss, new_dmg, ied, attack, pdr);
-                            if (new_output > optimal_dmg){
+                            if (new_output > optimal_dmg) {
                                 optimal_setup = {
                                     primary: primary,
                                     primary_bonus: stat_counter * 5,
@@ -4219,7 +4275,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                                 }
                                 optimal_dmg = new_output;
                             }
-                            
+
                         }
                     }
                 }
@@ -4233,6 +4289,57 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
 
 //Main Function
 function optimizeWSE() {
+    //here
+    //run initial checks
+    var error_msg
+    var stop = false;
+    //1. make sure all characters are assigned
+    var attackersAssigned = parseInt(document.getElementById('attackersAssignedValue').innerHTML)
+    var totalAttackers = parseInt(document.getElementById('totalAttackersValue').innerHTML)
+    console.log(attackersAssigned, totalAttackers);
+    if (totalAttackers != attackersAssigned) {
+        if (document.getElementById('hasLab').checked) {
+            if (attackersAssigned - totalAttackers != 1) {
+                stop = true
+                error_msg = 'You have not assigned the correct number of attackers on your legion board.'
+            }
+        }
+        else {
+            stop = true
+            error_msg = 'You have not assigned the correct number of attackers on your legion board.'
+        }
+    }
+    //2. make sure desired crit rate is possible
+    var max_legion_crit = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
+    var max_hyper_crit = 15;
+    var max_desired_crit = max_legion_crit + max_hyper_crit
+    var desired_crit_bonus = parseInt(document.getElementById('desired_total_crit').value);
+    var current_crit_bonus = parseInt(document.getElementById('current_crit_bonus').value);
+
+    var weaker = false
+    if (desired_crit_bonus > current_crit_bonus) {
+        weaker = true;
+    }
+
+    if (desired_crit_bonus > max_desired_crit) {
+        stop = true
+        error_msg = 'Your desired critical rate is not possible. The max critical rate bonus you can achieve is ' + max_desired_crit + '.';
+    }
+    //3. make sure legion level is at least 2000
+    var legion_level = parseInt(JSON.parse(localStorage.getItem("legion_level")));
+
+    if (legion_level < 2000) {
+        stop = true
+        error_msg = 'Your legion level must be at least 2000 in order to use this calculator.';
+    }
+
+    if (stop) {
+        //send an error message
+        document.getElementById('resultSection').hidden = false;
+        document.getElementById('result').innerHTML = `${error_msg}`;
+        window.scrollTo(0, document.body.scrollHeight);
+        return false
+    }
     var fr = new FileReader();
     //clear old optimized stats
     document.getElementById('nhpSelect').value = 0;
@@ -4589,6 +4696,8 @@ function optimizeWSE() {
     window.scrollTo(0, document.body.scrollHeight);
     saveToLocalStorage(maple_class);
 
+    var crit_rate_split = critRateSplit(desired_crit_bonus)
+
     if (pdr != 3) {
         current_boss_percent = 0;
         stripped_boss_percent = 0;
@@ -4621,7 +4730,7 @@ function optimizeWSE() {
 
     stripped_attack = stripped_attack - legion_attack; //here not sure if we need to use attk percent
     stripped_boss_percent = stripped_boss_percent - legion_boss;
-    stripped_ied_percent =  (stripped_ied_percent - legion_ied) / ((-1 * legion_ied / 100) + 1)
+    stripped_ied_percent = (stripped_ied_percent - legion_ied) / ((-1 * legion_ied / 100) + 1)
     stripped_crit_dmg = stripped_crit_dmg - legion_cdmg;
     stripped_primary = stripped_primary - legion_primary * 3 //here fix this by collecting their total % stat
 
@@ -4646,19 +4755,6 @@ function optimizeWSE() {
     }
 
     //here
-    // var crit_rate_amount = 6 //fix this amount needed in legion board (remaining amount after 10 points in hyper stats)
-    // var combinations = allStatCombinations(crit_rate_amount)
-
-    // var legion_ied = combinations[index].ied;
-    // var legion_boss = combinations[index].boss;
-    // var legion_crit_dmg = combinations[index].crit_dmg;
-    // var legion_stat = combinations[index].stat;
-    // var legion_attack = combinations[index].attack;
-    // var legion_crit_rate = combinations[index].crit_rate;
-
-    //remember to collect current legion bonuses to strip them from character stats
-    //legion grid stat and attack bonuses are affected by stat% and attack %, this needs to be considered.
-
     //strategy to optimize
     //first optimize hyper stats
     //review the recommended point distribution, initially distribute points up to and including 10 to the following stats (boss, dmg, ied, cdmg, crit)

@@ -78,42 +78,70 @@ document.getElementById('legionLevel').addEventListener('change', function () {
     var legion_level = document.getElementById('legionLevel').value;
     localStorage.setItem('legion_level', JSON.stringify(legion_level));
     var legion_stats = determineLegionStats(legion_level);
-
-    var total_attackers = legion_stats.number_of_attackers;
+    
+    if (document.getElementById('hasLab').checked){
+        var total_attackers = legion_stats.number_of_attackers + ' (+1 free Lab piece)';
+    }
+    else{
+        var total_attackers = legion_stats.number_of_attackers;
+    }
     localStorage.setItem('total_attackers', JSON.stringify(total_attackers));
-
     document.getElementById('totalAttackersValue').innerText = `${total_attackers}`;
     //console.log (legion_stats);
 })
 
-function loadValues(){
-    if (localStorage.getItem("total_attackers")) {
-        var total_attackers = JSON.parse(localStorage.getItem("total_attackers"));
-        document.getElementById('totalAttackersValue').innerText = `${total_attackers}`;
-    }
-    if (localStorage.getItem("legion_level")) {
-        var legion_level = parseInt(JSON.parse(localStorage.getItem("legion_level")));
-        document.getElementById('legionLevel').value = legion_level;
-    }
-    if (localStorage.getItem("assigned_attackers")) {
-        var assigned_attackers = parseInt(JSON.parse(localStorage.getItem("assigned_attackers")));
-        document.getElementById('attackersAssignedValue').innerText = `${assigned_attackers}`;
-    }
+document.getElementById('critBonus').addEventListener('change', function () {
+    if (parseInt(document.getElementById('critBonus').value) >= 0) {
+        var legion_bonus = parseInt(document.getElementById('critBonus').value);
+        var hyper_bonus = parseInt(document.getElementById('critRate').innerHTML);
 
-}
+        var current_crit_bonus = legion_bonus + hyper_bonus;
+
+        document.getElementById('current_crit_bonus').value = current_crit_bonus;
+    }
+});
+
+document.getElementById('hasLab').addEventListener('change', function () {
+    var legion_level = document.getElementById('legionLevel').value;
+    var legion_stats = determineLegionStats(legion_level);
+    if (document.getElementById('hasLab').checked){
+        var total_attackers = legion_stats.number_of_attackers + ' (+1 free Lab piece)';
+    }
+    else{
+        var total_attackers = legion_stats.number_of_attackers;
+    }
+    localStorage.setItem('total_attackers', JSON.stringify(total_attackers));
+    document.getElementById('totalAttackersValue').innerText = `${total_attackers}`;
+});
+
+document.getElementById('critRateSelect').addEventListener('change', function () {
+    var legion_bonus = parseInt(document.getElementById('critBonus').value);
+    var hyper_bonus = parseInt(document.getElementById('critRate').innerHTML);
+
+    var current_crit_bonus = legion_bonus + hyper_bonus;
+
+    document.getElementById('current_crit_bonus').value = current_crit_bonus;
+
+});
 
 document.addEventListener("DOMContentLoaded", function () {
-    if (document.getElementById('liveSolve').checked == false){
-        document.getElementById('liveSolve').click();
-        document.getElementById('liveSolve').checked = true;
-    }
-    
-    if (document.getElementById('darkMode').checked == false){
-        document.getElementById('darkMode').click();
-        document.getElementById('darkMode').checked = true;
-    }
-    document.getElementById('liveSolve').disabled = true;
-    document.getElementById('darkMode').disabled = true;
+    // if (document.getElementById('liveSolve').checked == false) {
+    //     document.getElementById('liveSolve').click();
+    //     document.getElementById('liveSolve').checked = true;
+    // }
 
-    loadValues();
+    // if (document.getElementById('darkMode').checked == false) {
+    //     document.getElementById('darkMode').click();
+    //     document.getElementById('darkMode').checked = true;
+    // }
+    // document.getElementById('liveSolve').disabled = true;
+    // document.getElementById('darkMode').disabled = true;
+
+    // if(localStorage.getItem('total_attackers')){
+    //     console.log('got it')
+    //     console.log(JSON.parse(localStorage.getItem('total_attackers')))
+    //     var total_attackers = JSON.parse(localStorage.getItem('total_attackers'));
+    //     document.getElementById('totalAttackersValue').innerText = `${total_attackers}`;
+    // }
+
 });

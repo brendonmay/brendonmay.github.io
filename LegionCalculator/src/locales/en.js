@@ -32,7 +32,7 @@ export default {
 
     // Lvl: 140
     warriorPirate140: 'Lvl 140 Warrior/Pirate',
-    mageThiefArcher140: 'Lvl 140 Mage/Thief/Archer',
+    mageThiefArcher140: 'Lvl 140 Mage/Thief/Archer/Xenon',
 
     // Lvl: 200
     warrior200: 'Lvl 200 Warrior',

@@ -982,8 +982,8 @@
                   </td>
                   <td id="critRate"></td>
                   <td class='tableCheckBox'>
-                    <label class="checkbox2" for="critRateLock">
-                      <input checked type="checkbox" id="critRateLock" value="">
+                    <label hidden class="checkbox2" for="critRateLock">
+                      <input disabled hidden type="checkbox" id="critRateLock" value="">
                       <span></span>
                     </label>
                   </td>
@@ -1371,7 +1371,7 @@
             </div>
             <div class='col-4 padding-7px'>
               <label for="critBonus"> Critical Rate: </label>
-              <input class="form-control" type="number" id="critBonus" name="critBonus" min="0" max="40" value=0>
+              <input class="form-control" type="number" id="critBonus" name="critBonus" min="0" max="40" value="0">
             </div>
             <div class='col-4 padding-7px'>
               <label for="attBonus"> Attack: </label>
@@ -1408,10 +1408,10 @@
                 </table>
                 <div id="legionFooter" class="centerMiddleChild">
                   <div id="labels">
-                    <div id="currentPieces">
+                    <div id="currentPieces" hidden>
                       Spaces to be Filled: <span id="currentPiecesValue">0</span>
                     </div>
-                    <div id="boardFilled">
+                    <div id="boardFilled" hidden>
                       Board Spaces Filled: <span id="boardFilledValue">0</span>
                     </div>
                     <div id="totalAttackers">
@@ -1420,22 +1420,29 @@
                     <div id="attackersAssigned">
                       Members Assigned: <span id="attackersAssignedValue">0</span>
                     </div>
+                    <br>
+                    <div id="hasLabPiece">
+                      <label class="form-check-label checkbox3" for="hasLab">
+                        <input class="form-check-input" type="checkbox" value='' id="hasLab">
+                        <span>Check if you possess a Lab piece</span>
+                      </label>
+                    </div>
                     <button id="clearBoard" hidden>Clear Board</button>
                   </div>
                   <div id="middlelabels" hidden>
-                    
+
                     <button id="boardButton" hidden>Start</button>
                     <button id="resetButton" hidden>Reset</button>
                     <div id="failText" hidden></div>
                   </div>
-                  <div id="options">
+                  <div hidden id="options">
                     <div id="checkboxes">
                       <input type="checkbox" id="bigClick" hidden></input>
                       <label for="bigClick" hidden>Region Click</label>
-                      <input type="checkbox" id="liveSolve"></input>
-                      <label for="liveSolve" class='no-bottom-margin'>Live Solve</label>
-                      <div id="darkModeLabel" class='no-padding'>
-                        <input type="checkbox" id="darkMode" ></input>
+                      <input type="checkbox" id="liveSolve" hidden></input>
+                      <label for="liveSolve" class='no-bottom-margin' hidden>Live Solve</label>
+                      <div id="darkModeLabel" class='no-padding' hidden>
+                        <input type="checkbox" id="darkMode"></input>
                         <label for="darkMode">Dark Mode</label></div>
                     </div>
                     <div id="iterationTime" hidden>
@@ -1465,6 +1472,31 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <hr>
+      <div class='form-row top-margin bottom-margin top-margin'>
+        <div class='col text-center'>
+          <a tabindex="0" class="btn btnStep btn-outline-secondary btn-sm" role="button" data-toggle="popover"
+            data-trigger="focus" title="Providing Legion Information"
+            data-content="Identify how much critical rate you wish you gain from both hyper stats and the legion board combined.">
+            <div class="btnDiv">
+              <h6>Step 7. Provide Critical Rate Information</h6>
+            </div>
+            <div class="btnDiv small">
+              Click for details
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col form-group">
+          <label for="current_crit_bonus"> Current Critical Rate Bonus</label>
+          <input disabled class="form-control" type="number" id="current_crit_bonus" name="current_crit_bonus" min="0" max="100" value=0>
+        </div>
+        <div class="col form-group">
+          <label for="desired_total_crit"> Desired Critical Rate Bonus</label>
+          <input class="form-control" type="number" id="desired_total_crit" name="desired_total_crit" min="0" max="100" value=0>
         </div>
       </div>
       <div class="form-row">
