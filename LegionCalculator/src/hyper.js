@@ -83,6 +83,18 @@ function critRateSplit(desired_crit_bonus) {
 
     var blocks_per_stat = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
 
+    var hyper_crit_data = {
+        7: 60,
+        8: 85,
+        9: 115,
+        10: 150,
+        11: 200,
+        12: 265,
+        13: 345,
+        14: 440,
+        15: 550
+    }
+
     if (desired_crit_bonus >= blocks_per_stat + 15) {
         legion_crit_blocks = blocks_per_stat;
         hyper_crit_dmg_point = 10;
@@ -97,8 +109,11 @@ function critRateSplit(desired_crit_bonus) {
         else {
             legion_crit_blocks = blocks_per_stat;
             desired_crit_bonus = desired_crit_bonus - blocks_per_stat;
-            hyper_crit_dmg_point = hyper_crit_dmg_point + desired_crit_bonus;
-            if (hyper_crit_dmg_point > 15) hyper_crit_dmg_point = 15
+            hyper_crit_dmg_point = hyper_crit_dmg_point + Math.floor(desired_crit_bonus / 2);
+            //check they can afford this many points
+            // var total_points = parseInt(document.getElementById('hyperPoints').innerHTML);
+            //if not, set to max number of points they can afford
+            if (hyper_crit_dmg_point > 15) hyper_crit_dmg_point = 10 //here you can change this, for now never put more than 10 in crit rate
         }
     }
 
@@ -4311,7 +4326,7 @@ function optimizeWSE() {
     }
     //2. make sure desired crit rate is possible
     var max_legion_crit = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
-    var max_hyper_crit = 15;
+    var max_hyper_crit = 10; //here you can change this
     var max_desired_crit = max_legion_crit + max_hyper_crit
     var desired_crit_bonus = parseInt(document.getElementById('desired_total_crit').value);
     var current_crit_bonus = parseInt(document.getElementById('current_crit_bonus').value);
