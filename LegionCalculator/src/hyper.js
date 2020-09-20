@@ -92,7 +92,7 @@ function critRateSplit(desired_crit_bonus) {
 
     else { //here ensure this is working
         hyper_crit_dmg_point = 7;
-        desired_crit_bonus = desired_crit_bonus - hyper_crit_dmg_point;
+        desired_crit_bonus = desired_crit_bonus - 9;
         if (blocks_per_stat >= desired_crit_bonus) legion_crit_blocks = desired_crit_bonus;
         else {
             legion_crit_blocks = blocks_per_stat;
