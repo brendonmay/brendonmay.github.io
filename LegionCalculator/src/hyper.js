@@ -4792,16 +4792,15 @@ function optimizeWSE() {
     stripped_primary = stripped_primary - legion_primary * 3 //here fix this by collecting their total % stat
 
     localStorage.setItem('current_attack_percent', JSON.stringify(current_attack_percent));
+    localStorage.setItem('stripped_primary', JSON.stringify(stripped_primary));
+    localStorage.setItem('stripped_secondary', JSON.stringify(stripped_secondary));
+    localStorage.setItem('stripped_attack', JSON.stringify(stripped_attack));
 
     if (maple_class != "Kanna") {
         console.log('original stats: primary stat: ' + primary_stat + ", secondary stat: " + secondary_stat, ", ied: " + current_ied_percent + ", boss: " + current_boss_percent + ", dmg: " + current_damage_percent + ", crit dmg: " + critical_damage + ', attack (without %): ' + attack + ", stat_value: " + stat_value + ', attk percent: ' + current_attack_percent)
         console.log('old score: ' + currentScore);
 
         console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack)
-        //here
-        localStorage.setItem('stripped_primary', JSON.stringify(stripped_primary));
-        localStorage.setItem('stripped_secondary', JSON.stringify(stripped_secondary));
-        localStorage.setItem('stripped_attack', JSON.stringify(stripped_attack));
 
     }
     else {
