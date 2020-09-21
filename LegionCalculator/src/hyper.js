@@ -3399,7 +3399,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     else {
                         document.getElementById('result').innerHTML = `
-                        Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
+                        Your legion board and hyper stats have successfully been optimized!<br>Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
                     `;
                     }
 
