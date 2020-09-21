@@ -79,8 +79,9 @@ document.getElementById('legionLevel').addEventListener('change', function () {
     localStorage.setItem('legion_level', JSON.stringify(legion_level));
     var legion_stats = determineLegionStats(legion_level);
     
-    if (document.getElementById('hasLab').checked){
-        var total_attackers = legion_stats.number_of_attackers + ' (+1 free Lab piece)';
+    if (parseInt(document.getElementById('hasLab').value) > 0){
+        var lab_pieces = parseInt(document.getElementById('hasLab').value);
+        var total_attackers = legion_stats.number_of_attackers + ' (+' + lab_pieces + ' free Lab piece)';
     }
     else{
         var total_attackers = legion_stats.number_of_attackers;
@@ -104,8 +105,9 @@ document.getElementById('critBonus').addEventListener('change', function () {
 document.getElementById('hasLab').addEventListener('change', function () {
     var legion_level = document.getElementById('legionLevel').value;
     var legion_stats = determineLegionStats(legion_level);
-    if (document.getElementById('hasLab').checked){
-        var total_attackers = legion_stats.number_of_attackers + ' (+1 free Lab piece)';
+    if (parseInt(document.getElementById('hasLab').value) > 0){
+        var lab_pieces = parseInt(document.getElementById('hasLab').value);
+        var total_attackers = legion_stats.number_of_attackers + ' (+' + lab_pieces + ' free Lab piece)';
     }
     else{
         var total_attackers = legion_stats.number_of_attackers;

@@ -526,6 +526,10 @@ hr {
     top: 0.27rem;
 }
 
+.spec-tm{
+    margin-top: 0.5em;
+}
+
 .boardInfo {
     margin-top: 0;
     margin-bottom: 0.25rem;

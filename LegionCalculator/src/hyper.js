@@ -247,9 +247,9 @@ function saveToLocalStorage(maple_class) {
 
 
     //collection of IDs to collect data on
-    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc', 'bossDmgBonus', 'iedBonus', 'cdmgBonus', 'critBonus', 'attBonus', 'primaryBonus', 'current_crit_bonus', 'desired_total_crit', 'legionLevel']
+    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc', 'bossDmgBonus', 'iedBonus', 'cdmgBonus', 'critBonus', 'attBonus', 'primaryBonus', 'current_crit_bonus', 'desired_total_crit', 'legionLevel', 'hasLab']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
-    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot', 'hasLab']
+    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
     var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
 
@@ -4311,19 +4311,28 @@ function optimizeWSE() {
     //1. make sure all characters are assigned
     var attackersAssigned = parseInt(document.getElementById('attackersAssignedValue').innerHTML)
     var totalAttackers = parseInt(document.getElementById('totalAttackersValue').innerHTML)
-    console.log(attackersAssigned, totalAttackers);
-    if (totalAttackers != attackersAssigned) {
-        if (document.getElementById('hasLab').checked) {
-            if (attackersAssigned - totalAttackers != 1) {
-                stop = true
-                error_msg = 'You have not assigned the correct number of attackers on your legion board.'
-            }
-        }
-        else {
+    var lab_pieces = parseInt(document.getElementById('hasLab').value);
+    if (lab_pieces > 0){
+        if (attackersAssigned - totalAttackers != lab_pieces) {
             stop = true
             error_msg = 'You have not assigned the correct number of attackers on your legion board.'
         }
     }
+    else{
+        if (totalAttackers != attackersAssigned) {
+            if (lab_pieces > 0) {
+                if (attackersAssigned - totalAttackers != lab_pieces) {
+                    stop = true
+                    error_msg = 'You have not assigned the correct number of attackers on your legion board.'
+                }
+            }
+            else {
+                stop = true
+                error_msg = 'You have not assigned the correct number of attackers on your legion board.'
+            }
+        }
+    }
+    
     //2. make sure desired crit rate is possible
     var max_legion_crit = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
     var max_hyper_crit = 10; //here you can change this
