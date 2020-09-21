@@ -26,24 +26,25 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="../"><span class='small'>
-                        <ion-icon name="home-outline"></ion-icon>
-                    </span>Home</a>
-
                 <a class="nav-item nav-link" href="../cubingCalculator/"><span class='small'>
                         <ion-icon name="cube-outline"></ion-icon>
-                    </span>Cubing Calculator</a>
+                    </span>Cubing Tool</a>
 
                 <a class="nav-item nav-link" href="../wseCalculator/"><span class='small'>
                         <ion-icon name="shield-outline"></ion-icon>
-                    </span>WSE Calculator <span class="sr-only">(current)</span></a>
+                    </span>WSE Tool<span class="sr-only">(current)</span></a>
 
                 <a class="nav-item nav-link" href="../starforceCalculator/"><span class='small'>
                         <ion-icon name="star-outline"></ion-icon>
-                    </span>Starforce Calculator</a>
+                    </span>Starforce Tool</a>
+
                 <a class="nav-item nav-link active" href="#"><span class='small'>
                         <ion-icon name="arrow-up-circle-outline"></ion-icon>
-                    </span>Hyper Stat Calculator</a>
+                    </span>Hyper Stat Tool</a>
+
+                <a class="nav-item nav-link" href="../LegionCalculator/"><span class='small'>
+                        <ion-icon name="grid-outline"></ion-icon>
+                    </span>Legion Tool</a>
             </div>
         </div>
     </nav>
@@ -86,7 +87,8 @@
             <div id='file_div' class="form-row top-margin bottom-margin justify-content-md-center" hidden>
                 <div class="col-md-3">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input form-control" id="customFile" value='IMPORT' accept="application/JSON">
+                        <input type="file" class="custom-file-input form-control" id="customFile" value='IMPORT'
+                            accept="application/JSON">
                         <label class="custom-file-label" for="customFile">Choose File</label>
                     </div>
                 </div>
@@ -257,8 +259,9 @@
                         value=184000>
                 </div>
                 <div class="col form-group text-center top-margin" id='zeromessage' hidden>
-                    <div class='text-center'>Please ensure you are in <u>Beta Mode</u> fully buffed and standing still when inputting your stats.</div>
-                </div>    
+                    <div class='text-center'>Please ensure you are in <u>Beta Mode</u> fully buffed and standing still
+                        when inputting your stats.</div>
+                </div>
             </div>
             <hr>
             <div class='form-row top-margin bottom-margin'>
@@ -367,8 +370,8 @@
                 <div class='col-md-12 text-center d-flex justify-content-center'>
                     <div class="form-check">
                         <label for="familiarAttPerc"> Total Attack % </label>
-                    <input class="form-control" type="number" id="familiarAttPerc" name="familiarAttPerc"
-                        min="0" max="100" value=0>
+                        <input class="form-control" type="number" id="familiarAttPerc" name="familiarAttPerc" min="0"
+                            max="100" value=0>
                     </div>
                 </div>
                 <div class='col-md-12 text-center'></div>
@@ -411,7 +414,7 @@
                                 </label>
                             </div>
                         </div>
-        
+
                         <div class='col-md-6 text-center d-flex justify-content-center top-margin'>
                             <div class="form-check">
                                 <label class="form-check-label checkbox" for="nonreboot">
@@ -785,10 +788,10 @@
                     </div>
                 </div>
                 <div class='col-md-12 text-center d-flex justify-content-center'>
-                    <div class="form-check"  id='bonusDiv' hidden>
+                    <div class="form-check" id='bonusDiv' hidden>
                         <label for="bonusAttPerc"> Total Attack % </label>
-                    <input class="form-control" type="number" id="bonusAttPerc" name="bonusAttPerc"
-                        min="0" max="200" value=0>
+                        <input class="form-control" type="number" id="bonusAttPerc" name="bonusAttPerc" min="0"
+                            max="200" value=0>
                     </div>
                 </div>
                 <div class='col-md-12 text-center'></div>

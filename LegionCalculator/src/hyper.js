@@ -3047,6 +3047,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadValues();
 
+    if(localStorage.getItem('prim_stat')){
+        var primary_stat = JSON.parse(localStorage.getItem('prim_stat'))
+        document.getElementById('primaryBonusLabel').innerHTML = `<label for="primaryBonus"> ${primary_stat}: </label>`;
+    }
+
     //initialize 
     $(function () {
         $('[data-toggle="popover"]').popover({ html: true })
@@ -3839,6 +3844,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var stat_types = getPrimaryAndSecondaryStatType(maple_class);
         var primary_stat = stat_types.primaryStatType;
+
+        localStorage.setItem('prim_stat', JSON.stringify(primary_stat));
+
         var secondary_stat = stat_types.secondaryStatType;
 
         document.getElementById('primary_label').innerHTML = `<label for="primary_stat"> ${primary_stat} </label>`;
