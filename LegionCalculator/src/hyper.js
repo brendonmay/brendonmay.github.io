@@ -3242,7 +3242,9 @@ document.addEventListener("DOMContentLoaded", function () {
             var crit_rate_amount = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks'))); //collect this data properly
             //assume 3 ATT = 3 stat
 
+            console.log(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary)
             optimal_setup = allStatCombinations(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary); //optimizes legion board
+            console.log(optimal_setup)
             //move to step 3
             document.getElementById('result').innerHTML = 'Step 3/6. Building Legion Board...';
 
