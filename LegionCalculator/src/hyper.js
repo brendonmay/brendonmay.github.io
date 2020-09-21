@@ -82,19 +82,20 @@ function loadValues() {
 function critRateSplit(desired_crit_bonus) {
     var hyper_crit_dmg_point = 0
     var legion_crit_blocks = 0
+    var true_desired_bonus = desired_crit_bonus
 
     var blocks_per_stat = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
 
     var hyper_crit_data = {
-        7: 60,
-        8: 85,
-        9: 115,
-        10: 150,
-        11: 200,
-        12: 265,
-        13: 345,
-        14: 440,
-        15: 550
+        7: 9,
+        8: 11,
+        9: 13,
+        10: 15,
+        11: 17,
+        12: 19,
+        13: 21,
+        14: 23,
+        15: 25
     }
 
     if (desired_crit_bonus >= blocks_per_stat + 15) {
@@ -104,7 +105,7 @@ function critRateSplit(desired_crit_bonus) {
 
     else if (desired_crit_bonus <= 7) hyper_crit_dmg_point = desired_crit_bonus
 
-    else { //here update with nicer algorithm for crit rate split
+    else { //here update with nicer algorithm for crit rate split (18-9 = 9 - 6 =3 )
         hyper_crit_dmg_point = 7;
         desired_crit_bonus = desired_crit_bonus - 9;
         if (blocks_per_stat >= desired_crit_bonus) legion_crit_blocks = desired_crit_bonus;
@@ -112,6 +113,14 @@ function critRateSplit(desired_crit_bonus) {
             legion_crit_blocks = blocks_per_stat;
             desired_crit_bonus = desired_crit_bonus - blocks_per_stat;
             hyper_crit_dmg_point = hyper_crit_dmg_point + Math.floor(desired_crit_bonus / 2);
+
+            //here if they are one short from desired, add one point to hyper, subtract one from legion board
+            var total_crit_bonus = hyper_crit_data[hyper_crit_dmg_point] + legion_crit_blocks;
+            if (total_crit_bonus == true_desired_bonus - 1){
+                hyper_crit_dmg_point++
+                legion_crit_blocks--
+            }
+
             //check they can afford this many points
             // var total_points = parseInt(document.getElementById('hyperPoints').innerHTML);
             //if not, set to max number of points they can afford
