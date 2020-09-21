@@ -153,8 +153,8 @@ for (let i = 0; i < pieces.length; i++) {
     let row = '<td class="pieceCell" style="background: #2a2e33;"></td>'.repeat(pieces[i].shape[0].length);
     let grid = `<tr>${row}</tr>`.repeat(pieces[i].shape.length);
     document.querySelector('#pieceForm form').innerHTML += `<div class="piece">
-        <div id="pieceDescription${i+1}"></div>
-        <label for="piece${i+1}">
+        <div id="pieceDescription${i+1}" style="padding-right: 15px;width: 8em;"></div>
+        <label for="piece${i+1}" class='pieceLabel'>
             <table id="pieceDisplay${i+1}">
                 <tbody>${grid}</tbody>
             </table>
