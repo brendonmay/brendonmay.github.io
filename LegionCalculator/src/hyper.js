@@ -3216,6 +3216,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 var new_ied = bestResult.ied_base
             }
 
+            console.log('new_boss: ' + new_boss + ", new_cdmg: " + new_cdmg + ", new_dmg: " + new_dmg + ", new_ied: " + new_ied)
+
             var att = parseInt(JSON.parse(localStorage.getItem('stripped_attack')));
             var primary = parseInt(JSON.parse(localStorage.getItem('stripped_primary')));
             var secondary = parseInt(JSON.parse(localStorage.getItem('stripped_secondary')));
@@ -3251,6 +3253,8 @@ document.addEventListener("DOMContentLoaded", function () {
             var board_crit_rate = crit_rate_amount
             var board_cdmg = optimal_setup.cdmg_bonus
             var board_boss = optimal_setup.boss_bonus
+
+            console.log('board_stat: ' + board_stat + ", board_attack: " + board_attack + ", board_ied: " + board_ied + ", board_cdmg: " + board_cdmg + ", board_boss: " + board_boss)
 
             localStorage.setItem("board_stat", JSON.stringify(board_stat));
             localStorage.setItem("board_attack", JSON.stringify(board_attack));
