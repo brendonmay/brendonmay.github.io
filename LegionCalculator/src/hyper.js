@@ -4406,7 +4406,7 @@ function optimizeWSE() {
 
     //2. make sure desired crit rate is possible
     var max_legion_crit = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
-    var max_hyper_crit = 10; //here you can change this
+    var max_hyper_crit = 15; //here you can change this
     var max_desired_crit = max_legion_crit + max_hyper_crit
     var desired_crit_bonus = parseInt(document.getElementById('desired_total_crit').value);
     var current_crit_bonus = parseInt(document.getElementById('current_crit_bonus').value);
