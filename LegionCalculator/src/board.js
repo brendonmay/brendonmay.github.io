@@ -37,6 +37,7 @@ document.getElementById('result').addEventListener("DOMSubtreeModified", functio
 
         // document.getElementById("clearBoard").click();
         // clearBoard();
+        //console.log(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss)
         buildBoard(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss);
 
         //move to step 4

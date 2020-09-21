@@ -1,6 +1,8 @@
 //hyperstat main.js
 var optimal_setup = {};
 
+var weaker = false;
+
 var points_to_be_removed = {};
 
 var information = {
@@ -3047,7 +3049,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadValues();
 
-    if(localStorage.getItem('prim_stat')){
+    if (localStorage.getItem('prim_stat')) {
         var primary_stat = JSON.parse(localStorage.getItem('prim_stat'))
         document.getElementById('primaryBonusLabel').innerHTML = `<label for="primaryBonus"> ${primary_stat}: </label>`;
     }
@@ -3192,6 +3194,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 ied: initial_ied_points
             }
 
+            var maple_class = document.getElementById('class').value;
+
             var diff_data = {
                 boss: { 11: 39, 12: 43, 13: 47, 14: 51, 15: 55 },
                 cdmg: { 11: 11, 12: 12, 13: 13, 14: 14, 15: 15 },
@@ -3199,10 +3203,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 ied: { 11: 33, 12: 36, 13: 39, 14: 42, 15: 45 }
             }
 
-            var new_boss = bestResult.boss_base
-            var new_cdmg = bestResult.cdmg_base
-            var new_dmg = bestResult.dmg_base
-            var new_ied = bestResult.ied_base
+            if (maple_class == 'Kanna') {
+                var new_boss = bestResult.base_boss
+                var new_cdmg = bestResult.base_cdmg
+                var new_dmg = bestResult.base_dmg
+                var new_ied = bestResult.base_ied
+            }
+            else {
+                var new_boss = bestResult.boss_base
+                var new_cdmg = bestResult.cdmg_base
+                var new_dmg = bestResult.dmg_base
+                var new_ied = bestResult.ied_base
+            }
+
             var att = parseInt(JSON.parse(localStorage.getItem('stripped_attack')));
             var primary = parseInt(JSON.parse(localStorage.getItem('stripped_primary')));
             var secondary = parseInt(JSON.parse(localStorage.getItem('stripped_secondary')));
@@ -3221,12 +3234,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 new_ied = (1 - (stripped_ied / 100)) * 0.3 + stripped_ied / 100;
             }
 
-            var maple_class = document.getElementById('class').value;
             var pdr = 3;
 
             //here
             var crit_rate_amount = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks'))); //collect this data properly
             //assume 3 ATT = 3 stat
+            
             optimal_setup = allStatCombinations(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary); //optimizes legion board
             //move to step 3
             document.getElementById('result').innerHTML = 'Step 3/6. Building Legion Board...';
@@ -3397,7 +3410,7 @@ document.addEventListener("DOMContentLoaded", function () {
             else if (dmgRatio < 1) {
 
                 //4. if desired crit > current crit, dmg will go down, fix results message
-                if (weaker) {
+                if (weaker || maple_class == "Kanna") {
                     document.getElementById('result').innerHTML = `
                     Your legion board and hyper stats have successfully been optimized! 
                 `;
@@ -4320,13 +4333,13 @@ function optimizeWSE() {
     var attackersAssigned = parseInt(document.getElementById('attackersAssignedValue').innerHTML)
     var totalAttackers = parseInt(document.getElementById('totalAttackersValue').innerHTML)
     var lab_pieces = parseInt(document.getElementById('hasLab').value);
-    if (lab_pieces > 0){
+    if (lab_pieces > 0) {
         if (attackersAssigned - totalAttackers != lab_pieces) {
             stop = true
             error_msg = 'You have not assigned the correct number of attackers on your legion board.'
         }
     }
-    else{
+    else {
         if (totalAttackers != attackersAssigned) {
             if (lab_pieces > 0) {
                 if (attackersAssigned - totalAttackers != lab_pieces) {
@@ -4340,7 +4353,7 @@ function optimizeWSE() {
             }
         }
     }
-    
+
     //2. make sure desired crit rate is possible
     var max_legion_crit = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
     var max_hyper_crit = 10; //here you can change this
@@ -4348,7 +4361,6 @@ function optimizeWSE() {
     var desired_crit_bonus = parseInt(document.getElementById('desired_total_crit').value);
     var current_crit_bonus = parseInt(document.getElementById('current_crit_bonus').value);
 
-    var weaker = false
     if (desired_crit_bonus > current_crit_bonus) {
         weaker = true;
     }
