@@ -10,3 +10,7 @@ body {
 h5 {
     margin-bottom: 0 !important;
 }
+
+.jumbotron {
+    background-color: #C7CAD1;
+}
