@@ -104,7 +104,7 @@ function critRateSplit(desired_crit_bonus) {
 
     else if (desired_crit_bonus <= 7) hyper_crit_dmg_point = desired_crit_bonus
 
-    else { //here ensure this is working
+    else { //here update with nicer algorithm for crit rate split
         hyper_crit_dmg_point = 7;
         desired_crit_bonus = desired_crit_bonus - 9;
         if (blocks_per_stat >= desired_crit_bonus) legion_crit_blocks = desired_crit_bonus;
@@ -478,7 +478,6 @@ function transferLockedOptions() {
         nupdatePoints(document.getElementById('ndemForSelect'));
         available_points = parseInt(document.getElementById('ncurrentPoints').innerHTML);
     }
-    //here
     //document.getElementById('ncritRate').innerHTML = `${value}`;
     document.getElementById('ncritRateSelect').value = parseInt(JSON.parse(localStorage.getItem('hyper_crit_dmg_point')));
     nupdatePoints(document.getElementById('ncritRateSelect'));
@@ -3216,11 +3215,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 var new_ied = bestResult.ied_base
             }
 
-            console.log('new_boss: ' + new_boss + ", new_cdmg: " + new_cdmg + ", new_dmg: " + new_dmg + ", new_ied: " + new_ied)
+            //console.log('new_boss: ' + new_boss + ", new_cdmg: " + new_cdmg + ", new_dmg: " + new_dmg + ", new_ied: " + new_ied)
 
             var att = parseInt(JSON.parse(localStorage.getItem('stripped_attack')));
             var primary = parseInt(JSON.parse(localStorage.getItem('stripped_primary')));
             var secondary = parseInt(JSON.parse(localStorage.getItem('stripped_secondary')));
+            //var new_hp_percent = 1;
+
+            //if (maple_class == 'Demon Avenger') new_hp_percent = parseFloat(JSON.parse(localStorage.getItem('new_hp_percent')));
 
             if (initial_boss_points > 10) {
                 new_boss = new_boss - diff_data.boss[initial_boss_points] / 100 + 35 / 100;
@@ -3238,18 +3240,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
             var pdr = 3;
 
-            //here
-            var crit_rate_amount = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks'))); //collect this data properly
-            //assume 3 ATT = 3 stat
+            var crit_rate_amount = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks')));
+            //here assume 3 ATT = 3 stat
 
-            console.log(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary)
+            //console.log(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary)
             optimal_setup = allStatCombinations(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary); //optimizes legion board
             console.log(optimal_setup)
             //move to step 3
             document.getElementById('result').innerHTML = 'Step 3/6. Building Legion Board...';
 
             //build board
-            var board_stat = optimal_setup.primary_bonus
+            var board_stat = optimal_setup.primary_bonus //here issue for D.A giving NaN
             var board_attack = optimal_setup.att_bonus
             var board_ied = optimal_setup.ied_bonus
             var board_crit_rate = crit_rate_amount
@@ -3404,16 +3405,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     `;
                     }
                     else {
-                        if (maple_class == "Kanna") {
-                            document.getElementById('result').innerHTML = `
-                            Your legion board and hyper stats have successfully been optimized!
-                        `;
-                        }
-                        else {
-                            document.getElementById('result').innerHTML = `
+                        // if (maple_class == "Kanna") {
+                        //     document.getElementById('result').innerHTML = `
+                        //     Your legion board and hyper stats have successfully been optimized!
+                        // `;
+                        // }
+                        // else {
+                        document.getElementById('result').innerHTML = `
                         Your legion board and hyper stats have successfully been optimized!<br>Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
                     `;
-                        }
+                        // }
                     }
 
                 }
@@ -4175,15 +4176,19 @@ function determineDamageOutput(maple_class, primary_stat, secondary_stat, critic
 
 function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, new_dmg, new_ied, new_att, pdr, primary, secondary) {
     //all will contain at least 5 attk and 25 stat
-    //here try to avoid relying on localstorage
     var currentPieces = parseInt(JSON.parse(localStorage.getItem('currentPieces'))); //currentPieces = # of blocks to fill
     var remaining_blocks = currentPieces - crit_rate_amount - 2; //5 from stat, 5 from attack on intial board setup, 2 for the center 2 blocks
     var blocks_per_stat = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
+
+    if (maple_class == "Demon Avenger"){
+        var new_hp_percent = parseFloat(JSON.parse(localStorage.getItem('new_hp_percent')));
+        //var new_hp_percent = 1; //here
+    }
     //var stat_types = ['ied', 'boss', 'crit_dmg', 'stat', 'attack']
 
     //strategy, find all combinations, before committing them to the array of all combinations, check they meet the proper conditions
     //in regards to crit rate and ied
-
+    
     var optimal_dmg = -100;
     // var optimal_setup = {};
     for (var ied_counter = 0; ied_counter <= blocks_per_stat; ied_counter++) {
@@ -4197,18 +4202,26 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
             attack_counter = 5;
             if (ied_counter >= remaining_blocks) {
                 if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
+                    if (maple_class == 'Demon Avenger') {
+                        var attack = new_att + attack_counter;
+                        //here
+                        var prim_bonus = Math.floor(stat_counter * 250 * new_hp_percent); //mult by %hp 
+                    }
+                    else {
+                        var attack = new_att + attack_counter + (1.67 * stat_counter); //here approximating to avoid summing % stat 
+                        var prim_bonus = stat_counter * 5;
+                    }
 
                     additional_ied = (ied_counter / 100) * (100 - new_ied);
                     var ied = new_ied + additional_ied;
                     var boss = new_boss + boss_counter;
                     var cdmg = new_cdmg + crit_dmg_counter * 0.5;
-                    var attack = new_att + attack_counter + (1.67 * stat_counter); //here approximating to avoid summing % stat 
 
                     var new_output = determineDamageOutput(maple_class, primary, secondary, cdmg, boss, new_dmg, ied, attack, pdr);
                     if (new_output > optimal_dmg) {
                         optimal_setup = {
                             primary: primary,
-                            primary_bonus: stat_counter * 5,
+                            primary_bonus: prim_bonus, //here for HP it is 250HP per block
                             secondary: secondary,
                             cdmg: cdmg,
                             cdmg_bonus: crit_dmg_counter * 0.5,
@@ -4232,17 +4245,25 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                 attack_counter = 5;
                 if (ied_counter + boss_counter >= remaining_blocks) {
                     if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
+                        if (maple_class == 'Demon Avenger') {
+                            var attack = new_att + attack_counter;
+                            //here
+                            var prim_bonus = Math.floor(stat_counter * 250 * new_hp_percent); //mult by %hp  
+                        }
+                        else {
+                            var attack = new_att + attack_counter + (1.67 * stat_counter); //here approximating to avoid summing % stat 
+                            var prim_bonus = stat_counter * 5;
+                        }
                         additional_ied = (ied_counter / 100) * (100 - new_ied);
                         var ied = new_ied + additional_ied;
                         var boss = new_boss + boss_counter;
                         var cdmg = new_cdmg + crit_dmg_counter * 0.5;
-                        var attack = new_att + attack_counter + (1.67 * stat_counter);
 
                         var new_output = determineDamageOutput(maple_class, primary, secondary, cdmg, boss, new_dmg, ied, attack, pdr);
                         if (new_output > optimal_dmg) {
                             optimal_setup = {
                                 primary: primary,
-                                primary_bonus: stat_counter * 5,
+                                primary_bonus: prim_bonus,
                                 secondary: secondary,
                                 cdmg: cdmg,
                                 cdmg_bonus: crit_dmg_counter * 0.5,
@@ -4266,17 +4287,25 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                     attack_counter = 5;
                     if (ied_counter + boss_counter + crit_dmg_counter >= remaining_blocks) {
                         if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
+                            if (maple_class == 'Demon Avenger') {
+                                var attack = new_att + attack_counter;
+                                //here
+                                var prim_bonus = Math.floor(stat_counter * 250 * new_hp_percent); //mult by %hp  
+                            }
+                            else {
+                                var attack = new_att + attack_counter + (1.67 * stat_counter); //here approximating to avoid summing % stat 
+                                var prim_bonus = stat_counter * 5;
+                            }
                             additional_ied = (ied_counter / 100) * (100 - new_ied);
                             var ied = new_ied + additional_ied;
                             var boss = new_boss + boss_counter;
                             var cdmg = new_cdmg + crit_dmg_counter * 0.5;
-                            var attack = new_att + attack_counter + (1.67 * stat_counter);
 
                             var new_output = determineDamageOutput(maple_class, primary, secondary, cdmg, boss, new_dmg, ied, attack, pdr);
                             if (new_output > optimal_dmg) {
                                 optimal_setup = {
                                     primary: primary,
-                                    primary_bonus: stat_counter * 5,
+                                    primary_bonus: prim_bonus,
                                     secondary: secondary,
                                     cdmg: cdmg,
                                     cdmg_bonus: crit_dmg_counter * 0.5,
@@ -4298,17 +4327,25 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                     }
                     for (attack_counter = 5; attack_counter <= 15; attack_counter++) {
                         if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
+                            if (maple_class == 'Demon Avenger') {
+                                var attack = new_att + attack_counter;
+                                //here
+                                var prim_bonus = Math.floor(stat_counter * 250 * new_hp_percent); //mult by %hp 
+                            }
+                            else {
+                                var attack = new_att + attack_counter + (1.67 * stat_counter); //here approximating to avoid summing % stat 
+                                var prim_bonus = stat_counter * 5;
+                            }
                             additional_ied = (ied_counter / 100) * (100 - new_ied);
                             var ied = new_ied + additional_ied;
                             var boss = new_boss + boss_counter;
                             var cdmg = new_cdmg + crit_dmg_counter * 0.5;
-                            var attack = new_att + attack_counter + (1.67 * stat_counter);
 
                             var new_output = determineDamageOutput(maple_class, primary, secondary, cdmg, boss, new_dmg, ied, attack, pdr);
                             if (new_output > optimal_dmg) {
                                 optimal_setup = {
                                     primary: primary,
-                                    primary_bonus: stat_counter * 5,
+                                    primary_bonus: prim_bonus,
                                     secondary: secondary,
                                     cdmg: cdmg,
                                     cdmg_bonus: crit_dmg_counter * 0.5,
@@ -4628,6 +4665,7 @@ function optimizeWSE() {
 
         //console.log('old hp perc: ' + hp_percent)
         var new_hp_percent = (hp_percent * 100 - hp_hyper) / 100;
+
         //console.log('new hp perc: ' + new_hp_percent)
         var new_hp = parseInt(document.getElementById('kanna_hp').value) * (new_hp_percent) / (hp_percent);
         //console.log('new hp: ' + new_hp)
@@ -4648,6 +4686,7 @@ function optimizeWSE() {
         var hp_percent = 1 + (parseInt(document.getElementById('hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
         console.log('hp perc: ' + hp_percent)
         var new_hp_percent = ((hp_percent * 100) - hp_hyper) / 100;
+        localStorage.setItem('new_hp_percent', JSON.stringify(new_hp_percent)); //here
         //console.log('new hp perc: ' + new_hp_percent)
         var new_hp = flat_hp + (primary_stat - flat_hp) * (new_hp_percent) / (hp_percent);
         stripped_primary = new_hp;
@@ -4785,11 +4824,18 @@ function optimizeWSE() {
     var legion_attack = parseInt(document.getElementById('attBonus').value);
     var legion_primary = parseInt(document.getElementById('primaryBonus').value);
 
-    stripped_attack = stripped_attack - legion_attack; //here not sure if we need to use attk percent
+    stripped_attack = stripped_attack - legion_attack;
     stripped_boss_percent = stripped_boss_percent - legion_boss;
     stripped_ied_percent = (stripped_ied_percent - legion_ied) / ((-1 * legion_ied / 100) + 1)
     stripped_crit_dmg = stripped_crit_dmg - legion_cdmg;
-    stripped_primary = stripped_primary - legion_primary * 3 //here fix this by collecting their total % stat
+    
+    if (maple_class == "Demon Avenger"){
+        //console.log('new_hp_percent: ' + new_hp_percent);
+        stripped_primary = stripped_primary - (legion_primary * new_hp_percent)
+    }
+    else{
+        stripped_primary = stripped_primary - legion_primary * 3 //here fix this by collecting their total % stat
+    }
 
     localStorage.setItem('current_attack_percent', JSON.stringify(current_attack_percent));
     localStorage.setItem('stripped_primary', JSON.stringify(stripped_primary));
