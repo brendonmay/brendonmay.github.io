@@ -3215,7 +3215,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var new_ied = bestResult.ied_base
             }
 
-            //console.log('new_boss: ' + new_boss + ", new_cdmg: " + new_cdmg + ", new_dmg: " + new_dmg + ", new_ied: " + new_ied)
+            console.log('new_boss: ' + new_boss + ", new_cdmg: " + new_cdmg + ", new_dmg: " + new_dmg + ", new_ied: " + new_ied)
 
             var att = parseInt(JSON.parse(localStorage.getItem('stripped_attack')));
             var primary = parseInt(JSON.parse(localStorage.getItem('stripped_primary')));

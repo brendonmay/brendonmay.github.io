@@ -136,6 +136,13 @@ function calculateOptimalLuk2(data, progress, cb, mobbing) {
                 'primary': counters[7],
                 'extra points': data.points,
                 'score': damage,
+                'primary_base': data.primary + statGain(counters[7]),
+                'secondary_base': data.secondary1 + statGain(counters[0]) + data.secondary2 + statGain(counters[1]),
+                'cdmg_base': data.cdmg + cdmgGain(counters[4]),
+                'boss_base': data.boss + bossGain(counters[2], mobbing),
+                'ied_base': (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[5]))),
+                'dmg_base': data.dmg + dmgGain(counters[3]),
+                'att_base':  data.att + attGain(counters[6])
             };
             cb(optimalConfig);
         }
@@ -196,6 +203,13 @@ function calculateOptimalXenon(data, progress, cb, mobbing) {
                 'primary3': counters[7],
                 'extra points': data.points,
                 'score': damage,
+                'primary_base': data.primary1 + statGain(counters[5]) + data.primary2 + statGain(counters[6]) + data.primary3 + statGain(counters[7]),
+                'secondary_base': 0,
+                'cdmg_base': data.cdmg + cdmgGain(counters[3]),
+                'boss_base': data.boss + bossGain(counters[1], mobbing),
+                'ied_base': (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
+                'dmg_base': data.dmg + dmgGain(counters[2]),
+                'att_base': data.att + attGain(counters[0])
             };
             cb(optimalConfig);
         }
