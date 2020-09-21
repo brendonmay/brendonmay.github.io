@@ -526,6 +526,11 @@ hr {
     top: 0.27rem;
 }
 
+.boardInfo {
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+}
+
 .noPadding {
     padding: 0;
 }
