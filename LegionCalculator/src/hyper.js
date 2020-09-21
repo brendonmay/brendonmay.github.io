@@ -3239,7 +3239,7 @@ document.addEventListener("DOMContentLoaded", function () {
             //here
             var crit_rate_amount = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks'))); //collect this data properly
             //assume 3 ATT = 3 stat
-            
+
             optimal_setup = allStatCombinations(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary); //optimizes legion board
             //move to step 3
             document.getElementById('result').innerHTML = 'Step 3/6. Building Legion Board...';
@@ -3398,9 +3398,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     `;
                     }
                     else {
-                        document.getElementById('result').innerHTML = `
+                        if (maple_class == "Kanna") {
+                            document.getElementById('result').innerHTML = `
+                            Your legion board and hyper stats have successfully been optimized!
+                        `;
+                        }
+                        else {
+                            document.getElementById('result').innerHTML = `
                         Your legion board and hyper stats have successfully been optimized!<br>Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
                     `;
+                        }
                     }
 
                 }
