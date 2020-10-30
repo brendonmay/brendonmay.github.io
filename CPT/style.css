@@ -16,7 +16,7 @@ p, span {
 }
 
 .header h1 {
-	width: 50%;
+	width: 49%;
 	display: inline-block;
 	vertical-align: top;
 }
@@ -29,7 +29,7 @@ p, span {
 .fa-bars {
 	display: inline-block;
 	color: rgb(66, 71, 172);
-	width: 50%;
+	width: 49%;
 	vertical-align: middle;
 	font-size: 1.5em;
 	padding-top: 0.3em;
@@ -166,7 +166,7 @@ p, span {
 }
 
 .left-banner {
-	width: 50%;
+	width: 49%;
 	display: inline-block;
 	margin-right: -4px;
 	vertical-align: middle;
@@ -176,7 +176,7 @@ p, span {
 }
 
 .right-banner {
-	width: 50%;
+	width: 49%;
 	display: inline-block;
 	vertical-align: middle;
 	color: rgb(31, 32, 79);
