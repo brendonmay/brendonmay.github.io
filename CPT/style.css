@@ -1,0 +1,222 @@
+body, h1, h2, h3, h4 {
+	margin: 0;
+}
+
+h1, h2, h3, h4 {
+	font-family: 'Cabin', sans-serif;
+}
+
+p, span {
+	font-family: 'Inter', sans-serif;
+}
+
+.header {
+	padding: 1em;
+	box-sizing: border-box;
+}
+
+.header h1 {
+	width: 50%;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.container {
+	width: 90%;
+	margin: auto;
+}
+
+.fa-bars {
+	display: inline-block;
+	color: rgb(66, 71, 172);
+	width: 50%;
+	vertical-align: middle;
+	font-size: 1.5em;
+	padding-top: 0.3em;
+	box-sizing: border-box;
+	text-align: right;
+	margin-left: -4px;
+}
+
+#pay {
+	color: rgb(66, 71, 172);
+}
+
+#bright {
+	color: rgb(34, 176, 152);
+}
+
+.image-banner {
+	background-image: url("https://cdn.pixabay.com/photo/2017/12/26/09/15/woman-3040029_1280.jpg");
+	background-size: cover;
+	color: white;
+	text-align: center;
+	height: 400px;
+	box-sizing: border-box;
+}
+
+.mask {
+	background: rgba(0, 0, 0, 0.4);
+	height: 100%;
+	box-sizing: border-box;
+	padding: 150px 2em;
+}
+
+.accomplishments {
+	margin-left: 4%;
+	box-sizing: border-box;
+	padding: 2em;
+}
+
+.accomplishment {
+	display: inline-block;
+	width: 20%;
+	margin-right: 4%;
+}
+
+.paying-with-paybright {
+	background-color: rgb(242, 242, 250);
+	padding: 2em;
+	text-align: center;
+	color: rgb(31, 32, 79);
+}
+
+.left-card, .right-card {
+	margin-top: 2.5em;
+	display: inline-block;
+	width: 25%;
+	vertical-align: top;
+}
+
+.left-card, .middle-card {
+	margin-right: -4px;
+}
+
+.middle-card {
+	margin-top: 3.5em;
+	display: inline-block;
+	width: 40%;
+	vertical-align: top;
+}
+
+.button {
+	background-color: gray;
+	width: 50%;
+	margin: auto;
+	padding: 1.25em;
+	margin-top: 1em;
+	border-radius: 10px;
+	color: white;
+	background-color: rgb(66, 71, 172);
+	font-family: 'Inter', sans-serif;
+	font-size: 0.9em;
+	margin-top: 1em;
+}
+
+.middle-card .button {
+	margin-top: 2em;
+}
+
+.card-image {
+	width: 40%;
+}
+
+.featured-merchants {
+	text-align: center;
+	padding: 2em;
+	color: rgb(31, 32, 79);
+	padding-bottom: 3em;
+}
+
+.card {
+	width: 30%;
+	display: inline-block;
+	vertical-align: top;
+	box-shadow: 0px 0px 7px 1px lightgray;
+	margin-right: 1em;
+	margin-top: 1em;
+	border-radius: 10px;
+}
+
+.first-card {
+	margin-left: 0.5em;
+}
+
+.last-card {
+	margin-right: 0;
+}
+
+.card img {
+	width: 100%;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.card-text {
+	padding: 1em;
+}
+
+.card-text span {
+	font-size: 0.8em;
+}
+
+.shop-now-pay-later {
+	background-color: rgb(248, 245, 241);
+	padding: 1em;
+}
+
+.left-banner {
+	width: 50%;
+	display: inline-block;
+	margin-right: -4px;
+	vertical-align: middle;
+	text-align: center;
+	padding: 1em;
+	box-sizing: border-box;
+}
+
+.right-banner {
+	width: 50%;
+	display: inline-block;
+	vertical-align: middle;
+	color: rgb(31, 32, 79);
+}
+
+.fa-arrow-right {
+	margin-left: 5px;
+}
+
+.right-banner img {
+	width: 100%;
+	border-radius: 10px;
+}
+
+.footer {
+	padding: 2em;
+	background-color: rgb(31, 32, 79);
+	color: white;
+}
+
+.copyright {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: -4px;
+	width: 50%;
+	font-family: 'Inter', sans-serif;
+}
+
+.social-media {
+	display: inline-block;
+	vertical-align: middle;
+	width: 50%;
+	text-align: right;
+	font-size: 1.5em;
+}
+
+.sm {
+	margin-right: 5px;
+}
+
+a {
+	color: white;
+}
