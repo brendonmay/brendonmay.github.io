@@ -15,6 +15,10 @@ a:hover {
     color: #fff;
 }
 
+.shift_up {
+    margin-top: -1rem;
+}
+
 .tableCheckBox{
     text-align: center !important; /* center checkbox horizontally */
     vertical-align: middle !important; /* center checkbox vertically */
@@ -23,6 +27,16 @@ a:hover {
 .title-color{
     text-decoration: underline;
     text-decoration-color: #e0ca05;
+}
+
+.new_line {
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-top: 1em;
+    font-style: italic;
+    font-weight: 100;
+    font-size: medium;
 }
 
 .navbar {

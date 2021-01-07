@@ -26,6 +26,16 @@ a:hover {
     padding: 15px 35px;
 }
 
+.new_line {
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-top: 1em;
+    font-style: italic;
+    font-weight: 100;
+    font-size: medium;
+}
+
 .table th, .table td {
     vertical-align: middle;
 }

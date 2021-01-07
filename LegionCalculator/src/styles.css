@@ -98,6 +98,16 @@ form {
     width: 30px; 
 }
 
+.new_line {
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-top: 1em;
+    font-style: italic;
+    font-weight: 100;
+    font-size: medium;
+}
+
 .piece {
     display: flex;
     flex-direction: row;
