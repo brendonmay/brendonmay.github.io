@@ -203,8 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
         stat_equivalences.all_stat = document.getElementById('all_stat').value
         stat_equivalences.attack = document.getElementById('attack').value
         stat_equivalences.secondary_stat = document.getElementById('secondary_stat').value
-        console.log(stat_equivalences)
-
+        //console.log(stat_equivalences)
 
         var p = getProbability(item_level, flame_type, item_type, desired_stat)
         var stats = geoDistrQuantile(p)
@@ -237,11 +236,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 var ninety_fifth_cost = nintey_fifth * 9120000
             }
         }
-        
+
         document.getElementById('result').style.display = '';
-      document.getElementById('error-container').style.display = 'none';
-      document.getElementById('result').innerHTML =
-        `
+        document.getElementById('error-container').style.display = 'none';
+        document.getElementById('result').innerHTML =
+            `
     <div class="container secondarycon">
       <div class=" statBox statBox1" style="background-color:#aaa;">
         <h2 style="text-align:center;">Mesos Stats</h2>
@@ -262,8 +261,8 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class=" statBox statBox3" style="background-color:#aaa;">
         <h2 style="text-align:center;"">Flame Stats</h2>
             <p style="text-align:center;"">
-                Average cubes: ${mean.toLocaleString()} ${flame_type} flames<br />
-                Median cubes: ${median.toLocaleString()} ${flame_type} flames<br />
+                Average flames: ${mean.toLocaleString()} ${flame_type} flames<br />
+                Median flames: ${median.toLocaleString()} ${flame_type} flames<br />
             </p>
       </div>
       <div class=" statBox statBox4" style="background-color:#bbb;">
