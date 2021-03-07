@@ -208,12 +208,15 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
         var attack_tier = 0
         if (desired_attack_tier >= lower_limit) attack_tier = desired_attack_tier
         while (attack_tier < upper_limit) {
-            var boss_tier = 0 //switch boss with sec
-            if (desired_dmg_percent >= 8) { //switch boss with sec
-                starting_tier = 0.5 * desired_dmg_percent - 3 //switch boss with sec
-                if (starting_tier >= lower_limit) boss_tier = starting_tier //switch boss with sec
-            } //switch boss with sec
-            while (boss_tier < upper_limit) { //switch boss with sec
+            var boss_tier = 0
+            if (desired_dmg_percent >= 8) {
+                starting_tier = Math.round(0.5 * desired_dmg_percent) - 3
+                if (starting_tier >= lower_limit) {
+                    boss_tier = starting_tier
+
+                }
+            }
+            while (boss_tier < upper_limit) {
                 var combo_one_tier = 0
                 while (combo_one_tier < upper_limit) {
                     var combo_two_tier = 0
@@ -224,8 +227,8 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
                             while (all_stat_tier < upper_limit) {
                                 var main_tier = 0
                                 while (main_tier < upper_limit) {
-                                    var secondary_tier = 0 //switch sec with boss
-                                    while (secondary_tier < upper_limit) { //switch sec with boss
+                                    var secondary_tier = 0
+                                    while (secondary_tier < upper_limit) {
                                         var dmg_tier = 0
                                         while (dmg_tier < upper_limit) {
                                             var combo_four_tier = 0
@@ -261,11 +264,11 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
                                                 dmg_tier++
                                             }
                                         }
-                                        if (secondary_tier == 0) { //switch sec with boss
-                                            var secondary_tier = lower_limit //switch sec with boss
+                                        if (secondary_tier == 0) {
+                                            var secondary_tier = lower_limit
                                         }
                                         else {
-                                            secondary_tier++ //switch sec with boss
+                                            secondary_tier++
                                         }
                                     }
                                     if (main_tier == 0) {
@@ -303,11 +306,11 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
                         combo_one_tier++
                     }
                 }
-                if (boss_tier < lower_limit) { //switch boss with sec
-                    var boss_tier = lower_limit //switch boss with sec
+                if (boss_tier < lower_limit) {
+                    var boss_tier = lower_limit
                 }
                 else {
-                    boss_tier++ //switch boss with sec
+                    boss_tier++
                 }
             }
             if (attack_tier < lower_limit) {
