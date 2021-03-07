@@ -38,6 +38,10 @@ h5 {
     text-align: center;
 }
 
+.border-right-none {
+    border-right: none;
+}
+
 body{
     margin-bottom: 75px;
     background-color: #fff;
