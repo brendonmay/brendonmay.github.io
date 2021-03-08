@@ -18,6 +18,133 @@ function combination(n, r) {
     return factorial(n) / (factorial(r) * factorial(n - r));
 };
 
+function getWeaponProbability(attack, dmg, flame_type) {
+    var probability = 0
+
+    if (flame_type == "powerful") var tier_probabilities = powerful_tier_probabilities
+    else var tier_probabilities = eternal_tier_probabilities
+
+    if (dmg == 0) {
+        var tier_probability = 0
+        var tier_check = 3
+        while (tier_check < 8) {
+            if (attack <= tier_check) {
+                tier_probability = tier_probability + tier_probabilities[tier_check]
+            }
+            tier_check++
+        }
+        var line_probability = combination(18, 3) / combination(19, 4)
+        probability = tier_probability * line_probability
+    }
+    if (attack == 0) {
+        //only dmg
+        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7)) {
+            var tier_probability = 0
+            var tier_check = 3
+            while (tier_check < 8) {
+                if (tier_check >= dmg) {
+                    tier_probability = tier_probability + tier_probabilities[tier_check]
+                }
+                tier_check++
+            }
+            var line_probability = combination(18, 3) / combination(19, 4)
+            probability = probability + tier_probability * line_probability
+        }
+        //only boss
+        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14)) {
+            var tier_probability = 0
+            var tier_check = 3
+            while (tier_check < 8) {
+                if (2 * tier_check >= dmg) {
+                    tier_probability = tier_probability + tier_probabilities[tier_check]
+                }
+                tier_check++
+            }
+            var line_probability = combination(18, 3) / combination(19, 4)
+            probability = probability + tier_probability * line_probability
+        }
+        //boss + dmg
+        if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21)) {
+            var tier_probability = 0
+            var boss_tier_check = 3
+            while (boss_tier_check < 8) {
+                var dmg_tier_check = 3
+                while (dmg_tier_check < 8) {
+                    if (2 * boss_tier_check + dmg_tier_check >= dmg) {
+                        tier_probability = tier_probability + tier_probabilities[boss_tier_check] * tier_probabilities[dmg_tier_check]
+                    }
+                    dmg_tier_check++
+                }
+                boss_tier_check++
+            }
+            var line_probability = combination(17, 2) / combination(19, 4)
+            probability = probability + tier_probability * line_probability
+
+        }
+    }
+    if (attack != 0 && dmg != 0) {
+        //Attack + Boss
+        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14)) {
+            var tier_probability = 0
+            var boss_tier_check = 3
+            while (boss_tier_check < 8) {
+                var attack_tier_check = 3
+                while (attack_tier_check < 8) {
+                    if (2 * boss_tier_check >= dmg && attack_tier_check >= attack) {
+                        tier_probability = tier_probability + tier_probabilities[boss_tier_check] * tier_probabilities[attack_tier_check]
+                    }
+                    attack_tier_check++
+                }
+                boss_tier_check++
+            }
+            var line_probability = combination(17, 2) / combination(19, 4)
+            probability = probability + tier_probability * line_probability
+
+        }
+        //Attack + DMG
+        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7)) {
+            var tier_probability = 0
+            var dmg_tier_check = 3
+            while (dmg_tier_check < 8) {
+                var attack_tier_check = 3
+                while (attack_tier_check < 8) {
+                    if (dmg_tier_check >= dmg && attack_tier_check >= attack) {
+                        tier_probability = tier_probability + tier_probabilities[dmg_tier_check] * tier_probabilities[attack_tier_check]
+                    }
+                    attack_tier_check++
+                }
+                dmg_tier_check++
+            }
+            var line_probability = combination(17, 2) / combination(19, 4)
+            probability = probability + tier_probability * line_probability
+
+        }
+        //Attack + Boss + DMG
+        if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21)) {
+            var tier_probability = 0
+            var dmg_tier_check = 3
+            while (dmg_tier_check < 8) {
+                var attack_tier_check = 3
+                while (attack_tier_check < 8) {
+                    var boss_tier_check = 3
+                    while (boss_tier_check < 8) {
+                        if (2 * boss_tier_check + dmg_tier_check >= dmg && attack_tier_check >= attack) {
+                            tier_probability = tier_probability + tier_probabilities[dmg_tier_check] * tier_probabilities[attack_tier_check]
+                        }
+                        boss_tier_check++
+                    }
+                    attack_tier_check++
+                }
+                dmg_tier_check++
+            }
+            var line_probability = combination(16, 1) / combination(19, 4)
+            probability = probability + tier_probability * line_probability
+        }
+
+    }
+    return probability
+}
+
 function possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier) {
     var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier]
     var index = 0
@@ -61,20 +188,17 @@ function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two
 }
 
 function getProbability(item_level, flame_type, item_type, desired_stat) {
-    //function getProbability(item_level, flame_type, item_type, desired_stat) {
-    //desired_stat = {attack_tier, desired_stat, dmg_percent}
-    //red
-    var main_tier = 0
-    var secondary_tier = 0
-    var combo_one_tier = 0 //main + sec_stat
-    var combo_two_tier = 0 // main + other1
-    var combo_three_tier = 0 //main + other2
-    var combo_four_tier = 0 // sec + other1
-    var combo_five_tier = 0 // sec + other2
-    var all_stat_tier = 0
-    var attack_tier = 0
-    var boss_tier = 0
-    var dmg_tier = 0
+    //desired_stat = {attack_tier, dmg_percent}
+
+    //main_tier
+    //secondary_tier
+    //combo_one_tier //main + sec_stat
+    //combo_two_tier // main + other1
+    //combo_three_tier //main + other2
+    //combo_four_tier // sec + other1
+    //combo_five_tier // sec + other2
+    //all_stat_tier
+    //attack_tier
 
     var solutions = []
     var upper_limit = 7
@@ -86,23 +210,24 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
     }
 
     if (item_type == "armor") {
+        if (desired_stat == 0) return 1
         var main_tier = 0
         while (main_tier < upper_limit) {
-            var secondary_tier = 0;
+            var secondary_tier = 0
             while (secondary_tier < upper_limit) {
-                var combo_one_tier = 0;
+                var combo_one_tier = 0
                 while (combo_one_tier < upper_limit) {
-                    var combo_two_tier = 0;
+                    var combo_two_tier = 0
                     while (combo_two_tier < upper_limit) {
-                        var combo_three_tier = 0;
+                        var combo_three_tier = 0
                         while (combo_three_tier < upper_limit) {
-                            var all_stat_tier = 0;
+                            var all_stat_tier = 0
                             while (all_stat_tier < upper_limit) {
-                                var attack_tier = 0;
+                                var attack_tier = 0
                                 while (attack_tier < upper_limit) {
-                                    var combo_four_tier = 0;
+                                    var combo_four_tier = 0
                                     while (combo_four_tier < upper_limit) {
-                                        var combo_five_tier = 0;
+                                        var combo_five_tier = 0
                                         while (combo_five_tier < upper_limit) {
                                             //equation here change this calculation for different classes
                                             var stat_score = main_tier * stat_per_tier[item_level] + secondary_tier * stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_one_tier * (combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_stat_per_tier[item_level]) + combo_two_tier * combo_stat_per_tier[item_level] + combo_three_tier * combo_stat_per_tier[item_level] + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"] + combo_four_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_five_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"]
@@ -189,7 +314,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
             var attack_tier = solutions[i].attack_tier
 
             var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0)
-            if (number_of_lines > 4) console.log(number_of_lines)
+
             //hypergeometric distribution
             var line_probability = combination(10, 4 - number_of_lines) / combination(19, 4)
             var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, 0, 0)
@@ -200,160 +325,200 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
         }
     }
     else if (item_type == "weapon") {
-        var desired_stats = desired_stat.desired_stat
         var desired_attack_tier = desired_stat.attack_tier
         var desired_dmg_percent = desired_stat.dmg_percent
 
-        //loop
-        var attack_tier = 0
-        if (desired_attack_tier >= lower_limit) attack_tier = desired_attack_tier
-        while (attack_tier < upper_limit) {
-            var boss_tier = 0
-            if (desired_dmg_percent >= 8) {
-                starting_tier = Math.round(0.5 * desired_dmg_percent) - 3
-                if (starting_tier >= lower_limit) {
-                    boss_tier = starting_tier
+        if (desired_attack_tier == 0 && desired_dmg_percent) return 1
 
-                }
-            }
-            while (boss_tier < upper_limit) {
-                var combo_one_tier = 0
-                while (combo_one_tier < upper_limit) {
-                    var combo_two_tier = 0
-                    while (combo_two_tier < upper_limit) {
-                        var combo_three_tier = 0
-                        while (combo_three_tier < upper_limit) {
-                            var all_stat_tier = 0
-                            while (all_stat_tier < upper_limit) {
-                                var main_tier = 0
-                                while (main_tier < upper_limit) {
-                                    var secondary_tier = 0
-                                    while (secondary_tier < upper_limit) {
-                                        var dmg_tier = 0
-                                        while (dmg_tier < upper_limit) {
-                                            var combo_four_tier = 0
-                                            while (combo_four_tier < upper_limit) {
-                                                var combo_five_tier = 0
-                                                while (combo_five_tier < upper_limit) {
-                                                    //equation here change this calculation for different classes
-                                                    var stat_score = main_tier * stat_per_tier[item_level] + secondary_tier * stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_one_tier * (combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_stat_per_tier[item_level]) + combo_two_tier * combo_stat_per_tier[item_level] + combo_three_tier * combo_stat_per_tier[item_level] + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"] + combo_four_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_five_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"]
-                                                    if (stat_score >= desired_stats && 2 * boss_tier + dmg_tier >= desired_dmg_percent && attack_tier >= desired_attack_tier) {
-                                                        if (possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier)) {
-                                                            var solution = { "main_tier": main_tier, "secondary_tier": secondary_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier, "boss_tier": boss_tier, "dmg_tier": dmg_tier }
-                                                            solutions[solutions.length] = solution
-                                                        }
-                                                    }
-                                                    if (combo_five_tier == 0) {
-                                                        var combo_five_tier = lower_limit
-                                                    }
-                                                    else {
-                                                        combo_five_tier++
-                                                    }
-                                                }
-                                                if (combo_four_tier == 0) {
-                                                    var combo_four_tier = lower_limit
-                                                }
-                                                else {
-                                                    combo_four_tier++
-                                                }
-                                            }
-                                            if (dmg_tier == 0) {
-                                                var dmg_tier = lower_limit
-                                            }
-                                            else {
-                                                dmg_tier++
-                                            }
-                                        }
-                                        if (secondary_tier == 0) {
-                                            var secondary_tier = lower_limit
-                                        }
-                                        else {
-                                            secondary_tier++
-                                        }
-                                    }
-                                    if (main_tier == 0) {
-                                        var main_tier = lower_limit
-                                    }
-                                    else {
-                                        main_tier++
-                                    }
-                                }
-                                if (all_stat_tier == 0) {
-                                    var all_stat_tier = lower_limit
-                                }
-                                else {
-                                    all_stat_tier++
-                                }
-                            }
-                            if (combo_three_tier == 0) {
-                                var combo_three_tier = lower_limit
-                            }
-                            else {
-                                combo_three_tier++
-                            }
-                        }
-                        if (combo_two_tier == 0) {
-                            var combo_two_tier = lower_limit
-                        }
-                        else {
-                            combo_two_tier++
-                        }
-                    }
-                    if (combo_one_tier == 0) {
-                        var combo_one_tier = lower_limit
-                    }
-                    else {
-                        combo_one_tier++
-                    }
-                }
-                if (boss_tier < lower_limit) {
-                    var boss_tier = lower_limit
-                }
-                else {
-                    boss_tier++
-                }
-            }
-            if (attack_tier < lower_limit) {
-                var attack_tier = lower_limit
-            }
-            else {
-                attack_tier++
-            }
-        }
-        //continue weapon
-        var probability = 0;
-
-        for (var i = 0; i < solutions.length; i++) {
-            var main_tier = solutions[i].main_tier;
-            var secondary_tier = solutions[i].secondary_tier
-            var combo_one_tier = solutions[i].combo_one_tier
-            var combo_two_tier = solutions[i].combo_two_tier
-            var combo_three_tier = solutions[i].combo_three_tier
-            var combo_four_tier = solutions[i].combo_four_tier
-            var combo_five_tier = solutions[i].combo_five_tier
-            var all_stat_tier = solutions[i].all_stat_tier
-            var attack_tier = solutions[i].attack_tier
-            var boss_tier = solutions[i].boss_tier
-            var dmg_tier = solutions[i].dmg_tier
-
-            var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier)
-            if (number_of_lines > 4) console.log(number_of_lines)
-            //hypergeometric distribution
-            var choose_from = 8;
-            if (desired_stats == 0) choose_from = 16 //only cant choose from attk, dmg, boss
-            var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
-
-            //var p = number_of_lines/19;
-            //var q = 1 - p
-            //var line_probability = Math.pow(p, number_of_lines) * Math.pow(q, 4-number_of_lines)
-
-            var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier)
-            var event_probability = line_probability * tier_probability
-            probability = probability + event_probability
-        }
+        var probability = getWeaponProbability(desired_attack_tier, desired_dmg_percent, flame_type)
     }
-
     return probability
+
+    //     var desired_stats = desired_stat.desired_stat
+    //     var desired_attack_tier = desired_stat.attack_tier
+    //     var desired_dmg_percent = desired_stat.dmg_percent
+
+    //     if (desired_attack_tier > 0 && desired_dmg_percent == 0) {
+    //         var line_probability = combination(18, 3) / combination(19, 4)
+    //         var tier_probability = getWeaponProbability(desired_attack_tier, desired_dmg_percent, flame_type)
+    //         var probability = line_probability * tier_probability
+    //         return probability
+
+    //     }
+    //     if (desired_attack_tier == 0 && desired_dmg_percent > 0) {
+
+    //     }
+    //     else {
+
+    //     }
+
+    //     //loop
+    //     var attack_tier = 0
+    //     if (desired_attack_tier >= lower_limit) attack_tier = desired_attack_tier
+    //     while (attack_tier < upper_limit) {
+    //         var boss_tier = 0
+    //         if (desired_dmg_percent >= 8) {
+    //             starting_tier = Math.round(0.5 * desired_dmg_percent) - 3
+    //             if (starting_tier >= lower_limit) {
+    //                 boss_tier = starting_tier
+
+    //             }
+    //         }
+    //         while (boss_tier < upper_limit) {
+    //             var combo_one_tier = 0
+    //             while (combo_one_tier < upper_limit) {
+    //                 var combo_two_tier = 0
+    //                 while (combo_two_tier < upper_limit) {
+    //                     var combo_three_tier = 0
+    //                     while (combo_three_tier < upper_limit) {
+    //                         var all_stat_tier = 0
+    //                         while (all_stat_tier < upper_limit) {
+    //                             var main_tier = 0
+    //                             while (main_tier < upper_limit) {
+    //                                 var secondary_tier = 0
+    //                                 while (secondary_tier < upper_limit) {
+    //                                     var dmg_tier = 0
+    //                                     while (dmg_tier < upper_limit) {
+    //                                         var combo_four_tier = 0
+    //                                         while (combo_four_tier < upper_limit) {
+    //                                             var combo_five_tier = 0
+    //                                             while (combo_five_tier < upper_limit) {
+    //                                                 //equation here change this calculation for different classes
+    //                                                 var stat_score = main_tier * stat_per_tier[item_level] + secondary_tier * stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_one_tier * (combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_stat_per_tier[item_level]) + combo_two_tier * combo_stat_per_tier[item_level] + combo_three_tier * combo_stat_per_tier[item_level] + all_stat_tier * stat_equivalences["all_stat"] + combo_four_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_five_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"]// + attack_tier * stat_equivalences["attack"]
+    //                                                 if (stat_score >= desired_stats && 2 * boss_tier + dmg_tier >= desired_dmg_percent && attack_tier >= desired_attack_tier) {
+    //                                                     if (possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier)) {
+    //                                                         var solution = { "main_tier": main_tier, "secondary_tier": secondary_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier, "boss_tier": boss_tier, "dmg_tier": dmg_tier }
+    //                                                         solutions[solutions.length] = solution
+    //                                                     }
+    //                                                 }
+    //                                                 if (combo_five_tier == 0) {
+    //                                                     var combo_five_tier = lower_limit
+    //                                                 }
+    //                                                 else {
+    //                                                     combo_five_tier++
+    //                                                 }
+    //                                             }
+    //                                             if (combo_four_tier == 0) {
+    //                                                 var combo_four_tier = lower_limit
+    //                                             }
+    //                                             else {
+    //                                                 combo_four_tier++
+    //                                             }
+    //                                         }
+    //                                         if (dmg_tier == 0) {
+    //                                             var dmg_tier = lower_limit
+    //                                         }
+    //                                         else {
+    //                                             dmg_tier++
+    //                                         }
+    //                                     }
+    //                                     if (secondary_tier == 0) {
+    //                                         var secondary_tier = lower_limit
+    //                                     }
+    //                                     else {
+    //                                         secondary_tier++
+    //                                     }
+    //                                 }
+    //                                 if (main_tier == 0) {
+    //                                     var main_tier = lower_limit
+    //                                 }
+    //                                 else {
+    //                                     main_tier++
+    //                                 }
+    //                             }
+    //                             if (all_stat_tier == 0) {
+    //                                 var all_stat_tier = lower_limit
+    //                             }
+    //                             else {
+    //                                 all_stat_tier++
+    //                             }
+    //                         }
+    //                         if (combo_three_tier == 0) {
+    //                             var combo_three_tier = lower_limit
+    //                         }
+    //                         else {
+    //                             combo_three_tier++
+    //                         }
+    //                     }
+    //                     if (combo_two_tier == 0) {
+    //                         var combo_two_tier = lower_limit
+    //                     }
+    //                     else {
+    //                         combo_two_tier++
+    //                     }
+    //                 }
+    //                 if (combo_one_tier == 0) {
+    //                     var combo_one_tier = lower_limit
+    //                 }
+    //                 else {
+    //                     combo_one_tier++
+    //                 }
+    //             }
+    //             if (boss_tier < lower_limit) {
+    //                 var boss_tier = lower_limit
+    //             }
+    //             else {
+    //                 boss_tier++
+    //             }
+    //         }
+    //         if (attack_tier < lower_limit) {
+    //             var attack_tier = lower_limit
+    //         }
+    //         else {
+    //             attack_tier++
+    //         }
+    //     }
+    //     //continue weapon
+    //     var probability = 0;
+
+    //     for (var i = 0; i < solutions.length; i++) {
+    //         var main_tier = solutions[i].main_tier;
+    //         var secondary_tier = solutions[i].secondary_tier
+    //         var combo_one_tier = solutions[i].combo_one_tier
+    //         var combo_two_tier = solutions[i].combo_two_tier
+    //         var combo_three_tier = solutions[i].combo_three_tier
+    //         var combo_four_tier = solutions[i].combo_four_tier
+    //         var combo_five_tier = solutions[i].combo_five_tier
+    //         var all_stat_tier = solutions[i].all_stat_tier
+    //         var attack_tier = solutions[i].attack_tier
+    //         var boss_tier = solutions[i].boss_tier
+    //         var dmg_tier = solutions[i].dmg_tier
+
+    //         var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier)
+
+    //         //hypergeometric distribution
+    //         var choose_from = 8;
+    //         var just_attack = false;
+    //         //FIX HERE
+    //         //ADD CHECKS THAT NOT ALL 0 same with armor
+    //         if (desired_stats != 0 && desired_dmg_percent == 0 && desired_attack_tier == 0) {
+    //             choose_from = 11 + (4 - number_of_lines) //only cant choose from main, sec, combo1-5, all stat
+    //         }
+    //         if (desired_stats == 0 && desired_dmg_percent != 0 && desired_attack_tier == 0) {
+    //             choose_from = 17 //only cant choose from boss, dmg
+    //             if (boss_tier == 0 || dmg_tier == 0) choose_from = 18 //only cant choose from boss OR dmg
+    //         }
+    //         if (desired_stats == 0 && desired_dmg_percent == 0 && desired_attack_tier != 0) {
+    //             choose_from = 18 //only cant choose attk
+    //             just_attack = true;
+    //         }
+    //         if (desired_stats != 0 && desired_dmg_percent != 0 && desired_attack_tier == 0) choose_from = 9 + (4 - number_of_lines) //only cant choose dmg, boss, main, sec, combo1-5, all stat
+    //         if (desired_stats != 0 && desired_dmg_percent == 0 && desired_attack_tier != 0) choose_from = 10 + (4 - number_of_lines) //only cant choose attk,  main, sec, combo1-5, all stat
+    //         if (desired_stats == 0 && desired_dmg_percent != 0 && desired_attack_tier != 0) choose_from = 16 + (3 - number_of_lines) //only cant choose attk, boss, dmg
+
+    //         var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
+
+    //         //var p = number_of_lines/19;
+    //         //var q = 1 - p
+    //         //var line_probability = Math.pow(p, number_of_lines) * Math.pow(q, 4-number_of_lines)
+
+    //         var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier)
+    //         var event_probability = line_probability * tier_probability
+    //         probability = probability + event_probability
+    //     }
+    // }
+
+    // return probability
 }
 
 function geoDistrQuantile(p) {
@@ -373,11 +538,17 @@ document.addEventListener("DOMContentLoaded", function () {
         var flame_type = document.getElementById('flame_type').value
         if (item_type == 'armor') {
             document.getElementById('weapon_desired_stats').hidden = true;
+            document.getElementById('statequivalences_title').hidden = false;
+            document.getElementById('statequivalences').hidden = false;
             document.getElementById('armor_desired_stats').hidden = false;
+            document.getElementById('item_level_div').hidden = false;
         }
         else {
             document.getElementById('weapon_desired_stats').hidden = false;
             document.getElementById('armor_desired_stats').hidden = true;
+            document.getElementById('statequivalences').hidden = true;
+            document.getElementById('statequivalences_title').hidden = true;
+            document.getElementById('item_level_div').hidden = true;
 
             if (flame_type == 'powerful') {
                 document.getElementById('attack_tier').options[5].disabled = true;
@@ -412,10 +583,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         function runCalc() {
-            var item_level = document.getElementById('item_level').value
             var flame_type = document.getElementById('flame_type').value
             var item_type = document.getElementById('item_type').value
             var guild_discount = document.getElementById('guild_discount').checked
+            var item_level
 
             stat_equivalences.all_stat = document.getElementById('all_stat').value
             stat_equivalences.attack = document.getElementById('attack').value
@@ -423,12 +594,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (item_type == 'armor') {
                 var desired_stat = document.getElementById('desired_stat_armor').value
+                item_level = document.getElementById('item_level').value
             }
             else {
                 var attack_tier = document.getElementById('attack_tier').value
                 var dmg_percent = document.getElementById('dmg_percent').value
-                var desired_stats = document.getElementById('desired_stat').value
-                var desired_stat = { "attack_tier": attack_tier, "desired_stat": desired_stats, "dmg_percent": dmg_percent }
+                var desired_stat = { "attack_tier": attack_tier, "dmg_percent": dmg_percent }
             }
 
             var p = getProbability(item_level, flame_type, item_type, desired_stat)

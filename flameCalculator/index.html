@@ -95,7 +95,7 @@
                         <option value='eternal'>Eternal (Rainbow)</option>
                     </select>
                 </div>
-                <div class='form-group col'>
+                <div class='form-group col' id="item_level_div">
                     <label for="item_level">Item Level</label>
                     <select id="item_level" class="form-control">
                         <option value="140-159" selected>140-159</option>
@@ -106,7 +106,7 @@
                 </div>
 
             </div>
-            <div class='form-row'>
+            <div class='form-row' id="statequivalences_title">
                 <div class='form-group col title remove-bottom-margin'>
                     <h4><span>
                             Stat Equivalences
@@ -116,7 +116,7 @@
                         if you are unsure.</h5>
                 </div>
             </div>
-            <div class='form-row'>
+            <div class='form-row' id="statequivalences">
                 <div class="input-group">
                     <span class="input-group-text no-rad">1 All Stat % = </span>
                     <input type="number" class="form-control text-align-right" id="all_stat" value=8
@@ -164,11 +164,6 @@
                     <label for="dmg_percent">Dmg % (Boss + Dmg)</label>
                     <input type="number" class="form-control text-align-center" id="dmg_percent" value=0 min=0 step=1>
                 </div>
-                <div class='form-group col'>
-                    <label for="desired_stat">Main Stat</label>
-                    <input type="number" class="form-control text-align-center" id="desired_stat" value=0 min=0 step=1>
-                </div>
-
             </div>
 
             <div class='form-row' id="armor_desired_stats">
