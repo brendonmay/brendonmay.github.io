@@ -2905,6 +2905,20 @@ document.addEventListener("DOMContentLoaded", function () {
       var eighty_fifth_cost = cubingCost(cubeType, itemLevel, eighty_fifth)
       var ninety_fifth_cost = cubingCost(cubeType, itemLevel, nintey_fifth)
 
+      if (currentTier == desiredTier && desiredStat == "any"){
+        mean = 0
+        median = 0
+        seventy_fifth = 0
+        eighty_fifth = 0
+        nintey_fifth = 0
+
+        mean_cost = 0
+        median_cost = 0
+        seventy_fifth_cost = 0
+        eighty_fifth_cost = 0
+        ninety_fifth_cost = 0
+      }
+
       //new logic ends here
 
 
