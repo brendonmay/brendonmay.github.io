@@ -17,9 +17,13 @@
 <link rel="stylesheet" href="bootstrap.css">
 <link rel="stylesheet" href="font-awesome.css">
 <link rel="stylesheet" href="style.css">
+
 <head>
     <title>SuckHard's Cubing Calculator</title>
-    <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAZLD+AP39/gAsq/4APnj4ADmG8gBLav4AzfbzAJS6+QA7iP0AZLn+ANjy/gA+be4ANa7+ACm3/gCUqv0Au97+AIbW/gA8kf0AWmr+AJ2Y/gA+jvUAW23+AEdn9wA5jPsAnM3+AKLi7ACezf4AscH+AEmC/gA5d+wANJT+AO34/gCCiv4AM5f+AMTq/gDx+P4A8vj+APT4/gAwnf4AvcT+AGGr/gBgfP4AVFb+AFa0/gCjyPQA0uf+AE5g+wBOnf0A2Of+AGyr/gAzdugAnLn+AEvG/gCeiv4ASWv+ANbw/gC6p/4Adnz+AEag/gCvs/4AeX/+AJnI/gBDev4A4PP+ANDq9wBAbPQAN4TzAFCj/gBoo/0APYP+AJmf/gA+cvQAQoHzAO/w/gCdzv4A6Pb+ADVu5wA/kfgAsd3sAD9+/ADP5/gAesD+AMTo/gAym/4APYv5AMDC/gAvof4Apqj+AMXx/gD2/P4Az+v+AFBd/gBMY/4AKbD+ADyE/QA+fvUAQoX6ANL0/gA3eN0AOI39AJXG/gA6g/gAOor1ADaT/QBgY/4ANbP+AEF7/gA3gvMASGjxAEB+/gCUz/4AZmP+AP///wCDr/4ARrD+AIne/gBDjPgA8fH+ADaT/gD09P4ASmf9APT3/gA0oPsA9fr+AFmB/gD2+v4ARW31AERz/QC1zP4ASIb5AIiP/gB4bP4ASWn4ADp98gBPXv4A+v3+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmLQAAAAAAAAAAAAAAAAAAAFFBAAAAAAAAAAAAAAAAAAAAGgAAKCFpcIQ2OQAAAAAAcQdPDwZdXCsUAAAAAAAAAjEIY01CeRNWAAAAAAAAAGUSbDMESAwXFkdKAAAAABBUH0NmHmuAf20vPXYAACBzVzsFGIZQP303hYc6eABTA29SZ2h1YG40HCpdh1gAEUwALBUiMElfHXqBgYGDPAAAQA1OJ0tVYUaBAAAAAAAAADheewokRIIJci4AAAAAAAALDmpbABloZEV8AAAAAAAAiDUjAAB+AXcyLgAAAAAAAFp0AAAAACUbKXwAAAAAAABiWQAAAAAAAC4+AAAAAM//AADn/wAA9gMAAOAPAADAHwAAwAcAAIADAAAAAQAAAAEAACAAAADAHwAAwA8AAMIPAADGDwAAzw8AAM/PAAA=" rel="icon" type="image/x-icon" /></head>
+    <link
+        href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAZLD+AP39/gAsq/4APnj4ADmG8gBLav4AzfbzAJS6+QA7iP0AZLn+ANjy/gA+be4ANa7+ACm3/gCUqv0Au97+AIbW/gA8kf0AWmr+AJ2Y/gA+jvUAW23+AEdn9wA5jPsAnM3+AKLi7ACezf4AscH+AEmC/gA5d+wANJT+AO34/gCCiv4AM5f+AMTq/gDx+P4A8vj+APT4/gAwnf4AvcT+AGGr/gBgfP4AVFb+AFa0/gCjyPQA0uf+AE5g+wBOnf0A2Of+AGyr/gAzdugAnLn+AEvG/gCeiv4ASWv+ANbw/gC6p/4Adnz+AEag/gCvs/4AeX/+AJnI/gBDev4A4PP+ANDq9wBAbPQAN4TzAFCj/gBoo/0APYP+AJmf/gA+cvQAQoHzAO/w/gCdzv4A6Pb+ADVu5wA/kfgAsd3sAD9+/ADP5/gAesD+AMTo/gAym/4APYv5AMDC/gAvof4Apqj+AMXx/gD2/P4Az+v+AFBd/gBMY/4AKbD+ADyE/QA+fvUAQoX6ANL0/gA3eN0AOI39AJXG/gA6g/gAOor1ADaT/QBgY/4ANbP+AEF7/gA3gvMASGjxAEB+/gCUz/4AZmP+AP///wCDr/4ARrD+AIne/gBDjPgA8fH+ADaT/gD09P4ASmf9APT3/gA0oPsA9fr+AFmB/gD2+v4ARW31AERz/QC1zP4ASIb5AIiP/gB4bP4ASWn4ADp98gBPXv4A+v3+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmLQAAAAAAAAAAAAAAAAAAAFFBAAAAAAAAAAAAAAAAAAAAGgAAKCFpcIQ2OQAAAAAAcQdPDwZdXCsUAAAAAAAAAjEIY01CeRNWAAAAAAAAAGUSbDMESAwXFkdKAAAAABBUH0NmHmuAf20vPXYAACBzVzsFGIZQP303hYc6eABTA29SZ2h1YG40HCpdh1gAEUwALBUiMElfHXqBgYGDPAAAQA1OJ0tVYUaBAAAAAAAAADheewokRIIJci4AAAAAAAALDmpbABloZEV8AAAAAAAAiDUjAAB+AXcyLgAAAAAAAFp0AAAAACUbKXwAAAAAAABiWQAAAAAAAC4+AAAAAM//AADn/wAA9gMAAOAPAADAHwAAwAcAAIADAAAAAQAAAAEAACAAAADAHwAAwA8AAMIPAADGDwAAzw8AAM/PAAA="
+        rel="icon" type="image/x-icon" />
+</head>
 
 <div id='loader1' class="spinner" style='display:none;'></div>
 <div id='loader2' class="spinner-background" style='display:none;'></div>
@@ -45,24 +49,23 @@
                 </span>Starforce Tool</a>
 
             <a class="nav-item nav-link" href="../hyperCalculator/"><span class='small'>
-                <ion-icon name="arrow-up-circle-outline"></ion-icon>
-            </span>Hyper Stat Tool</a>
+                    <ion-icon name="arrow-up-circle-outline"></ion-icon>
+                </span>Hyper Stat Tool</a>
 
             <a class="nav-item nav-link" href="../LegionCalculator/"><span class='small'>
-                <ion-icon name="grid-outline"></ion-icon>
-            </span>Legion Tool</a>
+                    <ion-icon name="grid-outline"></ion-icon>
+                </span>Legion Tool</a>
 
             <a class="nav-item nav-link" href="../flameCalculator/"><span class='small'>
-                <ion-icon name="flame-outline"></ion-icon>
-            </span>Flame Calculator</a>
+                    <ion-icon name="flame-outline"></ion-icon>
+                </span>Flame Calculator</a>
         </div>
     </div>
 </nav>
-
 <div class="container-fluid head">
     <h1><span>
             <ion-icon name="cube-sharp"></ion-icon>Cubing
-        </span> Experimental Probability</h1>
+        </span> Theoretical Probability</h1>
 </div>
 
 <div class="container maincon">
@@ -90,7 +93,7 @@
                     <option value='overall'>Overall</option>
                     <option value='top'>Top</option>
                     <option value='secondary'>Secondary</option>
-                    <option value='shield'>Shield</option>
+                    <!-- <option value='shield'>Shield</option> -->
                     <option value='shoes' selected>Shoes</option>
                     <option value='shoulder'>Shoulder</option>
                     <option value='weapon'>Weapon</option>
@@ -106,11 +109,11 @@
             </div>
             <div class='form-group col'>
                 <label for="currentTier">Current Tier</label>
-                <select id="currentTier" class="form-control">
-                    <option value=0 selected>Rare</option>
+                <select id="currentTier" class="form-control" disabled>
+                    <option value=0>Rare</option> <!-- this should be selected by defualt -->
                     <option value=1>Epic</option>
                     <option value=2>Unique</option>
-                    <option value=3>Legendary</option>
+                    <option value=3 selected>Legendary</option>
                 </select>
             </div>
             <div class='form-group col'>
@@ -128,38 +131,41 @@
         <div class='form-row'>
             <div class='form-group col-3'>
                 <label for="desiredTier">Desired Tier</label>
-                <select id="desiredTier" class="form-control">
+                <select id="desiredTier" class="form-control" disabled>
                     <option value=1>Epic</option>
                     <option value=2>Unique</option>
                     <option value=3 selected>Legendary</option>
                 </select>
             </div>
-            <div class='form-group col-6'>
+            <div class='form-group col-9'>
                 <label for="desiredStats">Desired Stat</label>
                 <select id="desiredStats" class="form-control">
                     <!-- ALL -->
-                        <option id='any' value='any'>Any</option>
-                        <!-- LVL 71-151 -->
-                            <option id='any1' value='21PercLUK'>21%+ Stat</option>
-                            <option id='any2' value='24PercLUK'>24%+ Stat</option>
-                            <option id='any3' value='27PercLUK'>27%+ Stat</option>
-                            <option id='any4' value='30PercLUK'>30%+ Stat</option>
-                            <option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>
-                            <option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>
-                            <option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>
-                            <!-- Hat Options -->
+                    <option id='any' value='any'>Any</option>
+                    <!-- LVL 71-151 -->
+                    <option id='any1' value='21PercLUK'>21%+ Stat</option>
+                    <option id='any2' value='24PercLUK'>24%+ Stat</option>
+                    <option id='any3' value='27PercLUK'>27%+ Stat</option>
+                    <option id='any4' value='30PercLUK'>30%+ Stat</option>
+                    <option id='any16' value='21PercHP'>21%+ Max HP</option>
+                    <option id='any17' value='24PercHP'>24%+ Max HP</option>
+                    <option id='any18' value='30PercHP'>30%+ Max HP</option>
+                    <option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>
+                    <option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>
+                    <option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>
+                    <!-- Hat Options -->
 
                 </select>
             </div>
-            <div class='form-group col-3'>
+            <!-- <div class='form-group col-3'>
                 <label for="totalTrials">Number of Trials</label>
                 <input type="number" class="form-control" id="totalTrials" value=100>
-            </div>
+            </div> -->
         </div>
         <div class='form-row'>
             <div class='form-group col text-center remove-bottom-margin'>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="DMT">
+                    <input class="form-check-input" type="checkbox" value="" id="DMT" disabled>
                     <label class="form-check-label" for="DMT">
                         Double Miracle Time
                     </label>
@@ -173,7 +179,7 @@
         </div>
     </form>
 </div>
-<div id="error-container" class="container containThree">
+<!-- <div id="error-container" class="container containThree">
     <div class='row'>
         <div class='col text-center error-msg title'>
             <p><span>
@@ -181,6 +187,18 @@
                     Furthermore, very rare outcomes may take a while to process, please be patient.
                 </span></p>
         </div>
+    </div>
+</div> -->
+<br>
+<div id="toast" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false">
+    <div class="toast-header">
+        <span class="mr-auto">Hello Mapler!</span>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        I hope you are enjoying my tools! <strong>Please consider donating</strong> by clicking the link in the footer.
     </div>
 </div>
 <div id="result"></div>
@@ -190,16 +208,14 @@
     </figure>
 </div>
 <footer>
-    <a href="#">
+    <a target="_blank"
+        href="https://www.paypal.com/donate/?token=AcjzfHeOefZVlPY2fgGZ8g9yumawJH9_v_93YA9hA_xcIsEGKVvwIVskaiKQWJzX0EnZGlhIQDvjMntZ&fromUL=true&Z3JncnB0=">
 
         <ion-icon name="heart"></ion-icon>
-        <ion-icon name="game-controller"></ion-icon>Made by SuckHard
+        <strong><u>Click here</u> to Donate</strong>
+        <ion-icon name="game-controller" id="controller"></ion-icon>Made by SuckHard
 
-        <ion-icon name="color-wand"></ion-icon> Styled by Taha
-
-        <ion-icon name="git-branch-outline"></ion-icon> Forked from stripedypaper
-
-        <ion-icon name="clipboard-outline"></ion-icon> Experimental Data from jeffim
+        <!-- <ion-icon name="color-wand"></ion-icon> Styled by Taha -->
 
     </a>
 </footer>

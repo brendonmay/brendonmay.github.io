@@ -11,6 +11,9 @@
     opacity: 0.5;
 }
 
+#result {
+    margin-bottom: 70px;
+}
 .spinner {
   z-index: 1;
    position: absolute;
@@ -183,6 +186,27 @@
     max-width: auto;
     box-shadow: 0 0 15px rgba(0,0,0,.1);
     margin-bottom: 80px;
+}
+
+#toast {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    z-index: 9999;
+}
+
+.toast-header {
+    background-color: #eb8034;
+    color: white;
+}
+
+#controller{
+    margin-left: 15px;
+    margin-right: 5px
+}
+
+.close {
+    color: white
 }
 
 footer {
