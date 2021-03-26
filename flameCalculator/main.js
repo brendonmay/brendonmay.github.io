@@ -526,6 +526,9 @@ function geoDistrQuantile(p) {
 }
 //test
 document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function(){
+        $("#toast").toast('show')
+      }, 1000)
     document.getElementById("item_type").addEventListener("change", function () {
         var item_type = document.getElementById('item_type').value
         var flame_type = document.getElementById('flame_type').value

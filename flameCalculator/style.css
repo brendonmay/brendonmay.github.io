@@ -42,6 +42,33 @@ h5 {
     border-right: none;
 }
 
+#toast {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    z-index: 9999;
+}
+
+.toast-header {
+    background-color: #D33E43;
+    color: white;
+}
+
+#controller{
+    margin-left: 15px;
+    margin-right: 5px
+}
+
+.close {
+    color: white
+}
+
+.link-text {
+    /* color: #1C2826; */
+    color: #E5DCDC;
+    font-weight: 900;
+}
+
 body{
     margin-bottom: 75px;
     background-color: #fff;
@@ -243,7 +270,7 @@ body{
 }
 
 footer {
-    background: #D44D5C;
+    background: #4F4D56;
     position: fixed;
     bottom: 0;
     width: 100%;

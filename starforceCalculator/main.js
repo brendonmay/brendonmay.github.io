@@ -594,6 +594,9 @@ document.addEventListener("DOMContentLoaded", function () {
         loaderOn();
       setTimeout(loaderOff, 100);
     });
+    setTimeout(function(){
+        $("#toast").toast('show')
+      }, 1000)
     //add event listener for when AEE is clicked, disable starcatching (no star catching)
     document.getElementById('AEE').addEventListener('change', function(){
         if (document.getElementById('AEE').checked){

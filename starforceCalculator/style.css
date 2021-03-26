@@ -285,6 +285,37 @@ label {
     box-shadow: 0 0 15px rgba(0,0,0,.1);
 }
 
+.margin-bottom-footer {
+    margin-bottom: 75px;
+}
+
+#toast {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    z-index: 9999;
+}
+
+.toast-header {
+    background-color: #4A4063;
+    color: white;
+}
+
+#controller{
+    margin-left: 15px;
+    margin-right: 5px
+}
+
+.close {
+    color: white
+}
+
+.link-text {
+    color: white;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
 footer {
     background: rgba(236,73,142,1);
     background: linear-gradient(-45deg, rgba(114,34,121,1) 10%, rgba(236,73,142,1) 90%);
