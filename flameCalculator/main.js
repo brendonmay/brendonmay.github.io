@@ -3,6 +3,10 @@
 let powerful_tier_probabilities = { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 }
 let eternal_tier_probabilities = { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 }
 
+//update this
+let powerful_tier_probabilities_non_adv = { 1: 0.2, 2: 0.3, 3: 0.36, 4: 0.14, 5: 0 }
+let eternal_tier_probabilities_non_adv = { 1: 0, 2: 0.29, 3: 0.45, 4: 0.25, 5: 0.01 }
+
 var stat_per_tier = { "140-159": 8, "160-179": 9, "180-199": 10, "200-219": 11 }
 let combo_stat_per_tier = { "140-159": 4, "160-179": 5, "180-199": 5, "200-219": 6 }
 var stat_equivalences = { "all_stat": 8, "secondary_stat": 0.1, "attack": 3 }
@@ -192,12 +196,22 @@ function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier
     return number_of_lines
 }
 
-function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier) {
+function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier, non_advantaged_item) {
     var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier]
     var index = 0
     var probability = 0
-    if (flame_type == "powerful") var tier_probabilities = powerful_tier_probabilities
-    if (flame_type == "eternal") var tier_probabilities = eternal_tier_probabilities
+    if (flame_type == "powerful") {
+        var tier_probabilities = powerful_tier_probabilities
+        if (non_advantaged_item) {
+            tier_probabilities = powerful_tier_probabilities_non_adv
+        }
+    }
+    if (flame_type == "eternal") {
+        var tier_probabilities = eternal_tier_probabilities
+        if (non_advantaged_item) {
+            tier_probabilities = eternal_tier_probabilities_non_adv
+        }
+    }
     while (index < list.length) {
         var tier = list[index];
         if (tier > 0) {
@@ -211,7 +225,7 @@ function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two
     return probability
 }
 
-function getProbability(item_level, flame_type, item_type, desired_stat) {
+function getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item) {
     //desired_stat = {attack_tier, dmg_percent}
 
     //main_tier
@@ -234,6 +248,16 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
 
     var lower_limit = 3
 
+    if (non_advantaged_item) {
+        lower_limit = 1
+        upper_limit = 5
+        sec_upper_limit = 5
+        combo_four_upper_limit = 5
+        combo_five_upper_limit = 5
+        att_upper_limit = 5
+        all_stat_upper_limit = 5
+    }
+
     if (flame_type == "eternal") {
         upper_limit = 8
         sec_upper_limit = 8
@@ -243,6 +267,16 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
         all_stat_upper_limit = 8
 
         lower_limit = 4
+
+        if (non_advantaged_item) {
+            lower_limit = 2
+            upper_limit = 6
+            sec_upper_limit = 6
+            combo_four_upper_limit = 6
+            combo_five_upper_limit = 6
+            att_upper_limit = 6
+            all_stat_upper_limit = 6
+        }
     }
 
     if (item_type == "armor") {
@@ -361,12 +395,32 @@ function getProbability(item_level, flame_type, item_type, desired_stat) {
 
             var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0)
 
+            //non-flame-advantaged item line probabilities
+            var non_advantaged = { 1: 0.45, 2: 0.35, 3: 0.15, 4: 0.05 }
+
             //hypergeometric distribution
             var number_of_zeroes = checkRatios().zeroes
             var choose_from = 10 + number_of_zeroes
             //here
             var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
-            var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, 0, 0)
+            if (non_advantaged_item) {
+                if (number_of_lines == 1) {
+                    line_probability = non_advantaged[1] / combination(19, 1) + non_advantaged[2] * combination(choose_from, 1) / combination(19, 2) + non_advantaged[3] * combination(choose_from, 2) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 3) / combination(19, 4)
+                }
+                else if (number_of_lines == 2) {
+                    line_probability = non_advantaged[2] / combination(19, 2) + non_advantaged[3] * combination(choose_from, 1) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 2) / combination(19, 4)
+                }
+                else if (number_of_lines == 3) {
+                    line_probability = non_advantaged[3] / combination(19, 3) + non_advantaged[4] * combination(choose_from, 1) / combination(19, 4)
+                }
+                else if (number_of_lines == 4) {
+                    line_probability = non_advantaged[4] / combination(19, 4)
+                }
+                else {
+                    line_probability = 0
+                }
+            }
+            var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, 0, 0, non_advantaged_item)
             var event_probability = line_probability * tier_probability
 
             probability = probability + event_probability
@@ -526,9 +580,9 @@ function geoDistrQuantile(p) {
 }
 //test
 document.addEventListener("DOMContentLoaded", function () {
-    setTimeout(function(){
+    setTimeout(function () {
         $("#toast").toast('show')
-      }, 1000)
+    }, 1000)
     document.getElementById("item_type").addEventListener("change", function () {
         var item_type = document.getElementById('item_type').value
         var flame_type = document.getElementById('flame_type').value
@@ -583,6 +637,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var item_type = document.getElementById('item_type').value
             var guild_discount = document.getElementById('guild_discount').checked
             var item_level
+            var non_advantaged_item = !document.getElementById('flame-advantaged').checked
 
             stat_equivalences.all_stat = document.getElementById('all_stat').value
             stat_equivalences.attack = document.getElementById('attack').value
@@ -598,7 +653,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var desired_stat = { "attack_tier": attack_tier, "dmg_percent": dmg_percent }
             }
 
-            var p = getProbability(item_level, flame_type, item_type, desired_stat)
+            var p = getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item)
             var stats = geoDistrQuantile(p)
 
             var mean = Math.round(stats.mean)

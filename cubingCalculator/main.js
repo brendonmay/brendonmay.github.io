@@ -1013,12 +1013,21 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
       "line_1":
       {
         "attack": { "red": 0.04878, "black": 0.04878 },
+        "12_attack": { "red": 0.04878, "black": 0.04878 },
+        "40_boss": { "red": 0.04878, "black": 0.04878 },
+        "35_boss": { "red": 0.04878, "black": 0.04878 },
+        "30_boss": { "red": 0.04878, "black": 0.04878 },
         "boss": { "red": 0.04878 + 0.04878 + 0.04878, "black": 0.04878 + 0.04878 + 0.04878 },
         "ied": { "red": 0.04878 + 0.04878, "black": 0.04878 + 0.04878 }
       },
       "line_2":
       {
         "attack": { "red": 0.004878 + 0.06, "black": 0.009756 + 0.053333 },
+        "12_attack": { "red": 0.004878, "black": 0.009756 },
+        "9_attack": { "red": 0.06, "black": 0.053333 },
+        "40_boss": { "red": 0.04878, "black": 0.009756 },
+        "35_boss": { "red": 0.04878, "black": 0.009756 },
+        "30_boss": { "red": 0.004878 + 0.04, "black": 0.009756 + 0.035556 },
         "boss": { "red": 0.004878 + 0.004878 + 0.004878 + 0.04 + 0.06, "black": 0.009756 + 0.009756 + 0.009756 + 0.035556 + 0.053333 },
         "ied": { "red": 0.004878 + 0.004878 + 0.06, "black": 0.009756 + 0.009756 + 0.053333 }
       },
@@ -1026,6 +1035,11 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
       {
         "attack": { "red": 0.000488 + 0.066, "black": 0.002439 + 0.063333 },
         "boss": { "red": 0.000488 + 0.000488 + 0.000488 + 0.044 + 0.066, "black": 0.002439 + 0.002439 + 0.002439 + 0.042222 + 0.063333 },
+        "12_attack": { "red": 0.000488, "black": 0.002439 },
+        "9_attack": { "red": 0.066, "black": 0.063333 },
+        "40_boss": { "red": 0.000488, "black": 0.002439 },
+        "35_boss": { "red": 0.000488, "black": 0.002439 },
+        "30_boss": { "red": 0.000488 + 0.044, "black": 0.002439 + 0.042222 },
         "ied": { "red": 0.000488 + 0.000488 + 0.066, "black": 0.002439 + 0.002439 + 0.063333 }
       }
     },
@@ -1034,18 +1048,32 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
       {
         "attack": { "red": 0.042553, "black": 0.042553 },
         "boss": { "red": 0.042553 * 3, "black": 0.042553 * 3 },
+        "12_attack": { "red": 0.042553, "black": 0.042553 },
+        "40_boss": { "red": 0.042553, "black": 0.042553 },
+        "35_boss": { "red": 0.042553, "black": 0.042553 },
+        "30_boss": { "red": 0.042553, "black": 0.042553 },
         "ied": { "red": 0.042553 * 2, "black": 0.042553 * 2 }
       },
       "line_2":
       {
         "attack": { "red": 0.004255 + 0.050943, "black": 0.008511 + 0.045283 },
         "boss": { "red": 0.004255 * 2 + 0.004255 + 0.033962 + 0.050943, "black": 0.008511 * 2 + 0.008511 + 0.30189 + 0.045283 },
+        "12_attack": { "red": 0.004255, "black": 0.008511 },
+        "9_attack": { "red": 0.050943, "black": 0.045283 },
+        "40_boss": { "red": 0.004255, "black": 0.008511 },
+        "35_boss": { "red": 0.004255, "black": 0.008511 },
+        "30_boss": { "red": 0.004255 + 0.033962, "black": 0.008511 + 0.30189 },
         "ied": { "red": 0.004255 * 2 + 0.050943, "black": 0.008511 * 2 + 0.045283 }
       },
       "line_3":
       {
         "attack": { "red": 0.000426 + 0.056038, "black": 0.002128 + 0.053774 },
         "boss": { "red": 0.000426 * 2 + 0.000426 + 0.037358 + 0.056038, "black": 0.002128 * 2 + 0.002128 + 0.035849 + 0.053774 },
+        "12_attack": { "red": 0.000426, "black": 0.002128 },
+        "9_attack": { "red": 0.056038, "black": 0.053774 },
+        "40_boss": { "red": 0.000426, "black": 0.002128 },
+        "35_boss": { "red": 0.000426, "black": 0.002128 },
+        "30_boss": { "red": 0.000426 + 0.037358, "black": 0.002128 + 0.035849 },
         "ied": { "red": 0.000426 * 2 + 0.056038, "black": 0.002128 * 2 + 0.053774 }
       }
     },
@@ -1053,16 +1081,21 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
       "line_1":
       {
         "attack": { "red": 0.057143, "black": 0.057143 },
+        "12_attack": { "red": 0.057143, "black": 0.057143 },
         "ied": { "red": 0.057143 * 2, "black": 0.057143 * 2 }
       },
       "line_2":
       {
         "attack": { "red": 0.005714 + 0.0675, "black": 0.011429 + 0.06 },
+        "12_attack": { "red": 0.005714, "black": 0.011429 },
+        "9_attack": { "red": 0.0675, "black": 0.06 },
         "ied": { "red": 0.005714 * 2 + 0.0675, "black": 0.011429 * 2 + 0.06 }
       },
       "line_3":
       {
         "attack": { "red": 0.000571 + 0.07425, "black": 0.002857 + 0.07125 },
+        "12_attack": { "red": 0.000571, "black": 0.002857 },
+        "9_attack": { "red": 0.07425, "black": 0.07125 },
         "ied": { "red": 0.000571 * 2 + 0.07425, "black": 0.002857 * 2 + 0.07125 }
       }
     },
@@ -1388,12 +1421,22 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
       return probabilities[item_type][line].drop[cube_type]
     }
   }
-  function prob_line(line, line_type, probabilities, cube_type, item_type) {
+  function prob_line(line, line_type, probabilities, cube_type, item_type, amount_of_stat) {
+    if (line_type == "att") {
+      if (line == "line_1") { }
+      else {
+      }
+    }
+
     if (line_type == "stat") {
       if (line == "line_1") {
+        if (amount_of_stat == 12) return probabilities[item_type][line]["12_stat"][cube_type]
+        if (amount_of_stat == 9) return probabilities[item_type][line]["9_all"][cube_type]
         return probabilities[item_type][line]["12_stat"][cube_type] + probabilities[item_type][line]["9_all"][cube_type]
       }
       else {
+        if (amount_of_stat == 12) return probabilities[item_type][line]["12_stat"][cube_type]
+        if (amount_of_stat == 9) return probabilities[item_type][line]["9_all"][cube_type] + probabilities[item_type][line]["9_stat"][cube_type]
         return probabilities[item_type][line]["12_stat"][cube_type] + probabilities[item_type][line]["9_all"][cube_type] + probabilities[item_type][line]["9_stat"][cube_type] + probabilities[item_type][line]["6_all"][cube_type]
       }
     }
@@ -1403,6 +1446,8 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
         return probabilities[item_type][line]["9_all"][cube_type]
       }
       else {
+        if (amount_of_stat == 12) return probabilities[item_type][line]["9_all"][cube_type]
+        if (amount_of_stat == 9) return probabilities[item_type][line]["6_all"][cube_type]
         return probabilities[item_type][line]["9_all"][cube_type] + probabilities[item_type][line]["6_all"][cube_type]
       }
     }
@@ -1412,6 +1457,8 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
         return probabilities[item_type][line]["12_hp"][cube_type]
       }
       else {
+        if (amount_of_stat == 12) return probabilities[item_type][line]["12_hp"][cube_type]
+        if (amount_of_stat == 9) return probabilities[item_type][line]["9_hp"][cube_type]
         return probabilities[item_type][line]["12_hp"][cube_type] + probabilities[item_type][line]["9_hp"][cube_type]
       }
     }
@@ -1419,7 +1466,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
   }
   //hat
 
-  if (desired_outcome == "4SecCD" || desired_outcome == "3SecCD" || desired_outcome == "2SecCD") {
+  if (desired_outcome == "4SecCD" || desired_outcome == "3SecCD" || desired_outcome == "2SecCD" || desired_outcome == "5SecCD" || desired_outcome == "6SecCD") {
     var prob_2sec_line_1 = prob_line("line_1", "cd_2", probabilities, cube_type, item_type)
     var prob_2sec_line_2 = prob_line("line_2", "cd_2", probabilities, cube_type, item_type)
     var prob_2sec_line_3 = prob_line("line_3", "cd_2", probabilities, cube_type, item_type)
@@ -1468,30 +1515,56 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     ////////4sec+
     //2 2 2
     probability = probability + prob_2sec_line_1 * prob_2sec_line_2 * prob_2sec_line_3
-    //2 2 1
-    probability = probability + prob_2sec_line_1 * prob_2sec_line_2 * prob_1sec_line_3
-    //2 1 2
-    probability = probability + prob_2sec_line_1 * prob_1sec_line_2 * prob_2sec_line_3
-    //1 2 2
-    probability = probability + prob_1sec_line_1 * prob_2sec_line_2 * prob_2sec_line_3
 
-    //2 1 1
-    probability = probability + prob_2sec_line_1 * prob_1sec_line_2 * prob_1sec_line_3
-    //1 2 1
-    probability = probability + prob_1sec_line_1 * prob_2sec_line_2 * prob_1sec_line_3
-    //1 1 2
-    probability = probability + prob_1sec_line_1 * prob_1sec_line_2 * prob_2sec_line_3
+    if (desired_outcome != "6SecCD") {
+      //2 2 1
+      probability = probability + prob_2sec_line_1 * prob_2sec_line_2 * prob_1sec_line_3
+      //2 1 2
+      probability = probability + prob_2sec_line_1 * prob_1sec_line_2 * prob_2sec_line_3
+      //1 2 2
+      probability = probability + prob_1sec_line_1 * prob_2sec_line_2 * prob_2sec_line_3
+    }
 
-    //2 2 O
-    probability = probability + prob_2sec_line_1 * prob_2sec_line_2 * prob_other_line_3
-    //2 O 2
-    probability = probability + prob_2sec_line_1 * prob_2sec_line_3 * prob_other_line_2
-    //O 2 2
-    probability = probability + prob_2sec_line_3 * prob_2sec_line_2 * prob_other_line_1
+    if (desired_outcome != "5SecCD" && desired_outcome != "6SecCD" ) {
+      //2 1 1
+      probability = probability + prob_2sec_line_1 * prob_1sec_line_2 * prob_1sec_line_3
+      //1 2 1
+      probability = probability + prob_1sec_line_1 * prob_2sec_line_2 * prob_1sec_line_3
+      //1 1 2
+      probability = probability + prob_1sec_line_1 * prob_1sec_line_2 * prob_2sec_line_3
+
+      //2 2 O
+      probability = probability + prob_2sec_line_1 * prob_2sec_line_2 * prob_other_line_3
+      //2 O 2
+      probability = probability + prob_2sec_line_1 * prob_2sec_line_3 * prob_other_line_2
+      //O 2 2
+      probability = probability + prob_2sec_line_3 * prob_2sec_line_2 * prob_other_line_1
+    }
   }
 
+  //here
+  if (desired_outcome == "2SecCDAnd2Stat" || desired_outcome == "2SecCDAnd2HP" || desired_outcome == "2SecCDAnd2ALL") {
+    var stat = "stat"
+    if (desired_outcome == "2SecCDAnd2HP") stat = "hp"
+    if (desired_outcome == "2SecCDAnd2ALL") stat = "all"
 
-  // if (desired_outcome == "2SecCDAnd2Stat" || desired_outcome == "2SecCDAnd2HP" || desired_outcome == "2SecCDAnd2ALL") { }
+    var cd_line_1 = probabilities[item_type]["line_1"]["cd_1"][cube_type] + probabilities[item_type]["line_1"]["cd_2"][cube_type]
+    var cd_line_2 = probabilities[item_type]["line_2"]["cd_1"][cube_type] + probabilities[item_type]["line_2"]["cd_2"][cube_type]
+    var cd_line_3 = probabilities[item_type]["line_3"]["cd_1"][cube_type] + probabilities[item_type]["line_3"]["cd_2"][cube_type]
+
+    var stat_line_1 = prob_line("line_1", stat, probabilities, cube_type, item_type)
+    var stat_line_2 = prob_line("line_2", stat, probabilities, cube_type, item_type)
+    var stat_line_3 = prob_line("line_3", stat, probabilities, cube_type, item_type)
+
+    var probability = 0
+
+    //CD S S
+    probability = probability + cd_line_1 * stat_line_2 * stat_line_3
+    //S CD S
+    probability = probability + cd_line_2 * stat_line_1 * stat_line_3
+    //S S CD
+    probability = probability + cd_line_3 * stat_line_2 * stat_line_1
+  }
 
   if (desired_outcome == "4SecCDAndStat" || desired_outcome == "4SecCDAndHP" || desired_outcome == "4SecCDAndALL" || desired_outcome == "2SecCDAndStat" || desired_outcome == "2SecCDAndHP" || desired_outcome == "2SecCDAndALL" || desired_outcome == "3SecCDAndStat" || desired_outcome == "3SecCDAndHP" || desired_outcome == "3SecCDAndALL") {
     if (desired_outcome == "4SecCDAndStat" || desired_outcome == "3SecCDAndStat" || desired_outcome == "2SecCDAndStat") var stat = "stat"
@@ -1560,9 +1633,6 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     //S 2 2
     probability = probability + prob_2sec_line_3 * prob_2sec_line_2 * prob_stat_line_1
   }
-
-
-
 
   //accessory
   if (desired_outcome == "1LMeso" || desired_outcome == "1LDrop") {
@@ -1924,6 +1994,11 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     var probability = probability_1 + probability_2 + probability_3 + probability_4
   }
 
+  if (desired_outcome == "3LCrit") {
+    //CCC
+    var probability = probabilities[item_type].line_1.crit[cube_type] * probabilities[item_type].line_2.crit[cube_type] * probabilities[item_type].line_3.crit[cube_type]
+  }
+
   if (desired_outcome == "2LCritAndStat") {
     //SCC
     var probability_1 = (probabilities[item_type].line_1["12_stat"][cube_type] + probabilities[item_type].line_1["9_all"][cube_type]) * probabilities[item_type].line_2.crit[cube_type] * probabilities[item_type].line_3.crit[cube_type]
@@ -1964,6 +2039,66 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
   }
 
   //WSE
+  if (desired_outcome == "21ATT30BOSS" || desired_outcome == "21ATT35BOSS" || desired_outcome == "21ATT40BOSS" || desired_outcome == "24ATT30BOSS" || desired_outcome == "21ATTandIED" || desired_outcome == "24ATTandIED") {
+    var stat = "30_boss"
+    var att = 21
+    if (desired_outcome == "24ATTandIED" || desired_outcome == "24ATT30BOSS") att = 24
+    if (desired_outcome == "21ATT35BOSS") stat = "35_boss"
+    if (desired_outcome == "21ATT40BOSS") stat = "40_boss"
+    if (desired_outcome == "21ATTandIED" || desired_outcome == "24ATTandIED") stat = "ied"
+
+    var prob_12_att_line_1 = probabilities[item_type].line_1["12_attack"][cube_type]
+    var prob_12_att_line_2 = probabilities[item_type].line_2["12_attack"][cube_type]
+    var prob_12_att_line_3 = probabilities[item_type].line_3["12_attack"][cube_type]
+
+    var prob_9_att_line_2 = probabilities[item_type].line_2["9_attack"][cube_type]
+    var prob_9_att_line_3 = probabilities[item_type].line_3["9_attack"][cube_type]
+
+    if (stat == "ied") {
+      var prob_stat_line_1 = probabilities[item_type].line_1[stat][cube_type]
+      var prob_stat_line_2 = probabilities[item_type].line_1[stat][cube_type]
+      var prob_stat_line_3 = probabilities[item_type].line_1[stat][cube_type]
+    }
+    else {
+      var prob_stat_line_1 = probabilities[item_type].line_1["40_boss"][cube_type]
+      var prob_stat_line_2 = probabilities[item_type].line_1["40_boss"][cube_type]
+      var prob_stat_line_3 = probabilities[item_type].line_1["40_boss"][cube_type]
+    }
+    if (stat == "30_boss" || stat == "35_boss") {
+      prob_stat_line_1 = prob_stat_line_1 + probabilities[item_type].line_1["35_boss"][cube_type]
+      prob_stat_line_2 = prob_stat_line_2 + probabilities[item_type].line_2["35_boss"][cube_type]
+      prob_stat_line_3 = prob_stat_line_3 + probabilities[item_type].line_3["35_boss"][cube_type]
+    }
+    if (stat == "30_boss") {
+      prob_stat_line_1 = prob_stat_line_1 + probabilities[item_type].line_1["30_boss"][cube_type]
+      prob_stat_line_2 = prob_stat_line_2 + probabilities[item_type].line_2["30_boss"][cube_type]
+      prob_stat_line_3 = prob_stat_line_3 + probabilities[item_type].line_3["30_boss"][cube_type]
+    }
+
+    var probability = 0
+
+    if (att == 21) {
+      //12A 9A S
+      probability = probability + prob_12_att_line_1 * prob_9_att_line_2 * prob_stat_line_3
+      //12A S 9A
+      probability = probability + prob_12_att_line_1 * prob_9_att_line_3 * prob_stat_line_2
+      //S 12A 12A
+      probability = probability + prob_12_att_line_3 * prob_12_att_line_2 * prob_stat_line_1
+      //S 12A 9A
+      probability = probability + prob_9_att_line_3 * prob_12_att_line_2 * prob_stat_line_1
+      //S 9A 12A
+      probability = probability + prob_12_att_line_3 * prob_9_att_line_2 * prob_stat_line_1
+    }
+
+    //12A 12A S
+    probability = probability + prob_12_att_line_1 * prob_12_att_line_2 * prob_stat_line_3
+    //12A S 12A
+    probability = probability + prob_12_att_line_1 * prob_12_att_line_3 * prob_stat_line_2
+    //S 12A 12A
+    probability = probability + prob_12_att_line_3 * prob_12_att_line_2 * prob_stat_line_1
+
+
+  }
   if (desired_outcome == "2LATT") {
     //12 OR 13 OR 23 OR 123
     var probability_1 = probabilities[item_type].line_1.attack[cube_type] * probabilities[item_type].line_2.attack[cube_type] * (1 - probabilities[item_type].line_3.attack[cube_type])
@@ -2472,6 +2607,29 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
 
     var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9
   }
+  if ((desired_outcome == "36PercLUK") || (desired_outcome == "36PercHP") || (desired_outcome == "27PercALL") || (desired_outcome == "33PercLUK" && itemLevel <= 150) || (desired_outcome == "33PercHP" && itemLevel <= 150) || (desired_outcome == "24PercALL" && itemLevel <= 150)) {
+    if (desired_outcome == "36PercLUK" || desired_outcome == "33PercLUK") var stat = "stat"
+    else if (desired_outcome == "36PercHP" || desired_outcome == "33PercHP") var stat = "hp"
+    else var stat = "all"
+    var prob_12_line_1 = prob_line("line_1", stat, probabilities, cube_type, item_type, 12)
+    var prob_12_line_2 = prob_line("line_2", stat, probabilities, cube_type, item_type, 12)
+    var prob_12_line_3 = prob_line("line_3", stat, probabilities, cube_type, item_type, 12)
+
+    var prob_9_line_2 = prob_line("line_2", stat, probabilities, cube_type, item_type, 9)
+    var prob_9_line_3 = prob_line("line_3", stat, probabilities, cube_type, item_type, 9)
+
+    var probability = 0
+
+    //12 12 12
+    probability = probability + prob_12_line_1 * prob_12_line_2 * prob_12_line_3
+
+    //12 12 9
+    probability = probability + prob_12_line_1 * prob_12_line_2 * prob_9_line_3
+
+    //12 9 12
+    probability = probability + prob_12_line_1 * prob_9_line_2 * prob_12_line_3
+
+  }
   return probability
 }
 
@@ -2564,14 +2722,17 @@ function updatedDesiredStats() {
         $('#desiredStats').append("<option id='any2' value='24PercLUK'>24%+ Stat</option>");
         $('#desiredStats').append("<option id='any3' value='27PercLUK'>27%+ Stat</option>");
         $('#desiredStats').append("<option id='any4' value='30PercLUK'>30%+ Stat</option>");
+        $('#desiredStats').append("<option id='any22' value='33PercLUK'>33%+ Stat</option>");
 
         $('#desiredStats').append("<option id='any16' value='21PercHP'>21%+ Max HP</option>");
         $('#desiredStats').append("<option id='any17' value='24PercHP'>24%+ Max HP</option>");
         $('#desiredStats').append("<option id='any18' value='30PercHP'>30%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any23' value='33PercHP'>33%+ Max HP</option>");
 
         $('#desiredStats').append("<option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>");
+        $('#desiredStats').append("<option id='any24' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
       }
 
     }
@@ -2582,14 +2743,17 @@ function updatedDesiredStats() {
         $('#desiredStats').append("<option id='any10' value='27PercLUK'>27%+ Stat</option>");
         $('#desiredStats').append("<option id='any11' value='30PercLUK'>30%+ Stat</option>");
         $('#desiredStats').append("<option id='any12' value='33PercLUK'>33%+ Stat</option>");
+        $('#desiredStats').append("<option id='any25' value='36PercLUK'>36%+ Stat</option>");
 
         $('#desiredStats').append("<option id='any19' value='23PercHP'>23%+ Max HP</option>");
         $('#desiredStats').append("<option id='any20' value='26PercHP'>26%+ Max HP</option>");
         $('#desiredStats').append("<option id='any21' value='33PercHP'>33%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any26' value='36PercHP'>36%+ Max HP</option>");
 
         $('#desiredStats').append("<option id='any13' value='17PercALL'>17%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any14' value='20PercALL'>20%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any15' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
+        $('#desiredStats').append("<option id='any27' value='27PercALL'>27%+ All Stat (For Xenon)</option>");
       }
     }
   }
@@ -2608,6 +2772,10 @@ function updatedDesiredStats() {
         $('#any16').remove();
         $('#any17').remove();
         $('#any18').remove();
+
+        $('#any22').remove();
+        $('#any23').remove();
+        $('#any24').remove();
       }
     }
     else {
@@ -2624,19 +2792,22 @@ function updatedDesiredStats() {
         $('#any19').remove();
         $('#any20').remove();
         $('#any21').remove();
+
+        $('#any25').remove();
+        $('#any26').remove();
+        $('#any27').remove();
       }
     }
 
     if (document.getElementById('weaponsecondaryshield') === null) {
       $('#desiredStats').append("<option id='weaponsecondaryshield' value='2LATT'>2 Line Attack%</option>");
+      $('#desiredStats').append("<option id='weaponsecondaryshield2' value='3LATT'>3 Line Attack%</option>");
 
     }
     if (document.getElementById('weaponsecondaryshield1') === null) {
       $('#desiredStats').append("<option id='weaponsecondaryshield1' value='2ATTand1IED'>2 Line Attack% + 1 Line IED%</option>");
-
-    }
-    if (document.getElementById('weaponsecondaryshield2') === null) {
-      $('#desiredStats').append("<option id='weaponsecondaryshield2' value='3LATT'>3 Line Attack%</option>");
+      $('#desiredStats').append("<option id='weaponsecondaryshield9' value='21ATTandIED'>21%+ Attack and IED</option>");
+      $('#desiredStats').append("<option id='weaponsecondaryshield10' value='24ATTandIED'>24%+ Attack and IED</option>");
 
     }
     if (document.getElementById('weaponsecondaryshield3') === null) {
@@ -2646,6 +2817,10 @@ function updatedDesiredStats() {
     if (document.getElementById('weaponsecondaryshield4') === null) {
       $('#desiredStats').append("<option id='weaponsecondaryshield4' value='2ATTand1BOSS'>2 Line Attack% + 1 Line Boss%</option>");
 
+      $('#desiredStats').append("<option id='weaponsecondaryshield5' value='21ATT30BOSS'>21%+ Attack and 30%+ Boss</option>");
+      $('#desiredStats').append("<option id='weaponsecondaryshield6' value='21ATT35BOSS'>21%+ Attack and 35%+ Boss</option>");
+      $('#desiredStats').append("<option id='weaponsecondaryshield7' value='21ATT40BOSS'>21%+ Attack and 40%+ Boss</option>");
+      $('#desiredStats').append("<option id='weaponsecondaryshield8' value='24ATT30BOSS'>24%+ Attack and 30%+ Boss</option>");
     }
 
   }
@@ -2664,6 +2839,10 @@ function updatedDesiredStats() {
         $('#any16').remove();
         $('#any17').remove();
         $('#any18').remove();
+
+        $('#any22').remove();
+        $('#any23').remove();
+        $('#any24').remove();
       }
     }
     else {
@@ -2680,22 +2859,28 @@ function updatedDesiredStats() {
         $('#any19').remove();
         $('#any20').remove();
         $('#any21').remove();
+
+        $('#any25').remove();
+        $('#any26').remove();
+        $('#any27').remove();
       }
     }
     if (document.getElementById('emblem') === null) {
       $('#desiredStats').append("<option id='emblem' value='2LATT'>2 Line Attack%</option>");
+      $('#desiredStats').append("<option id='emblem2' value='3LATT'>3 Line Attack%</option>");
     }
     if (document.getElementById('emblem1') === null) {
       $('#desiredStats').append("<option id='emblem1' value='2ATTand1IED'>2 Line Attack% + 1 Line IED%</option>");
     }
-    if (document.getElementById('emblem2') === null) {
-      $('#desiredStats').append("<option id='emblem2' value='3LATT'>3 Line Attack%</option>");
+    if (document.getElementById('emblem7') === null) {
+      $('#desiredStats').append("<option id='emblem7' value='21ATTandIED'>21%+ Attack and IED</option>");
+      $('#desiredStats').append("<option id='emblem8' value='24ATTandIED'>24%+ Attack and IED</option>");
     }
   }
 
   else if (itemType == 'gloves') {//1LCritandHP, 2LCritAndStat, 2LCritAndALL, 2LCritandHP
     if (document.getElementById('gloves') === null) {
-      $('#desiredStats').append("<option id='gloves' value='1LCrit'>1 Line Critical Dmg%</option>");
+      $('#desiredStats').append("<option id='gloves' value='1LCrit'>1 Line Crit Dmg%</option>");
 
       $('#desiredStats').append("<option id='gloves1' value='1LCritAndStat'>1 Line Crit Dmg% and Stat%</option>");
       $('#desiredStats').append("<option id='gloves2' value='1LCritAndALL'>1 Line Crit Dmg% and All Stat%</option>");
@@ -2710,6 +2895,8 @@ function updatedDesiredStats() {
       $('#desiredStats').append("<option id='gloves5' value='2LCritAndStat'>2 Line Crit Dmg% and Stat%</option>");
       $('#desiredStats').append("<option id='gloves6' value='2LCritAndALL'>2 Line Crit Dmg% and All Stat%</option>");
       $('#desiredStats').append("<option id='gloves7' value='2CritandHP'>2 Line Crit Dmg% and MaxHP%</option>");
+
+      $('#desiredStats').append("<option id='gloves8' value='3LCrit'>3 Line Crit Dmg%</option>");
     }
   }
 
@@ -2742,31 +2929,33 @@ function updatedDesiredStats() {
       $('#desiredStats').append("<option id='hat' value='2SecCD'>-2sec+ CD Reduction</option>");
       $('#desiredStats').append("<option id='hat1' value='3SecCD'>-3sec+ CD Reduction</option>");
       $('#desiredStats').append("<option id='hat2' value='4SecCD'>-4sec+ CD Reduction</option>");
+      $('#desiredStats').append("<option id='hat15' value='5SecCD'>-5sec+ CD Reduction</option>");
+      $('#desiredStats').append("<option id='hat16' value='6SecCD'>-6sec+ CD Reduction</option>");
 
       $('#desiredStats').append("<option id='hat3' value='2SecCDAndStat'>-2sec+ CD Reduction and Stat%</option>");
       $('#desiredStats').append("<option id='hat4' value='2SecCDAndHP'>-2sec+ CD Reduction and MaxHP%</option>");
       $('#desiredStats').append("<option id='hat5' value='2SecCDAndALL'>-2sec+ CD Reduction and All Stat%</option>");
 
-      // $('#desiredStats').append("<option id='hat6' value='2SecCDAnd2Stat'>-2sec+ CD Reduction and 2 Line Stat%</option>");
-      // $('#desiredStats').append("<option id='hat7' value='2SecCDAnd2HP'>-2sec+ CD Reduction and 2 Line MaxHP%</option>");
-      // $('#desiredStats').append("<option id='hat8' value='2SecCDAnd2ALL'>-2sec+ CD Reduction and 2 Line All Stat%</option>");
+      $('#desiredStats').append("<option id='hat6' value='2SecCDAnd2Stat'>-2sec+ CD Reduction and 2 Line Stat%</option>");
+      $('#desiredStats').append("<option id='hat7' value='2SecCDAnd2HP'>-2sec+ CD Reduction and 2 Line Max HP%</option>");
+      $('#desiredStats').append("<option id='hat8' value='2SecCDAnd2ALL'>-2sec+ CD Reduction and 2 Line All Stat%</option>");
 
       $('#desiredStats').append("<option id='hat9' value='3SecCDAndStat'>-3sec+ CD Reduction and Stat%</option>");
-      $('#desiredStats').append("<option id='hat10' value='3SecCDAndHP'>-3sec+ CD Reduction and MaxHP%</option>");
+      $('#desiredStats').append("<option id='hat10' value='3SecCDAndHP'>-3sec+ CD Reduction and Max HP%</option>");
       $('#desiredStats').append("<option id='hat11' value='3SecCDAndALL'>-3sec+ CD Reduction and All Stat%</option>");
 
       $('#desiredStats').append("<option id='hat12' value='4SecCDAndStat'>-4sec+ CD Reduction and Stat%</option>");
-      $('#desiredStats').append("<option id='hat13' value='4SecCDAndHP'>-4sec+ CD Reduction and MaxHP%</option>");
+      $('#desiredStats').append("<option id='hat13' value='4SecCDAndHP'>-4sec+ CD Reduction and Max HP%</option>");
       $('#desiredStats').append("<option id='hat14' value='4SecCDAndALL'>-4sec+ CD Reduction and All Stat%</option>");
     }
   }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  setTimeout(function(){
+  setTimeout(function () {
     $("#toast").toast('show')
   }, 1000)
-  
+
   // setTimeout(function(){
   //   $("#toast").toast('hide')
   // }, 3000)
@@ -2834,14 +3023,17 @@ document.addEventListener("DOMContentLoaded", function () {
         $('#desiredStats').append("<option id='any2' value='24PercLUK'>24%+ Stat</option>");
         $('#desiredStats').append("<option id='any3' value='27PercLUK'>27%+ Stat</option>");
         $('#desiredStats').append("<option id='any4' value='30PercLUK'>30%+ Stat</option>");
+        $('#desiredStats').append("<option id='any22' value='33PercLUK'>33%+ Stat</option>");
 
         $('#desiredStats').append("<option id='any16' value='21PercHP'>21%+ Max HP</option>");
         $('#desiredStats').append("<option id='any17' value='24PercHP'>24%+ Max HP</option>");
         $('#desiredStats').append("<option id='any18' value='30PercHP'>30%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any23' value='33PercHP'>33%+ Max HP</option>");
 
         $('#desiredStats').append("<option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>");
+        $('#desiredStats').append("<option id='any24' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
         document.getElementById('calculateButton').disabled = false;
       } else if (itemLevel >= 151 && itemLevel <= 200) {
         $('#desiredStats').append("<option id='any' value='any'>Any</option>");
@@ -2850,14 +3042,17 @@ document.addEventListener("DOMContentLoaded", function () {
         $('#desiredStats').append("<option id='any10' value='27PercLUK'>27%+ Stat</option>");
         $('#desiredStats').append("<option id='any11' value='30PercLUK'>30%+ Stat</option>");
         $('#desiredStats').append("<option id='any12' value='33PercLUK'>33%+ Stat</option>");
+        $('#desiredStats').append("<option id='any25' value='36PercLUK'>36%+ Stat</option>");
 
         $('#desiredStats').append("<option id='any19' value='23PercHP'>23%+ Max HP</option>");
         $('#desiredStats').append("<option id='any20' value='26PercHP'>26%+ Max HP</option>");
         $('#desiredStats').append("<option id='any21' value='33PercHP'>33%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any26' value='36PercHP'>36%+ Max HP</option>");
 
         $('#desiredStats').append("<option id='any13' value='17PercALL'>17%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any14' value='20PercALL'>20%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any15' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
+        $('#desiredStats').append("<option id='any27' value='27PercLUK'>27%+ All Stat (For Xenon)</option>");
         document.getElementById('calculateButton').disabled = false;
       }
       updatedDesiredStats();
@@ -2905,7 +3100,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var eighty_fifth_cost = cubingCost(cubeType, itemLevel, eighty_fifth)
       var ninety_fifth_cost = cubingCost(cubeType, itemLevel, nintey_fifth)
 
-      if (currentTier == desiredTier && desiredStat == "any"){
+      if (currentTier == desiredTier && desiredStat == "any") {
         mean = 0
         median = 0
         seventy_fifth = 0

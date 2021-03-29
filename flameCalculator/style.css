@@ -65,8 +65,9 @@ h5 {
 
 .link-text {
     /* color: #1C2826; */
-    color: #E5DCDC;
-    font-weight: 900;
+    color: white;
+    font-weight: 500;
+    text-decoration: underline;
 }
 
 body{
