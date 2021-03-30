@@ -116,7 +116,7 @@ function critRateSplit(desired_crit_bonus) {
 
             //here if they are one short from desired, add one point to hyper, subtract one from legion board
             var total_crit_bonus = hyper_crit_data[hyper_crit_dmg_point] + legion_crit_blocks;
-            if (total_crit_bonus == true_desired_bonus - 1){
+            if (total_crit_bonus == true_desired_bonus - 1) {
                 hyper_crit_dmg_point++
                 legion_crit_blocks--
             }
@@ -156,85 +156,94 @@ function loadLocalStorage() {
         else if (k == 4) current_obj = obj_hyper_values;
 
         i = 0;
-        var id_values = Object.keys(current_obj);
-        while (i < id_values.length) {
-            var id = id_values[i];
-            var value = current_obj[id];
-            if (id == 'level') {
-                document.getElementById(id).value = value;
-                calcHyperStatPoints();
-                ncalcHyperStatPoints();
-                var new_level = value;
-                document.getElementById('current_level').innerHTML = `${new_level}`;
-                document.getElementById('ncurrent_level').innerHTML = `${new_level}`;
+        if (current_obj) {
+            var id_values = Object.keys(current_obj);
+            while (i < id_values.length) {
+                var id = id_values[i];
+                var value = current_obj[id];
+                if (id == 'level') {
+                    document.getElementById(id).value = value;
+                    calcHyperStatPoints();
+                    ncalcHyperStatPoints();
+                    var new_level = value;
+                    document.getElementById('current_level').innerHTML = `${new_level}`;
+                    document.getElementById('ncurrent_level').innerHTML = `${new_level}`;
+                }
+                if (id == 'class') {
+                    document.getElementById(id).value = value;
+                    var maple_class = value;
+                    if (maple_class == "Kanna") {
+                        document.getElementById('kanna_hp_div').hidden = false;
+                    }
+                    else {
+                        document.getElementById('kanna_hp_div').hidden = true;
+                    }
+
+                    if (maple_class == "Demon Avenger") {
+                        document.getElementById('hp_arcane_div').hidden = false;
+                    }
+                    else {
+                        document.getElementById('hp_arcane_div').hidden = true;
+                    }
+
+                    if (maple_class == "Demon Avenger" || maple_class == "Kanna") {
+                        document.getElementById('hp_perc_div').hidden = false;
+                    }
+                    else {
+                        document.getElementById('hp_perc_div').hidden = true;
+                    }
+
+                    if (maple_class == "Zero") {
+                        document.getElementById('zeromessage').hidden = false;
+                    }
+                    else {
+                        document.getElementById('zeromessage').hidden = true;
+                    }
+
+                    var stat_types = getPrimaryAndSecondaryStatType(maple_class);
+                    var primary_stat = stat_types.primaryStatType;
+                    var secondary_stat = stat_types.secondaryStatType;
+
+                    document.getElementById('primary_label').innerHTML = `<label for="primary_stat"> ${primary_stat} </label>`;
+                    document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
+
+                    if (maple_class == "Xenon") {
+                        document.getElementById('secondary_stat').value = 0;
+                        document.getElementById('secondary_stat').disabled = true;
+                    }
+                    else {
+                        document.getElementById('secondary_stat').disabled = false;
+                    }
+                }
+                if (k != 2) {
+                    if (document.getElementById(id)) document.getElementById(id).value = value;
+                }
+                if (k == 4) {
+                    if (document.getElementById(id)) {
+                        document.getElementById(id).value = value;
+                        updatePoints(document.getElementById(id));
+                    }
+                }
+                if (k == 2) {
+                    if (document.getElementById(id)) document.getElementById(id).checked = value;
+                }
+                if (id == 'reboot') {
+                    if (value) {
+                        document.getElementById('bonusAttPerc').value = 0;
+                        document.getElementById('bonusDiv').hidden = true;
+                        document.getElementById('bonusTitle').hidden = true;
+                    }
+                }
+                if (id == 'nonreboot') {
+                    if (value) {
+                        document.getElementById('reboot').checked = false;
+                        document.getElementById('bonusDiv').hidden = false;
+                        document.getElementById('bonusTitle').hidden = false;
+                    }
+                }
+                i++;
             }
-            if (id == 'class') {
-                document.getElementById(id).value = value;
-                var maple_class = value;
-                if (maple_class == "Kanna") {
-                    document.getElementById('kanna_hp_div').hidden = false;
-                }
-                else {
-                    document.getElementById('kanna_hp_div').hidden = true;
-                }
 
-                if (maple_class == "Demon Avenger") {
-                    document.getElementById('hp_arcane_div').hidden = false;
-                }
-                else {
-                    document.getElementById('hp_arcane_div').hidden = true;
-                }
-
-                if (maple_class == "Demon Avenger" || maple_class == "Kanna") {
-                    document.getElementById('hp_perc_div').hidden = false;
-                }
-                else {
-                    document.getElementById('hp_perc_div').hidden = true;
-                }
-
-                if (maple_class == "Zero") {
-                    document.getElementById('zeromessage').hidden = false;
-                }
-                else {
-                    document.getElementById('zeromessage').hidden = true;
-                }
-
-                var stat_types = getPrimaryAndSecondaryStatType(maple_class);
-                var primary_stat = stat_types.primaryStatType;
-                var secondary_stat = stat_types.secondaryStatType;
-
-                document.getElementById('primary_label').innerHTML = `<label for="primary_stat"> ${primary_stat} </label>`;
-                document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
-
-                if (maple_class == "Xenon") {
-                    document.getElementById('secondary_stat').value = 0;
-                    document.getElementById('secondary_stat').disabled = true;
-                }
-                else {
-                    document.getElementById('secondary_stat').disabled = false;
-                }
-            }
-            if (k != 2) document.getElementById(id).value = value;
-            if (k == 4) {
-                document.getElementById(id).value = value;
-                updatePoints(document.getElementById(id));
-            }
-            if (k == 2) document.getElementById(id).checked = value;
-            if (id == 'reboot') {
-                if (value) {
-                    document.getElementById('bonusAttPerc').value = 0;
-                    document.getElementById('bonusDiv').hidden = true;
-                    document.getElementById('bonusTitle').hidden = true;
-                }
-            }
-            if (id == 'nonreboot') {
-                if (value) {
-                    document.getElementById('reboot').checked = false;
-                    document.getElementById('bonusDiv').hidden = false;
-                    document.getElementById('bonusTitle').hidden = false;
-                }
-            }
-            i++;
         }
         if (k == 1) {
             updateWeaponLines();
@@ -4189,7 +4198,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
     var remaining_blocks = currentPieces - crit_rate_amount - 2; //5 from stat, 5 from attack on intial board setup, 2 for the center 2 blocks
     var blocks_per_stat = parseInt(JSON.parse(localStorage.getItem('blocksPerStat')));
 
-    if (maple_class == "Demon Avenger"){
+    if (maple_class == "Demon Avenger") {
         var new_hp_percent = parseFloat(JSON.parse(localStorage.getItem('new_hp_percent')));
         //var new_hp_percent = 1; //here
     }
@@ -4197,7 +4206,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
 
     //strategy, find all combinations, before committing them to the array of all combinations, check they meet the proper conditions
     //in regards to crit rate and ied
-    
+
     var optimal_dmg = -100;
     // var optimal_setup = {};
     for (var ied_counter = 0; ied_counter <= blocks_per_stat; ied_counter++) {
@@ -4837,12 +4846,12 @@ function optimizeWSE() {
     stripped_boss_percent = stripped_boss_percent - legion_boss;
     stripped_ied_percent = (stripped_ied_percent - legion_ied) / ((-1 * legion_ied / 100) + 1)
     stripped_crit_dmg = stripped_crit_dmg - legion_cdmg;
-    
-    if (maple_class == "Demon Avenger"){
+
+    if (maple_class == "Demon Avenger") {
         //console.log('new_hp_percent: ' + new_hp_percent);
         stripped_primary = stripped_primary - (legion_primary * new_hp_percent)
     }
-    else{
+    else {
         stripped_primary = stripped_primary - legion_primary * 3 //here fix this by collecting their total % stat
     }
 

@@ -19,107 +19,114 @@ function loadLocalStorage() {
         //else if (k == 4) current_obj = obj_hyper_values;
 
         i = 0;
-        var id_values = Object.keys(current_obj);
-        while (i < id_values.length) {
-            var id = id_values[i];
-            var value = current_obj[id];
-            if (id == 'level') {
-                document.getElementById(id).value = value;
-            }
-            if (id == 'class') {
-                document.getElementById(id).value = value;
-                var maple_class = value;
-
-                if (maple_class == "Zero") {
-                    document.getElementById('zeromessage').hidden = false;
+        if (current_obj) {
+            var id_values = Object.keys(current_obj);
+            while (i < id_values.length) {
+                var id = id_values[i];
+                var value = current_obj[id];
+                if (id == 'level') {
+                    document.getElementById(id).value = value;
                 }
-                else {
-                    document.getElementById('zeromessage').hidden = true;
-                }
-            }
-            if (k != 2) document.getElementById(id).value = value;
-            if (k == 2) document.getElementById(id).checked = value;
-            if (id == 'reboot') { 
-                if (value) {
-                    document.getElementById('nonreboot').checked = false;
-                    document.getElementById('bonusAttPerc').value = 0;
-                    document.getElementById('bonusDiv').hidden = true;
-                    document.getElementById('bonusTitle').hidden = true;
-                    document.getElementById('bonustable1').hidden = true;
-                    document.getElementById('bonustable2').hidden = true;
-                    document.getElementById('currentBonusTitle').hidden = true;
+                if (id == 'class') {
+                    document.getElementById(id).value = value;
+                    var maple_class = value;
 
-                    if (document.getElementById('optimize').checked == true) {
-                        //disable
-                        //Weapon
-                        document.getElementById('new_wlevel').disabled = true;
-                        document.getElementById('new_wline1').disabled = true;
-                        document.getElementById('new_wline2').disabled = true;
-                        document.getElementById('new_wline3').disabled = true;
-
-                        //Secondary
-                        document.getElementById('new_slevel').disabled = true;
-                        document.getElementById('new_sline1').disabled = true;
-                        document.getElementById('new_sline2').disabled = true;
-                        document.getElementById('new_sline3').disabled = true;
-
-                        //Emblem
-                        document.getElementById('new_elevel').disabled = true;
-                        document.getElementById('new_eline1').disabled = true;
-                        document.getElementById('new_eline2').disabled = true;
-                        document.getElementById('new_eline3').disabled = true;
-
-                        document.getElementById('optimizeTitle').hidden = false;
-                        document.getElementById('compareTitle').hidden = true;
-                    }
-                }
-            }
-            if (id == 'nonreboot') { 
-                if (value) {
-                    document.getElementById('reboot').checked = false;
-                    if (document.getElementById('compare').checked == true) {
-                        document.getElementById('bonusTitle').hidden = false;
-                        document.getElementById('bonustable1').hidden = false;
-                        document.getElementById('bonustable2').hidden = false;
-
-                        document.getElementById('currentBonusTitle').hidden = true;
-                        document.getElementById('bonusDiv').hidden = true;
+                    if (maple_class == "Zero") {
+                        document.getElementById('zeromessage').hidden = false;
                     }
                     else {
-                        document.getElementById('currentBonusTitle').hidden = false;
-                        document.getElementById('bonusDiv').hidden = false;
-
+                        document.getElementById('zeromessage').hidden = true;
+                    }
+                }
+                if (k != 2) {
+                    if (document.getElementById(id)) document.getElementById(id).value = value;
+                }
+                if (k == 2) {
+                    if (document.getElementById(id)) document.getElementById(id).checked = value;
+                }
+                if (id == 'reboot') {
+                    if (value) {
+                        document.getElementById('nonreboot').checked = false;
+                        document.getElementById('bonusAttPerc').value = 0;
+                        document.getElementById('bonusDiv').hidden = true;
                         document.getElementById('bonusTitle').hidden = true;
                         document.getElementById('bonustable1').hidden = true;
                         document.getElementById('bonustable2').hidden = true;
+                        document.getElementById('currentBonusTitle').hidden = true;
 
+                        if (document.getElementById('optimize').checked == true) {
+                            //disable
+                            //Weapon
+                            document.getElementById('new_wlevel').disabled = true;
+                            document.getElementById('new_wline1').disabled = true;
+                            document.getElementById('new_wline2').disabled = true;
+                            document.getElementById('new_wline3').disabled = true;
 
-                        //disable
-                        //Weapon
-                        document.getElementById('new_wlevel').disabled = true;
-                        document.getElementById('new_wline1').disabled = true;
-                        document.getElementById('new_wline2').disabled = true;
-                        document.getElementById('new_wline3').disabled = true;
+                            //Secondary
+                            document.getElementById('new_slevel').disabled = true;
+                            document.getElementById('new_sline1').disabled = true;
+                            document.getElementById('new_sline2').disabled = true;
+                            document.getElementById('new_sline3').disabled = true;
 
-                        //Secondary
-                        document.getElementById('new_slevel').disabled = true;
-                        document.getElementById('new_sline1').disabled = true;
-                        document.getElementById('new_sline2').disabled = true;
-                        document.getElementById('new_sline3').disabled = true;
+                            //Emblem
+                            document.getElementById('new_elevel').disabled = true;
+                            document.getElementById('new_eline1').disabled = true;
+                            document.getElementById('new_eline2').disabled = true;
+                            document.getElementById('new_eline3').disabled = true;
 
-                        //Emblem
-                        document.getElementById('new_elevel').disabled = true;
-                        document.getElementById('new_eline1').disabled = true;
-                        document.getElementById('new_eline2').disabled = true;
-                        document.getElementById('new_eline3').disabled = true;
-
-                        document.getElementById('optimizeTitle').hidden = false;
-                        document.getElementById('compareTitle').hidden = true;
-
+                            document.getElementById('optimizeTitle').hidden = false;
+                            document.getElementById('compareTitle').hidden = true;
+                        }
                     }
                 }
+                if (id == 'nonreboot') {
+                    if (value) {
+                        document.getElementById('reboot').checked = false;
+                        if (document.getElementById('compare').checked == true) {
+                            document.getElementById('bonusTitle').hidden = false;
+                            document.getElementById('bonustable1').hidden = false;
+                            document.getElementById('bonustable2').hidden = false;
+
+                            document.getElementById('currentBonusTitle').hidden = true;
+                            document.getElementById('bonusDiv').hidden = true;
+                        }
+                        else {
+                            document.getElementById('currentBonusTitle').hidden = false;
+                            document.getElementById('bonusDiv').hidden = false;
+
+                            document.getElementById('bonusTitle').hidden = true;
+                            document.getElementById('bonustable1').hidden = true;
+                            document.getElementById('bonustable2').hidden = true;
+
+
+                            //disable
+                            //Weapon
+                            document.getElementById('new_wlevel').disabled = true;
+                            document.getElementById('new_wline1').disabled = true;
+                            document.getElementById('new_wline2').disabled = true;
+                            document.getElementById('new_wline3').disabled = true;
+
+                            //Secondary
+                            document.getElementById('new_slevel').disabled = true;
+                            document.getElementById('new_sline1').disabled = true;
+                            document.getElementById('new_sline2').disabled = true;
+                            document.getElementById('new_sline3').disabled = true;
+
+                            //Emblem
+                            document.getElementById('new_elevel').disabled = true;
+                            document.getElementById('new_eline1').disabled = true;
+                            document.getElementById('new_eline2').disabled = true;
+                            document.getElementById('new_eline3').disabled = true;
+
+                            document.getElementById('optimizeTitle').hidden = false;
+                            document.getElementById('compareTitle').hidden = true;
+
+                        }
+                    }
+                }
+                i++;
             }
-            i++;
+
         }
         if (k == 1) {
             updateWeaponLines();
@@ -2895,14 +2902,14 @@ function optimizeWSE() {
 
         //here
         //if Kanna and secondary != ATT, set equal to 'none' isATT
-        if (maple_class == "Kanna"){
-            if (b_sec_line_1 != '6att' && b_sec_line_1 != '7att' && b_sec_line_1 != '9att' && b_sec_line_1 != '10att' && b_sec_line_1 != '12att' && b_sec_line_1 != '13att' ){
+        if (maple_class == "Kanna") {
+            if (b_sec_line_1 != '6att' && b_sec_line_1 != '7att' && b_sec_line_1 != '9att' && b_sec_line_1 != '10att' && b_sec_line_1 != '12att' && b_sec_line_1 != '13att') {
                 b_sec_line_1 = 'none';
             }
-            if (b_sec_line_2 != '6att' && b_sec_line_2 != '7att' && b_sec_line_2 != '9att' && b_sec_line_2 != '10att' && b_sec_line_2 != '12att' && b_sec_line_2 != '13att' ){
+            if (b_sec_line_2 != '6att' && b_sec_line_2 != '7att' && b_sec_line_2 != '9att' && b_sec_line_2 != '10att' && b_sec_line_2 != '12att' && b_sec_line_2 != '13att') {
                 b_sec_line_2 = 'none';
             }
-            if (b_sec_line_3 != '6att' && b_sec_line_3 != '7att' && b_sec_line_3 != '9att' && b_sec_line_3 != '10att' && b_sec_line_3 != '12att' && b_sec_line_3 != '13att' ){
+            if (b_sec_line_3 != '6att' && b_sec_line_3 != '7att' && b_sec_line_3 != '9att' && b_sec_line_3 != '10att' && b_sec_line_3 != '12att' && b_sec_line_3 != '13att') {
                 b_sec_line_3 = 'none';
             }
         }
@@ -2963,14 +2970,14 @@ function optimizeWSE() {
             var b_new_emb_line_2 = document.getElementById('b_new_eline2').value;
             var b_new_emb_line_3 = document.getElementById('b_new_eline3').value;
 
-            if (maple_class == "Kanna"){
-                if (b_new_sec_line_1 != '6att' && b_new_sec_line_1 != '7att' && b_new_sec_line_1 != '9att' && b_new_sec_line_1 != '10att' && b_new_sec_line_1 != '12att' && b_new_sec_line_1 != '13att' ){
+            if (maple_class == "Kanna") {
+                if (b_new_sec_line_1 != '6att' && b_new_sec_line_1 != '7att' && b_new_sec_line_1 != '9att' && b_new_sec_line_1 != '10att' && b_new_sec_line_1 != '12att' && b_new_sec_line_1 != '13att') {
                     b_new_sec_line_1 = 'none';
                 }
-                if (b_new_sec_line_2 != '6att' && b_new_sec_line_2 != '7att' && b_new_sec_line_2 != '9att' && b_new_sec_line_2 != '10att' && b_new_sec_line_2 != '12att' && b_new_sec_line_2 != '13att' ){
+                if (b_new_sec_line_2 != '6att' && b_new_sec_line_2 != '7att' && b_new_sec_line_2 != '9att' && b_new_sec_line_2 != '10att' && b_new_sec_line_2 != '12att' && b_new_sec_line_2 != '13att') {
                     b_new_sec_line_2 = 'none';
                 }
-                if (b_new_sec_line_3 != '6att' && b_new_sec_line_3 != '7att' && b_new_sec_line_3 != '9att' && b_new_sec_line_3 != '10att' && b_new_sec_line_3 != '12att' && b_new_sec_line_3 != '13att' ){
+                if (b_new_sec_line_3 != '6att' && b_new_sec_line_3 != '7att' && b_new_sec_line_3 != '9att' && b_new_sec_line_3 != '10att' && b_new_sec_line_3 != '12att' && b_new_sec_line_3 != '13att') {
                     b_new_sec_line_3 = 'none';
                 }
             }

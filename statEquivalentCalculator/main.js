@@ -56,6 +56,77 @@ var new_information = {
     specialIncr: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 };
 
+function statAmount(without_perc, flat, perc, xenon_primary_bool, luk2_secondary_bool) {
+    // for attack: flat = 0
+    // for stat: flat sources include hyper, arcane symbols, inner ability
+    //note: maple warrior adds 16% stat
+    //hyper stat % applies to HP
+    if (luk2_secondary_bool){
+        return {1: (without_perc[1] - flat[1]) * (1 + perc[1]) + flat[1], 2: (without_perc[2] - flat[2]) * (1 + perc[2]) + flat[2]}
+    }
+    if (xenon_primary_bool){
+        return {1: (without_perc[1] - flat[1]) * (1 + perc[1]) + flat[1], 2: (without_perc[2] - flat[2]) * (1 + perc[2]) + flat[2], 3: (without_perc[3] - flat[3]) * (1 + perc[3]) + flat[3]}
+    }
+    return (without_perc - flat) * (1 + perc) + flat
+}
+
+function damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc) {
+    if (maple_class == "Xenon"){ //flat_primary, primary_without_perc, primary_perc are all objects with keys 1, 2, 3
+        var primary_stats = statAmount(primary_without_perc, flat_primary, primary_perc, true)
+        var primary1 = primary_stats[1]
+        var primary2 = primary_stats[2]
+        var primary3 = primary_stats[3]
+        var att = statAmount(attack_without_perc, 0, attack_perc)
+
+        return (4 * primary1 + 4 * primary2 + 4 * primary3) * att
+    }
+    else if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
+        var primary = statAmount(primary_without_perc, flat_primary, primary_perc)
+        var secondary_stats = statAmount(sec_without_perc, flat_sec, sec_perc, false, true) //flat_sec, sec_without_perc, sec_perc are all objects with keys 1, 2
+        var secondary1 = secondary_stats[1]
+        var secondary2 = secondary_stats[2]
+        var att = statAmount(attack_without_perc, 0, attack_perc)
+
+        return (4 * primary + secondary1 + secondary2) * att
+    }
+    else if (maple_class == "Demon Avenger") {
+        var level = parseInt(document.getElementById('level').value)
+        var purehp = 545 + 90 * level
+        var att = statAmount(attack_without_perc, 0, attack_perc)
+        var str = statAmount(sec_without_perc, flat_sec, sec_perc)
+        var hp = statAmount(primary_without_perc, flat_primary, primary_perc)
+        
+        return (Math.floor(purehp / 3.5) + 0.8 * Math.floor((hp - purehp) / 3.5) + str) * att
+    }
+    else {
+        var primary = statAmount(primary_without_perc, flat_primary, primary_perc)
+        var secondary = statAmount(sec_without_perc, flat_sec, sec_perc)
+        var att = statAmount(attack_without_perc, 0, attack_perc)
+
+        if (maple_class == "Kanna") {
+            //here
+        }
+
+        return (4 * primary + secondary) * att
+    }
+
+}
+
+function determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc) {
+    var current_dmg = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
+   
+    var att_diff = damage(maple_class, attack_without_perc + 1, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc) - current_dmg
+    var stat_diff = damage (maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc + 1, primary_perc, sec_without_perc, sec_perc) - current_dmg
+    var sec_diff = damage (maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc + 1, sec_perc) - current_dmg
+    var perc_all_diff = damage (maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc + 1, sec_without_perc, sec_perc + 1) - current_dmg
+
+    var sec_equiv = stat_diff / sec_diff
+    var perc_all_equiv = stat_diff / perc_all_diff
+    var att_equiv = stat_diff / att_diff 
+
+    return {sec_equiv, perc_all_equiv, att_equiv}
+}
+
 function loadLocalStorage() {
     //var json = event.target.result;
     var json = window.localStorage.getItem('data'); //here
@@ -256,123 +327,6 @@ function calculateDamageXenon(primary1, primary2, primary3, cdmg, boss, dmg, ied
 function calculateDamageDA(purehp, hp, str, cdmg, boss, dmg, ied, att, pdr) {
     return (Math.floor(purehp / 3.5) + 0.8 * Math.floor((hp - purehp) / 3.5) + str) * (1.35 + cdmg) * (1.00 + boss + dmg) * att * Math.max(0, 1 - (pdr * (1 - ied)));
 }
-
-//initializing workers
-let workers = [];
-let progress = [];
-let bestScore = [-1, -1];
-let bestResult = {};
-let currentScore = [-1, -1];
-
-for (let i = 0; i <= 15; ++i) {
-    let worker = new Worker('worker.js');
-    progress.push(0.0);
-    worker.addEventListener('message', (event) => {
-        if (typeof event.data.progress !== 'undefined') {
-            let workerProgress = event.data.progress;
-            let workerNum = event.data.i;
-            progress[workerNum] = workerProgress;
-            let curProgress = progress.reduce((a, b) => a + b, 0) / progress.length;
-            if (curProgress >= 100.0) {
-                // document.getElementById('progress').innerHTML = 'Finished';
-                document.getElementById('result').innerHTML = 'Finished';
-                document.getElementById('calculateButton').disabled = false;
-            } else {
-                document.getElementById('result').innerHTML = `Calculating... (${curProgress}%)`;
-                document.getElementById('calculateButton').disabled = true;
-            }
-        } else if (typeof event.data.result !== 'undefined') {
-            let result = event.data.result;
-            let score = [result.score, result['extra points']];
-            if (score[0] > bestScore[0] || (score[0] == bestScore[0] && score[1] > bestScore[1])) {
-                bestScore = score;
-                bestResult = result;
-                // console.log(result);
-            }
-        }
-    });
-    workers.push(worker);
-}
-//initializing workers end 
-
-window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, secondary_stat, maple_class, level, attack_percent, bossDef) => {
-    // document.getElementById('progress').innerHTML = 'Initializing...';
-    // document.getElementById('result').innerHTML = '';
-    // document.getElementById('calc').disabled = true;
-
-    let points = transferLockedOptions();
-    let att = attack; //+document.getElementById('att').value;
-    let dmg = damage / 100; //+document.getElementById('dmg').value / 100;
-    let boss = bossDmg / 100;//+document.getElementById('boss').value / 100;
-    let ied = ignoreDef / 100;//+document.getElementById('ied').value / 100;
-    let cdmg = critDmg / 100;//+document.getElementById('cdmg').value / 100;
-    let pdr = bossDef; //+document.getElementById('pdr').value / 100;
-    let type = "";
-    if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") type = 'luk2';
-    else if (maple_class == "Xenon") type = 'XENON';
-    else if (maple_class == "Demon Avenger") type = 'DA';
-    else type = "normal";
-
-    let mobbing = document.getElementById('mobbing').checked;
-
-    // let type = document.getElementById('job').value;
-
-    let message = {
-        points: points,
-        att: att,
-        dmg: dmg,
-        boss: boss,
-        ied: ied,
-        cdmg: cdmg,
-        pdr: pdr,
-        type: type,
-        primary: primary_stat,
-        primary1: primary_stat,
-        primary2: 0,
-        primary3: 0,
-        secondary: secondary_stat,
-        secondary1: secondary_stat,
-        secondary2: 0,
-        hp: primary_stat,
-        flathp: 0, //update this
-        php: 0, //percent hp, 378 is 21%/item
-        level: level,
-        str: secondary_stat,
-        patt: attack_percent / 100,
-        int: primary_stat,
-        luk: secondary_stat,
-        mob: mobbing
-    };
-
-    if (maple_class == "Kanna") {
-        message.type = 'KANNA';
-        message.hp = parseInt(document.getElementById('kanna_hp').value);
-        var percent_hp = parseInt(document.getElementById('hp_perc').value);
-        message.php = percent_hp / 100;
-    }
-    if (maple_class == "Demon Avenger") {
-        var percent_hp = parseInt(document.getElementById('hp_perc').value);
-        var flat_hp = parseInt(document.getElementById('hp_arcane').value);
-        message.php = percent_hp / 100;
-        message.flathp = flat_hp;
-    }
-
-    // } else if (type == 'KANNA') {
-    //     message.hp = +document.getElementById('kanna-hp').value;
-    //     message.flathp = +document.getElementById('kanna-flathp').value;
-    //     message.php = +document.getElementById('kanna-php').value;
-    //     message.patt = +document.getElementById('kanna-patt').value;
-    //     message.int = +document.getElementById('kanna-int').value;
-    //     message.luk = +document.getElementById('kanna-luk').value;
-    // }
-    // progress = progress.map(_ => 0.0);
-    bestScore = [-1, -1];
-
-    for (let i = 0; i < workers.length; ++i) {
-        message.i = i;
-        workers[i].postMessage(message);
-    }
-};
 
 function transferLockedOptions() {
     var available_points = parseInt(document.getElementById('nhyperPoints').innerHTML);
@@ -2973,7 +2927,7 @@ function update_new_elevel() {
 document.addEventListener("DOMContentLoaded", function () {
     //hyper stat table code
     init();
-    ninit();
+    //ninit();
 
     //initialize 
     $(function () {
@@ -2984,9 +2938,9 @@ document.addEventListener("DOMContentLoaded", function () {
         trigger: 'focus'
     });
 
-    if (window.localStorage.getItem('data') !== null) {
-        loadLocalStorage(); //load data from localstorage //here
-    }
+    // if (window.localStorage.getItem('data') !== null) {
+    //     loadLocalStorage(); //load data from localstorage //here
+    // }
 
     //checkbox behaviour
     document.getElementById("solus2").addEventListener("click", function () {
@@ -3216,22 +3170,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("calculateButton").addEventListener("click", function () {
         optimizeWSE();
-    });
-    document.getElementById("new_wlevel").addEventListener("change", function () {
-        if (document.getElementById('new_wlevel').value == 'lesser160') {
-            update_new_wlevel_lesser()
-        }
-        else {
-            update_new_wlevel_greater()
-        }
-    });
-    document.getElementById("new_slevel").addEventListener("change", function () {
-        var current_class = document.getElementById('class').value;
-        update_new_slevel(current_class);
-
-    });
-    document.getElementById("new_elevel").addEventListener("change", function () {
-        update_new_elevel()
     });
     document.getElementById("wlevel").addEventListener("change", function () {
         if (document.getElementById('wlevel').value == 'lesser160') {
@@ -3548,63 +3486,6 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#eline3').append("<option value='none' selected>N/A</option>");
         }
     });
-    document.getElementById("optimize").addEventListener("change", function () {
-        //optimize calculator selected
-        //FIX THIS SECTION
-
-        //Weapon
-        document.getElementById('new_wlevel').disabled = true;
-        document.getElementById('new_wlevel').value = document.getElementById('wlevel').value;
-        if (document.getElementById('new_wlevel').value == "lesser160") {
-            update_new_wlevel_lesser();
-        }
-        else {
-            update_new_wlevel_greater();
-        }
-
-        document.getElementById('new_wline1').disabled = true;
-        document.getElementById('new_wline1').value = 'none';
-
-        document.getElementById('new_wline2').disabled = true;
-        document.getElementById('new_wline2').value = 'none';
-
-        document.getElementById('new_wline3').disabled = true;
-        document.getElementById('new_wline3').value = 'none';
-
-        //Secondary
-        document.getElementById('new_slevel').disabled = true;
-        document.getElementById('new_slevel').value = document.getElementById('slevel').value;
-        var maple_class = document.getElementById('class').value;
-        update_new_slevel(maple_class);
-
-
-        document.getElementById('new_sline1').disabled = true;
-        document.getElementById('new_sline1').value = 'none';
-
-        document.getElementById('new_sline2').disabled = true;
-        document.getElementById('new_sline2').value = 'none';
-
-        document.getElementById('new_sline3').disabled = true;
-        document.getElementById('new_sline3').value = 'none';
-
-        //Emblem
-        document.getElementById('new_elevel').disabled = true;
-        document.getElementById('new_elevel').value = document.getElementById('elevel').value;
-        update_new_elevel();
-
-        document.getElementById('new_eline1').disabled = true;
-        document.getElementById('new_eline1').value = 'none';
-
-        document.getElementById('new_eline2').disabled = true;
-        document.getElementById('new_eline2').value = 'none';
-
-        document.getElementById('new_eline3').disabled = true;
-        document.getElementById('new_eline3').value = 'none';
-
-        document.getElementById('optimizeTitle').hidden = false;
-        document.getElementById('compareTitle').hidden = true;
-
-    });
     document.getElementById("class").addEventListener("change", function () {
         document.getElementById('resultSection').hidden = true;
         var maple_class = document.getElementById('class').value;
@@ -3893,81 +3774,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //Main Function
 function optimizeWSE() {
-    var fr = new FileReader();
-    //clear old optimized stats
-    document.getElementById('nhpSelect').value = 0;
-    nupdatePoints(document.getElementById('nhpSelect'));
-
-    document.getElementById('nstrSelect').value = 0;
-    nupdatePoints(document.getElementById('nstrSelect'));
-
-    document.getElementById('ndexSelect').value = 0;
-    nupdatePoints(document.getElementById('ndexSelect'));
-
-    document.getElementById('nintSelect').value = 0;
-    nupdatePoints(document.getElementById('nintSelect'));
-
-    document.getElementById('nlukSelect').value = 0;
-    nupdatePoints(document.getElementById('nlukSelect'));
-
-    document.getElementById('nmpSelect').value = 0;
-    nupdatePoints(document.getElementById('nmpSelect'));
-
-    document.getElementById('ncritRateSelect').value = 0;
-    nupdatePoints(document.getElementById('ncritRateSelect'));
-
-    document.getElementById('ndemForSelect').value = 0;
-    nupdatePoints(document.getElementById('ndemForSelect'));
-
-    document.getElementById('ncritDmgSelect').value = 0;
-    nupdatePoints(document.getElementById('ncritDmgSelect'));
-
-    document.getElementById('nignDefSelect').value = 0;
-    nupdatePoints(document.getElementById('nignDefSelect'));
-
-    document.getElementById('ndamageSelect').value = 0;
-    nupdatePoints(document.getElementById('ndamageSelect'));
-
-    document.getElementById('nbDamageSelect').value = 0;
-    nupdatePoints(document.getElementById('nbDamageSelect'));
-
-    document.getElementById('nstatResistSelect').value = 0;
-    nupdatePoints(document.getElementById('nstatResistSelect'));
-
-    document.getElementById('nstanceSelect').value = 0;
-    nupdatePoints(document.getElementById('nstanceSelect'));
-
-    document.getElementById('nattPowerSelect').value = 0;
-    nupdatePoints(document.getElementById('nattPowerSelect'));
-
-    document.getElementById('nbonusExpSelect').value = 0;
-    nupdatePoints(document.getElementById('nbonusExpSelect'));
-
-    document.getElementById('narcForceSelect').value = 0;
-    nupdatePoints(document.getElementById('narcForceSelect'));
-
-    //ied source
-    var ied_sources = [];
-    var pro_mode = false;
-
     // Stats from Stat Window
     var maple_class = document.getElementById('class').value;
     var weapon_type = document.getElementById('weapon_type').value;
     var multiplier = getMultiplier(weapon_type, maple_class);
     var boss_percent = parseInt(document.getElementById('boss_percent').value);
     var final_damage_percent = parseInt(document.getElementById('final_damage_percent').value);
-    var ied_percent = document.getElementById('ied_percent').value - 0.5; //due to rounding up in game
-    if (document.getElementById('ied_percent').value.includes('.')) {
-        pro_mode = true;
-        ied_percent = parseFloat(document.getElementById('ied_percent').value);
-    }
+    
     var damage_percent = parseInt(document.getElementById('damage_percent').value);
     var primary_stat = parseInt(document.getElementById('primary_stat').value);
     var secondary_stat = parseInt(document.getElementById('secondary_stat').value);
     var attack_percent = 100;
     var level = parseInt(document.getElementById('level').value);
     var upperShownDamage = parseInt(document.getElementById('upper_shown_damage').value);
-    var critical_damage = parseFloat(document.getElementById('critical_damage').value);
 
     //Link Skill Stats
     if (document.getElementById('solus2').checked == true) {
@@ -3983,8 +3802,7 @@ function optimizeWSE() {
     }
 
     if (document.getElementById('empiricalKnowledge').checked == true) {
-        var empiricalKnowledgeIED = [3, 3, 3];
-        ied_sources = ied_sources.concat(empiricalKnowledgeIED);
+        
         damage_percent = damage_percent + 9;
     }
 
@@ -4019,23 +3837,14 @@ function optimizeWSE() {
     // class_data
     var class_data = getClassData(maple_class)
 
-    var class_ied = class_data.iedPercent;
     var class_dmg = class_data.dmgPercent;
     var class_att = class_data.attPercent;
     var class_boss = class_data.bossPercent;
-    var class_crit_dmg = class_data.critDmg
 
-    critical_damage = critical_damage + class_crit_dmg
-
-    //update ied_sources
-    if (pro_mode == false) {
-        ied_sources = ied_sources.concat(class_ied);
-    }
 
     //Current Stats With WSE
     current_damage_percent = damage_percent + class_dmg;
     current_boss_percent = boss_percent + class_boss;
-    current_ied_percent = determineIED(ied_percent, ied_sources);
 
     //get ATT %
     current_attack_percent = attack_percent + class_att;
@@ -4051,14 +3860,6 @@ function optimizeWSE() {
         attack = attack + total_hp/700;
     } */
 
-    //Determine Damage Output
-    var currentBossDefMultiplier = getBossDefMultiplier(current_ied_percent);
-    var currentHitDamage = getTrueHitDamage(current_boss_percent, current_attack_percent, current_damage_percent, critical_damage, multiplier, stat_value, attack);
-
-
-
-    var currentOutput = currentBossDefMultiplier * currentHitDamage;
-
 
     //console.log('oldOutput ' + currentOutput)    
 
@@ -4069,8 +3870,6 @@ function optimizeWSE() {
     //Hyper stats
     var hyper_dmg = parseInt(document.getElementById('damage').value);
     var hyper_boss_dmg = parseInt(document.getElementById('bDamage').value);
-    var hyper_crit_dmg = parseInt(document.getElementById('critDmg').value);
-    var hyper_ied = parseInt(document.getElementById('ignDef').value);
     var hyper_att = parseInt(document.getElementById('attPower').value);
 
     var stat_types = getPrimaryAndSecondaryStatType(maple_class);
@@ -4115,7 +3914,7 @@ function optimizeWSE() {
     //Current Stats Without WSE
     //var withoutWSEStats = removePotentialsFromStats(potential_list, current_ied_percent, current_attack_percent, current_boss_percent, current_damage_percent)
 
-    var stripped_ied_percent = (current_ied_percent - hyper_ied) / ((-1 * hyper_ied / 100) + 1);
+    
     var stripped_attack = attack - hyper_att;
     if (maple_class == 'Kanna') {
         var hp_hyper = parseInt(document.getElementById('hp').value);
@@ -4137,7 +3936,6 @@ function optimizeWSE() {
     }
     var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
-    var stripped_crit_dmg = critical_damage - hyper_crit_dmg;
     var flat_hp = parseInt(document.getElementById('hp_arcane').value);
     if (primary_stat_type == "HP") {
         var hp_hyper = parseInt(document.getElementById('hp').value);
@@ -4147,6 +3945,7 @@ function optimizeWSE() {
         //console.log('new hp perc: ' + new_hp_percent)
         var new_hp = flat_hp + (primary_stat - flat_hp) * (new_hp_percent) / (hp_percent);
         stripped_primary = new_hp;
+
         //console.log('new hp: ' + new_hp)
     }
     else {
@@ -4155,7 +3954,7 @@ function optimizeWSE() {
     var stripped_secondary = secondary_stat - hyper_secondary;
     var stripped_stat_value = getStatValue(maple_class, stripped_primary, stripped_secondary, level)
 
-    if (stripped_ied_percent < 0 || stripped_attack < 0 || stripped_boss_percent < 0 || stripped_damage_percent < 0) {
+    if (stripped_attack < 0 || stripped_boss_percent < 0 || stripped_damage_percent < 0) {
         //send an error message
         document.getElementById('resultSection').hidden = false;
         document.getElementById('result').innerHTML = `
@@ -4165,94 +3964,12 @@ function optimizeWSE() {
         return false
     }
 
-    var strippedBossDefMultiplier = getBossDefMultiplier(stripped_ied_percent);
-    var strippedHitDamage = getTrueHitDamage(stripped_boss_percent, current_attack_percent, stripped_damage_percent, stripped_crit_dmg, multiplier, stripped_stat_value, stripped_attack);
 
-    var strippedOutput = strippedBossDefMultiplier * strippedHitDamage;
-
-    //console.log('stripped stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack + ", stat_value: " + stripped_stat_value)
-    //console.log('strippedOutput ' + strippedOutput)
-
-    //console.log('old stats: primary stat: ' + stripped_primary + ", secondary stat: " + stripped_secondary, ", ied: " + stripped_ied_percent + ", boss: " + stripped_boss_percent + ", dmg: " + stripped_damage_percent + ", crit dmg: " + stripped_crit_dmg + ', attack: ' + stripped_attack + ", stat_value: " + stripped_stat_value)
-    //console.log('oldOutput ' + strippedOutput)
-
-    /*if (document.getElementById('compare').checked == true) {
-        //New WSE Potentials
-        var new_wep_line_1 = document.getElementById('new_wline1').value;
-        var new_wep_line_2 = document.getElementById('new_wline2').value;
-        var new_wep_line_3 = document.getElementById('new_wline3').value;
-
-        var new_sec_line_1 = document.getElementById('new_sline1').value;
-        var new_sec_line_2 = document.getElementById('new_sline2').value;
-        var new_sec_line_3 = document.getElementById('new_sline3').value;
-
-        var new_emb_line_1 = document.getElementById('new_eline1').value;
-        var new_emb_line_2 = document.getElementById('new_eline2').value;
-        var new_emb_line_3 = document.getElementById('new_eline3').value;
-
-        var new_potential_list = [new_wep_line_1, new_wep_line_2, new_wep_line_3, new_sec_line_1, new_sec_line_2, new_sec_line_3, new_emb_line_1, new_emb_line_2, new_emb_line_3];
-
-        var withNewWSEStats = AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent);
-        var new_ied_percent = withNewWSEStats.new_ied_percent;
-        var new_attack_percent = withNewWSEStats.new_attack_percent;
-        var new_boss_percent = withNewWSEStats.new_boss_percent;
-        var new_damage_percent = withNewWSEStats.new_damage_percent;
-
-        //New Dmg Output
-        var newBossDefMultiplier = getBossDefMultiplier(new_ied_percent)
-        var newHitDamage = getHitDamage(new_boss_percent, new_attack_percent, new_damage_percent)
-
-        var newOutput = newBossDefMultiplier * newHitDamage;
-
-        //console.log('ied with New WSE = ' + new_ied_percent);
-        //console.log('attk % with new WSE = ' + new_attack_percent);
-        //console.log('boss def multiplier with new WSE = ' + newBossDefMultiplier);
-
-        var dmgRatio = newOutput / currentOutput;
-        //console.log(dmgRatio)
-        var dmgIncrease = ((dmgRatio - 1) * 100).toFixed(2);
-
-        if (dmgRatio == 1 || dmgIncrease == '0.00') {
-            document.getElementById('resultSection').hidden = false;
-            document.getElementById('result').innerHTML = `
-                Hit Damage on Bosses will <strong>not change</strong>.
-            `;
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-        else if (dmgRatio > 1) {
-            var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
-            document.getElementById('resultSection').hidden = false;
-            document.getElementById('result').innerHTML = `
-                Hit Damage on Bosses will <span style='color:green'><strong>increase</strong></span> by ${output_increase}%.
-            `;
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-        else if (dmgRatio < 1) {
-            var output_decrease = ((1 - dmgRatio) * 100).toFixed(2);
-            document.getElementById('resultSection').hidden = false;
-            document.getElementById('result').innerHTML = `
-                Hit Damage on Bosses will <span style='color:red'><strong>decrease</strong></span> by ${output_decrease}%.
-            `;
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-
-    }*/
-
-    //console.log(optimal_lines)
-    //var optimal_output = optimizeHypers(strippedOutput, stripped_ied_percent, stripped_attack, stripped_boss_percent, stripped_damage_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, multiplier, current_attack_percent);
-
-    var pdr = 3;
-
-    if (document.getElementById('mobbing').checked) pdr = 0.1;
 
     document.getElementById('resultSection').hidden = false;
     window.scrollTo(0, document.body.scrollHeight);
-    saveToLocalStorage(maple_class);
+    //saveToLocalStorage(maple_class);
 
-    if (pdr != 3) {
-        current_boss_percent = 0;
-        stripped_boss_percent = 0;
-    }
 
     if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
         currentScore = calculateDamageLuk2(primary_stat, secondary_stat, 0, critical_damage / 100, current_boss_percent / 100, current_damage_percent / 100, current_ied_percent / 100, attack, pdr);
@@ -4286,11 +4003,27 @@ function optimizeWSE() {
 
 
     if (maple_class == "Kanna") {
-        calculate(stripped_attack * current_attack_percent / 100, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
+        //calculate(stripped_attack * current_attack_percent / 100, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
     }
     else {
-        calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
+        //calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
     }
+    var primary_perc //collect this directly sum(% stat and %all)
+    if (maple_class == "Demonn Avenger") primary_perc = primary_perc + hp_hyper/100
+    var sec_perc //collect this directly sum (%sec and %all)
+    var flat_primary = hyper_primary// collect directly (inner ability, arcane symbols, hyperstats)
+    if (maple_class == "Demonn Avenger") flat_primary = flat_hp
+    var flat_sec = hyper_secondary // collect directly (inner ability)
+    var primary_without_perc = primary_stat - flat_primary
+    var sec_without_perc = primary_stat - flat_sec
+    
+    //determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
+    var statEquivalences = determineStatEquivalences(maple_class, attack, current_attack_percent / 100, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
+    
+    //to do:
+    //critical dmg
+    //collect: stat %, sec %, 
+    console.log(statEquivalences)
     return false
 
 }
