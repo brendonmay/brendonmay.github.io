@@ -88,7 +88,7 @@
                         </div>
                     </div>
             </div> -->
-            <div id='file_div' class="form-row top-margin bottom-margin justify-content-md-center" hidden>
+            <!-- <div id='file_div' class="form-row top-margin bottom-margin justify-content-md-center" hidden>
                 <div class="col-md-3">
                     <div class="custom-file">
                         <input type="file" class="custom-file-input form-control" id="customFile" value='IMPORT'
@@ -96,11 +96,11 @@
                         <label class="custom-file-label" for="customFile">Choose File</label>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="form-row">
                 <div class="col-sm-12 col-md-3 form-group">
                     <label for="level"> Level </label>
-                    <input class="form-control" type="number" id="level" name="level" min="0" max="275" value=251>
+                    <input class="form-control" type="number" id="level" name="level" min="0" max="275" value=257>
                 </div>
                 <div class="col-sm-12 col-md-3 form-group">
                     <label for="class">Class:</label>
@@ -121,7 +121,7 @@
                         <option value="Corsair">Corsair</option>
                         <option value="Dark Knight">Dark Knight</option>
                         <option value="Dawn Warrior">Dawn Warrior</option>
-                        <option value="Demon Avenger">Demon Avenger</option>
+                        <!-- <option value="Demon Avenger" disabled>Demon Avenger</option> -->
                         <option value="Demon Slayer">Demon Slayer</option>
                         <option value="Dual Blade">Dual Blade</option>
                         <option value="Evan">Evan</option>
@@ -197,12 +197,12 @@
                 <div class="col-sm-12 col-md-3 form-group">
                     <label for="upper_shown_damage"> Upper Range Value </label>
                     <input class="form-control" type="number" id="upper_shown_damage" name="upper_shown_damage" min="0"
-                        max="99999999" value=30838622>
+                        max="99999999" value=34534565>
                 </div>
                 <div class="col-sm-12 col-md-4 form-group">
                     <label for="boss_percent"> Boss % </label>
                     <input class="form-control" type="number" id="boss_percent" name="boss_percent" min="0" max="700"
-                        value=334>
+                        value=341>
                 </div>
                 <!-- <div class="col-sm-12 col-md-3 form-group">
                     <label for="ied_percent"> IED % </label>
@@ -212,55 +212,83 @@
                 <div class="col-sm-12 col-md-4 form-group">
                     <label for="damage_percent"> Damage % </label>
                     <input class="form-control" type="number" id="damage_percent" name="damage_percent" min="0"
-                        max="500" value=180>
+                        max="500" value=172>
                 </div>
                 <div class="col-sm-12 col-md-4 form-group">
                     <label for="final_damage_percent"> Final Damage % </label>
                     <input class="form-control" type="number" id="final_damage_percent" name="final_damage_percent"
                         min="0" max="500" value=25>
                 </div>
-                <div class="col-sm-12 col-md-4 form-group">
-                    <div id='critical_damage_label'>
-                        <label for="critical_damage"> Critical Damage % </label>
-                    </div>
-                    <input class="form-control" type="number" id="critical_damage" name="critical_damage" min="0"
-                        max="300" value=98>
-                </div>
-                <div class="col-sm-12 col-md-4 form-group">
+                <div class="col-sm-12 col-md-3 form-group">
                     <div id='primary_label'>
                         <label for="primary_stat"> LUK </label>
                     </div>
                     <input class="form-control" type="number" id="primary_stat" name="primary_stat" min="0"
-                        max="1000000" value=44995>
+                        max="1000000" value=47132>
                 </div>
-                <div class="col-sm-12 col-md-4 form-group">
+                <div class="col-sm-12 col-md-3 form-group">
                     <div id='secondary_label'>
                         <label for="secondary_stat"> DEX </label>
                     </div>
                     <input class="form-control" type="number" id="secondary_stat" name="secondary_stat" min="0"
-                        max="150000" value=6311>
+                        max="150000" value=7690>
                 </div>
-                <div class="col-sm-12 col-md form-group" hidden id='kanna_hp_div'>
+                <div class="col-sm-12 col-md-3 form-group">
+                    <div id='main_stat_perc_label'>
+                        <label for="main_stat_perc"> LUK % on Equips </label>
+                    </div>
+                    <input class="form-control" type="number" id="main_stat_perc" name="main_stat_perc" min="0"
+                        max="300" value=609>
+                </div>
+                <div class="col-sm-12 col-md-3 form-group">
+                    <div id='sec_perc_label'>
+                        <label for="sec_perc"> DEX % on Equips </label>
+                    </div>
+                    <input class="form-control" type="number" id="sec_perc" name="sec_perc" min="0"
+                        max="300" value=161>
+                </div>
+                <div class="col-md form-group" hidden id='kanna_hp_div'>
                     <div id='kanna_hp_label'>
                         <label for="kanna_hp"> HP </label>
                     </div>
                     <input class="form-control" type="number" id="kanna_hp" name="kanna_hp" min="0" max="500000"
                         value=80000>
                 </div>
-                <div class="col-sm-12 col-md form-group" hidden id='hp_perc_div'>
+                <div class="col-md form-group" id='kanna_hp_perc_div' hidden>
+                    <div id='kanna_hp_perc_label'>
+                        <label for="kanna_hp_perc"> HP % on Equips </label>
+                    </div>
+                    <input class="form-control" type="number" id="kanna_hp_perc" name="kanna_hp_perc" min="0" max="500000"
+                        value=100>
+                </div>
+                <!-- <div class="col-sm-12 col-md form-group" hidden id='hp_perc_div'>
                     <div id='hp_perc_label'>
                         <label for="hp_perc"> HP % (From Potentials on Gear) </label>
                     </div>
                     <input class="form-control" type="number" id="hp_perc" name="hp_perc" min="0" max="150000" value=0>
+                </div> -->
+                <div class="col-md form-group" id="sec_2_div" hidden>
+                    <div id='secondary_2_label'>
+                        <label for="secondary_2_stat"> STR </label>
+                    </div>
+                    <input class="form-control" type="number" id="secondary_2_stat" name="secondary_2_stat" min="0"
+                        max="150000" value=7690>
                 </div>
-                <div class="col-sm-12 col-md form-group" hidden id='hp_arcane_div'>
+                <div class="col-md form-group" id="sec_perc_2_div" hidden>
+                    <div id='sec_perc_2_label'>
+                        <label for="sec_perc_2"> STR % on Equips </label>
+                    </div>
+                    <input class="form-control" type="number" id="sec_perc_2" name="sec_perc_2" min="0"
+                        max="300" value=161>
+                </div>
+                <div class=" col-md form-group" id='hp_arcane_div'>
                     <div id='hp_arcane_label'>
-                        <label for="hp_arcane"> HP (From Arcane Symbols) </label>
+                        <label for="hp_arcane"> LUK (From Arcane Symbols) </label>
                     </div>
                     <input class="form-control" type="number" id="hp_arcane" name="hp_arcane" min="0" max="300000"
-                        value=184000>
+                        value=13200>
                 </div>
-                <div class="col form-group text-center top-margin" id='zeromessage' hidden>
+                <div class="col-12 form-group text-center top-margin" id='zeromessage' hidden>
                     <div class='text-center'>Please ensure you are in <u>Beta Mode</u> fully buffed and standing still
                         when inputting your stats.</div>
                 </div>
@@ -1152,7 +1180,7 @@
             <hr class="shift_up">
             <div class="form-row">
                 <div class='col text-center'>
-                    <button id='calculateButton' type="submit" class="btn btn-dark btnSubmit">Optimize</button>
+                    <button id='calculateButton' type="submit" class="btn btn-dark btnSubmit">Calculate</button>
                 </div>
                 <div class="new_line">
                     Note: In the event the calculator suddenly stops working, clear your browser's cache and
@@ -1168,9 +1196,8 @@
                 <h4>Results</h4>
             </div>
         </div>
-        <div class='form-row bottom-margin'>
-            <div class='col text-center' id='result'>
-            </div>
+        <div class='bottom-margin' id="result">
+            
         </div>
     </div>
 
@@ -1184,10 +1211,7 @@
     <div class="container text-center">
         <span style='color: white'>
             <ion-icon name="heart"></ion-icon>
-        </span><span class="text-muted"> Made by SuckHard <span style='color: white'>
-                <ion-icon name="git-branch-outline"></ion-icon>
-            </span> Forked from walletstory <span style='color: white'>
-                <ion-icon name="color-wand"></ion-icon>
-            </span> Styled by Taha</span>
+        </span><span class="text-muted"> Made by SuckHard </span>
+                
     </div>
 </footer>

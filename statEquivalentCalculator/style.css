@@ -368,6 +368,31 @@ hr {
     transform: none;
 }
 
+.text-align-right {
+    text-align: right;
+    border-right: none;
+    border-left: none;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.test {
+    width: 100%;
+    text-align: center;
+    font-weight: 200;
+    font-size: medium;
+    display: block;
+    color: white;
+    
+}
+
+.no-rad {
+    border-radius: 0;
+    margin-bottom: 1em;
+}
+
 .btnSubmit:hover {
     transform: scale(1.1);
 }
