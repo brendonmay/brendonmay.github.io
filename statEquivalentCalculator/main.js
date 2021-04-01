@@ -3849,7 +3849,7 @@ function optimizeWSE() {
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.dex_equiv)} DEX</div>
-            <div class="test">1 Main Stat = ${roundUP(1 / statEquivalences.sec_equiv.str_equiv)} STR</div>
+            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.str_equiv)} STR</div>
         </div>
         `
     }
