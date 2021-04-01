@@ -555,7 +555,6 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                 var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0)
             }
             if(number_of_lines > 4) {
-                console.log(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier, combo_six_tier)
                 console.log("More than 4 lines")
             }
             //non-flame-advantaged item line probabilities
@@ -773,7 +772,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("statequivalences").hidden = false
                 document.getElementById("statequivalences_title").hidden = false
 
-                document.getElementById("desired_stat_armor").value = 200
+                document.getElementById("desired_stat_armor").value = 235
                 document.getElementById("all_stat").value = 20
             }
             else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
@@ -833,7 +832,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("statequivalences").hidden = false
                 document.getElementById("statequivalences_title").hidden = false
 
-                document.getElementById("desired_stat_armor").value = 200
+                document.getElementById("desired_stat_armor").value = 235
                 document.getElementById("all_stat").value = 20
             }
             else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
