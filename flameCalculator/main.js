@@ -761,7 +761,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('secondary_stat_div').hidden = true
 
                 document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
 
             }
             else if (maple_class == "xenon") {
@@ -776,7 +775,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 document.getElementById("desired_stat_armor").value = 200
                 document.getElementById("all_stat").value = 20
-                document.getElementById("attack").value = 2.5
             }
             else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
                 document.getElementById('hp_stat_div').hidden = true
@@ -789,7 +787,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("statequivalences_title").hidden = false
 
                 document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
             }
             else if (maple_class == "other") {
                 document.getElementById('hp_stat_div').hidden = true
@@ -802,7 +799,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("statequivalences_title").hidden = false
 
                 document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
             }
             else if (maple_class == "da") {
                 document.getElementById("statequivalences").hidden = true
@@ -825,7 +821,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('secondary_stat_div').hidden = true
 
                 document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
 
             }
             else if (maple_class == "xenon") {
@@ -840,7 +835,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 document.getElementById("desired_stat_armor").value = 200
                 document.getElementById("all_stat").value = 20
-                document.getElementById("attack").value = 2.5
             }
             else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
                 document.getElementById('hp_stat_div').hidden = true
@@ -852,7 +846,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("statequivalences").hidden = false
                 document.getElementById("statequivalences_title").hidden = false
                 document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
             }
             else if (maple_class == "other") {
                 document.getElementById('hp_stat_div').hidden = true
@@ -864,7 +857,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("statequivalences").hidden = false
                 document.getElementById("statequivalences_title").hidden = false
                 document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
             }
             else if (maple_class == "da") {
                 document.getElementById("statequivalences").hidden = true
