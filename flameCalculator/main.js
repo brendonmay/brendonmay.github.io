@@ -206,10 +206,8 @@ function getWeaponProbability(attack, dmg, flame_type) {
 }
 
 function possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier) {
-    var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier]
-    if (main2_tier && main3_tier) {
-        list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier]
-    } 
+    list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier]
+
     var index = 0
     var total_tiers = 0
     while (index < list.length) {
@@ -221,8 +219,7 @@ function possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_ti
 }
 
 function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier) {
-    var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier]
-    if (main2_tier && main3_tier) list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier]
+    var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier]
     var index = 0
     var number_of_lines = 0
     while (index < list.length) {
@@ -346,10 +343,16 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                                                     while (main3_tier < upper_limit) { //dex
                                                         //equation here change this calculation for different classes
                                                         var stat_score = (main_tier + main2_tier + main3_tier) * stat_per_tier[item_level] + (combo_one_tier + combo_two_tier + combo_three_tier + 2 * (combo_four_tier + combo_five_tier + combo_six_tier)) * combo_stat_per_tier[item_level] + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"]
+
                                                         if (stat_score >= desired_stat) {
                                                             if (possibleOutcome(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier)) {
                                                                 var solution = { "main_tier": main_tier, "main2_tier": main2_tier, "main3_tier": main3_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "combo_six_tier": combo_six_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier }
                                                                 solutions[solutions.length] = solution
+
+                                                                if (stat_score >= 304) {
+                                                                    console.log(stat_score)
+                                                                    console.log(main_tier, main2_tier, main3_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, combo_six_tier, all_stat_tier, attack_tier, 0, 0)
+                                                                }
                                                             }
                                                         }
                                                         if (main3_tier == 0) {
@@ -460,7 +463,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                                                 //equation here change this calculation for different classes
                                                 var stat_score = main_tier * stat_per_tier[item_level] + secondary_tier * stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_one_tier * (combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_stat_per_tier[item_level]) + combo_two_tier * combo_stat_per_tier[item_level] + combo_three_tier * combo_stat_per_tier[item_level] + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"] + combo_four_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_five_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"]
                                                 if (stat_score >= desired_stat) {
-                                                    if (possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0)) {
+                                                    if (possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, 0, 0)) {
                                                         var solution = { "main_tier": main_tier, "secondary_tier": secondary_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier }
                                                         solutions[solutions.length] = solution
                                                     }
@@ -551,10 +554,10 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                 combo_six_tier = solutions[i].combo_six_tier
                 var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier)
             }
-            else{
-                var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0)
+            else {
+                var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, 0, 0)
             }
-            if(number_of_lines > 4) {
+            if (number_of_lines > 4) {
                 console.log("More than 4 lines")
             }
             //non-flame-advantaged item line probabilities
