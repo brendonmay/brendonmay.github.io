@@ -686,7 +686,8 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
             //hypergeometric distribution
             var number_of_zeroes = checkRatios().zeroes
             var choose_from = 10 + number_of_zeroes
-            if (maple_class == "xenon") choose_from = 8
+            if (maple_class == "xenon" || maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") choose_from = 8
+
             //here
             var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
             if (non_advantaged_item) {
