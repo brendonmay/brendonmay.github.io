@@ -2970,17 +2970,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // }
 
     //checkbox behaviour
-    document.getElementById("solus2").addEventListener("click", function () {
-        if (document.getElementById('solus2').checked == true) {
-            document.getElementById('solus3').checked = false;
-        }
-    });
+    // document.getElementById("solus2").addEventListener("click", function () {
+    //     if (document.getElementById('solus2').checked == true) {
+    //         document.getElementById('solus3').checked = false;
+    //     }
+    // });
 
-    document.getElementById("solus3").addEventListener("click", function () {
-        if (document.getElementById('solus3').checked == true) {
-            document.getElementById('solus2').checked = false;
-        }
-    });
+    // document.getElementById("solus3").addEventListener("click", function () {
+    //     if (document.getElementById('solus3').checked == true) {
+    //         document.getElementById('solus2').checked = false;
+    //     }
+    // });
 
     document.getElementById("reboot").addEventListener("click", function () {
         if (document.getElementById('reboot').checked == true) {
@@ -3501,7 +3501,7 @@ function optimizeWSE() {
     var maple_class = document.getElementById('class').value;
     var weapon_type = document.getElementById('weapon_type').value;
     var multiplier = getMultiplier(weapon_type, maple_class);
-    var boss_percent = parseInt(document.getElementById('boss_percent').value);
+    // var boss_percent = parseInt(document.getElementById('boss_percent').value);
     var final_damage_percent = parseInt(document.getElementById('final_damage_percent').value);
 
     var damage_percent = parseInt(document.getElementById('damage_percent').value);
@@ -3512,30 +3512,30 @@ function optimizeWSE() {
     var upperShownDamage = parseInt(document.getElementById('upper_shown_damage').value);
 
     //Link Skill Stats
-    if (document.getElementById('solus2').checked == true) {
-        damage_percent = damage_percent + 11;
-    }
+    // if (document.getElementById('solus2').checked == true) {
+    //     damage_percent = damage_percent + 11;
+    // }
 
-    if (document.getElementById('solus3').checked == true) {
-        damage_percent = damage_percent + 16;
-    }
+    // if (document.getElementById('solus3').checked == true) {
+    //     damage_percent = damage_percent + 16;
+    // }
 
-    if (document.getElementById('unfairAdvantage').checked == true) {
-        damage_percent = damage_percent + 12;
-    }
+    // if (document.getElementById('unfairAdvantage').checked == true) {
+    //     damage_percent = damage_percent + 12;
+    // }
 
-    if (document.getElementById('empiricalKnowledge').checked == true) {
+    // if (document.getElementById('empiricalKnowledge').checked == true) {
 
-        damage_percent = damage_percent + 9;
-    }
+    //     damage_percent = damage_percent + 9;
+    // }
 
-    if (document.getElementById('thiefCunning').checked == true) {
-        damage_percent = damage_percent + 18;
-    }
+    // if (document.getElementById('thiefCunning').checked == true) {
+    //     damage_percent = damage_percent + 18;
+    // }
 
-    if (document.getElementById('tideOfBattle').checked == true) {
-        damage_percent = damage_percent + 12;
-    }
+    // if (document.getElementById('tideOfBattle').checked == true) {
+    //     damage_percent = damage_percent + 12;
+    // }
 
     if (document.getElementById('magSoul').checked == true) {
         attack_percent = attack_percent + 3;
@@ -3567,7 +3567,7 @@ function optimizeWSE() {
 
     //Current Stats With WSE
     current_damage_percent = damage_percent + class_dmg;
-    current_boss_percent = boss_percent + class_boss;
+    //current_boss_percent = boss_percent + class_boss;
 
     //get ATT %
     current_attack_percent = attack_percent + class_att;
@@ -3576,7 +3576,7 @@ function optimizeWSE() {
 
     //determine Attack Amount
     var stat_value = getStatValue(maple_class, primary_stat, secondary_stat, level);
-    var attack = Math.floor(determineAttAmount(upperShownDamage, multiplier, stat_value, current_damage_percent, final_damage_percent) / (current_attack_percent / 100));
+    var attack = Math.floor(determineAttAmount(upperShownDamage, multiplier, stat_value, parseInt(document.getElementById('damage_percent').value), final_damage_percent) / (current_attack_percent / 100));
 
     /*if (maple_class == "Kanna"){
         var total_hp = document.getElementById('kanna_hp').value;
@@ -3592,7 +3592,6 @@ function optimizeWSE() {
 
     //Hyper stats
     var hyper_dmg = parseInt(document.getElementById('damage').value);
-    var hyper_boss_dmg = parseInt(document.getElementById('bDamage').value);
     var hyper_att = parseInt(document.getElementById('attPower').value);
 
     var stat_types = getPrimaryAndSecondaryStatType(maple_class);
@@ -3662,7 +3661,7 @@ function optimizeWSE() {
 
 
     }
-    var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
+    //var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
     var flat_hp = parseInt(document.getElementById('hp_arcane').value);
     if (primary_stat_type == "HP") {
@@ -3682,7 +3681,7 @@ function optimizeWSE() {
     var stripped_secondary = secondary_stat - hyper_secondary;
     var stripped_stat_value = getStatValue(maple_class, stripped_primary, stripped_secondary, level)
 
-    if (stripped_attack < 0 || stripped_boss_percent < 0 || stripped_damage_percent < 0) {
+    if (stripped_attack < 0 || stripped_damage_percent < 0) {
         //send an error message
         document.getElementById('resultSection').hidden = false;
         document.getElementById('result').innerHTML = `
@@ -3736,13 +3735,13 @@ function optimizeWSE() {
     else {
         //calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
     }
-    var primary_perc = (parseInt(document.getElementById("main_stat_perc").value) + 16) / 100
+    var primary_perc = (100 + parseInt(document.getElementById("main_stat_perc").value) + 16) / 100
 
-    if (maple_class == "Demon Avenger") primary_perc = (parseInt(document.getElementById("main_stat_perc").value) + hp_hyper) / 100
+    if (maple_class == "Demon Avenger") primary_perc = (100 + parseInt(document.getElementById("main_stat_perc").value) + hp_hyper) / 100
     if (maple_class == "Xenon") { //dex, luk, str
-        var primary_1_perc = (parseInt(document.getElementById("main_stat_perc").value) + 16) / 100
-        var primary_2_perc = (parseInt(document.getElementById("sec_perc").value) + 16) / 100
-        var primary_3_perc = (parseInt(document.getElementById("sec_perc_2").value) + 16) / 100
+        var primary_1_perc = (100 + parseInt(document.getElementById("main_stat_perc").value) + 16) / 100
+        var primary_2_perc = (100 + parseInt(document.getElementById("sec_perc").value) + 16) / 100
+        var primary_3_perc = (100 + parseInt(document.getElementById("sec_perc_2").value) + 16) / 100
 
         primary_perc = { 1: primary_1_perc, 2: primary_2_perc, 3: primary_3_perc }
 
@@ -3784,12 +3783,12 @@ function optimizeWSE() {
 
         var primary_without_perc = (primary_stat - flat_primary) / primary_perc + flat_primary
 
-        var sec_1_perc = (parseInt(document.getElementById("sec_perc").value) + 16) / 100
+        var sec_1_perc = (100 + parseInt(document.getElementById("sec_perc").value) + 16) / 100
         if (maple_class == "Kanna") {
             var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value)) / 100
         }
         else {
-            var sec_2_perc = (parseInt(document.getElementById("sec_perc_2").value) + 16) / 100
+            var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value) + 16) / 100
         }
 
         var sec_perc = { 1: sec_1_perc, 2: sec_2_perc }
@@ -3803,7 +3802,7 @@ function optimizeWSE() {
         var sec_without_perc = { 1: sec_1_without_perc, 2: sec_2_without_perc }
     }
     else {
-        var sec_perc = (parseInt(document.getElementById("sec_perc").value) + 16) / 100
+        var sec_perc = (100 + parseInt(document.getElementById("sec_perc").value) + 16) / 100
 
         var flat_primary = hyper_primary + parseInt(document.getElementById("hp_arcane").value) // collect directly (inner ability)
         if (maple_class == "Demon Avenger") {
@@ -3862,7 +3861,7 @@ function optimizeWSE() {
         </div>
         `
     }
-    //console.log(statEquivalences)
+    console.log(statEquivalences)
     return false
     //new ids to track for localstorage
     //sec_perc_2, sec_perc_2_div(hidden), sec_2_div (hidden), secondary_2_stat, sec_perc, main_stat_perc, kanna_hp_perc, kanna_hp_perc_div(hidden)
