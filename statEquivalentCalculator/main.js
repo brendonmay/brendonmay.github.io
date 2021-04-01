@@ -27,6 +27,10 @@ var information = {
     specialIncr: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 };
 
+function roundHalf(num) {
+    return Math.round(num*2)/2;
+}
+
 var new_information = {
     currentLevel: 0,
     currentPoints: 0,
@@ -204,7 +208,7 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
     }
     else if (maple_class == "Kanna") {
         var luk_equiv = luk_diff / stat_diff
-        var hp_equiv = stat_diff / hp_diff
+        var hp_equiv =  hp_diff / stat_diff
 
         var sec_equiv = { luk_equiv, hp_equiv }
     }
@@ -3562,8 +3566,6 @@ function optimizeWSE() {
 
     var class_dmg = class_data.dmgPercent;
     var class_att = class_data.attPercent;
-    var class_boss = class_data.bossPercent;
-
 
     //Current Stats With WSE
     current_damage_percent = damage_percent + class_dmg;
@@ -3813,21 +3815,22 @@ function optimizeWSE() {
         var primary_without_perc = (primary_stat - flat_primary) / primary_perc + flat_primary
         var sec_without_perc = ((secondary_stat - flat_sec) / sec_perc) + flat_sec
 
+
     }
 
 
     //determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
     var statEquivalences = determineStatEquivalences(maple_class, attack, current_attack_percent / 100, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc)
-
+    
     document.getElementById('resultSection').style.display = ''
     if (maple_class == "Kanna") {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${statEquivalences.perc_all_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 Attack = ${statEquivalences.att_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 LUK = ${statEquivalences.sec_equiv.luk_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 HP = ${statEquivalences.sec_equiv.hp_equiv.toFixed(2)} Main Stat</div>
+            <div class="test">1 All Stat % = ${Math.ceil(statEquivalences.perc_all_equiv) + 1} Main Stat</div>
+            <div class="test">1 Attack = ${Math.floor(statEquivalences.att_equiv)} Main Stat</div>
+            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv.luk_equiv)} LUK</div>
+            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv.hp_equiv)} HP</div>
         </div>
         `
     }
@@ -3835,10 +3838,10 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${statEquivalences.perc_all_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 Attack = ${statEquivalences.att_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 DEX = ${statEquivalences.sec_equiv.dex_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 STR = ${statEquivalences.sec_equiv.str_equiv.toFixed(2)} Main Stat</div>
+            <div class="test">1 All Stat % = ${Math.ceil(statEquivalences.perc_all_equiv) + 1} Main Stat</div>
+            <div class="test">1 Attack = ${Math.floor(statEquivalences.att_equiv) + 0.5} Main Stat</div>
+            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv.dex_equiv)} DEX</div>
+            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv.str_equiv)} STR</div>
         </div>
         `
     }
@@ -3846,8 +3849,8 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${statEquivalences.perc_all_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 Attack = ${statEquivalences.att_equiv.toFixed(2)} Main Stat</div>
+            <div class="test">1 All Stat % = ${Math.ceil(statEquivalences.perc_all_equiv) + 1} Main Stat</div>
+            <div class="test">1 Attack = ${Math.floor(statEquivalences.att_equiv) + 0.5} Main Stat</div>
         </div>
         `
     }
@@ -3855,9 +3858,9 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${statEquivalences.perc_all_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 Attack = ${statEquivalences.att_equiv.toFixed(2)} Main Stat</div>
-            <div class="test">1 Secondary Stat = ${statEquivalences.sec_equiv.toFixed(2)} Main Stat</div>
+            <div class="test">1 All Stat % = ${Math.ceil(statEquivalences.perc_all_equiv) + 1} Main Stat</div>
+            <div class="test">1 Attack = ${Math.floor(statEquivalences.att_equiv) + 0.5} Main Stat</div>
+            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv)} Secondary Stat</div>
         </div>
         `
     }
