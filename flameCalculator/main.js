@@ -316,8 +316,122 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
         if (desired_stat == 0) return 1
 
         var ratios = checkRatios(maple_class) //here
-        if (maple_class == "shadower" || maple_class == "db" || maple_class == "cadena") { }
-        if (maple_class == "kanna") { }
+		if (maple_class == "kanna") {}
+        if (maple_class == "shadower" || maple_class == "db" || maple_class == "cadena") {
+			var main_tier = 0
+            while (main_tier < upper_limit) { //str
+                var combo_six_tier = 0
+                while (combo_six_tier < upper_limit) { // luk+dex
+                    var combo_one_tier = 0
+                    while (combo_one_tier < upper_limit) { // str + int
+                        var combo_two_tier = 0
+                        while (combo_two_tier < upper_limit) { // luk + int
+                            var combo_three_tier = 0
+                            while (combo_three_tier < upper_limit) { // dex + int
+                                var all_stat_tier = 0
+                                while (all_stat_tier < upper_limit) {
+                                    var attack_tier = 0
+                                    while (attack_tier < att_upper_limit) {
+                                        var combo_four_tier = 0
+                                        while (combo_four_tier < upper_limit) { //str + dex
+                                            var combo_five_tier = 0
+                                            while (combo_five_tier < upper_limit) { //str + luk
+                                                var sec1_tier = 0
+                                                while (sec1_tier < upper_limit) { //luk
+                                                    var sec2_tier = 0
+                                                    while (sec2_tier < upper_limit) { //dex
+                                                        //equation here change this calculation for different classes //here
+                                                        var stat_score = (main_tier) * stat_per_tier[item_level] + sec1_tier * stat_per_tier[item_level] * stat_equivalences["dex_stat"] + sec2_tier * stat_per_tier[item_level] * stat_equivalences["str_stat"] + (combo_one_tier + combo_two_tier + combo_three_tier) * combo_stat_per_tier[item_level] + (combo_two_tier + combo_four_tier + combo_five_tier) * combo_stat_per_tier[item_level] * stat_equivalences.str_stat + (combo_three_tier + combo_five_tier + combo_six_tier) * combo_stat_per_tier[item_level] * stat_equivalences.dex_stat + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"]
+
+                                                        if (stat_score >= desired_stat) {
+                                                            if (possibleOutcome(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, sec1_tier, sec2_tier)) {
+                                                                var solution = { "main_tier": main_tier, "sec1_tier": sec1_tier, "sec2_tier": sec2_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "combo_six_tier": combo_six_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier }
+                                                                solutions[solutions.length] = solution
+
+                                                                if (stat_score >= 304) {
+                                                                    console.log(stat_score)
+                                                                    console.log(main_tier, sec1_tier, sec2_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, combo_six_tier, all_stat_tier, attack_tier, 0, 0)
+                                                                }
+                                                            }
+                                                        }
+                                                        if (sec2_tier == 0) {
+                                                            var sec2_tier = lower_limit
+                                                        }
+                                                        else {
+                                                            sec2_tier++
+                                                        }
+                                                    }
+                                                    if (sec1_tier == 0) {
+                                                        var sec1_tier = lower_limit
+                                                    }
+                                                    else {
+                                                        sec1_tier++
+                                                    }
+                                                }
+                                                if (combo_five_tier == 0) {
+                                                    var combo_five_tier = lower_limit
+                                                }
+                                                else {
+                                                    combo_five_tier++
+                                                }
+                                            }
+                                            if (combo_four_tier == 0) {
+                                                var combo_four_tier = lower_limit
+                                            }
+                                            else {
+                                                combo_four_tier++
+                                            }
+                                        }
+                                        if (attack_tier == 0) {
+                                            var attack_tier = lower_limit
+                                        }
+                                        else {
+                                            attack_tier++
+                                        }
+                                    }
+                                    if (all_stat_tier == 0) {
+                                        var all_stat_tier = lower_limit
+                                    }
+                                    else {
+                                        all_stat_tier++
+                                    }
+                                }
+                                if (combo_three_tier == 0) {
+                                    var combo_three_tier = lower_limit
+                                }
+                                else {
+                                    combo_three_tier++
+                                }
+                            }
+                            if (combo_two_tier == 0) {
+                                var combo_two_tier = lower_limit
+                            }
+                            else {
+                                combo_two_tier++
+                            }
+                        }
+                        if (combo_one_tier == 0) {
+                            var combo_one_tier = lower_limit
+                        }
+                        else {
+                            combo_one_tier++
+                        }
+                    }
+                    if (combo_six_tier == 0) {
+                        var combo_six_tier = lower_limit
+                    }
+                    else {
+                        combo_six_tier++
+                    }
+                }
+                if (main_tier == 0) {
+                    var main_tier = lower_limit
+                }
+                else {
+                    main_tier++
+                }
+            }
+		}
         if (maple_class == "xenon") {
             var main_tier = 0
             while (main_tier < upper_limit) { //str
@@ -540,7 +654,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
             var main3_tier = 0
             var combo_six_tier = 0
             var main_tier = solutions[i].main_tier
-            if (maple_class != "xenon") var secondary_tier = solutions[i].secondary_tier
+            if(maple_class == "other") var secondary_tier = solutions[i].secondary_tier
             var combo_one_tier = solutions[i].combo_one_tier
             var combo_two_tier = solutions[i].combo_two_tier
             var combo_three_tier = solutions[i].combo_three_tier
@@ -553,6 +667,12 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                 main3_tier = solutions[i].main3_tier
                 combo_six_tier = solutions[i].combo_six_tier
                 var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier)
+            }
+            if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
+                var sec1_tier = solutions[i].sec1_tier
+                var sec2_tier = solutions[i].sec2_tier
+                combo_six_tier = solutions[i].combo_six_tier
+                var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, sec1_tier, sec2_tier)
             }
             else {
                 var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, 0, 0)
