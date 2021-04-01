@@ -24,19 +24,51 @@ function combination(n, r) {
     return factorial(n) / (factorial(r) * factorial(n - r));
 };
 
-function checkRatios() {
+function checkRatios(maple_class) {
     var zeroes = 0
     var remove_all_stat = false
     var remove_sec = false
     var remove_att = false
+    var remove_dex = false
+    var remove_str = false
+    var remove_luk = false
+    var remove_hp = false
 
+    if (maple_class == "other") {
+        if (stat_equivalences.secondary_stat == 0) {
+            zeroes = zeroes + 3
+            remove_sec = true
+        }
+    }
+    if (maple_class == "shadower" || maple_class == "db" || maple_class == "cadena") {
+        if (stat_equivalences.dex_stat == 0) {
+            if (stat_equivalences.str_stat == 0) {
+                zeroes = zeroes + 5 //here
+                remove_str = true
+            }
+            else {
+                zeroes = zeroes + 2
+            }
+            remove_dex = true
+        }
+        if (stat_equivalences.str_stat == 0 && remove_dex == false) {
+            remove_str = true
+            zeroes = zeroes + 2
+        }
+    }
+    if (maple_class == "kanna") {
+        if (stat_equivalences.luk_stat == 0) {
+            zeroes = zeroes + 3
+            remove_luk = true
+        }
+        if (stat_equivalences.hp_stat == 0) {
+            zeroes = zeroes++
+            remove_hp = true
+        }
+    }
     if (stat_equivalences.all_stat == 0) {
         zeroes++
         remove_all_stat = true;
-    }
-    if (stat_equivalences.secondary_stat == 0) {
-        zeroes = zeroes + 3
-        remove_sec = true
     }
     if (stat_equivalences.attack == 0) {
         zeroes++
@@ -173,8 +205,9 @@ function getWeaponProbability(attack, dmg, flame_type) {
     return probability
 }
 
-function possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier) {
+function possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier) {
     var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier]
+    if (main2_tier && main3_tier) list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier]
     var index = 0
     var total_tiers = 0
     while (index < list.length) {
@@ -185,8 +218,8 @@ function possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_ti
     return total_tiers <= 4
 }
 
-function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier) {
-    var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier]
+function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier, combo_six_tier) {
+    var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier, combo_six_tier]
     var index = 0
     var number_of_lines = 0
     while (index < list.length) {
@@ -196,8 +229,8 @@ function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier
     return number_of_lines
 }
 
-function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier, non_advantaged_item) {
-    var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier]
+function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier, non_advantaged_item, main2_tier, main3_tier, combo_six_tier) {
+    var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier, combo_six_tier]
     var index = 0
     var probability = 0
     if (flame_type == "powerful") {
@@ -225,7 +258,7 @@ function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two
     return probability
 }
 
-function getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item) {
+function getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class) {
     //desired_stat = {attack_tier, dmg_percent}
 
     //main_tier
@@ -282,109 +315,225 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
     if (item_type == "armor") {
         if (desired_stat == 0) return 1
 
-        var ratios = checkRatios()
-        if (ratios.remove_all_stat == true) all_stat_upper_limit = 1
-        if (ratios.remove_att == true) att_upper_limit = 1
-        if (ratios.remove_sec == true) {
-            sec_upper_limit = 1
-            combo_four_upper_limit = 1
-            combo_five_upper_limit = 1
-        }
-
-        var main_tier = 0
-        while (main_tier < upper_limit) {
-            var secondary_tier = 0
-            while (secondary_tier < sec_upper_limit) {
-                var combo_one_tier = 0
-                while (combo_one_tier < upper_limit) {
-                    var combo_two_tier = 0
-                    while (combo_two_tier < upper_limit) {
-                        var combo_three_tier = 0
-                        while (combo_three_tier < upper_limit) {
-                            var all_stat_tier = 0
-                            while (all_stat_tier < all_stat_upper_limit) {
-                                var attack_tier = 0
-                                while (attack_tier < att_upper_limit) {
-                                    var combo_four_tier = 0
-                                    while (combo_four_tier < combo_four_upper_limit) {
-                                        var combo_five_tier = 0
-                                        while (combo_five_tier < combo_five_upper_limit) {
-                                            //equation here change this calculation for different classes
-                                            var stat_score = main_tier * stat_per_tier[item_level] + secondary_tier * stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_one_tier * (combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_stat_per_tier[item_level]) + combo_two_tier * combo_stat_per_tier[item_level] + combo_three_tier * combo_stat_per_tier[item_level] + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"] + combo_four_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_five_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"]
-                                            if (stat_score >= desired_stat) {
-                                                if (possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0)) {
-                                                    var solution = { "main_tier": main_tier, "secondary_tier": secondary_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier }
-                                                    solutions[solutions.length] = solution
+        var ratios = checkRatios(maple_class) //here
+        if (maple_class == "shadower" || maple_class == "db" || maple_class == "cadena") { }
+        if (maple_class == "kanna") { }
+        if (maple_class == "xenon") {
+            var main_tier = 0
+            while (main_tier < upper_limit) { //str
+                var combo_six_tier = 0
+                while (combo_six_tier < upper_limit) { // luk+dex
+                    var combo_one_tier = 0
+                    while (combo_one_tier < upper_limit) { // str + int
+                        var combo_two_tier = 0
+                        while (combo_two_tier < upper_limit) { // luk + int
+                            var combo_three_tier = 0
+                            while (combo_three_tier < upper_limit) { // dex + int
+                                var all_stat_tier = 0
+                                while (all_stat_tier < upper_limit) {
+                                    var attack_tier = 0
+                                    while (attack_tier < att_upper_limit) {
+                                        var combo_four_tier = 0
+                                        while (combo_four_tier < upper_limit) { //str + dex
+                                            var combo_five_tier = 0
+                                            while (combo_five_tier < upper_limit) { //str + luk
+                                                var main2_tier = 0
+                                                while (main2_tier < upper_limit) { //luk
+                                                    var main3_tier = 0
+                                                    while (main3_tier < upper_limit) { //dex
+                                                        //equation here change this calculation for different classes
+                                                        var stat_score = (main_tier + main2_tier + main3_tier) * stat_per_tier[item_level] + (combo_one_tier + combo_two_tier + combo_three_tier + 2 * (combo_four_tier + combo_five_tier + combo_six_tier)) * combo_stat_per_tier[item_level] + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"]
+                                                        if (stat_score >= desired_stat) {
+                                                            if (possibleOutcome(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier)) {
+                                                                var solution = { "main_tier": main_tier, "main2_tier": main2_tier, "main3_tier": main3_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "combo_six_tier": combo_six_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier }
+                                                                solutions[solutions.length] = solution
+                                                            }
+                                                        }
+                                                        if (main3_tier == 0) {
+                                                            var main3_tier = lower_limit
+                                                        }
+                                                        else {
+                                                            main3_tier++
+                                                        }
+                                                    }
+                                                    if (main2_tier == 0) {
+                                                        var main2_tier = lower_limit
+                                                    }
+                                                    else {
+                                                        main2_tier++
+                                                    }
+                                                }
+                                                if (combo_five_tier == 0) {
+                                                    var combo_five_tier = lower_limit
+                                                }
+                                                else {
+                                                    combo_five_tier++
                                                 }
                                             }
-                                            if (combo_five_tier == 0) {
-                                                var combo_five_tier = lower_limit
+                                            if (combo_four_tier == 0) {
+                                                var combo_four_tier = lower_limit
                                             }
                                             else {
-                                                combo_five_tier++
+                                                combo_four_tier++
                                             }
                                         }
-                                        if (combo_four_tier == 0) {
-                                            var combo_four_tier = lower_limit
+                                        if (attack_tier == 0) {
+                                            var attack_tier = lower_limit
                                         }
                                         else {
-                                            combo_four_tier++
+                                            attack_tier++
                                         }
                                     }
-                                    if (attack_tier == 0) {
-                                        var attack_tier = lower_limit
+                                    if (all_stat_tier == 0) {
+                                        var all_stat_tier = lower_limit
                                     }
                                     else {
-                                        attack_tier++
+                                        all_stat_tier++
                                     }
                                 }
-                                if (all_stat_tier == 0) {
-                                    var all_stat_tier = lower_limit
+                                if (combo_three_tier == 0) {
+                                    var combo_three_tier = lower_limit
                                 }
                                 else {
-                                    all_stat_tier++
+                                    combo_three_tier++
                                 }
                             }
-                            if (combo_three_tier == 0) {
-                                var combo_three_tier = lower_limit
+                            if (combo_two_tier == 0) {
+                                var combo_two_tier = lower_limit
                             }
                             else {
-                                combo_three_tier++
+                                combo_two_tier++
                             }
                         }
-                        if (combo_two_tier == 0) {
-                            var combo_two_tier = lower_limit
+                        if (combo_one_tier == 0) {
+                            var combo_one_tier = lower_limit
                         }
                         else {
-                            combo_two_tier++
+                            combo_one_tier++
                         }
                     }
-                    if (combo_one_tier == 0) {
-                        var combo_one_tier = lower_limit
+                    if (combo_six_tier == 0) {
+                        var combo_six_tier = lower_limit
                     }
                     else {
-                        combo_one_tier++
+                        combo_six_tier++
                     }
                 }
-                if (secondary_tier == 0) {
-                    var secondary_tier = lower_limit
+                if (main_tier == 0) {
+                    var main_tier = lower_limit
                 }
                 else {
-                    secondary_tier++
+                    main_tier++
                 }
             }
-            if (main_tier == 0) {
-                var main_tier = lower_limit
+        }
+        if (maple_class == "other") {
+            if (ratios.remove_all_stat == true) all_stat_upper_limit = 1
+            if (ratios.remove_att == true) att_upper_limit = 1
+            if (ratios.remove_sec == true) {
+                sec_upper_limit = 1
+                combo_four_upper_limit = 1
+                combo_five_upper_limit = 1
             }
-            else {
-                main_tier++
+
+            var main_tier = 0
+            while (main_tier < upper_limit) {
+                var secondary_tier = 0
+                while (secondary_tier < sec_upper_limit) {
+                    var combo_one_tier = 0
+                    while (combo_one_tier < upper_limit) {
+                        var combo_two_tier = 0
+                        while (combo_two_tier < upper_limit) {
+                            var combo_three_tier = 0
+                            while (combo_three_tier < upper_limit) {
+                                var all_stat_tier = 0
+                                while (all_stat_tier < all_stat_upper_limit) {
+                                    var attack_tier = 0
+                                    while (attack_tier < att_upper_limit) {
+                                        var combo_four_tier = 0
+                                        while (combo_four_tier < combo_four_upper_limit) {
+                                            var combo_five_tier = 0
+                                            while (combo_five_tier < combo_five_upper_limit) {
+                                                //equation here change this calculation for different classes
+                                                var stat_score = main_tier * stat_per_tier[item_level] + secondary_tier * stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_one_tier * (combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_stat_per_tier[item_level]) + combo_two_tier * combo_stat_per_tier[item_level] + combo_three_tier * combo_stat_per_tier[item_level] + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"] + combo_four_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"] + combo_five_tier * combo_stat_per_tier[item_level] * stat_equivalences["secondary_stat"]
+                                                if (stat_score >= desired_stat) {
+                                                    if (possibleOutcome(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0)) {
+                                                        var solution = { "main_tier": main_tier, "secondary_tier": secondary_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier }
+                                                        solutions[solutions.length] = solution
+                                                    }
+                                                }
+                                                if (combo_five_tier == 0) {
+                                                    var combo_five_tier = lower_limit
+                                                }
+                                                else {
+                                                    combo_five_tier++
+                                                }
+                                            }
+                                            if (combo_four_tier == 0) {
+                                                var combo_four_tier = lower_limit
+                                            }
+                                            else {
+                                                combo_four_tier++
+                                            }
+                                        }
+                                        if (attack_tier == 0) {
+                                            var attack_tier = lower_limit
+                                        }
+                                        else {
+                                            attack_tier++
+                                        }
+                                    }
+                                    if (all_stat_tier == 0) {
+                                        var all_stat_tier = lower_limit
+                                    }
+                                    else {
+                                        all_stat_tier++
+                                    }
+                                }
+                                if (combo_three_tier == 0) {
+                                    var combo_three_tier = lower_limit
+                                }
+                                else {
+                                    combo_three_tier++
+                                }
+                            }
+                            if (combo_two_tier == 0) {
+                                var combo_two_tier = lower_limit
+                            }
+                            else {
+                                combo_two_tier++
+                            }
+                        }
+                        if (combo_one_tier == 0) {
+                            var combo_one_tier = lower_limit
+                        }
+                        else {
+                            combo_one_tier++
+                        }
+                    }
+                    if (secondary_tier == 0) {
+                        var secondary_tier = lower_limit
+                    }
+                    else {
+                        secondary_tier++
+                    }
+                }
+                if (main_tier == 0) {
+                    var main_tier = lower_limit
+                }
+                else {
+                    main_tier++
+                }
             }
         }
-        var probability = 0
 
+        var probability = 0
         for (var i = 0; i < solutions.length; i++) {
+            var main2_tier = 0
+            var main3_tier = 0
+            var combo_six_tier = 0
             var main_tier = solutions[i].main_tier
-            var secondary_tier = solutions[i].secondary_tier
+            if (maple_class != "xenon") var secondary_tier = solutions[i].secondary_tier
             var combo_one_tier = solutions[i].combo_one_tier
             var combo_two_tier = solutions[i].combo_two_tier
             var combo_three_tier = solutions[i].combo_three_tier
@@ -392,8 +541,12 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
             var combo_five_tier = solutions[i].combo_five_tier
             var all_stat_tier = solutions[i].all_stat_tier
             var attack_tier = solutions[i].attack_tier
-
-            var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0)
+            if (maple_class == "xenon") {
+                main2_tier = solutions[i].main2_tier
+                main3_tier = solutions[i].main3_tier
+                combo_six_tier = solutions[i].combo_six_tier
+            }
+            var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier, combo_six_tier)
 
             //non-flame-advantaged item line probabilities
             var non_advantaged = { 1: 0.45, 2: 0.35, 3: 0.15, 4: 0.05 }
@@ -401,6 +554,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
             //hypergeometric distribution
             var number_of_zeroes = checkRatios().zeroes
             var choose_from = 10 + number_of_zeroes
+            if (maple_class == "xenon") choose_from = 8
             //here
             var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
             if (non_advantaged_item) {
@@ -420,7 +574,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                     line_probability = 0
                 }
             }
-            var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, 0, 0, non_advantaged_item)
+            var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, 0, 0, non_advantaged_item, main2_tier, main3_tier, combo_six_tier)
             var event_probability = line_probability * tier_probability
 
             probability = probability + event_probability
@@ -584,6 +738,123 @@ document.addEventListener("DOMContentLoaded", function () {
         $("#toast").toast('show')
     }, 1000)
     document.getElementById("item_type").addEventListener("change", function () {
+        var maple_class = document.getElementById("maple_class").value
+        if (document.getElementById("item_type").value == "armor") {
+            if (maple_class == "kanna") {
+                document.getElementById('hp_stat_div').hidden = false
+                document.getElementById('luk_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+
+                document.getElementById("all_stat").value = 8
+
+            }
+            else if (maple_class == "xenon") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById("desired_stat_armor").value = 200
+                document.getElementById("all_stat").value = 20
+            }
+            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+
+                document.getElementById('str_stat_div').hidden = false
+                document.getElementById('dex_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById("all_stat").value = 8
+            }
+            else if (maple_class == "other") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+
+                document.getElementById('secondary_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById("all_stat").value = 8
+            }
+            else if (maple_class == "da") {
+                document.getElementById("statequivalences").hidden = true
+                document.getElementById("statequivalences_title").hidden = true
+            }
+        }
+    })
+    document.getElementById("maple_class").addEventListener("change", function () {
+        var maple_class = document.getElementById("maple_class").value
+
+        if (document.getElementById("item_type").value == "armor") {
+            if (maple_class == "kanna") {
+                document.getElementById('hp_stat_div').hidden = false
+                document.getElementById('luk_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+
+                document.getElementById("all_stat").value = 8
+
+            }
+            else if (maple_class == "xenon") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById("desired_stat_armor").value = 200
+                document.getElementById("all_stat").value = 20
+            }
+            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+
+                document.getElementById('str_stat_div').hidden = false
+                document.getElementById('dex_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+                document.getElementById("all_stat").value = 8
+            }
+            else if (maple_class == "other") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+
+                document.getElementById('secondary_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+                document.getElementById("all_stat").value = 8
+            }
+            else if (maple_class == "da") {
+                document.getElementById("statequivalences").hidden = true
+                document.getElementById("statequivalences_title").hidden = true
+            }
+        }
+    })
+    document.getElementById("item_type").addEventListener("change", function () {
         var item_type = document.getElementById('item_type').value
         var flame_type = document.getElementById('flame_type').value
         if (item_type == 'armor') {
@@ -638,10 +909,20 @@ document.addEventListener("DOMContentLoaded", function () {
             var guild_discount = document.getElementById('guild_discount').checked
             var item_level
             var non_advantaged_item = !document.getElementById('flame-advantaged').checked
+            var maple_class = document.getElementById("maple_class").value
+
+            if (maple_class == "kanna") {
+                stat_equivalences.hp_stat = 1 / document.getElementById('hp_stat').value
+                stat_equivalences.luk_stat = 1 / document.getElementById('luk_stat').value
+            }
+            if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
+                stat_equivalences.dex_stat = 1 / document.getElementById('dex_stat').value
+                stat_equivalences.str_stat = 1 / document.getElementById('str_stat').value
+            }
 
             stat_equivalences.all_stat = document.getElementById('all_stat').value
             stat_equivalences.attack = document.getElementById('attack').value
-            stat_equivalences.secondary_stat = document.getElementById('secondary_stat').value
+            if (maple_class != "xenon") stat_equivalences.secondary_stat = 1 / document.getElementById('secondary_stat').value
 
             if (item_type == 'armor') {
                 var desired_stat = document.getElementById('desired_stat_armor').value
@@ -653,7 +934,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 var desired_stat = { "attack_tier": attack_tier, "dmg_percent": dmg_percent }
             }
 
-            var p = getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item)
+            var p = getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class)
+            console.log(p)
             var stats = geoDistrQuantile(p)
 
             var mean = Math.round(stats.mean)

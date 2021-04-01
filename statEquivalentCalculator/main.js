@@ -27,8 +27,16 @@ var information = {
     specialIncr: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 };
 
-function roundHalf(num) {
-    return Math.round(num*2)/2;
+function roundUp(number) {
+    return (Math.ceil(number * 2) / 2).toFixed(1)
+}
+
+function roundDown(num) {
+    let f = Math.floor(num);
+    if (num - f < 0.5) {
+        return f;
+    }
+    return f + 0.5;
 }
 
 var new_information = {
@@ -66,12 +74,12 @@ function statAmount(without_perc, flat, perc, xenon_primary_bool, luk2_secondary
     //note: maple warrior adds 16% stat
     //hyper stat % applies to HP
     if (luk2_secondary_bool) {
-        return { 1: (without_perc[1] - flat[1]) * (1 + perc[1]) + flat[1], 2: (without_perc[2] - flat[2]) * (1 + perc[2]) + flat[2] }
+        return { 1: (without_perc[1] - flat[1]) * (perc[1]) + flat[1], 2: (without_perc[2] - flat[2]) * (perc[2]) + flat[2] }
     }
     if (xenon_primary_bool) {
-        return { 1: (without_perc[1] - flat[1]) * (1 + perc[1]) + flat[1], 2: (without_perc[2] - flat[2]) * (1 + perc[2]) + flat[2], 3: (without_perc[3] - flat[3]) * (1 + perc[3]) + flat[3] }
+        return { 1: (without_perc[1] - flat[1]) * (perc[1]) + flat[1], 2: (without_perc[2] - flat[2]) * (perc[2]) + flat[2], 3: (without_perc[3] - flat[3]) * (perc[3]) + flat[3] }
     }
-    return (without_perc - flat) * (1 + perc) + flat
+    return (without_perc - flat) * (perc) + flat
 }
 
 function damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc) {
@@ -208,7 +216,7 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
     }
     else if (maple_class == "Kanna") {
         var luk_equiv = luk_diff / stat_diff
-        var hp_equiv =  hp_diff / stat_diff
+        var hp_equiv = hp_diff / stat_diff
 
         var sec_equiv = { luk_equiv, hp_equiv }
     }
@@ -3737,13 +3745,13 @@ function optimizeWSE() {
     else {
         //calculate(stripped_attack, stripped_damage_percent, stripped_boss_percent, stripped_ied_percent, stripped_crit_dmg, stripped_primary, stripped_secondary, maple_class, level, current_attack_percent, pdr);
     }
-    var primary_perc = (100 + parseInt(document.getElementById("main_stat_perc").value) + 16) / 100
+    var primary_perc = (100 + parseInt(document.getElementById("main_stat_perc").value)) / 100
 
     if (maple_class == "Demon Avenger") primary_perc = (100 + parseInt(document.getElementById("main_stat_perc").value) + hp_hyper) / 100
     if (maple_class == "Xenon") { //dex, luk, str
-        var primary_1_perc = (100 + parseInt(document.getElementById("main_stat_perc").value) + 16) / 100
-        var primary_2_perc = (100 + parseInt(document.getElementById("sec_perc").value) + 16) / 100
-        var primary_3_perc = (100 + parseInt(document.getElementById("sec_perc_2").value) + 16) / 100
+        var primary_1_perc = (100 + parseInt(document.getElementById("main_stat_perc").value)) / 100
+        var primary_2_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
+        var primary_3_perc = (100 + parseInt(document.getElementById("sec_perc_2").value)) / 100
 
         primary_perc = { 1: primary_1_perc, 2: primary_2_perc, 3: primary_3_perc }
 
@@ -3785,12 +3793,12 @@ function optimizeWSE() {
 
         var primary_without_perc = (primary_stat - flat_primary) / primary_perc + flat_primary
 
-        var sec_1_perc = (100 + parseInt(document.getElementById("sec_perc").value) + 16) / 100
+        var sec_1_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
         if (maple_class == "Kanna") {
             var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value)) / 100
         }
         else {
-            var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value) + 16) / 100
+            var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value)) / 100
         }
 
         var sec_perc = { 1: sec_1_perc, 2: sec_2_perc }
@@ -3804,7 +3812,7 @@ function optimizeWSE() {
         var sec_without_perc = { 1: sec_1_without_perc, 2: sec_2_without_perc }
     }
     else {
-        var sec_perc = (100 + parseInt(document.getElementById("sec_perc").value) + 16) / 100
+        var sec_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
 
         var flat_primary = hyper_primary + parseInt(document.getElementById("hp_arcane").value) // collect directly (inner ability)
         if (maple_class == "Demon Avenger") {
@@ -3821,16 +3829,16 @@ function optimizeWSE() {
 
     //determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
     var statEquivalences = determineStatEquivalences(maple_class, attack, current_attack_percent / 100, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc)
-    
+
     document.getElementById('resultSection').style.display = ''
     if (maple_class == "Kanna") {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${Math.ceil(statEquivalences.perc_all_equiv) + 1} Main Stat</div>
-            <div class="test">1 Attack = ${Math.floor(statEquivalences.att_equiv)} Main Stat</div>
-            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv.luk_equiv)} LUK</div>
-            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv.hp_equiv)} HP</div>
+            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
+            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
+            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.luk_equiv)} LUK</div>
+            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.hp_equiv)} HP</div>
         </div>
         `
     }
@@ -3838,10 +3846,10 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${Math.ceil(statEquivalences.perc_all_equiv) + 1} Main Stat</div>
-            <div class="test">1 Attack = ${Math.floor(statEquivalences.att_equiv) + 0.5} Main Stat</div>
-            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv.dex_equiv)} DEX</div>
-            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv.str_equiv)} STR</div>
+            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
+            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
+            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.dex_equiv)} DEX</div>
+            <div class="test">1 Main Stat = ${roundUP(1 / statEquivalences.sec_equiv.str_equiv)} STR</div>
         </div>
         `
     }
@@ -3849,8 +3857,8 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${Math.ceil(statEquivalences.perc_all_equiv) + 1} Main Stat</div>
-            <div class="test">1 Attack = ${Math.floor(statEquivalences.att_equiv) + 0.5} Main Stat</div>
+            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
+            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
         </div>
         `
     }
@@ -3858,9 +3866,9 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${Math.ceil(statEquivalences.perc_all_equiv) + 1} Main Stat</div>
-            <div class="test">1 Attack = ${Math.floor(statEquivalences.att_equiv) + 0.5} Main Stat</div>
-            <div class="test">1 Main Stat = ${roundHalf(1/statEquivalences.sec_equiv)} Secondary Stat</div>
+            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
+            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
+            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv)} Secondary Stat</div>
         </div>
         `
     }
