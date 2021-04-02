@@ -258,16 +258,18 @@ function loadLocalStorage() {
     var obj_wse_level = obj.obj_wse_level; //ex: {id1: value1, id2: value2}
     var obj_wse_lines = obj.obj_wse_lines; //ex: {id1: value1, id2: value2}
     var obj_checked = obj.obj_checked; //ex: {id1: true, id2: false}
+    var obj_hidden = obj.obj_hidden
 
     var k = 0;
     var i = 0;
     var current_obj
-    while (k < 5) {
+    while (k < 6) {
         if (k == 0) current_obj = obj_values;
         else if (k == 1) current_obj = obj_wse_level;
         else if (k == 2) current_obj = obj_checked;
         else if (k == 3) current_obj = obj_wse_lines;
         else if (k == 4) current_obj = obj_hyper_values;
+        else if (k == 5) current_obj = obj_hidden;
 
         i = 0;
         if (current_obj) {
@@ -280,7 +282,6 @@ function loadLocalStorage() {
                     calcHyperStatPoints();
                     var new_level = value;
                     document.getElementById('current_level').innerHTML = `${new_level}`;
-                    document.getElementById('ncurrent_level').innerHTML = `${new_level}`;
                 }
                 if (id == 'class') {
                     document.getElementById(id).value = value;
@@ -316,7 +317,7 @@ function loadLocalStorage() {
                         document.getElementById('secondary_stat').disabled = false;
                     }
                 }
-                if (k != 2) {
+                if (k != 2 && k != 5) {
                     if (document.getElementById(id)) document.getElementById(id).value = value;
                 }
                 if (k == 4) {
@@ -325,6 +326,9 @@ function loadLocalStorage() {
                 }
                 if (k == 2) {
                     if (document.getElementById(id)) document.getElementById(id).checked = value;
+                }
+                if (k == 5) {
+                    if (document.getElementById(id)) document.getElementById(id).hidden = value;
                 }
                 if (id == 'reboot') {
                     if (value) {
@@ -363,20 +367,26 @@ function saveToLocalStorage(maple_class) {
     var obj_wse_lines = {}; //ex: {id1: value1, id2: value2}
     //key is ID, value is true or false (.checked == true)
     var obj_checked = {}; //ex: {id1: true, id2: false}
+    var obj_hidden = {};
 
+    //new ids to track for localstorage
+    //sec_perc_2, sec_perc_2_div(hidden), sec_2_div (hidden), secondary_2_stat, sec_perc, main_stat_perc, kanna_hp_perc, kanna_hp_perc_div(hidden)
 
     //collection of IDs to collect data on
-    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
+    var id_values = ['level', 'sec_perc_2', 'secondary_2_stat', 'sec_perc', 'main_stat_perc', 'kanna_hp_perc', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
     var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
     var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
+    var id_hidden = ['sec_perc_2_div', 'sec_2_div', 'kanna_hp_perc_div', 'kanna_hp_div', 'zeromessage']
 
     var i = 0
     while (i < id_values.length) {
         var id = id_values[i];
-        var value = document.getElementById(id).value;
-        obj_values[id] = value;
+        if (document.getElementById(id)) {
+            var value = document.getElementById(id).value;
+            obj_values[id] = value;
+        }
         i++;
     }
     i = 0
@@ -387,10 +397,19 @@ function saveToLocalStorage(maple_class) {
         i++;
     }
     i = 0
+    while (i < id_hidden.length) {
+        var id = id_hidden[i];
+        var hidden = document.getElementById(id).hidden;
+        obj_hidden[id] = hidden;
+        i++;
+    }
+    i = 0
     while (i < id_checked.length) {
         var id = id_checked[i];
-        var checked = document.getElementById(id).checked;
-        obj_checked[id] = checked;
+        if (document.getElementById(id)) {
+            var checked = document.getElementById(id).checked;
+            obj_checked[id] = checked;
+        }
         i++;
     }
     i = 0
@@ -419,8 +438,9 @@ function saveToLocalStorage(maple_class) {
     obj.obj_wse_level = obj_wse_level;
     obj.obj_wse_lines = obj_wse_lines;
     obj.obj_checked = obj_checked;
+    obj.obj_hidden = obj_hidden
 
-    window.localStorage.setItem('data', JSON.stringify(obj)); //here
+    window.localStorage.setItem('data', JSON.stringify(obj));
 }
 
 function calculateDamageCommon(primary, secondary, cdmg, boss, dmg, ied, att, pdr) {
@@ -2996,9 +3016,9 @@ document.addEventListener("DOMContentLoaded", function () {
         trigger: 'focus'
     });
 
-    // if (window.localStorage.getItem('data') !== null) {
-    //     loadLocalStorage(); //load data from localstorage //here
-    // }
+    if (window.localStorage.getItem('data') !== null) {
+        loadLocalStorage(); //load data from localstorage //here
+    }
 
     //checkbox behaviour
     // document.getElementById("solus2").addEventListener("click", function () {
@@ -3724,7 +3744,7 @@ function optimizeWSE() {
 
     document.getElementById('resultSection').hidden = false;
     window.scrollTo(0, document.body.scrollHeight);
-    //saveToLocalStorage(maple_class);
+    saveToLocalStorage(maple_class);
 
 
     // if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
@@ -3833,7 +3853,7 @@ function optimizeWSE() {
 
         var sec_without_perc = { 1: sec_1_without_perc, 2: sec_2_without_perc }
 
-        var secondary_stat = secondary_stat_1 +  secondary_stat_2
+        var secondary_stat = secondary_stat_1 + secondary_stat_2
     }
     else {
         var sec_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
