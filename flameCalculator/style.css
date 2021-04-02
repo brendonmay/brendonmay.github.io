@@ -23,6 +23,14 @@ h5 {
     font-size: 0.9em;
 }
 
+.red {
+    color: #D33E43;
+}
+
+.red:hover {
+    color: black;
+}
+
 .no-rad {
     border-radius: 0;
     margin-bottom: 1em;

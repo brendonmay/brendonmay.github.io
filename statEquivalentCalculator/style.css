@@ -26,7 +26,7 @@ a:hover {
 
 .title-color{
     text-decoration: underline;
-    text-decoration-color: #e0ca05;
+    text-decoration-color: #9FCFFE;
 }
 
 .new_line {
@@ -81,13 +81,14 @@ a:hover {
 
 .jumbotron {
     padding: 4rem 2rem;
-    background: linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.75)), url(bg.jpg);
+    background-color: #16191C;
     background-repeat: no-repeat;
     background-size: cover;
+    border-top: 4px black solid;
 }
 
 .nav-item:hover, .navbar-text:hover, .active{
-    color: #e0ca05 !important
+    color: #9FCFFE !important
 }
 
 .footer {
@@ -114,7 +115,7 @@ html {
 
 .display-4>span {
     font-weight: 900;
-    color: #e0ca05;
+    color: #9FCFFE;
 }
 
 .lead {
@@ -131,53 +132,53 @@ html {
 
 .btnStep {
     padding: 5px 7px;
-    border: 1px solid #e0ca05;
+    border: 1px solid #9FCFFE;
 }
 
 .btnStep:focus {
     padding: 5px 7px;
-    border: 1px solid #e0ca05 !important;
+    border: 1px solid #9FCFFE !important;
 }
 
 .btnStep>div>h6 {
-    color: #e0ca05;
+    color: #9FCFFE;
     margin-bottom: 5px;
 }
 
 .btnStep>div {
-    color: #e0ca05;
+    color: #9FCFFE;
     font-size: 16px;
 }
 
 .btnStep:hover {
-    border: 1px solid #aadb24;
+    border: 1px solid #6AA4DD;
     background: #0b2331;
 }
 
 .btnStep:hover .btnDiv {
-    color: #aadb24;
+    color: #6AA4DD;
 }
 
 .btnStep:hover .btnDiv>h6 {
-    color: #aadb24;
+    color: #6AA4DD;
 }
 
 .btnStep:active {
     background: #0b2331 !important;
-    border: 1px solid #aadb24 !important;
+    border: 1px solid #6AA4DD !important;
 }
 
 .btnStep:visited {
     background: #0b2331 !important;
-    border: 1px solid #aadb24 !important;
+    border: 1px solid #6AA4DD !important;
 }
 
 .btnStep:active .btnDiv {
-    color: #aadb24;
+    color: #6AA4DD;
 }
 
 .btnStep:active .btnDiv>h6 {
-    color: #aadb24;
+    color: #6AA4DD;
 }
 
 textarea:focus, input:focus{
@@ -240,7 +241,7 @@ table {
 .popover-header {
     border-radius: 10px 10px 0 0;
     background: #0c0f11;
-    color: #e0ca05;
+    color: #9FCFFE;
     border-bottom: 0;
 }
 
@@ -265,7 +266,7 @@ table {
     -moz-appearance: none;
     -o-appearance: none;
     appearance: none;
-    border: 1px solid #e0ca05;
+    border: 1px solid #9FCFFE;
     outline: none;
     transition-duration: 0.3s;
     background: none;
@@ -274,8 +275,8 @@ table {
 }
 
 .checkbox > input:checked {
-    border: 1px solid #e0ca05;
-    background-color: #e0ca05;
+    border: 1px solid #9FCFFE;
+    background-color: #9FCFFE;
 }
 
 .form-check {
@@ -318,7 +319,7 @@ hr {
     -moz-appearance: none;
     -o-appearance: none;
     appearance: none;
-    border: 1px solid #e0ca05;
+    border: 1px solid #9FCFFE;
     outline: none;
     transition-duration: 0.3s;
     background: none;
@@ -327,8 +328,8 @@ hr {
 }
 
 .checkbox2 > input:checked {
-    border: 1px solid #e0ca05;
-    background-color: #e0ca05;
+    border: 1px solid #9FCFFE;
+    background-color: #9FCFFE;
     
 }
 
@@ -348,7 +349,7 @@ hr {
 }
 
 .btnSubmit {
-    background: linear-gradient(-45deg, #9b8c02 0%, rgb(90, 100, 1) 80%);
+    background: linear-gradient(-45deg, #0472E0 0%, #0472E0 80%);
     font-size: 18px;
     transition: 0.6s;
     padding: 10px 15px;
@@ -398,16 +399,16 @@ hr {
 }
 
 .nav-item:hover .small>ion-icon {
-    color: #e0ca05 !important;
+    color: #9FCFFE !important;
 }
 
 .contData {
-    color: #e0ca05;
+    color: #9FCFFE;
     transition: .3s;
 }
 
 .contData:hover {
-    color: #e0ca05;
+    color: #9FCFFE;
 }
 
 .form-control:disabled {
