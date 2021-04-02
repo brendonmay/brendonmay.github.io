@@ -1,5 +1,6 @@
 body {
     background: #1e2226;
+    margin-bottom: 75px;
 }
 
 a:hover {
@@ -92,7 +93,7 @@ a:hover {
 }
 
 .footer {
-    position: sticky;
+    position: fixed;
     bottom: 0;
     width: 100%;
     height: 60px;
@@ -115,7 +116,12 @@ html {
 
 .display-4>span {
     font-weight: 900;
-    color: #9FCFFE;
+    color: #6bb0f5;
+}
+
+.white {
+    color: 9FCFFE;
+    font-weight: 600;
 }
 
 .lead {
@@ -346,6 +352,10 @@ hr {
 
 .noPadding {
     padding: 0;
+}
+
+.right-margin {
+    margin-right: 10px;
 }
 
 .btnSubmit {
