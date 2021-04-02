@@ -3794,6 +3794,9 @@ function optimizeWSE() {
         var flat_sec = 0
         var sec_without_perc = 0
 
+        var primary_stat = primary_stat_1 + primary_stat_2 + primary_stat_3
+        var secondary_stat = 0
+
     }
     else if (maple_class == "Dual Blade" || maple_class == "Cadena" || maple_class == "Shadower" || maple_class == "Kanna") {
 
@@ -3829,6 +3832,8 @@ function optimizeWSE() {
         var sec_2_without_perc = ((secondary_stat_2 - flat_sec_2) / sec_2_perc) + flat_sec_2
 
         var sec_without_perc = { 1: sec_1_without_perc, 2: sec_2_without_perc }
+
+        var secondary_stat = secondary_stat_1 +  secondary_stat_2
     }
     else {
         var sec_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
@@ -3841,10 +3846,10 @@ function optimizeWSE() {
         var flat_sec = hyper_secondary // collect directly (inner ability)
         var primary_without_perc = (primary_stat - flat_primary) / primary_perc + flat_primary
         var sec_without_perc = ((secondary_stat - flat_sec) / sec_perc) + flat_sec
-
-
     }
 
+    var stat_value = getStatValue(maple_class, primary_stat, secondary_stat, level);
+    var attack = Math.floor(determineAttAmount(upperShownDamage, multiplier, stat_value, parseInt(document.getElementById('damage_percent').value), final_damage_percent) / (current_attack_percent / 100));
 
     //determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
     var statEquivalences = determineStatEquivalences(maple_class, attack, current_attack_percent / 100, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc)
