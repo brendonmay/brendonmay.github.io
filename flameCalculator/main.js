@@ -539,11 +539,6 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                                                             if (possibleOutcome(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, sec1_tier, sec2_tier)) {
                                                                 var solution = { "main_tier": main_tier, "sec1_tier": sec1_tier, "sec2_tier": sec2_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "combo_six_tier": combo_six_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier }
                                                                 solutions[solutions.length] = solution
-
-                                                                if (stat_score >= 304) {
-                                                                    console.log(stat_score)
-                                                                    console.log(main_tier, sec1_tier, sec2_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, combo_six_tier, all_stat_tier, attack_tier, 0, 0)
-                                                                }
                                                             }
                                                         }
                                                         if (sec2_tier == 0) {
@@ -654,11 +649,6 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                                                             if (possibleOutcome(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier)) {
                                                                 var solution = { "main_tier": main_tier, "main2_tier": main2_tier, "main3_tier": main3_tier, "combo_one_tier": combo_one_tier, "combo_two_tier": combo_two_tier, "combo_three_tier": combo_three_tier, "combo_four_tier": combo_four_tier, "combo_five_tier": combo_five_tier, "combo_six_tier": combo_six_tier, "all_stat_tier": all_stat_tier, "attack_tier": attack_tier }
                                                                 solutions[solutions.length] = solution
-
-                                                                if (stat_score >= 304) {
-                                                                    console.log(stat_score)
-                                                                    console.log(main_tier, main2_tier, main3_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, combo_six_tier, all_stat_tier, attack_tier, 0, 0)
-                                                                }
                                                             }
                                                         }
                                                         if (main3_tier == 0) {
@@ -840,7 +830,6 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
         }
         if (maple_class != "da") {
             var probability = 0
-            console.log(solutions.length)
             for (var i = 0; i < solutions.length; i++) {
                 var main2_tier = 0
                 var main3_tier = 0
@@ -856,7 +845,6 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                 var attack_tier = solutions[i].attack_tier
                 if (maple_class == "kanna"){
                     hp_tier = solutions[i].hp_tier
-                    console.log(solutions[i])
                     var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, 0, hp_tier)
                 }
                 else if (maple_class == "xenon") {
@@ -1675,7 +1663,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             var p = getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class)
-            console.log(p)
+            //console.log(p)
             var stats = geoDistrQuantile(p)
 
             var mean = Math.round(stats.mean)

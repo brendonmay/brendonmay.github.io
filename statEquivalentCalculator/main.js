@@ -294,10 +294,12 @@ function loadLocalStorage() {
                     if (maple_class == "Kanna") {
                         document.getElementById('kanna_hp_div').hidden = false;
                         document.getElementById('kanna_hp_perc_div').hidden = false;
+                        document.getElementById('DHB_div').hidden = false;
                     }
                     else {
                         document.getElementById('kanna_hp_div').hidden = true;
                         document.getElementById('kanna_hp_perc_div').hidden = true;
+                        document.getElementById('DHB_div').hidden = true;
                     }
 
                     if (maple_class == "Zero") {
@@ -313,6 +315,10 @@ function loadLocalStorage() {
 
                     document.getElementById('primary_label').innerHTML = `<label for="primary_stat"> ${primary_stat} </label>`;
                     document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
+
+                    document.getElementById('main_stat_perc_label').innerHTML = `<label for="main_stat_perc"> ${primary_stat} % on Equips </label>`;
+                    document.getElementById('sec_perc_label').innerHTML = `<label for="sec_perc"> ${secondary_stat} % on Equips </label>`;
+                    document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane Symbols) </label>`;
 
                     if (maple_class == "Xenon") {
                         document.getElementById('secondary_stat').value = 0;
@@ -380,10 +386,10 @@ function saveToLocalStorage(maple_class) {
     //collection of IDs to collect data on
     var id_values = ['level', 'sec_perc_2', 'secondary_2_stat', 'sec_perc', 'main_stat_perc', 'kanna_hp_perc', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
-    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
+    var id_checked = ['DHB', 'solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
     var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
-    var id_hidden = ['sec_perc_2_div', 'sec_2_div', 'kanna_hp_perc_div', 'kanna_hp_div', 'zeromessage']
+    var id_hidden = ['sec_perc_2_div', 'sec_2_div', 'kanna_hp_perc_div', 'kanna_hp_div', 'zeromessage', 'DHB_div']
 
     var i = 0
     while (i < id_values.length) {
@@ -3368,8 +3374,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (maple_class == "Kanna") {
             document.getElementById('kanna_hp_div').hidden = false;
             document.getElementById('kanna_hp_perc_div').hidden = false;
+            document.getElementById('DHB_div').hidden = false;
         }
         else {
+            
+            document.getElementById('DHB_div').hidden = true;
             document.getElementById('kanna_hp_div').hidden = true;
             document.getElementById('kanna_hp_perc_div').hidden = true;
         }
@@ -3842,8 +3851,9 @@ function optimizeWSE() {
 
         var sec_1_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
         if (maple_class == "Kanna") {
-            var sec_2_perc = (100 + 15 + 1 + 20 + 26 + 40 + parseInt(document.getElementById('hp').value) + parseInt(document.getElementById("kanna_hp_perc").value)) / 100
-            console.log(sec_2_perc)
+            var sec_2_perc = (100 + 15 + 1 + 20 + 26 + parseInt(document.getElementById('hp').value) + parseInt(document.getElementById("kanna_hp_perc").value)) / 100
+            if (document.getElementById('DHB').checked) sec_2_perc = sec_2_perc + 0.4 
+            
         }
         else {
             var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value)) / 100
@@ -3925,7 +3935,7 @@ function optimizeWSE() {
         </div>
         `
     }
-    console.log(statEquivalences)
+    //console.log(statEquivalences)
     return false
 }
 
