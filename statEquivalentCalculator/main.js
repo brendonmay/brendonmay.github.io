@@ -140,7 +140,7 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
         var stat_diff_2 = damage(maple_class, attack_without_perc, attack_perc, flat_primary, adjusted_primary_without_perc_2, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
         var stat_diff_3 = damage(maple_class, attack_without_perc, attack_perc, flat_primary, adjusted_primary_without_perc_3, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
 
-        var stat_diff = (stat_diff_1 + stat_diff_2 + stat_diff_3) / 3
+
         var sec_diff = 0
         var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, adjusted_perc_all, flat_sec, sec_without_perc, sec_perc) - current_dmg
 
@@ -224,7 +224,14 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
         var sec_equiv = sec_diff / stat_diff
     }
     var perc_all_equiv = perc_all_diff / stat_diff
-    var att_equiv = att_diff / stat_diff
+    if (maple_class != "Xenon") var att_equiv = att_diff / stat_diff
+    else {
+        var att_equiv_1 = att_diff / stat_diff_1
+        var att_equiv_2 = att_diff / stat_diff_2
+        var att_equiv_3 = att_diff / stat_diff_3
+
+        var att_equiv = (att_equiv_1 + att_equiv_2 + att_equiv_3) / 3
+    }
 
     return { sec_equiv, perc_all_equiv, att_equiv }
 }
