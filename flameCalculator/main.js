@@ -1,5 +1,8 @@
 //to do: xenon, DA, Kanna, double sec stat classes, other weird classes check formulas
 
+//non-flame-advantaged item line probabilities
+let non_advantaged = { 1: 0.45, 2: 0.35, 3: 0.15, 4: 0.05 }
+
 let powerful_tier_probabilities = { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 }
 let eternal_tier_probabilities = { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 }
 
@@ -10,6 +13,8 @@ let eternal_tier_probabilities_non_adv = { 1: 0, 2: 0.29, 3: 0.45, 4: 0.25, 5: 0
 var stat_per_tier = { "140-159": 8, "160-179": 9, "180-199": 10, "200-219": 11 }
 let combo_stat_per_tier = { "140-159": 4, "160-179": 5, "180-199": 5, "200-219": 6 }
 var stat_equivalences = { "all_stat": 8, "secondary_stat": 0.1, "attack": 3 }
+
+let hp_stat_per_tier = { "140-149": 420, "150-159": 450, "160-169": 480, "170-179": 510, "180-189": 540, "190-199": 570, "200-209": 600, "210-219": 630 }
 
 function factorial(number) {
     var value = number;
@@ -43,7 +48,7 @@ function checkRatios(maple_class) {
     if (maple_class == "shadower" || maple_class == "db" || maple_class == "cadena") {
         if (stat_equivalences.dex_stat == 0) {
             if (stat_equivalences.str_stat == 0) {
-                zeroes = zeroes + 5 //here
+                zeroes = zeroes + 5
                 remove_str = true
             }
             else {
@@ -76,6 +81,77 @@ function checkRatios(maple_class) {
     }
 
     return { zeroes, remove_all_stat, remove_sec, remove_att }
+}
+
+function getDAProbability(desired_attack, desired_hp, flame_type, non_advantaged_item) {
+    var probability = 0
+
+    if (flame_type == "powerful") {
+        if (non_advantaged_item) {
+            var tier_probabilities = powerful_tier_probabilities_non_adv
+        }
+        else {
+            var tier_probabilities = powerful_tier_probabilities
+        }
+    }
+    else {
+        if (non_advantaged_item) {
+            var tier_probabilities = eternal_tier_probabilities_non_adv
+        }
+        else {
+            var tier_probabilities = eternal_tier_probabilities
+        }
+    }
+
+    if (desired_attack == 0 || desired_hp == 0) { // only hp
+        var stat = desired_hp
+        if (desired_hp == 0) stat = desired_attack
+        var tier_probability = 0
+        var tier_check = 3
+        var tier_limit = 8
+        if (non_advantaged_item) {
+            tier_check = 1
+            tier_limit = 6
+        }
+        while (tier_check < tier_limit) {
+            if (stat <= tier_check) {
+                tier_probability = tier_probability + tier_probabilities[tier_check]
+            }
+            tier_check++
+        }
+
+        if (non_advantaged_item) { //here
+            var line_probability = non_advantaged[1] / 19 + non_advantaged[2] * combination(17, 1) / combination(19, 2) + non_advantaged[3] * combination(17, 2) / combination(19, 3) + non_advantaged[4] * combination(17, 3) / combination(19, 4)
+        }
+        else {
+            var line_probability = combination(18, 3) / combination(19, 4)
+        }
+        probability = tier_probability * line_probability
+    }
+    else { // hp and attack
+        var tier_probability = 0
+        var att_tier_check = desired_attack
+        var tier_limit = 8
+        if (non_advantaged_item) tier_limit = 6
+
+        while (att_tier_check < tier_limit) {
+            var hp_tier_check = desired_hp
+            while (hp_tier_check < tier_limit) {
+                tier_probability = tier_probability + tier_probabilities[att_tier_check] * tier_probabilities[hp_tier_check]
+                hp_tier_check++
+            }
+            att_tier_check++
+        }
+
+        if (non_advantaged_item) { //here
+            var line_probability = non_advantaged[2] / combination(19, 2) + non_advantaged[3] * combination(17, 1) / combination(19, 3) + non_advantaged[4] * combination(17, 2) / combination(19, 4)
+        }
+        else {
+            var line_probability = combination(17, 2) / combination(19, 4)
+        }
+        probability = tier_probability * line_probability
+    }
+    return probability
 }
 
 function getWeaponProbability(attack, dmg, flame_type) {
@@ -315,10 +391,18 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
     if (item_type == "armor") {
         if (desired_stat == 0) return 1
 
-        var ratios = checkRatios(maple_class) //here
-		if (maple_class == "kanna") {}
+        var ratios = checkRatios(maple_class)
+        if (maple_class == "da") {
+            var desired_attack_tier = desired_stat.attack_tier
+            var desired_hp_tier = desired_stat.hp_tier //here
+
+            if (desired_attack_tier == 0 && desired_hp_tier) return 1
+
+            var probability = getDAProbability(desired_attack_tier, desired_hp_tier, flame_type, non_advantaged_item)
+        }
+        if (maple_class == "kanna") { }
         if (maple_class == "shadower" || maple_class == "db" || maple_class == "cadena") {
-			var main_tier = 0
+            var main_tier = 0
             while (main_tier < upper_limit) { //str
                 var combo_six_tier = 0
                 while (combo_six_tier < upper_limit) { // luk+dex
@@ -340,7 +424,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                                                 while (sec1_tier < upper_limit) { //luk
                                                     var sec2_tier = 0
                                                     while (sec2_tier < upper_limit) { //dex
-                                                        //equation here change this calculation for different classes //here
+                                                        //equation here change this calculation for different classes
                                                         var stat_score = (main_tier) * stat_per_tier[item_level] + sec1_tier * stat_per_tier[item_level] * stat_equivalences["dex_stat"] + sec2_tier * stat_per_tier[item_level] * stat_equivalences["str_stat"] + (combo_one_tier + combo_two_tier + combo_three_tier) * combo_stat_per_tier[item_level] + (combo_two_tier + combo_four_tier + combo_five_tier) * combo_stat_per_tier[item_level] * stat_equivalences.str_stat + (combo_three_tier + combo_five_tier + combo_six_tier) * combo_stat_per_tier[item_level] * stat_equivalences.dex_stat + all_stat_tier * stat_equivalences["all_stat"] + attack_tier * stat_equivalences["attack"]
 
                                                         if (stat_score >= desired_stat) {
@@ -431,7 +515,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                     main_tier++
                 }
             }
-		}
+        }
         if (maple_class == "xenon") {
             var main_tier = 0
             while (main_tier < upper_limit) { //str
@@ -646,73 +730,73 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                 }
             }
         }
-
-        var probability = 0
-        console.log(solutions.length)
-        for (var i = 0; i < solutions.length; i++) {
-            var main2_tier = 0
-            var main3_tier = 0
-            var combo_six_tier = 0
-            var main_tier = solutions[i].main_tier
-            if(maple_class == "other") var secondary_tier = solutions[i].secondary_tier
-            var combo_one_tier = solutions[i].combo_one_tier
-            var combo_two_tier = solutions[i].combo_two_tier
-            var combo_three_tier = solutions[i].combo_three_tier
-            var combo_four_tier = solutions[i].combo_four_tier
-            var combo_five_tier = solutions[i].combo_five_tier
-            var all_stat_tier = solutions[i].all_stat_tier
-            var attack_tier = solutions[i].attack_tier
-            if (maple_class == "xenon") {
-                main2_tier = solutions[i].main2_tier
-                main3_tier = solutions[i].main3_tier
-                combo_six_tier = solutions[i].combo_six_tier
-                var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier)
-            }
-            if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
-                var sec1_tier = solutions[i].sec1_tier
-                var sec2_tier = solutions[i].sec2_tier
-                combo_six_tier = solutions[i].combo_six_tier
-                var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, sec1_tier, sec2_tier)
-            }
-            else {
-                var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, 0, 0)
-            }
-            if (number_of_lines > 4) {
-                console.log("More than 4 lines")
-            }
-            //non-flame-advantaged item line probabilities
-            var non_advantaged = { 1: 0.45, 2: 0.35, 3: 0.15, 4: 0.05 }
-
-            //hypergeometric distribution
-            var number_of_zeroes = checkRatios().zeroes
-            var choose_from = 10 + number_of_zeroes
-            if (maple_class == "xenon" || maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") choose_from = 8
-
-            //here
-            var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
-            if (non_advantaged_item) {
-                if (number_of_lines == 1) {
-                    line_probability = non_advantaged[1] / combination(19, 1) + non_advantaged[2] * combination(choose_from, 1) / combination(19, 2) + non_advantaged[3] * combination(choose_from, 2) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 3) / combination(19, 4)
+        if (maple_class != "da") {
+            var probability = 0
+            console.log(solutions.length)
+            for (var i = 0; i < solutions.length; i++) {
+                var main2_tier = 0
+                var main3_tier = 0
+                var combo_six_tier = 0
+                var main_tier = solutions[i].main_tier
+                if (maple_class == "other") var secondary_tier = solutions[i].secondary_tier
+                var combo_one_tier = solutions[i].combo_one_tier
+                var combo_two_tier = solutions[i].combo_two_tier
+                var combo_three_tier = solutions[i].combo_three_tier
+                var combo_four_tier = solutions[i].combo_four_tier
+                var combo_five_tier = solutions[i].combo_five_tier
+                var all_stat_tier = solutions[i].all_stat_tier
+                var attack_tier = solutions[i].attack_tier
+                if (maple_class == "xenon") {
+                    main2_tier = solutions[i].main2_tier
+                    main3_tier = solutions[i].main3_tier
+                    combo_six_tier = solutions[i].combo_six_tier
+                    var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, main2_tier, main3_tier)
                 }
-                else if (number_of_lines == 2) {
-                    line_probability = non_advantaged[2] / combination(19, 2) + non_advantaged[3] * combination(choose_from, 1) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 2) / combination(19, 4)
-                }
-                else if (number_of_lines == 3) {
-                    line_probability = non_advantaged[3] / combination(19, 3) + non_advantaged[4] * combination(choose_from, 1) / combination(19, 4)
-                }
-                else if (number_of_lines == 4) {
-                    line_probability = non_advantaged[4] / combination(19, 4)
+                if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
+                    var sec1_tier = solutions[i].sec1_tier
+                    var sec2_tier = solutions[i].sec2_tier
+                    combo_six_tier = solutions[i].combo_six_tier
+                    var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, sec1_tier, sec2_tier)
                 }
                 else {
-                    line_probability = 0
+                    var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, 0, 0, 0, 0)
                 }
+                if (number_of_lines > 4) {
+                    console.log("More than 4 lines")
+                }
+
+                //hypergeometric distribution
+                var number_of_zeroes = checkRatios().zeroes
+                var choose_from = 10 + number_of_zeroes
+                if (maple_class == "xenon" || maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") choose_from = 8
+
+                //here
+                var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
+                if (non_advantaged_item) {
+                    if (number_of_lines == 1) {
+                        line_probability = non_advantaged[1] / combination(19, 1) + non_advantaged[2] * combination(choose_from, 1) / combination(19, 2) + non_advantaged[3] * combination(choose_from, 2) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 3) / combination(19, 4)
+                    }
+                    else if (number_of_lines == 2) {
+                        line_probability = non_advantaged[2] / combination(19, 2) + non_advantaged[3] * combination(choose_from, 1) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 2) / combination(19, 4)
+                    }
+                    else if (number_of_lines == 3) {
+                        line_probability = non_advantaged[3] / combination(19, 3) + non_advantaged[4] * combination(choose_from, 1) / combination(19, 4)
+                    }
+                    else if (number_of_lines == 4) {
+                        line_probability = non_advantaged[4] / combination(19, 4)
+                    }
+                    else {
+                        line_probability = 0
+                    }
+                }
+                var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, 0, 0, non_advantaged_item, main2_tier, main3_tier, combo_six_tier)
+                var event_probability = line_probability * tier_probability
+
+                probability = probability + event_probability
+
             }
-            var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, 0, 0, non_advantaged_item, main2_tier, main3_tier, combo_six_tier)
-            var event_probability = line_probability * tier_probability
-
-            probability = probability + event_probability
-
         }
+
     }
     else if (item_type == "weapon") {
         var desired_attack_tier = desired_stat.attack_tier
@@ -855,6 +939,27 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
     // return probability
 }
 
+function updateItemLevels(maple_class) {
+    if (maple_class == "kanna") {
+        $('#item_level').empty()
+        $('#item_level').append("<option value='140-149'>140-149</option>")
+        $('#item_level').append("<option value='150-159'>150-159</option>")
+        $('#item_level').append("<option value='160-169'>160-169</option>")
+        $('#item_level').append("<option value='170-179'>170-179</option>")
+        $('#item_level').append("<option value='180-189'>180-189</option>")
+        $('#item_level').append("<option value='190-199'>190-199</option>")
+        $('#item_level').append("<option value='200-209'>200-209</option>")
+        $('#item_level').append("<option value='210-219'>210-219</option>")
+    }
+    else {
+        $('#item_level').empty()
+        $('#item_level').append("<option value='140-159'>140-149</option>")
+        $('#item_level').append("<option value='160-179'>150-159</option>")
+        $('#item_level').append("<option value='180-199'>160-169</option>")
+        $('#item_level').append("<option value='200-219'>170-179</option>")
+    }
+}
+
 function geoDistrQuantile(p) {
     var mean = 1 / p
 
@@ -872,132 +977,59 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000)
     document.getElementById("item_type").addEventListener("change", function () {
         var maple_class = document.getElementById("maple_class").value
-        if (document.getElementById("item_type").value == "armor") {
-            if (maple_class == "kanna") {
-                document.getElementById('hp_stat_div').hidden = false
-                document.getElementById('luk_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-
-                document.getElementById("all_stat").value = 8
-
-            }
-            else if (maple_class == "xenon") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById("desired_stat_armor").value = 235
-                document.getElementById("all_stat").value = 20
-            }
-            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-
-                document.getElementById('str_stat_div').hidden = false
-                document.getElementById('dex_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById("all_stat").value = 8
-            }
-            else if (maple_class == "other") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-
-                document.getElementById('secondary_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById("all_stat").value = 8
-            }
-            else if (maple_class == "da") {
-                document.getElementById("statequivalences").hidden = true
-                document.getElementById("statequivalences_title").hidden = true
-            }
-        }
-    })
-    document.getElementById("maple_class").addEventListener("change", function () {
-        var maple_class = document.getElementById("maple_class").value
-
-        if (document.getElementById("item_type").value == "armor") {
-            if (maple_class == "kanna") {
-                document.getElementById('hp_stat_div').hidden = false
-                document.getElementById('luk_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-
-                document.getElementById("all_stat").value = 8
-
-            }
-            else if (maple_class == "xenon") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById("desired_stat_armor").value = 235
-                document.getElementById("all_stat").value = 20
-            }
-            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-
-                document.getElementById('str_stat_div').hidden = false
-                document.getElementById('dex_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-                document.getElementById("all_stat").value = 8
-            }
-            else if (maple_class == "other") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-
-                document.getElementById('secondary_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-                document.getElementById("all_stat").value = 8
-            }
-            else if (maple_class == "da") {
-                document.getElementById("statequivalences").hidden = true
-                document.getElementById("statequivalences_title").hidden = true
-            }
-        }
-    })
-    document.getElementById("item_type").addEventListener("change", function () {
         var item_type = document.getElementById('item_type').value
         var flame_type = document.getElementById('flame_type').value
         if (item_type == 'armor') {
+            if (maple_class == "da") {
+                document.getElementById("armor_desired_stats").hidden = true
+
+                document.getElementById("da_desired_stats").hidden = false
+
+                if (flame_type == "powerful") {
+                    $('#da_attack_tier').empty()
+                    $('#hp_tier').empty()
+
+                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+                    $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
+                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
+                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+
+                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
+                    $('#hp_tier').append("<option value=1>Tier 1+</option>")
+                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
+                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
+                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
+                }
+                else {
+                    $('#da_attack_tier').empty()
+                    $('#hp_tier').empty()
+
+                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
+                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+                    $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
+
+                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
+                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
+                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
+                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
+                    $('#hp_tier').append("<option value=5>Tier 5+</option>")
+                }
+            }
+            else {
+                document.getElementById("armor_desired_stats").hidden = false
+
+                document.getElementById("da_desired_stats").hidden = true
+            }
             document.getElementById('weapon_desired_stats').hidden = true;
             document.getElementById('statequivalences_title').hidden = false;
             document.getElementById('statequivalences').hidden = false;
-            document.getElementById('armor_desired_stats').hidden = false;
             document.getElementById('item_level_div').hidden = false;
         }
         else {
+            document.getElementById('flame-advantaged').checked = true;
             document.getElementById('weapon_desired_stats').hidden = false;
             document.getElementById('armor_desired_stats').hidden = true;
             document.getElementById('statequivalences').hidden = true;
@@ -1008,19 +1040,230 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('attack_tier').options[5].disabled = true;
 
             }
+            else {
+                document.getElementById('attack_tier').options[5].disabled = false;
+            }
+        }
+        if (document.getElementById("item_type").value == "armor") {
+            updateItemLevels(maple_class);
+            if (maple_class == "kanna") {
+                document.getElementById('hp_stat_div').hidden = false
+                document.getElementById('luk_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+
+                document.getElementById("all_stat").value = 8
+
+            }
+            else if (maple_class == "xenon") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById("desired_stat_armor").value = 230
+                document.getElementById("all_stat").value = 19
+            }
+            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+
+                document.getElementById('str_stat_div').hidden = false
+                document.getElementById('dex_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById("all_stat").value = 8
+            }
+            else if (maple_class == "other") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+
+                document.getElementById('secondary_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById("all_stat").value = 8
+            }
+            else if (maple_class == "da") {
+                document.getElementById("statequivalences").hidden = true
+                document.getElementById("statequivalences_title").hidden = true
+
+                document.getElementById("da_desired_stats").hidden = false
+
+            }
+        }
+        else {
+            document.getElementById("da_desired_stats").hidden = true
+        }
+    })
+    document.getElementById("maple_class").addEventListener("change", function () {
+        var maple_class = document.getElementById("maple_class").value
+        var flame_type = document.getElementById("flame_type").value
+
+        if (document.getElementById("item_type").value == "armor") {
+            updateItemLevels(maple_class);
+            if (maple_class == "da") {
+                document.getElementById("armor_desired_stats").hidden = true
+
+                document.getElementById("da_desired_stats").hidden = false
+                if (flame_type == "powerful") {
+                    $('#da_attack_tier').empty()
+                    $('#hp_tier').empty()
+
+                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+                    $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
+                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
+                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+
+                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
+                    $('#hp_tier').append("<option value=1>Tier 1+</option>")
+                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
+                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
+                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
+                }
+                else {
+                    $('#da_attack_tier').empty()
+                    $('#hp_tier').empty()
+
+                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
+                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+                    $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
+
+                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
+                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
+                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
+                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
+                    $('#hp_tier').append("<option value=5>Tier 5+</option>")
+                }
+            }
+            else {
+                document.getElementById("armor_desired_stats").hidden = false
+
+                document.getElementById("da_desired_stats").hidden = true
+            }
+            if (maple_class == "kanna") {
+                document.getElementById('hp_stat_div').hidden = false
+                document.getElementById('luk_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+
+                document.getElementById("all_stat").value = 8
+
+            }
+            else if (maple_class == "xenon") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+
+                document.getElementById("desired_stat_armor").value = 230
+                document.getElementById("all_stat").value = 19
+            }
+            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('secondary_stat_div').hidden = true
+
+                document.getElementById('str_stat_div').hidden = false
+                document.getElementById('dex_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+                document.getElementById("all_stat").value = 8
+            }
+            else if (maple_class == "other") {
+                document.getElementById('hp_stat_div').hidden = true
+                document.getElementById('luk_stat_div').hidden = true
+                document.getElementById('str_stat_div').hidden = true
+                document.getElementById('dex_stat_div').hidden = true
+
+                document.getElementById('secondary_stat_div').hidden = false
+                document.getElementById("statequivalences").hidden = false
+                document.getElementById("statequivalences_title").hidden = false
+                document.getElementById("all_stat").value = 8
+            }
+            else if (maple_class == "da") {
+                document.getElementById("statequivalences").hidden = true
+                document.getElementById("statequivalences_title").hidden = true
+                document.getElementById("armor_desired_stats").hidden = true
+
+                document.getElementById("da_desired_stats").hidden = false
+            }
         }
     })
     document.getElementById("flame_type").addEventListener("change", function () {
         var flame_type = document.getElementById('flame_type').value
         var item_type = document.getElementById('item_type').value
+        var maple_class = document.getElementById('maple_class').value
         if (flame_type == 'powerful') {
             if (item_type == 'weapon') {
                 document.getElementById('attack_tier').options[5].disabled = true;
+            }
+            else {
+                if (maple_class == 'da') {
+                    $('#da_attack_tier').empty()
+                    $('#hp_tier').empty()
+
+                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+                    $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
+                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
+                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+
+                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
+                    $('#hp_tier').append("<option value=1>Tier 1+</option>")
+                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
+                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
+                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
+
+                }
             }
         }
         else {
             if (item_type == 'weapon') {
                 document.getElementById('attack_tier').options[5].disabled = false;
+            }
+            else {
+                if (maple_class == 'da') {
+
+                    $('#da_attack_tier').empty()
+                    $('#hp_tier').empty()
+
+                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
+                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+                    $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
+
+                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
+                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
+                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
+                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
+                    $('#hp_tier').append("<option value=5>Tier 5+</option>")
+
+                }
             }
         }
     })
@@ -1058,8 +1301,15 @@ document.addEventListener("DOMContentLoaded", function () {
             if (maple_class != "xenon") stat_equivalences.secondary_stat = 1 / document.getElementById('secondary_stat').value
 
             if (item_type == 'armor') {
-                var desired_stat = document.getElementById('desired_stat_armor').value
-                item_level = document.getElementById('item_level').value
+                if (maple_class == "da") {
+                    var attack_tier = document.getElementById('da_attack_tier').value
+                    var hp_tier = document.getElementById('hp_tier').value
+                    var desired_stat = { "attack_tier": attack_tier, "hp_tier": hp_tier }
+                }
+                else {
+                    var desired_stat = document.getElementById('desired_stat_armor').value
+                    item_level = document.getElementById('item_level').value
+                }
             }
             else {
                 var attack_tier = document.getElementById('attack_tier').value
