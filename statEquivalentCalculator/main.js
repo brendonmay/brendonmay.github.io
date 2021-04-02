@@ -223,13 +223,20 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
     else {
         var sec_equiv = sec_diff / stat_diff
     }
-    var perc_all_equiv = perc_all_diff / stat_diff
-    if (maple_class != "Xenon") var att_equiv = att_diff / stat_diff
+    if (maple_class != "Xenon") {
+        var att_equiv = att_diff / stat_diff
+        var perc_all_equiv = perc_all_diff / stat_diff
+    }
     else {
         var att_equiv_1 = att_diff / stat_diff_1
         var att_equiv_2 = att_diff / stat_diff_2
         var att_equiv_3 = att_diff / stat_diff_3
 
+        var perc_all_equiv_1 = perc_all_diff / stat_diff_1
+        var perc_all_equiv_2 = perc_all_diff / stat_diff_2
+        var perc_all_equiv_3 = perc_all_diff / stat_diff_3
+
+        var perc_all_equiv = (perc_all_equiv_1 + perc_all_equiv_2 + perc_all_equiv_3) / 3
         var att_equiv = (att_equiv_1 + att_equiv_2 + att_equiv_3) / 3
     }
 
@@ -237,6 +244,11 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
 }
 
 function loadLocalStorage() {
+    //new ids to track for localstorage
+    //sec_perc_2, sec_perc_2_div(hidden), sec_2_div (hidden), secondary_2_stat, sec_perc, main_stat_perc, kanna_hp_perc, kanna_hp_perc_div(hidden)
+
+    //no longer make hp_arcane_div hidden
+
     //var json = event.target.result;
     var json = window.localStorage.getItem('data'); //here
     var obj = JSON.parse(json);
@@ -3881,10 +3893,6 @@ function optimizeWSE() {
     }
     console.log(statEquivalences)
     return false
-    //new ids to track for localstorage
-    //sec_perc_2, sec_perc_2_div(hidden), sec_2_div (hidden), secondary_2_stat, sec_perc, main_stat_perc, kanna_hp_perc, kanna_hp_perc_div(hidden)
-    //no longer make hp_arcane_div hidden
-
 }
 
 
