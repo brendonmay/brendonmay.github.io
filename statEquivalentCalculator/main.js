@@ -155,6 +155,8 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
             var old_att_gain = sec_without_perc[2] * (1 + sec_perc[2]) / 700
             var new_att_gain = (sec_without_perc[2] + 1) * (1 + sec_perc[2]) / 700
             var new_att_without_perc = attack_without_perc - old_att_gain + new_att_gain
+
+            var hp_to_att = 700 / sec_perc[2]
             var hp_diff = damage(maple_class, new_att_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
 
             var sec_diff = { luk_diff, hp_diff }
@@ -215,8 +217,11 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
         return { att_equiv }
     }
     else if (maple_class == "Kanna") {
+        var att_equiv = att_diff / stat_diff
+
         var luk_equiv = luk_diff / stat_diff
-        var hp_equiv = hp_diff / stat_diff
+
+        var hp_equiv = hp_to_att / att_equiv
 
         var sec_equiv = { luk_equiv, hp_equiv }
     }
@@ -3695,7 +3700,7 @@ function optimizeWSE() {
     if (maple_class == 'Kanna') {
         var hp_hyper = parseInt(document.getElementById('hp').value);
         var hp_percent = 1 + (parseInt(document.getElementById('kanna_hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
-        console.log('hp perc: ' + hp_percent)
+        
 
         //console.log('old hp perc: ' + hp_percent)
         var new_hp_percent = (hp_percent * 100 - hp_hyper) / 100;
@@ -3837,7 +3842,8 @@ function optimizeWSE() {
 
         var sec_1_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
         if (maple_class == "Kanna") {
-            var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value)) / 100
+            var sec_2_perc = (100 + 15 + 1 + 20 + 26 + 40 + parseInt(document.getElementById('hp').value) + parseInt(document.getElementById("kanna_hp_perc").value)) / 100
+            console.log(sec_2_perc)
         }
         else {
             var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value)) / 100
@@ -3848,12 +3854,15 @@ function optimizeWSE() {
         var secondary_stat_1 = parseInt(document.getElementById("secondary_stat").value)
         var secondary_stat_2 = parseInt(document.getElementById("secondary_2_stat").value)
 
+        if (maple_class == "Kanna") secondary_stat_2 = parseInt(document.getElementById("kanna_hp").value)
+
         var sec_1_without_perc = ((secondary_stat_1 - flat_sec_1) / sec_1_perc) + flat_sec_1
         var sec_2_without_perc = ((secondary_stat_2 - flat_sec_2) / sec_2_perc) + flat_sec_2
 
         var sec_without_perc = { 1: sec_1_without_perc, 2: sec_2_without_perc }
 
         var secondary_stat = secondary_stat_1 + secondary_stat_2
+        if (maple_class == "Kanna") secondary_stat = secondary_stat_1
     }
     else {
         var sec_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
@@ -3882,7 +3891,7 @@ function optimizeWSE() {
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.luk_equiv)} LUK</div>
-            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.hp_equiv)} HP</div>
+            <div class="test">1 Main Stat = ${roundUp(statEquivalences.sec_equiv.hp_equiv)} HP</div>
         </div>
         `
     }
