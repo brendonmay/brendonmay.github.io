@@ -1396,6 +1396,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('secondary_stat_div').hidden = true
 
                 document.getElementById("all_stat").value = 8
+                document.getElementById("attack").value = 3
 
             }
             else if (maple_class == "xenon") {
