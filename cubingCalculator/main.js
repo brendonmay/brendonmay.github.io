@@ -2261,7 +2261,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
 
   //item_level < 151
   //HP will follow same logic as ALL Stat
-  if (desired_outcome == "15PercALL" || desired_outcome == "17PercALL" || desired_outcome == "21PercHP" || desired_outcome == "23PercHP") {
+  if (desired_outcome == "15PercALL" || desired_outcome == "17PercALL" || desired_outcome == "21PercHP") {
     if (desired_outcome == "15PercALL" || desired_outcome == "17PercALL") {
       var prime = '9_all'
       var sub = '6_all'
@@ -2310,7 +2310,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11
   }
   //HP will follow same logic and Perc ALL
-  if (desired_outcome == "18PercALL" || desired_outcome == "20PercALL" || desired_outcome == "24PercHP" || desired_outcome == "26PercHP") {
+  if (desired_outcome == "18PercALL" || desired_outcome == "20PercALL" || desired_outcome == "24PercHP") {
     if (desired_outcome == "18PercALL" || desired_outcome == "20PercALL") {
       var prime = '9_all'
       var sub = '6_all'
@@ -2346,7 +2346,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7
   }
   //HP will follow same logic and PercALL
-  if (desired_outcome == "21PercALL" || desired_outcome == "24PercALL" || desired_outcome == "30PercHP" || desired_outcome == "33PercHP") {
+  if (desired_outcome == "21PercALL" || desired_outcome == "24PercALL" || desired_outcome == "30PercHP") {
     if (desired_outcome == "21PercALL" || desired_outcome == "24PercALL") {
       var prime = '9_all'
       var sub = '6_all'
@@ -2607,7 +2607,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
 
     var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9
   }
-  if ((desired_outcome == "36PercLUK") || (desired_outcome == "36PercHP") || (desired_outcome == "27PercALL") || (desired_outcome == "33PercLUK" && itemLevel <= 150) || (desired_outcome == "33PercHP" && itemLevel <= 150) || (desired_outcome == "24PercALL" && itemLevel <= 150)) {
+  if ((desired_outcome == "36PercLUK") || (desired_outcome == "27PercALL") || (desired_outcome == "33PercLUK" && itemLevel <= 150) || desired_outcome == "33PercHP" || (desired_outcome == "24PercALL" && itemLevel <= 150)) {
     if (desired_outcome == "36PercLUK" || desired_outcome == "33PercLUK") var stat = "stat"
     else if (desired_outcome == "36PercHP" || desired_outcome == "33PercHP") var stat = "hp"
     else var stat = "all"
@@ -2745,10 +2745,10 @@ function updatedDesiredStats() {
         $('#desiredStats').append("<option id='any12' value='33PercLUK'>33%+ Stat</option>");
         $('#desiredStats').append("<option id='any25' value='36PercLUK'>36%+ Stat</option>");
 
-        $('#desiredStats').append("<option id='any19' value='23PercHP'>23%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any20' value='26PercHP'>26%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any21' value='33PercHP'>33%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any26' value='36PercHP'>36%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any19' value='21PercHP'>21%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any20' value='24PercHP'>24%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any21' value='30PercHP'>30%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any26' value='33PercHP'>33%+ Max HP</option>");
 
         $('#desiredStats').append("<option id='any13' value='17PercALL'>17%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any14' value='20PercALL'>20%+ All Stat (For Xenon)</option>");
@@ -3044,15 +3044,15 @@ document.addEventListener("DOMContentLoaded", function () {
         $('#desiredStats').append("<option id='any12' value='33PercLUK'>33%+ Stat</option>");
         $('#desiredStats').append("<option id='any25' value='36PercLUK'>36%+ Stat</option>");
 
-        $('#desiredStats').append("<option id='any19' value='23PercHP'>23%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any20' value='26PercHP'>26%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any21' value='33PercHP'>33%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any26' value='36PercHP'>36%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any19' value='21PercHP'>21%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any20' value='24PercHP'>24%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any21' value='30PercHP'>30%+ Max HP</option>");
+        $('#desiredStats').append("<option id='any26' value='33PercHP'>33%+ Max HP</option>");
 
         $('#desiredStats').append("<option id='any13' value='17PercALL'>17%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any14' value='20PercALL'>20%+ All Stat (For Xenon)</option>");
         $('#desiredStats').append("<option id='any15' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any27' value='27PercLUK'>27%+ All Stat (For Xenon)</option>");
+        $('#desiredStats').append("<option id='any27' value='27PercALL'>27%+ All Stat (For Xenon)</option>");
         document.getElementById('calculateButton').disabled = false;
       }
       updatedDesiredStats();
