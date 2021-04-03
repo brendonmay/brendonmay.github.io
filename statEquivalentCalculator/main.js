@@ -313,16 +313,35 @@ function loadLocalStorage() {
                     var primary_stat = stat_types.primaryStatType;
                     var secondary_stat = stat_types.secondaryStatType;
 
+                    if (maple_class == "Xenon") primary_stat = "DEX"
                     document.getElementById('primary_label').innerHTML = `<label for="primary_stat"> ${primary_stat} </label>`;
-                    document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
+                    document.getElementById('main_stat_perc_label').innerHTML = `<label for="main_stat_perc"> ${primary_stat} % on Equips</label>`;
 
-                    document.getElementById('main_stat_perc_label').innerHTML = `<label for="main_stat_perc"> ${primary_stat} % on Equips </label>`;
-                    document.getElementById('sec_perc_label').innerHTML = `<label for="sec_perc"> ${secondary_stat} % on Equips </label>`;
-                    document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane Symbols) </label>`;
+                    if (maple_class == "Dual Blade" || maple_class == "Cadena" || maple_class == "Shadower") {
+                        secondary_stat = "DEX"
+                        secondary_stat_2 = "STR"
+
+                        document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
+                        document.getElementById('sec_perc_label').innerHTML = `<label for="secondary_stat_perc"> ${secondary_stat} % on Equips</label>`;
+
+                        document.getElementById('secondary_2_label').innerHTML = `<label for="secondary_2_stat"> ${secondary_stat_2} </label>`;
+                        document.getElementById('sec_perc_2_label').innerHTML = `<label for="secondary_2_stat_perc"> ${secondary_stat_2} % on Equips</label>`;
+                    }
+                    else {
+                        document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
+                        document.getElementById('sec_perc_label').innerHTML = `<label for="secondary_stat_perc"> ${secondary_stat} % on Equips</label>`;
+                    }
+                    document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane Symbols)</label>`;
 
                     if (maple_class == "Xenon") {
-                        document.getElementById('secondary_stat').value = 0;
-                        document.getElementById('secondary_stat').disabled = true;
+                        var primary_2 = "LUK"
+                        var primary_3 = "STR"
+
+                        document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${primary_2} </label>`;
+                        document.getElementById('sec_perc_label').innerHTML = `<label for="secondary_stat_perc"> ${primary_2} % on Equips</label>`;
+
+                        document.getElementById('secondary_2_label').innerHTML = `<label for="secondary_2_stat"> ${primary_3} </label>`;
+                        document.getElementById('sec_perc_2_label').innerHTML = `<label for="secondary_2_stat_perc"> ${primary_3} % on Equips</label>`;
                     }
                     else {
                         document.getElementById('secondary_stat').disabled = false;
@@ -3377,7 +3396,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('DHB_div').hidden = false;
         }
         else {
-            
+
             document.getElementById('DHB_div').hidden = true;
             document.getElementById('kanna_hp_div').hidden = true;
             document.getElementById('kanna_hp_perc_div').hidden = true;
@@ -3709,7 +3728,7 @@ function optimizeWSE() {
     if (maple_class == 'Kanna') {
         var hp_hyper = parseInt(document.getElementById('hp').value);
         var hp_percent = 1 + (parseInt(document.getElementById('kanna_hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
-        
+
 
         //console.log('old hp perc: ' + hp_percent)
         var new_hp_percent = (hp_percent * 100 - hp_hyper) / 100;
@@ -3852,8 +3871,8 @@ function optimizeWSE() {
         var sec_1_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
         if (maple_class == "Kanna") {
             var sec_2_perc = (100 + 15 + 1 + 20 + 26 + parseInt(document.getElementById('hp').value) + parseInt(document.getElementById("kanna_hp_perc").value)) / 100
-            if (document.getElementById('DHB').checked) sec_2_perc = sec_2_perc + 0.4 
-            
+            if (document.getElementById('DHB').checked) sec_2_perc = sec_2_perc + 0.4
+
         }
         else {
             var sec_2_perc = (100 + parseInt(document.getElementById("sec_perc_2").value)) / 100
