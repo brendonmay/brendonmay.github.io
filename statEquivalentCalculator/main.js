@@ -405,7 +405,7 @@ function saveToLocalStorage(maple_class) {
     //collection of IDs to collect data on
     var id_values = ['level', 'sec_perc_2', 'secondary_2_stat', 'sec_perc', 'main_stat_perc', 'kanna_hp_perc', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
-    var id_checked = ['DHB', 'solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
+    var id_checked = ['CRA', 'Dom', 'gollux', 'bt2', 'bt3', 'DHB', 'solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
     var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
     var id_hidden = ['sec_perc_2_div', 'sec_2_div', 'kanna_hp_perc_div', 'kanna_hp_div', 'zeromessage', 'DHB_div']
@@ -3080,6 +3080,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    document.getElementById("bt2").addEventListener("click", function () {
+        document.getElementById('bt2').checked = true
+        document.getElementById('bt3').checked = false
+    });
+
+    document.getElementById("bt3").addEventListener("click", function () {
+        document.getElementById('bt3').checked = true
+        document.getElementById('bt2').checked = false
+    });
+
     document.getElementById("badge1").addEventListener("click", function () {
         if (document.getElementById('badge1').checked == true) {
             document.getElementById('badge3').checked = false;
@@ -3870,8 +3880,15 @@ function optimizeWSE() {
 
         var sec_1_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
         if (maple_class == "Kanna") {
-            var sec_2_perc = (100 + 15 + 1 + 20 + 26 + parseInt(document.getElementById('hp').value) + parseInt(document.getElementById("kanna_hp_perc").value)) / 100
+            var sec_2_perc = (100 + 15 + 1 + parseInt(document.getElementById('hp').value) + parseInt(document.getElementById("kanna_hp_perc").value)) / 100
             if (document.getElementById('DHB').checked) sec_2_perc = sec_2_perc + 0.4
+            if (document.getElementById('CRA').checked) sec_2_perc = sec_2_perc + 0.2
+
+            if (document.getElementById('Dom').checked) sec_2_perc = sec_2_perc + 0.1
+            if (document.getElementById('gollux').checked) sec_2_perc = sec_2_perc + 0.26
+
+            if (document.getElementById('bt2').checked) sec_2_perc = sec_2_perc + 0.04
+            if (document.getElementById('bt3').checked) sec_2_perc = sec_2_perc + 0.05
 
         }
         else {
