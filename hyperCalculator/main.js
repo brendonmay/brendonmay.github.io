@@ -66,16 +66,18 @@ function loadLocalStorage() {
     var obj_wse_level = obj.obj_wse_level; //ex: {id1: value1, id2: value2}
     var obj_wse_lines = obj.obj_wse_lines; //ex: {id1: value1, id2: value2}
     var obj_checked = obj.obj_checked; //ex: {id1: true, id2: false}
+    var obj_hidden = obj.obj_hidden
 
     var k = 0;
     var i = 0;
     var current_obj
-    while (k < 5) {
+    while (k < 6) {
         if (k == 0) current_obj = obj_values;
         else if (k == 1) current_obj = obj_wse_level;
         else if (k == 2) current_obj = obj_checked;
         else if (k == 3) current_obj = obj_wse_lines;
         else if (k == 4) current_obj = obj_hyper_values;
+        else if (k == 5) current_obj = obj_hidden;
 
         i = 0;
         if (current_obj) {
@@ -96,23 +98,36 @@ function loadLocalStorage() {
                     var maple_class = value;
                     if (maple_class == "Kanna") {
                         document.getElementById('kanna_hp_div').hidden = false;
+                        document.getElementById('kanna_hp_perc_div').hidden = false;
+                        document.getElementById('DHB_div').hidden = false;
                     }
                     else {
                         document.getElementById('kanna_hp_div').hidden = true;
+                        document.getElementById('kanna_hp_perc_div').hidden = true;
+                        document.getElementById('DHB_div').hidden = true;
                     }
 
                     if (maple_class == "Demon Avenger") {
                         document.getElementById('hp_arcane_div').hidden = false;
+                        document.getElementById('hp_perc_div').hidden = false;
+                        document.getElementById('DHB_div').hidden = false;
+                        $('#primary_stat').tooltip({ 'trigger': 'hover focus', 'title': 'If your HP is over 500,000 hover over your stat window entry to find your true HP value.', 'placement': 'bottom' });
                     }
                     else {
                         document.getElementById('hp_arcane_div').hidden = true;
+                        document.getElementById('hp_perc_div').hidden = true;
+                        document.getElementById('DHB_div').hidden = true;
                     }
 
                     if (maple_class == "Demon Avenger" || maple_class == "Kanna") {
-                        document.getElementById('hp_perc_div').hidden = false;
+                        if (maple_class == "Demon Avenger") document.getElementById('hp_perc_div').hidden = false;
+                        else document.getElementById('kanna_hp_perc_div').hidden = false;
+                        document.getElementById('DHB_div').hidden = false;
                     }
                     else {
                         document.getElementById('hp_perc_div').hidden = true;
+                        document.getElementById('kanna_hp_perc_div').hidden = true;
+                        document.getElementById('DHB_div').hidden = true;
                     }
 
                     if (maple_class == "Zero") {
@@ -137,7 +152,7 @@ function loadLocalStorage() {
                         document.getElementById('secondary_stat').disabled = false;
                     }
                 }
-                if (k != 2) {
+                if (k != 2 && k != 5) {
                     if (document.getElementById(id)) document.getElementById(id).value = value;
                 }
                 if (k == 4) {
@@ -146,6 +161,9 @@ function loadLocalStorage() {
                 }
                 if (k == 2) {
                     if (document.getElementById(id)) document.getElementById(id).checked = value;
+                }
+                if (k == 5) {
+                    if (document.getElementById(id)) document.getElementById(id).hidden = value;
                 }
                 if (id == 'reboot') {
                     if (value) {
@@ -184,14 +202,16 @@ function saveToLocalStorage(maple_class) {
     var obj_wse_lines = {}; //ex: {id1: value1, id2: value2}
     //key is ID, value is true or false (.checked == true)
     var obj_checked = {}; //ex: {id1: true, id2: false}
+    var obj_hidden = {}
 
 
     //collection of IDs to collect data on
-    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
+    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'kanna_hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
-    var id_checked = ['solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
+    var id_checked = ['CRA', 'Dom', 'gollux', 'bt2', 'bt3', 'DHB', 'solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
     var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
+    var id_hidden = ['kanna_hp_perc_div', 'kanna_hp_div', 'hp_perc_div', 'zeromessage', 'DHB_div', 'hp_arcane_div']
 
     var i = 0
     while (i < id_values.length) {
@@ -205,6 +225,13 @@ function saveToLocalStorage(maple_class) {
         var id = id_hyper_values[i];
         var value = document.getElementById(id).value;
         obj_hyper_values[id] = value;
+        i++;
+    }
+    i = 0
+    while (i < id_hidden.length) {
+        var id = id_hidden[i];
+        var hidden = document.getElementById(id).hidden;
+        obj_hidden[id] = hidden;
         i++;
     }
     i = 0
@@ -240,6 +267,7 @@ function saveToLocalStorage(maple_class) {
     obj.obj_wse_level = obj_wse_level;
     obj.obj_wse_lines = obj_wse_lines;
     obj.obj_checked = obj_checked;
+    obj.obj_hidden = obj_hidden
 
     window.localStorage.setItem('data', JSON.stringify(obj)); //here
 }
@@ -347,7 +375,7 @@ window.calculate = (attack, damage, bossDmg, ignoreDef, critDmg, primary_stat, s
     if (maple_class == "Kanna") {
         message.type = 'KANNA';
         message.hp = parseInt(document.getElementById('kanna_hp').value);
-        var percent_hp = parseInt(document.getElementById('hp_perc').value);
+        var percent_hp = parseInt(document.getElementById('kanna_hp_perc').value);
         message.php = percent_hp / 100;
     }
     if (maple_class == "Demon Avenger") {
@@ -2978,6 +3006,17 @@ document.addEventListener("DOMContentLoaded", function () {
     //initialize 
     $(function () {
         $('[data-toggle="popover"]').popover({ html: true })
+
+        $('#ied_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Ignore Defense % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+        $('#upper_shown_damage').tooltip({ 'trigger': 'hover focus', 'title': 'Fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+
+        $('#main_stat_perc').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
+        $('#sec_perc').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
+        $('#sec_perc_2').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
+
+        $('#kanna_hp_perc').tooltip({ 'trigger': 'hover focus', 'title': 'HP % and MP % total from potentials only.', 'placement': 'bottom' });
+        $('#hp_perc').tooltip({ 'trigger': 'hover focus', 'title': 'HP % from potentials only.', 'placement': 'bottom' });
+
     });
 
     $('.popover-dismiss').popover({
@@ -2998,6 +3037,18 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("solus3").addEventListener("click", function () {
         if (document.getElementById('solus3').checked == true) {
             document.getElementById('solus2').checked = false;
+        }
+    });
+
+    document.getElementById("bt2").addEventListener("click", function () {
+        if (document.getElementById('bt2').checked == true) {
+            document.getElementById('bt3').checked = false
+        }
+    });
+
+    document.getElementById("bt3").addEventListener("click", function () {
+        if (document.getElementById('bt3').checked == true) {
+            document.getElementById('bt2').checked = false
         }
     });
 
@@ -3621,6 +3672,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (maple_class == "Kanna") {
             document.getElementById('kanna_hp_div').hidden = false;
+            document.getElementById('hp_perc_div').hidden = true;
         }
         else {
             document.getElementById('kanna_hp_div').hidden = true;
@@ -3628,16 +3680,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (maple_class == "Demon Avenger") {
             document.getElementById('hp_arcane_div').hidden = false;
+            document.getElementById('kanna_hp_perc_div').hidden = true;
+            $('#primary_stat').tooltip({ 'trigger': 'hover focus', 'title': 'If your HP is over 500,000 hover over your stat window entry to find your true HP value.', 'placement': 'bottom' });
         }
         else {
             document.getElementById('hp_arcane_div').hidden = true;
+            $('#primary_stat').tooltip('dispose');
         }
 
         if (maple_class == "Demon Avenger" || maple_class == "Kanna") {
-            document.getElementById('hp_perc_div').hidden = false;
+            if (maple_class == "Kanna") document.getElementById('kanna_hp_perc_div').hidden = false;
+            else document.getElementById('hp_perc_div').hidden = false;
+            document.getElementById('DHB_div').hidden = false;
         }
         else {
             document.getElementById('hp_perc_div').hidden = true;
+            document.getElementById('kanna_hp_perc_div').hidden = true;
+            document.getElementById('DHB_div').hidden = true;
         }
 
         var stat_types = getPrimaryAndSecondaryStatType(maple_class);
@@ -4119,7 +4178,17 @@ function optimizeWSE() {
     var stripped_attack = attack - hyper_att;
     if (maple_class == 'Kanna') {
         var hp_hyper = parseInt(document.getElementById('hp').value);
-        var hp_percent = 1 + (parseInt(document.getElementById('hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
+        var hp_percent = 1 + (parseInt(document.getElementById('kanna_hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
+
+        if (document.getElementById('DHB').checked) hp_percent = hp_percent + 0.4
+        if (document.getElementById('CRA').checked) hp_percent = hp_percent + 0.2
+
+        if (document.getElementById('Dom').checked) hp_percent = hp_percent + 0.1
+        if (document.getElementById('gollux').checked) hp_percent = hp_percent + 0.26
+
+        if (document.getElementById('bt2').checked) hp_percent = hp_percent + 0.04
+        if (document.getElementById('bt3').checked) hp_percent = hp_percent + 0.05
+
         console.log('hp perc: ' + hp_percent)
 
         //console.log('old hp perc: ' + hp_percent)
@@ -4142,6 +4211,16 @@ function optimizeWSE() {
     if (primary_stat_type == "HP") {
         var hp_hyper = parseInt(document.getElementById('hp').value);
         var hp_percent = 1 + (parseInt(document.getElementById('hp_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
+
+        if (document.getElementById('DHB').checked) hp_percent = hp_percent + 0.4
+        if (document.getElementById('CRA').checked) hp_percent = hp_percent + 0.2
+
+        if (document.getElementById('Dom').checked) hp_percent = hp_percent + 0.1
+        if (document.getElementById('gollux').checked) hp_percent = hp_percent + 0.26
+
+        if (document.getElementById('bt2').checked) hp_percent = hp_percent + 0.04
+        if (document.getElementById('bt3').checked) hp_percent = hp_percent + 0.05
+
         console.log('hp perc: ' + hp_percent)
         var new_hp_percent = ((hp_percent * 100) - hp_hyper) / 100;
         //console.log('new hp perc: ' + new_hp_percent)

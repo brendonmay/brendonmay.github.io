@@ -3041,15 +3041,15 @@ document.addEventListener("DOMContentLoaded", function () {
     $(function () {
         $('[data-toggle="popover"]').popover({ html: true })
         // $('[data-toggle="tooltip"]').tooltip()
-        $('#damage_percent').tooltip({'trigger':'hover focus', 'title': 'Damage Bonus % from the Stat Window. Do not include Boss Damage %.', 'placement': 'bottom'});
-        $('#upper_shown_damage').tooltip({'trigger':'hover focus', 'title': 'Fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom'});
+        $('#damage_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Damage Bonus % from the Stat Window. Do not include Boss Damage %.', 'placement': 'bottom' });
+        $('#upper_shown_damage').tooltip({ 'trigger': 'hover focus', 'title': 'Fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
 
-        $('#main_stat_perc').tooltip({'trigger':'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom'});
-        $('#sec_perc').tooltip({'trigger':'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom'});
-        $('#sec_perc_2').tooltip({'trigger':'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom'});
+        $('#main_stat_perc').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
+        $('#sec_perc').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
+        $('#sec_perc_2').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
 
-        $('#kanna_hp_perc').tooltip({'trigger':'hover focus', 'title': 'HP % and MP % total from potentials only.', 'placement': 'bottom'});
-        $('#sec_perc').tooltip({'trigger':'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom'});
+        $('#kanna_hp_perc').tooltip({ 'trigger': 'hover focus', 'title': 'HP % and MP % total from potentials only.', 'placement': 'bottom' });
+        $('#sec_perc').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
     });
 
     $('.popover-dismiss').popover({
@@ -3091,13 +3091,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById("bt2").addEventListener("click", function () {
-        document.getElementById('bt2').checked = true
-        document.getElementById('bt3').checked = false
+        if (document.getElementById('bt2').checked == true) {
+            document.getElementById('bt3').checked = false
+        }
     });
 
     document.getElementById("bt3").addEventListener("click", function () {
-        document.getElementById('bt3').checked = true
-        document.getElementById('bt2').checked = false
+        if (document.getElementById('bt3').checked == true) {
+            document.getElementById('bt2').checked = false
+        }
     });
 
     document.getElementById("badge1").addEventListener("click", function () {
