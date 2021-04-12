@@ -3122,6 +3122,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $('#final_damage_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Final Damage % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
         $('#critical_damage').tooltip({ 'trigger': 'hover focus', 'title': 'Critical Damage % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+
+        $('#desired_total_crit').tooltip({ 'trigger': 'hover focus', 'title': 'Click on: "Step 7. Provide Critical Rate Information" above for further details.', 'placement': 'bottom' });
     });
 
     $('.popover-dismiss').popover({
