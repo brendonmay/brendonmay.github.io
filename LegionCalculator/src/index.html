@@ -206,7 +206,7 @@
             max="99999999" value=30838622>
         </div>
         <div class="col-sm-12 col-md-3 form-group">
-          <label for="boss_percent"> Boss % </label>
+          <label for="boss_percent"> Boss Damage % </label>
           <input class="form-control" type="number" id="boss_percent" name="boss_percent" min="0" max="700" value=334>
         </div>
         <div class="col-sm-12 col-md-3 form-group">
@@ -217,7 +217,7 @@
 
         </div>
         <div class="col-sm-12 col-md-3 form-group">
-          <label for="damage_percent"> Damage % </label>
+          <label for="damage_percent"> Damage Bonus % </label>
           <input class="form-control" type="number" id="damage_percent" name="damage_percent" min="0" max="500"
             value=180>
         </div>
@@ -255,9 +255,16 @@
         </div>
         <div class="col-sm-12 col-md form-group" hidden id='hp_perc_div'>
           <div id='hp_perc_label'>
-            <label for="hp_perc"> HP % (From Potentials on Gear) </label>
+            <label for="hp_perc"> HP% (Potential Only) </label>
           </div>
           <input class="form-control" type="number" id="hp_perc" name="hp_perc" min="0" max="150000" value=0>
+        </div>
+        <div class="col-sm-12 col-md form-group" hidden id='kanna_hp_perc_div'>
+          <div id='kanna_hp_perc_label'>
+            <label for="kanna_hp_perc"> HP% + MP% (Potential Only) </label>
+          </div>
+          <input class="form-control" type="number" id="kanna_hp_perc" name="kanna_hp_perc" min="0" max="150000"
+            value=0>
         </div>
         <div class="col-sm-12 col-md form-group" hidden id='hp_arcane_div'>
           <div id='hp_arcane_label'>
@@ -285,7 +292,50 @@
           </a>
         </div>
       </div>
-      <div class='form-row bottom-margin checkBoxForm'>
+
+      <div class='row' id="DHB_div">
+        <div class='col-md-12 d-flex justify-content-center title-color top-margin'>
+          <h5>HP % Sets, Skills, and Equips</h5>
+        </div>
+
+        <div class='col-md-6 text-center d-flex justify-content-center'>
+          <div class="form-check">
+            <label class="form-check-label checkbox" for="DHB">
+              <input class="form-check-input" type="checkbox" value='' id="DHB">
+              <span>Decent Hyper Body</span>
+            </label>
+          </div>
+        </div>
+
+        <div class='col-md-6 text-center d-flex justify-content-center'>
+          <div class="form-check">
+            <label class="form-check-label checkbox" for="CRA">
+              <input class="form-check-input" type="checkbox" id="CRA" value="">
+              <span>CRA (3 Set)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class='col-md-6 text-center d-flex justify-content-center'>
+          <div class="form-check">
+            <label class="form-check-label checkbox" for="Dom">
+              <input class="form-check-input" type="checkbox" value='' id="Dom">
+              <span>Dominator Pendant</span>
+            </label>
+          </div>
+        </div>
+
+        <div class='col-md-6 text-center d-flex justify-content-center'>
+          <div class="form-check">
+            <label class="form-check-label checkbox" for="gollux">
+              <input class="form-check-input" type="checkbox" id="gollux" value="">
+              <span>Superior Gollux 3 Set</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class='form-row bottom-margin checkBoxForm top-margin'>
         <div class='col-md-12 d-flex justify-content-center title-color'>
           <h5>Link Skills</h5>
         </div>
@@ -337,6 +387,22 @@
             <label class="form-check-label checkbox" for="tideOfBattle">
               <input class="form-check-input" type="checkbox" value="" id="tideOfBattle">
               <span>Tide of Battle (Level 2)</span>
+            </label>
+          </div>
+        </div>
+        <div class='col-md-6 text-center d-flex justify-content-center'>
+          <div class="form-check">
+            <label class="form-check-label checkbox" for="bt2">
+              <input class="form-check-input" type="checkbox" id="bt2" value="">
+              <span>Focus Spirit (Level 2)</span>
+            </label>
+          </div>
+        </div>
+        <div class='col-md-6 text-center d-flex justify-content-center'>
+          <div class="form-check">
+            <label class="form-check-label checkbox" for="bt3">
+              <input class="form-check-input" type="checkbox" id="bt3" value="">
+              <span>Focus Spirit (Level 3)</span>
             </label>
           </div>
         </div>
@@ -1521,7 +1587,25 @@
       </div>
     </form>
   </div>
-
+  <div id="toast" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false">
+    <div class="toast-header">
+      <span class="mr-auto">Hello Mapler!</span>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      I hope you are enjoying my tools! <br><br><strong>Want to Donate: <a class="href-color"
+          href="https://www.paypal.com/donate?business=4UDN9QKYQTDFQ&item_name=SuckHard+Maplestory+Tools+Donation&currency_code=USD"
+          target="_blank">Click here</a></strong>
+      <br>
+      <hr style="background-color:black">
+      Have questions on how to use SuckHard's Tools? Have bugs to report, or feature requests? <br> <br>
+      <strong>Join our Discord: <a class="href-color" href="https://discord.gg/YvawktDw72" target="_blank">SuckHard's
+          Calculators
+          Discord</a></strong>
+    </div>
+  </div>
   <div class="container form-container rounded bottom-margin" id='resultSection' hidden>
     <div class='form-row top-margin'>
       <div class='col text-center'>
@@ -1539,11 +1623,6 @@
       <h2 class='text-center'>Optimized WSE</h2>
     </div>
   </div>
-
-
-
-
-
 
 </body>
 

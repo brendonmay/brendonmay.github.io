@@ -202,7 +202,7 @@ function saveToLocalStorage(maple_class) {
     var obj_wse_lines = {}; //ex: {id1: value1, id2: value2}
     //key is ID, value is true or false (.checked == true)
     var obj_checked = {}; //ex: {id1: true, id2: false}
-    var obj_hidden = {}
+    var obj_hidden = {};
 
 
     //collection of IDs to collect data on

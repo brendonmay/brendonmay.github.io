@@ -108,6 +108,26 @@ form {
     font-size: medium;
 }
 
+#toast {
+    position: fixed;
+    bottom: 5px;
+    right: 10px;
+    z-index: 9999;
+}
+
+.title-color {
+    color: white
+}
+
+.href-color {
+    color:rgb(155, 147, 39)
+}
+
+.toast-header {
+    /* background-color: #D33E43; */
+    color: black;
+}
+
 .piece {
     display: flex;
     flex-direction: row;
