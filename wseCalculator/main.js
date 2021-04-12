@@ -1814,6 +1814,11 @@ document.addEventListener("DOMContentLoaded", function () {
     //initialize 
     $(function () {
         $('[data-toggle="popover"]').popover({ html: true })
+
+        $('#ied_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Ignore Defense % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+        $('#boss_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Boss Damage % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+        $('#damage_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Damage Bonus % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+       
     });
 
     $('.popover-dismiss').popover({
