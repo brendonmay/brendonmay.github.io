@@ -1812,6 +1812,10 @@ function update_new_elevel() {
 //When page loaded
 document.addEventListener("DOMContentLoaded", function () {
     //initialize 
+    setTimeout(function () {
+        $("#toast").toast('show')
+    }, 1000)
+    
     $(function () {
         $('[data-toggle="popover"]').popover({ html: true })
 

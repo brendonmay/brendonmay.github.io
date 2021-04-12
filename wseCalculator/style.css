@@ -26,6 +26,37 @@ a:hover {
     padding: 15px 35px;
 }
 
+#toast {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    z-index: 9999;
+    background-color: rgb(32, 32, 32);
+}
+
+.toast-header {
+    background-color: rgb(14, 146, 9);
+    color: white;
+}
+
+.href-color { 
+    color: #29b90f;
+    text-decoration: underline;
+}
+
+.href-color:active, .href-color:hover { 
+    color: rgb(32, 34, 158);
+    text-decoration: underline;
+}
+
+.toast-body {
+    background-color: white;
+}
+
+.close, .close:active, .close:hover {
+    color: white
+}
+
 .new_line {
     width: 100%;
     display: block;

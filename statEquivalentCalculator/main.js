@@ -3037,6 +3037,10 @@ document.addEventListener("DOMContentLoaded", function () {
     init();
     //ninit();
 
+    setTimeout(function () {
+        $("#toast").toast('show')
+    }, 1000)
+
     //initialize 
     $(function () {
         $('[data-toggle="popover"]').popover({ html: true })

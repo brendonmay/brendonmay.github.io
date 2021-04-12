@@ -20,6 +20,31 @@ a:hover {
     margin-top: -1rem;
 }
 
+#toast {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    z-index: 9999;
+    background-color: #103b58;
+}
+
+.toast-header {
+    background-color: #103b58;
+    color: white;
+}
+
+.toast-body {
+    background-color: rgb(224, 224, 224);
+}
+
+.close {
+    color: white
+}
+
+.close:hover, .close:active {
+    color:white;
+}
+
 .tableCheckBox{
     text-align: center !important; /* center checkbox horizontally */
     vertical-align: middle !important; /* center checkbox vertically */

@@ -310,6 +310,10 @@ label {
     color: white
 }
 
+.close:hover, .close:active {
+    color:white;
+}
+
 .link-text {
     color: white;
     font-weight: 600;
