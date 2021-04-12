@@ -30,6 +30,29 @@ a:hover {
     color: white;
 }
 
+ion-icon {
+    margin-left: 10px;
+}
+
+#toast {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    z-index: 9999;
+}
+
+.toast-header {
+    /* background-color: #D33E43; */
+    color: black;
+}
+
+.link-text {
+    /* color: #1C2826; */
+    color: white;
+    font-weight: 500;
+    text-decoration: underline;
+}
+
 .new_line {
     width: 100%;
     display: block;

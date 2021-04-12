@@ -260,7 +260,8 @@
                     <div id='kanna_hp_perc_label'>
                         <label for="kanna_hp_perc"> HP% + MP% (Potential Only) </label>
                     </div>
-                    <input class="form-control" type="number" id="kanna_hp_perc" name="kanna_hp_perc" min="0" max="150000" value=0>
+                    <input class="form-control" type="number" id="kanna_hp_perc" name="kanna_hp_perc" min="0"
+                        max="150000" value=0>
                 </div>
 
                 <div class="col-sm-12 col-md form-group" hidden id='hp_arcane_div'>
@@ -1415,7 +1416,22 @@
             </div>
         </form>
     </div>
-
+    <div id="toast" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false">
+        <div class="toast-header">
+            <span class="mr-auto">Hello Mapler!</span>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            I hope you are enjoying my tools! <strong>Please consider donating</strong> by clicking the link in the
+            footer.
+            <br><hr style="background-color:black">
+            Have questions on how to use SuckHard's Tools? Have bugs to report, or feature requests? <br> <br>
+            <strong>Join our Discord:</strong> <a href="https://discord.gg/YvawktDw72" target="_blank">SuckHard's Calculators
+                Discord</a>
+        </div>
+    </div>
     <div class="container form-container rounded bottom-margin" id='resultSection' hidden>
         <div class='form-row top-margin'>
             <div class='col text-center'>
@@ -1436,12 +1452,21 @@
 </body>
 <footer class="footer">
     <div class="container text-center">
-        <span style='color: white'>
-            <ion-icon name="heart"></ion-icon>
-        </span><span class="text-muted"> Made by SuckHard <span style='color: white'>
-                <ion-icon name="git-branch-outline"></ion-icon>
-            </span> Forked from walletstory <span style='color: white'>
-                <ion-icon name="color-wand"></ion-icon>
-            </span> Styled by Taha</span>
+        <a target="_blank"
+            href="https://www.paypal.com/donate?business=4UDN9QKYQTDFQ&item_name=SuckHard+Maplestory+Tools+Donation&currency_code=USD">
+
+            <span style='color: white'>
+                <ion-icon name="heart"></ion-icon>
+            </span><span class="text-muted"> <span class="link-text">Click here</span> to Donate<span
+                    style='color: white'>
+                    <ion-icon name="git-branch-outline"></ion-icon>
+                </span>Forked from walletstory <span style='color: white'>
+                    <ion-icon name="game-controller"></ion-icon>
+                </span>Made by SuckHard</span>
+
+        </a>
     </div>
 </footer>
+
+<!-- <ion-icon name="git-branch-outline"></ion-icon>
+            </span> Forked from walletstory <span style='color: white'> -->

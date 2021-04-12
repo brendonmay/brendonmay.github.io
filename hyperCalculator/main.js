@@ -2999,6 +2999,10 @@ function update_new_elevel() {
 
 //When page loaded
 document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () {
+        $("#toast").toast('show')
+    }, 1000)
+
     //hyper stat table code
     init();
     ninit();
@@ -3016,6 +3020,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $('#kanna_hp_perc').tooltip({ 'trigger': 'hover focus', 'title': 'HP % and MP % total from potentials only.', 'placement': 'bottom' });
         $('#hp_perc').tooltip({ 'trigger': 'hover focus', 'title': 'HP % from potentials only.', 'placement': 'bottom' });
+
+        $('#boss_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Boss Damage % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+        $('#damage_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Damage Bonus % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+
+        $('#final_damage_percent').tooltip({ 'trigger': 'hover focus', 'title': 'Final Damage % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
+        $('#critical_damage').tooltip({ 'trigger': 'hover focus', 'title': 'Critical Damage % from the Stat Window. You should be fully buffed with 100% uptime buffs including familiars, while standing still.', 'placement': 'bottom' });
 
     });
 
