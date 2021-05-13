@@ -1583,9 +1583,9 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     var prob_1sec_line_2 = prob_line("line_2", "cd_1", probabilities, cube_type, item_type)
     var prob_1sec_line_3 = prob_line("line_3", "cd_1", probabilities, cube_type, item_type)
 
-    var prob_other_line_1 = 1 - prob_2sec_line_1 - prob_stat_line_1 - prob_1sec_line_1
-    var prob_other_line_2 = 1 - prob_2sec_line_2 - prob_stat_line_2 - prob_1sec_line_2
-    var prob_other_line_3 = 1 - prob_2sec_line_3 - prob_stat_line_3 - prob_1sec_line_3
+    var prob_other_line_1 = 1 - prob_2sec_line_1 - prob_1sec_line_1
+    var prob_other_line_2 = 1 - prob_2sec_line_2 - prob_1sec_line_2
+    var prob_other_line_3 = 1 - prob_2sec_line_3 - prob_1sec_line_3
 
     var probability = 0
 
@@ -1773,7 +1773,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     }
 
     //MMO
-    var probability_2 = prob_meso_line_1 * prob_meso_line_2 * (1 - prob_meso_line_1 * prob_meso_line_3)
+    var probability_2 = prob_meso_line_1 * prob_meso_line_2 * (1 - prob_meso_line_3)
     if (desired_outcome == "2LDrop") { //3l drop not possible
       probability_2 = prob_meso_line_1 * prob_meso_line_2
     }
