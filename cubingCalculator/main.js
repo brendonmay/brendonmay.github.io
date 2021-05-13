@@ -1548,9 +1548,9 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     if (desired_outcome == "2SecCDAnd2HP") stat = "hp"
     if (desired_outcome == "2SecCDAnd2ALL") stat = "all"
 
-    var cd_line_1 = probabilities[item_type]["line_1"]["cd_1"][cube_type] + probabilities[item_type]["line_1"]["cd_2"][cube_type]
-    var cd_line_2 = probabilities[item_type]["line_2"]["cd_1"][cube_type] + probabilities[item_type]["line_2"]["cd_2"][cube_type]
-    var cd_line_3 = probabilities[item_type]["line_3"]["cd_1"][cube_type] + probabilities[item_type]["line_3"]["cd_2"][cube_type]
+    var cd_line_1 = probabilities[item_type]["line_1"]["cd_2"][cube_type]
+    var cd_line_2 = probabilities[item_type]["line_2"]["cd_2"][cube_type]
+    var cd_line_3 = probabilities[item_type]["line_3"]["cd_2"][cube_type]
 
     var stat_line_1 = prob_line("line_1", stat, probabilities, cube_type, item_type)
     var stat_line_2 = prob_line("line_2", stat, probabilities, cube_type, item_type)
