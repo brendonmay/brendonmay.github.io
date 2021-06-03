@@ -2077,8 +2077,6 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
 
     var probability = 0
 
-    console.log(prob_stat_line_1, prob_stat_line_2, prob_stat_line_3)
-
     if (att == 21) {
       //12A 9A S
       probability = probability + prob_12_att_line_1 * prob_9_att_line_2 * prob_stat_line_3
