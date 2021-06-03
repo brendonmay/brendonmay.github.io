@@ -2056,13 +2056,13 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
 
     if (stat == "ied") {
       var prob_stat_line_1 = probabilities[item_type].line_1[stat][cube_type]
-      var prob_stat_line_2 = probabilities[item_type].line_1[stat][cube_type]
-      var prob_stat_line_3 = probabilities[item_type].line_1[stat][cube_type]
+      var prob_stat_line_2 = probabilities[item_type].line_2[stat][cube_type]
+      var prob_stat_line_3 = probabilities[item_type].line_3[stat][cube_type]
     }
     else {
       var prob_stat_line_1 = probabilities[item_type].line_1["40_boss"][cube_type]
-      var prob_stat_line_2 = probabilities[item_type].line_1["40_boss"][cube_type]
-      var prob_stat_line_3 = probabilities[item_type].line_1["40_boss"][cube_type]
+      var prob_stat_line_2 = probabilities[item_type].line_2["40_boss"][cube_type]
+      var prob_stat_line_3 = probabilities[item_type].line_3["40_boss"][cube_type]
     }
     if (stat == "30_boss" || stat == "35_boss") {
       prob_stat_line_1 = prob_stat_line_1 + probabilities[item_type].line_1["35_boss"][cube_type]
@@ -2077,13 +2077,13 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
 
     var probability = 0
 
+    console.log(prob_stat_line_1, prob_stat_line_2, prob_stat_line_3)
+
     if (att == 21) {
       //12A 9A S
       probability = probability + prob_12_att_line_1 * prob_9_att_line_2 * prob_stat_line_3
       //12A S 9A
       probability = probability + prob_12_att_line_1 * prob_9_att_line_3 * prob_stat_line_2
-      //S 12A 12A
-      probability = probability + prob_12_att_line_3 * prob_12_att_line_2 * prob_stat_line_1
       //S 12A 9A
       probability = probability + prob_9_att_line_3 * prob_12_att_line_2 * prob_stat_line_1
       //S 9A 12A
@@ -2096,8 +2096,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     probability = probability + prob_12_att_line_1 * prob_12_att_line_3 * prob_stat_line_2
     //S 12A 12A
     probability = probability + prob_12_att_line_3 * prob_12_att_line_2 * prob_stat_line_1
-
-
+    
   }
   if (desired_outcome == "2LATT") {
     //12 OR 13 OR 23 OR 123
