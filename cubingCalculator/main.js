@@ -1330,7 +1330,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
         "9_all": { 'black': 0.013636, 'red': 0.006818 },
         "crit": { 'black': 0.018182, 'red': 0.009091 },
         "9_stat": { 'black': 0.066667, 'red': 0.075 },
-        "6_all": { 'black': 0.053333, 'red': 0.053333 },
+        "6_all": { 'black': 0.053333, 'red': 0.06 },
         "12_hp": { 'black': 0.018182, 'red': 0.009091 },
         "9_hp": { 'black': 0.08, 'red': 0.09 }
       },
@@ -2612,6 +2612,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     var prob_12_line_2 = prob_line("line_2", stat, probabilities, cube_type, item_type, 12)
     var prob_12_line_3 = prob_line("line_3", stat, probabilities, cube_type, item_type, 12)
 
+    var prob_9_line_1 = prob_line("line_1", stat, probabilities, cube_type, item_type, 9)
     var prob_9_line_2 = prob_line("line_2", stat, probabilities, cube_type, item_type, 9)
     var prob_9_line_3 = prob_line("line_3", stat, probabilities, cube_type, item_type, 9)
 
@@ -2625,6 +2626,9 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
 
     //12 9 12
     probability = probability + prob_12_line_1 * prob_9_line_2 * prob_12_line_3
+
+    //9 12 12
+    probability = probability + prob_9_line_1 * prob_12_line_2 * prob_12_line_3
 
   }
   return probability
