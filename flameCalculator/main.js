@@ -233,7 +233,7 @@ function getWeaponProbability(attack, dmg, flame_type) {
                 }
                 boss_tier_check++
             }
-            var line_probability = combination(17, 2) / combination(19, 4)
+            var line_probability = combination(16, 2) / combination(19, 4) //exclude DMG
             probability = probability + tier_probability * line_probability
 
         }
@@ -251,7 +251,7 @@ function getWeaponProbability(attack, dmg, flame_type) {
                 }
                 dmg_tier_check++
             }
-            var line_probability = combination(17, 2) / combination(19, 4)
+            var line_probability = combination(16, 2) / combination(19, 4) //exclude boss
             probability = probability + tier_probability * line_probability
 
         }
