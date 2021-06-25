@@ -29,6 +29,47 @@ function combination(n, r) {
     return factorial(n) / (factorial(r) * factorial(n - r));
 };
 
+function getTierProbabilities(flame_type, non_advantaged_item) {
+    if (flame_type == "powerful") {
+        if (non_advantaged_item) {
+            return powerful_tier_probabilities_non_adv;
+        }
+        else {
+            return powerful_tier_probabilities;
+        }
+    }
+    else {
+        if (non_advantaged_item) {
+            return eternal_tier_probabilities_non_adv;
+        }
+        else {
+            return eternal_tier_probabilities;
+        }
+    }
+}
+
+function getLineProbability(choose_from, number_of_lines, non_advantaged_item) {
+	var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
+	if (non_advantaged_item) {
+		if (number_of_lines == 1) {
+			line_probability = non_advantaged[1] / combination(19, 1) + non_advantaged[2] * combination(choose_from, 1) / combination(19, 2) + non_advantaged[3] * combination(choose_from, 2) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 3) / combination(19, 4)
+		}
+		else if (number_of_lines == 2) {
+			line_probability = non_advantaged[2] / combination(19, 2) + non_advantaged[3] * combination(choose_from, 1) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 2) / combination(19, 4)
+		}
+		else if (number_of_lines == 3) {
+			line_probability = non_advantaged[3] / combination(19, 3) + non_advantaged[4] * combination(choose_from, 1) / combination(19, 4)
+		}
+		else if (number_of_lines == 4) {
+			line_probability = non_advantaged[4] / combination(19, 4)
+		}
+		else {
+			line_probability = 0
+		}
+	}
+	return line_probability
+}
+
 function checkRatios(maple_class) {
     var zeroes = 0
     var remove_all_stat = false
@@ -85,23 +126,8 @@ function checkRatios(maple_class) {
 
 function getDAProbability(desired_attack, desired_hp, flame_type, non_advantaged_item) {
     var probability = 0
-
-    if (flame_type == "powerful") {
-        if (non_advantaged_item) {
-            var tier_probabilities = powerful_tier_probabilities_non_adv
-        }
-        else {
-            var tier_probabilities = powerful_tier_probabilities
-        }
-    }
-    else {
-        if (non_advantaged_item) {
-            var tier_probabilities = eternal_tier_probabilities_non_adv
-        }
-        else {
-            var tier_probabilities = eternal_tier_probabilities
-        }
-    }
+	
+	var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
 
     if (desired_attack == 0 || desired_hp == 0) { // only hp
         var stat = desired_hp
@@ -154,58 +180,59 @@ function getDAProbability(desired_attack, desired_hp, flame_type, non_advantaged
     return probability
 }
 
-function getWeaponProbability(attack, dmg, flame_type) {
+function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
     var probability = 0
 
-    if (flame_type == "powerful") var tier_probabilities = powerful_tier_probabilities
-    else var tier_probabilities = eternal_tier_probabilities
+    var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
+	var minTier = non_advantaged_item ? 1 : 3;
+	var maxTier = non_advantaged_item ? 5 : 7;
 
     if (dmg == 0) {
         var tier_probability = 0
-        var tier_check = 3
-        while (tier_check < 8) {
+        var tier_check = minTier
+        while (tier_check <= maxTier) {
             if (attack <= tier_check) {
                 tier_probability = tier_probability + tier_probabilities[tier_check]
             }
             tier_check++
         }
-        var line_probability = combination(18, 3) / combination(19, 4)
+        var line_probability = getLineProbability(18, 1, non_advantaged_item)
         probability = tier_probability * line_probability
     }
     if (attack == 0) {
         //only dmg
         if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7)) {
             var tier_probability = 0
-            var tier_check = 3
-            while (tier_check < 8) {
+        var tier_check = minTier
+        while (tier_check <= maxTier) {
                 if (tier_check >= dmg) {
                     tier_probability = tier_probability + tier_probabilities[tier_check]
                 }
                 tier_check++
             }
-            var line_probability = combination(18, 3) / combination(19, 4)
+            var line_probability = getLineProbability(18, 1, non_advantaged_item)
             probability = probability + tier_probability * line_probability
         }
         //only boss
         if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14)) {
             var tier_probability = 0
-            var tier_check = 3
-            while (tier_check < 8) {
+        var tier_check = minTier
+        while (tier_check <= maxTier) {
                 if (2 * tier_check >= dmg) {
                     tier_probability = tier_probability + tier_probabilities[tier_check]
                 }
                 tier_check++
             }
-            var line_probability = combination(18, 3) / combination(19, 4)
+            var line_probability = getLineProbability(18, 1, non_advantaged_item)
             probability = probability + tier_probability * line_probability
         }
         //boss + dmg
         if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21)) {
             var tier_probability = 0
-            var boss_tier_check = 3
-            while (boss_tier_check < 8) {
-                var dmg_tier_check = 3
-                while (dmg_tier_check < 8) {
+            var boss_tier_check = minTier
+            while (boss_tier_check <= maxTier) {
+                var dmg_tier_check = minTier
+                while (dmg_tier_check <= maxTier) {
                     if (2 * boss_tier_check + dmg_tier_check >= dmg) {
                         tier_probability = tier_probability + tier_probabilities[boss_tier_check] * tier_probabilities[dmg_tier_check]
                     }
@@ -213,7 +240,7 @@ function getWeaponProbability(attack, dmg, flame_type) {
                 }
                 boss_tier_check++
             }
-            var line_probability = combination(17, 2) / combination(19, 4)
+            var line_probability = getLineProbability(17, 2, non_advantaged_item)
             probability = probability + tier_probability * line_probability
 
         }
@@ -222,10 +249,10 @@ function getWeaponProbability(attack, dmg, flame_type) {
         //Attack + Boss
         if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14)) {
             var tier_probability = 0
-            var boss_tier_check = 3
-            while (boss_tier_check < 8) {
-                var attack_tier_check = 3
-                while (attack_tier_check < 8) {
+            var boss_tier_check = minTier
+            while (boss_tier_check <= maxTier) {
+                var attack_tier_check = minTier
+                while (attack_tier_check <= maxTier) {
                     if (2 * boss_tier_check >= dmg && attack_tier_check >= attack) {
                         tier_probability = tier_probability + tier_probabilities[boss_tier_check] * tier_probabilities[attack_tier_check]
                     }
@@ -233,17 +260,17 @@ function getWeaponProbability(attack, dmg, flame_type) {
                 }
                 boss_tier_check++
             }
-            var line_probability = combination(16, 2) / combination(19, 4) //exclude DMG
+            var line_probability = getLineProbability(16, 2, non_advantaged_item) //exclude DMG
             probability = probability + tier_probability * line_probability
 
         }
         //Attack + DMG
         if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7)) {
             var tier_probability = 0
-            var dmg_tier_check = 3
-            while (dmg_tier_check < 8) {
-                var attack_tier_check = 3
-                while (attack_tier_check < 8) {
+            var dmg_tier_check = minTier
+            while (dmg_tier_check <= maxTier) {
+                var attack_tier_check = minTier
+                while (attack_tier_check <= maxTier) {
                     if (dmg_tier_check >= dmg && attack_tier_check >= attack) {
                         tier_probability = tier_probability + tier_probabilities[dmg_tier_check] * tier_probabilities[attack_tier_check]
                     }
@@ -251,19 +278,19 @@ function getWeaponProbability(attack, dmg, flame_type) {
                 }
                 dmg_tier_check++
             }
-            var line_probability = combination(16, 2) / combination(19, 4) //exclude boss
+            var line_probability = getLineProbability(16, 2, non_advantaged_item) //exclude boss
             probability = probability + tier_probability * line_probability
 
         }
         //Attack + Boss + DMG
         if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21)) {
             var tier_probability = 0
-            var dmg_tier_check = 3
-            while (dmg_tier_check < 8) {
-                var attack_tier_check = 3
-                while (attack_tier_check < 8) {
-                    var boss_tier_check = 3
-                    while (boss_tier_check < 8) {
+            var dmg_tier_check = minTier
+            while (dmg_tier_check <= maxTier) {
+                var attack_tier_check = minTier
+                while (attack_tier_check <= maxTier) {
+                    var boss_tier_check = minTier
+                    while (boss_tier_check <= maxTier) {
                         if (2 * boss_tier_check + dmg_tier_check >= dmg && attack_tier_check >= attack) {
                             tier_probability = tier_probability + tier_probabilities[dmg_tier_check] * tier_probabilities[attack_tier_check] * tier_probabilities[boss_tier_check]
                         }
@@ -273,7 +300,7 @@ function getWeaponProbability(attack, dmg, flame_type) {
                 }
                 dmg_tier_check++
             }
-            var line_probability = combination(16, 1) / combination(19, 4)
+            var line_probability = getLineProbability(16, 3, non_advantaged_item)
             probability = probability + tier_probability * line_probability
         }
 
@@ -309,18 +336,8 @@ function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two
     var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier, combo_six_tier]
     var index = 0
     var probability = 0
-    if (flame_type == "powerful") {
-        var tier_probabilities = powerful_tier_probabilities
-        if (non_advantaged_item) {
-            tier_probabilities = powerful_tier_probabilities_non_adv
-        }
-    }
-    if (flame_type == "eternal") {
-        var tier_probabilities = eternal_tier_probabilities
-        if (non_advantaged_item) {
-            tier_probabilities = eternal_tier_probabilities_non_adv
-        }
-    }
+	var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
+	
     while (index < list.length) {
         var tier = list[index];
         if (tier > 0) {
@@ -872,24 +889,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                 if (maple_class == "kanna") choose_from = 9
 
                 //here
-                var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
-                if (non_advantaged_item) {
-                    if (number_of_lines == 1) {
-                        line_probability = non_advantaged[1] / combination(19, 1) + non_advantaged[2] * combination(choose_from, 1) / combination(19, 2) + non_advantaged[3] * combination(choose_from, 2) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 3) / combination(19, 4)
-                    }
-                    else if (number_of_lines == 2) {
-                        line_probability = non_advantaged[2] / combination(19, 2) + non_advantaged[3] * combination(choose_from, 1) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 2) / combination(19, 4)
-                    }
-                    else if (number_of_lines == 3) {
-                        line_probability = non_advantaged[3] / combination(19, 3) + non_advantaged[4] * combination(choose_from, 1) / combination(19, 4)
-                    }
-                    else if (number_of_lines == 4) {
-                        line_probability = non_advantaged[4] / combination(19, 4)
-                    }
-                    else {
-                        line_probability = 0
-                    }
-                }
+                var line_probability = getLineProbability(choose_from, number_of_lines, non_advantaged_item)
                 var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, 0, 0, non_advantaged_item, main2_tier, main3_tier, combo_six_tier)
                 var event_probability = line_probability * tier_probability
 
@@ -905,7 +905,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
 
         if (desired_attack_tier == 0 && desired_dmg_percent) return 1
 
-        var probability = getWeaponProbability(desired_attack_tier, desired_dmg_percent, flame_type)
+        var probability = getWeaponProbability(desired_attack_tier, desired_dmg_percent, flame_type, non_advantaged_item)
     }
     return probability
 
@@ -1082,6 +1082,23 @@ function geoDistrQuantile(p) {
 
     return { mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth }
 }
+
+function updateAttackTierOptions(flame_type, flame_advantage) {
+	// Tier 1 and 2 are skipped, so index 1 is tier 3.
+	let maxTierIndex = 2;
+	if (flame_type == 'eternal') {
+		maxTierIndex += 1;
+	}
+	if (flame_advantage) {
+		maxTierIndex += 2;
+	}
+	// No need to disable tier 4+ and under, they're always valid.
+	const attackTierSelect = document.getElementById('attack_tier');
+	for (let i = 3; i <= 5; i++) {
+		attackTierSelect.options[i].disabled = i > maxTierIndex;
+	}
+}
+
 //test
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
@@ -1091,6 +1108,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var maple_class = document.getElementById("maple_class").value
         var item_type = document.getElementById('item_type').value
         var flame_type = document.getElementById('flame_type').value
+        var flame_advantage = document.getElementById('flame-advantaged').checked
         if (item_type == 'armor') {
             if (maple_class == "da") {
                 document.getElementById("armor_desired_stats").hidden = true
@@ -1141,24 +1159,16 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('item_level_div').hidden = false;
         }
         else {
-            document.getElementById('flame-advantaged').checked = true;
             document.getElementById('weapon_desired_stats').hidden = false;
             document.getElementById('armor_desired_stats').hidden = true;
             document.getElementById('statequivalences').hidden = true;
             document.getElementById('statequivalences_title').hidden = true;
             document.getElementById('item_level_div').hidden = true;
 
-            if (flame_type == 'powerful') {
-                document.getElementById('attack_tier').options[5].disabled = true;
-
-            }
-            else {
-                document.getElementById('attack_tier').options[5].disabled = false;
-            }
+			updateAttackTierOptions(flame_type, flame_advantage);
         }
         if (document.getElementById("item_type").value == "armor") {
             updateItemLevels(maple_class);
-            var flame_advantage = document.getElementById('flame-advantaged')
             if (maple_class == "kanna") {
                 document.getElementById('hp_stat_div').hidden = false
                 document.getElementById('luk_stat_div').hidden = false
@@ -1451,6 +1461,9 @@ document.addEventListener("DOMContentLoaded", function () {
         var item_type = document.getElementById('item_type').value
         var maple_class = document.getElementById('maple_class').value
         var flame_advantage = document.getElementById('flame-advantaged').checked
+		if (item_type == 'weapon') {
+			updateAttackTierOptions(flame_type, flame_advantage);
+		}
         if (flame_type == 'powerful' && maple_class == "da" && item_type == 'armor') {
             if (flame_advantage) {
                 $('#da_attack_tier').empty()
@@ -1528,89 +1541,82 @@ document.addEventListener("DOMContentLoaded", function () {
         var item_type = document.getElementById('item_type').value
         var maple_class = document.getElementById('maple_class').value
         var flame_advantage = document.getElementById('flame-advantaged').checked
+		if (item_type == 'weapon') {
+			updateAttackTierOptions(flame_type, flame_advantage);
+		}
         if (flame_type == 'powerful') {
-            if (item_type == 'weapon') {
-                document.getElementById('attack_tier').options[5].disabled = true;
-            }
-            else {
-                if (maple_class == 'da') {
-                    if (flame_advantage) {
-                        $('#da_attack_tier').empty()
-                        $('#hp_tier').empty()
+			if (maple_class == 'da') {
+				if (flame_advantage) {
+					$('#da_attack_tier').empty()
+					$('#hp_tier').empty()
 
-                        $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                        $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                        $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                        $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                        $('#da_attack_tier').append("<option value=6>Tier 6</option>")
+					$('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+					$('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+					$('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+					$('#da_attack_tier').append("<option value=5>Tier 5+</option>")
+					$('#da_attack_tier').append("<option value=6>Tier 6</option>")
 
-                        $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                        $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                        $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                        $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                        $('#hp_tier').append("<option value=6>Tier 6</option>")
-                    }
-                    else {
-                        $('#da_attack_tier').empty()
-                        $('#hp_tier').empty()
+					$('#hp_tier').append("<option value=0>Tier 0+</option>")
+					$('#hp_tier').append("<option value=3>Tier 3+</option>")
+					$('#hp_tier').append("<option value=4>Tier 4+</option>")
+					$('#hp_tier').append("<option value=5>Tier 5+</option>")
+					$('#hp_tier').append("<option value=6>Tier 6</option>")
+				}
+				else {
+					$('#da_attack_tier').empty()
+					$('#hp_tier').empty()
 
-                        $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                        $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
-                        $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                        $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                        $('#da_attack_tier').append("<option value=4>Tier 4</option>")
+					$('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+					$('#da_attack_tier').append("<option value=1>Tier 1+</option>")
+					$('#da_attack_tier').append("<option value=2>Tier 2+</option>")
+					$('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+					$('#da_attack_tier').append("<option value=4>Tier 4</option>")
 
-                        $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                        $('#hp_tier').append("<option value=1>Tier 1+</option>")
-                        $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                        $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                        $('#hp_tier').append("<option value=4>Tier 4</option>")
-                    }
+					$('#hp_tier').append("<option value=0>Tier 0+</option>")
+					$('#hp_tier').append("<option value=1>Tier 1+</option>")
+					$('#hp_tier').append("<option value=2>Tier 2+</option>")
+					$('#hp_tier').append("<option value=3>Tier 3+</option>")
+					$('#hp_tier').append("<option value=4>Tier 4</option>")
+				}
 
-                }
-            }
+			}
         }
         else {
-            if (item_type == 'weapon') {
-                document.getElementById('attack_tier').options[5].disabled = false;
-            }
-            else {
-                if (maple_class == 'da') {
-                    if (flame_advantage) {
-                        $('#da_attack_tier').empty()
-                        $('#hp_tier').empty()
+			if (maple_class == 'da') {
+				if (flame_advantage) {
+					$('#da_attack_tier').empty()
+					$('#hp_tier').empty()
 
-                        $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                        $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                        $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                        $('#da_attack_tier').append("<option value=6>Tier 6+</option>")
-                        $('#da_attack_tier').append("<option value=7>Tier 7</option>")
+					$('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+					$('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+					$('#da_attack_tier').append("<option value=5>Tier 5+</option>")
+					$('#da_attack_tier').append("<option value=6>Tier 6+</option>")
+					$('#da_attack_tier').append("<option value=7>Tier 7</option>")
 
-                        $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                        $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                        $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                        $('#hp_tier').append("<option value=6>Tier 6+</option>")
-                        $('#hp_tier').append("<option value=7>Tier 7</option>")
-                    }
-                    else {
-                        $('#da_attack_tier').empty()
-                        $('#hp_tier').empty()
+					$('#hp_tier').append("<option value=0>Tier 0+</option>")
+					$('#hp_tier').append("<option value=4>Tier 4+</option>")
+					$('#hp_tier').append("<option value=5>Tier 5+</option>")
+					$('#hp_tier').append("<option value=6>Tier 6+</option>")
+					$('#hp_tier').append("<option value=7>Tier 7</option>")
+				}
+				else {
+					$('#da_attack_tier').empty()
+					$('#hp_tier').empty()
 
-                        $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                        $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                        $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                        $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                        $('#da_attack_tier').append("<option value=5>Tier 5</option>")
+					$('#da_attack_tier').append("<option value=0>Tier 0+</option>")
+					$('#da_attack_tier').append("<option value=2>Tier 2+</option>")
+					$('#da_attack_tier').append("<option value=3>Tier 3+</option>")
+					$('#da_attack_tier').append("<option value=4>Tier 4+</option>")
+					$('#da_attack_tier').append("<option value=5>Tier 5</option>")
 
-                        $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                        $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                        $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                        $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                        $('#hp_tier').append("<option value=5>Tier 5</option>")
-                    }
+					$('#hp_tier').append("<option value=0>Tier 0+</option>")
+					$('#hp_tier').append("<option value=2>Tier 2+</option>")
+					$('#hp_tier').append("<option value=3>Tier 3+</option>")
+					$('#hp_tier').append("<option value=4>Tier 4+</option>")
+					$('#hp_tier').append("<option value=5>Tier 5</option>")
+				}
 
-                }
-            }
+			}
         }
     })
     document.getElementById("calculateButton").addEventListener("click", function () {
