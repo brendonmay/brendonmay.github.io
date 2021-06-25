@@ -49,25 +49,25 @@ function getTierProbabilities(flame_type, non_advantaged_item) {
 }
 
 function getLineProbability(choose_from, number_of_lines, non_advantaged_item) {
-	var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
-	if (non_advantaged_item) {
-		if (number_of_lines == 1) {
-			line_probability = non_advantaged[1] / combination(19, 1) + non_advantaged[2] * combination(choose_from, 1) / combination(19, 2) + non_advantaged[3] * combination(choose_from, 2) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 3) / combination(19, 4)
-		}
-		else if (number_of_lines == 2) {
-			line_probability = non_advantaged[2] / combination(19, 2) + non_advantaged[3] * combination(choose_from, 1) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 2) / combination(19, 4)
-		}
-		else if (number_of_lines == 3) {
-			line_probability = non_advantaged[3] / combination(19, 3) + non_advantaged[4] * combination(choose_from, 1) / combination(19, 4)
-		}
-		else if (number_of_lines == 4) {
-			line_probability = non_advantaged[4] / combination(19, 4)
-		}
-		else {
-			line_probability = 0
-		}
-	}
-	return line_probability
+    var line_probability = combination(choose_from, 4 - number_of_lines) / combination(19, 4)
+    if (non_advantaged_item) {
+        if (number_of_lines == 1) {
+            line_probability = non_advantaged[1] / combination(19, 1) + non_advantaged[2] * combination(choose_from, 1) / combination(19, 2) + non_advantaged[3] * combination(choose_from, 2) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 3) / combination(19, 4)
+        }
+        else if (number_of_lines == 2) {
+            line_probability = non_advantaged[2] / combination(19, 2) + non_advantaged[3] * combination(choose_from, 1) / combination(19, 3) + non_advantaged[4] * combination(choose_from, 2) / combination(19, 4)
+        }
+        else if (number_of_lines == 3) {
+            line_probability = non_advantaged[3] / combination(19, 3) + non_advantaged[4] * combination(choose_from, 1) / combination(19, 4)
+        }
+        else if (number_of_lines == 4) {
+            line_probability = non_advantaged[4] / combination(19, 4)
+        }
+        else {
+            line_probability = 0
+        }
+    }
+    return line_probability
 }
 
 function checkRatios(maple_class) {
@@ -127,7 +127,7 @@ function checkRatios(maple_class) {
 function getDAProbability(desired_attack, desired_hp, flame_type, non_advantaged_item) {
     var probability = 0
 	
-	var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
+    var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
 
     if (desired_attack == 0 || desired_hp == 0) { // only hp
         var stat = desired_hp
@@ -184,8 +184,8 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
     var probability = 0
 
     var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
-	var minTier = non_advantaged_item ? 1 : 3;
-	var maxTier = non_advantaged_item ? 5 : 7;
+    var minTier = non_advantaged_item ? 1 : 3;
+    var maxTier = non_advantaged_item ? 5 : 7;
 
     if (dmg == 0) {
         var tier_probability = 0
@@ -336,8 +336,7 @@ function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two
     var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier, combo_six_tier]
     var index = 0
     var probability = 0
-	var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
-	
+    var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
     while (index < list.length) {
         var tier = list[index];
         if (tier > 0) {
@@ -1084,19 +1083,19 @@ function geoDistrQuantile(p) {
 }
 
 function updateAttackTierOptions(flame_type, flame_advantage) {
-	// Tier 1 and 2 are skipped, so index 1 is tier 3.
-	let maxTierIndex = 2;
-	if (flame_type == 'eternal') {
-		maxTierIndex += 1;
-	}
-	if (flame_advantage) {
-		maxTierIndex += 2;
-	}
-	// No need to disable tier 4+ and under, they're always valid.
-	const attackTierSelect = document.getElementById('attack_tier');
-	for (let i = 3; i <= 5; i++) {
-		attackTierSelect.options[i].disabled = i > maxTierIndex;
-	}
+    // Tier 1 and 2 are skipped, so index 1 is tier 3.
+    let maxTierIndex = 2;
+    if (flame_type == 'eternal') {
+        maxTierIndex += 1;
+    }
+    if (flame_advantage) {
+        maxTierIndex += 2;
+    }
+    // No need to disable tier 4+ and under, they're always valid.
+    const attackTierSelect = document.getElementById('attack_tier');
+    for (let i = 3; i <= 5; i++) {
+        attackTierSelect.options[i].disabled = i > maxTierIndex;
+    }
 }
 
 //test
