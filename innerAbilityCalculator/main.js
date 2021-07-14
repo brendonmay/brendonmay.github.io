@@ -83,10 +83,9 @@ let abilities_honor =
 }
 
 function honor_cost(lock_info) {
-    if (lock_info == "none") return 100
-    else if (lock_info == "rank_lock") return 10100
-    else if (lock_info == "rank_and_line") return 13100
-    else if (lock_info == "rank_and_two_line") return 18100
+    if (lock_info == 0) return 10100
+    else if (lock_info == 1) return 13100
+    else if (lock_info == 2) return 18100
 }
 
 function adjust_probability(line_rank, line_prob, locked_lines) {
@@ -115,6 +114,9 @@ function reroll_or_lock(current_lines, desired_lines) {
     var lines_to_roll = 3
     var line_probabilities = { 1: 0, 2: 0, 3: 0 }
     var desired_NAs = 0
+    var locked_lines = 0
+    var repeated_lock_check = []
+    var repeated_roll_check = []
 
     while (line < 3) {
         var current_line = current_lines[line]
@@ -122,16 +124,25 @@ function reroll_or_lock(current_lines, desired_lines) {
         while (desired_line < 3) {
             var index = desired_line + 1
             if (current_line == desired_lines[desired_line]) {
-                lines_to_roll--
-                if (current_line != "N/A") {
-                    lines[index] = true
+                lines[index] = true
+                if (current_line != "N/A" && !repeated_lock_check.includes(index)) {
+                    repeated_lock_check.push(index)
+                    locked_lines++
                 }
-                else lines[index] = "N/A"
+                if(!repeated_roll_check.includes(index)){
+                    lines_to_roll--
+                    repeated_roll_check.push(index)
+                }
+
             }
             if (desired_lines[desired_line] == "N/A") {
                 var probability_for_desired_line = 1
                 lines[index] = true
                 desired_NAs++
+                if(!repeated_roll_check.includes(index)){
+                    lines_to_roll--
+                    repeated_roll_check.push(index)
+                }
             }
             else {
                 var line_type = desired_lines[desired_line].substring(0, desired_lines[desired_line].indexOf('*'))
@@ -144,7 +155,8 @@ function reroll_or_lock(current_lines, desired_lines) {
         }
         line++
     }
-    if (lines_to_roll == 0 || lines_to_roll - desired_NAs/3 == 0) return "done"
+    console.log("lines to roll: " + lines_to_roll)
+    if (lines_to_roll == 0) return "done"
     else if (lines_to_roll == 1 || lines_to_roll == 2) {
         if (lines[2] || lines[3]) {
             lines['reroll'] = false
@@ -158,9 +170,9 @@ function reroll_or_lock(current_lines, desired_lines) {
         lines['reroll'] = true
     }
 
-    lines.locked_lines = 3 - lines_to_roll
+    lines.locked_lines = locked_lines
     lines.line_probabilities = line_probabilities
-    lines.desired_NAs = desired_NAs/3
+    lines.desired_NAs = desired_NAs / 3
 
     return lines
 }
@@ -169,6 +181,7 @@ function pureHonorSpent(compare_lines) {
     var number_of_locked_lines = compare_lines.locked_lines
     var desired_NAs = compare_lines.desired_NAs
     var lines_to_roll = 3 - number_of_locked_lines - desired_NAs
+    console.log("lines to roll: " + lines_to_roll, ", number of locked lines:" +number_of_locked_lines)
 
     var honor_spent = 0
 
@@ -178,26 +191,23 @@ function pureHonorSpent(compare_lines) {
     if (lines_to_roll == 3) {
         var p = compare_lines.line_probabilities[1] + compare_lines.line_probabilities[2] + compare_lines.line_probabilities[3]
         var avg_rolls = 1 / p
-        console.log(avg_rolls)
-        honor_spent += honor_cost("rank_lock") * avg_rolls
+        honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
 
-        var adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[1], 1)
-        var adj_line_2 = adjust_probability(line_rank_2, compare_lines.line_probabilities[2], 1)
-        var adj_line_3 = adjust_probability(line_rank_3, compare_lines.line_probabilities[3], 1)
+        var adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[1], number_of_locked_lines + 1)
+        var adj_line_2 = adjust_probability(line_rank_2, compare_lines.line_probabilities[2], number_of_locked_lines + 1)
+        var adj_line_3 = adjust_probability(line_rank_3, compare_lines.line_probabilities[3], number_of_locked_lines + 1)
         var new_p = (compare_lines.line_probabilities[1] / p) * (adj_line_2 + adj_line_3) + (compare_lines.line_probabilities[2] / p) * (adj_line_1 + adj_line_3) + (compare_lines.line_probabilities[3] / p) * (adj_line_2 + adj_line_1)
         avg_rolls = 1 / new_p
-        console.log(avg_rolls)
-        honor_spent += honor_cost("rank_and_line") * avg_rolls
+        honor_spent += honor_cost(number_of_locked_lines + 1) * avg_rolls
 
-        var new_adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[1], 2)
-        var new_adj_line_2 = adjust_probability(line_rank_2, compare_lines.line_probabilities[2], 2)
-        var new_adj_line_3 = adjust_probability(line_rank_3, compare_lines.line_probabilities[3], 2)
+        var new_adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[1], number_of_locked_lines + 2)
+        var new_adj_line_2 = adjust_probability(line_rank_2, compare_lines.line_probabilities[2], number_of_locked_lines + 2)
+        var new_adj_line_3 = adjust_probability(line_rank_3, compare_lines.line_probabilities[3], number_of_locked_lines + 2)
         var case_one = (compare_lines.line_probabilities[1] / p) * (adj_line_2 / new_p) * new_adj_line_3 + (compare_lines.line_probabilities[1] / p) * (adj_line_3 / new_p) * new_adj_line_2
         var case_two = (compare_lines.line_probabilities[2] / p) * (adj_line_1 / new_p) * new_adj_line_3 + (compare_lines.line_probabilities[2] / p) * (adj_line_3 / new_p) * new_adj_line_1
         var case_three = (compare_lines.line_probabilities[3] / p) * (adj_line_2 / new_p) * new_adj_line_1 + (compare_lines.line_probabilities[3] / p) * (adj_line_1 / new_p) * new_adj_line_2
         avg_rolls = 1 / (case_one + case_two + case_three)
-        console.log(avg_rolls)
-        honor_spent += honor_cost("rank_and_two_line") * avg_rolls
+        honor_spent += honor_cost(number_of_locked_lines + 2) * avg_rolls
     }
     if (lines_to_roll == 2) {
         var line_one
@@ -223,18 +233,18 @@ function pureHonorSpent(compare_lines) {
             line_rank_1 = compare_lines.lines[1]
             line_rank_2 = compare_lines.lines[2]
         }
-        var adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[line_one], 1)
-        var adj_line_2 = adjust_probability(line_rank_2, compare_lines.line_probabilities[line_two], 1)
+        var adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[line_one], number_of_locked_lines)
+        var adj_line_2 = adjust_probability(line_rank_2, compare_lines.line_probabilities[line_two], number_of_locked_lines)
 
         var p = adj_line_1 + adj_line_2
         var avg_rolls = 1 / p
-        honor_spent += honor_cost("rank_and_line") * avg_rolls
+        honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
 
-        var new_adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[line_one], 2)
-        var new_adj_line_2 = adjust_probability(line_rank_2, compare_lines.line_probabilities[line_two], 2)
+        var new_adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[line_one], number_of_locked_lines + 1)
+        var new_adj_line_2 = adjust_probability(line_rank_2, compare_lines.line_probabilities[line_two], number_of_locked_lines + 1)
         var new_p = (compare_lines.line_probabilities[line_one] / p) * (new_adj_line_2) + (compare_lines.line_probabilities[line_two] / p) * (new_adj_line_1)
         avg_rolls = 1 / new_p
-        honor_spent += honor_cost("rank_and_two_line") * avg_rolls
+        honor_spent += honor_cost(number_of_locked_lines + 1) * avg_rolls
     }
     if (lines_to_roll == 1) {
         var line_one
@@ -250,9 +260,9 @@ function pureHonorSpent(compare_lines) {
             line_one = 3
             line_rank_1 = compare_lines.lines[3]
         }
-        var adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[line_one], 2)
+        var adj_line_1 = adjust_probability(line_rank_1, compare_lines.line_probabilities[line_one], number_of_locked_lines)
         var avg_rolls = 1 / adj_line_1
-        honor_spent += honor_cost("rank_and_two_line") * avg_rolls
+        honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
     }
     //here make sure this is working when N/A is thrown into the mix
     return honor_spent
@@ -260,11 +270,11 @@ function pureHonorSpent(compare_lines) {
 
 function run_calculation(current_lines, desired_lines, only_honor) {
     var compare_lines = reroll_or_lock(current_lines, desired_lines)
+    console.log(compare_lines)
     if (compare_lines == "done") {
-        //we are done, nothing to compute
+        console.log("No computation needed.")
         return 0
     }
-    console.log(compare_lines)
     var reroll_choice = compare_lines.reroll.choice
     if (only_honor) reroll_choice = false
 
@@ -300,6 +310,30 @@ function geoDistrQuantile(p) {
 
     return { mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth }
 }
+function isValidCombination(current_lines, desired_lines) {
+    var i = 0
+    var current_line_types = []
+    var desired_line_types = []
+    while (i < 3) {
+        if (current_lines[i] != "N/A") {
+            var line_type = current_lines[i].substring(0, current_lines[i].indexOf('*'))
+            if (current_line_types.includes(line_type)) return false
+            else current_line_types.push(line_type)
+        }
+        i++
+    }
+    i = 0
+    while (i < 3) {
+        if (desired_lines[i] != "N/A") {
+            var line_type = desired_lines[i].substring(0, desired_lines[i].indexOf('*'))
+            if (desired_line_types.includes(line_type)) return false
+            else desired_line_types.push(line_type)
+        }
+        i++
+    }
+
+    return true
+}
 
 //test
 document.addEventListener("DOMContentLoaded", function () {
@@ -327,39 +361,58 @@ document.addEventListener("DOMContentLoaded", function () {
             var desired_line_2 = document.getElementById("desired_line_2").value
             var desired_line_3 = document.getElementById("desired_line_3").value
 
-            //here run check that there are no repeated lines
-
-            var only_honor = document.getElementById("only_honor").checked
-            var fifty_off = false //here fix this
-
-            var targetted_line //here identify which line to target with circulators
-
             var current_lines = [line_1, line_2, line_3]
             var desired_lines = [desired_line_1, desired_line_2, desired_line_3]
 
-            var expected_honor = run_calculation(current_lines, desired_lines, only_honor)
-            var expected_circulators = 0 //here
+            var isValid = isValidCombination(current_lines, desired_lines)
 
-            console.log(expected_honor)
+            if (isValid) {
+                var only_honor = document.getElementById("only_honor").checked
+                var fifty_off = false //here fix this
 
-            if (fifty_off == true) {
-                expected_honor = Math.ceil(expected_honor / 2)
+                var targetted_line //here identify which line to target with circulators
+
+                var expected_honor = run_calculation(current_lines, desired_lines, only_honor)
+                var expected_circulators = 0 //here
+
+                console.log(expected_honor)
+
+                if (fifty_off == true) {
+                    expected_honor = Math.ceil(expected_honor / 2)
+                }
+
+                document.getElementById('result').style.display = '';
+                document.getElementById('error-container').style.display = 'none';
+                document.getElementById('result').innerHTML =
+                    `
+                    <div class="container secondarycon">
+                    <div class=" statBox statBox1" style="background-color:#aaa;">
+                        <h2 style="text-align:center;">Results</h2>
+                            <p style="text-align:center;"">
+                                Expected Miracle Circulators: ${expected_circulators.toLocaleString()}<br />
+                            Expected Honor Exp: ${expected_honor.toLocaleString()}<br />
+                            </p>
+                    </div>
+                    </div>
+        `
             }
 
-            document.getElementById('result').style.display = '';
-            document.getElementById('error-container').style.display = 'none';
-            document.getElementById('result').innerHTML =
-                `
-    <div class="container secondarycon">
-      <div class=" statBox statBox1" style="background-color:#aaa;">
-        <h2 style="text-align:center;">Results</h2>
-            <p style="text-align:center;"">
-                Expected Miracle Circulators: ${expected_circulators.toLocaleString()}<br />
-            Expected Honor Exp: ${expected_honor.toLocaleString()}<br />
-            </p>
-      </div>
-    </div>
-        `
+            else {
+                document.getElementById('result').style.display = '';
+                document.getElementById('error-container').style.display = 'none';
+                document.getElementById('result').innerHTML =
+                    `
+                    <div class="container secondarycon">
+                    <div class=" statBox statBox1" style="background-color:#aaa;">
+                        <h2 style="text-align:center;">Results</h2>
+                            <p style="text-align:center;"">
+                                You have inputted an invalid combination of lines.<br />
+                            You cannot have the same type of line appearing more than once.<br />
+                            </p>
+                    </div>
+                    </div>
+                        `
+            }
         }
         loaderOn();
         setTimeout(loaderOff, 100);
