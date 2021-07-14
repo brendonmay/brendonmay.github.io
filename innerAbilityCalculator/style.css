@@ -24,7 +24,7 @@ h5 {
 }
 
 .red {
-    color: #D33E43;
+    color: #0d7535;
 }
 
 .red:hover {
@@ -58,7 +58,7 @@ h5 {
 }
 
 .toast-header {
-    background-color: #D33E43;
+    background-color: #0d7535;
     color: white;
 }
 
@@ -131,13 +131,13 @@ body{
     padding: 0;
     display: flex;
     justify-content: center;
-    background:#F5E9E2;
+    background:#e9e7e9;
     background-size: cover;
 }
 
 .btn, .btn:hover {
-  background-color: #D44D5C;
-  border-color: #773344;
+  background-color: #0d7535;
+  border-color: #5cd894;
   outline: none
   
 }
@@ -150,29 +150,29 @@ body{
 
 .btnSubmit:focus {
     outline: none;
-    background-color: #D44D5C;
+    background-color: #0d7535;
 }
 
 .btnSubmit:active {
     outline: none;
-    background-color: #D44D5C;
+    background-color: #0d7535;
 }
 
 .btnSubmit:visited {
     outline: none;
-    background-color: #D44D5C;
+    background-color: #0d7535;
 }
 
 .head h1>span {
-    color: #D44D5C;
+    color: #0d7535;
     font-weight: 1000;
 }
 .container h4>span {
-    color: #D44D5C;
+    color: #0d7535;
     font-weight: 1000;
 }
 .title p>span {
-    color: #D44D5C;
+    color: #0d7535;
     font-weight: 650;
 }
 .secondarycon {
@@ -189,27 +189,27 @@ body{
     margin-bottom: 0!important;
 }
 .nav-item:hover, .navbar-text:hover, .active{
-    color:#F5E9E2!important
+    color:#e9e7e9!important
 }
 
 .navbar {
-    background-color: #D44D5C!important;
-    color: #F5E9E2!important;
+    background-color: #0d7535!important;
+    color: #e9e7e9!important;
 }
 .statBox {
-    background-color: #F5E9E2!important;
-    border-color: #D44D5C;
+    background-color: #e9e7e9!important;
+    border-color: #0d7535;
     border-radius: 15px;
     padding: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: calc(50% - 5px);
+    width: calc(100% - 5px);
 }
 
 .statBox h2 {
-    color: #D44D5C;
+    color: #0d7535;
     margin: 0;
     font-weight: normal;
     font-size: 20px;
@@ -218,7 +218,7 @@ body{
 
 .statBox p {
     font-weight: 400;
-    color: #D44D5C;
+    color: #0d7535;
     margin: 0;
     font-size: 14px;
     padding-top: 5px;

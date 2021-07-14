@@ -75,181 +75,203 @@
             <div class='form-row'>
                 <div class='form-group col title remove-bottom-margin'>
                     <h4><span>
-                            Flaming Information
+                            Current Inner Ability
                         </span></h4>
+                    <h5>State the current inner ability you have on your character. If the option isn't availble, select
+                        "N/A".</h5>
                 </div>
             </div>
             <div class='form-row'>
                 <div class='form-group col'>
-                    <label for="maple_class">Class</label>
-                    <select id="maple_class" class="form-control">
-                        <option value='other' selected>Other</option>
-                        <option value='db'>Dual Blade</option>
-                        <option value='cadena'>Cadena</option>
-                        <option value='shadower'>Shadower</option>
-                        <option value='kanna'>Kanna</option>
-                        <option value='xenon'>Xenon</option>
-                        <option value='da'>Demon Avenger</option>
+                    <label for="line_1">Line 1</label>
+                    <select id="line_1" class="form-control">
+                        <option value='normal_dmg*legendary'>Normal Monster +9-10% Dmg</option>
+                        <option value='abnormal_dmg*legendary'>Abnormal Status +9-10% Dmg</option>
+                        <option value='buff_duration*legendary'>Buff Duration +44-50%</option>
+                        <option value='item_drop*legendary'>Item Drop +18-20%</option>
+                        <option value='meso_drop*legendary'>Meso Drop +18-20%</option>
+                        <option value='w_attk*legendary'>Weapon Attack +27-30</option>
+                        <option value='m_attk*legendary'>Magic Attack +27-30</option>
+                        <option value='crit_rate*legendary'>Critical Rate +25-30%</option>
+                        <option value='boss*legendary' selected>Boss Dmg +15-20%</option>
+                        <option value='cd_skip*legendary'>Cooldown Skip +15-20%</option>
+                        <option value='att_speed*legendary'>Attack Speed +1</option>
+                        <option value='passive_skill*legendary'>Passive Skills +1</option>
+                        <option value='N/A'>N/A</option>
                     </select>
                 </div>
                 <div class='form-group col'>
-                    <label for="item_type">Item Type</label>
-                    <select id="item_type" class="form-control">
-                        <option value='armor' selected>Armor</option>
-                        <option value='weapon'>Weapon</option>
+                    <label for="line_2">Line 2</label>
+                    <select id="line_2" class="form-control">
+                        <option value='normal_dmg*epic'>Normal Monster +4-5% Dmg</option>
+                        <option value='normal_dmg*unique'>Normal Monster +7-8% Dmg</option>
 
+                        <option value='abnormal_dmg*epic'>Abnormal Status +4-5% Dmg</option>
+                        <option value='abnormal_dmg*unique'>Abnormal Status +7-8% Dmg</option>
+
+                        <option value='buff_duration*epic'>Buff Duration +19-25%</option>
+                        <option value='buff_duration*unique'>Buff Duration +32-38%</option>
+
+                        <option value='item_drop*epic'>Item Drop +8-10%</option>
+                        <option value='item_drop*unique'>Item Drop +13-15%</option>
+
+                        <option value='meso_drop*epic'>Meso Drop +8-10%</option>
+                        <option value='meso_drop*unique'>Meso Drop +13-15%</option>
+
+                        <option value='w_attk*epic'>Weapon Attack +6-12</option>
+                        <option value='w_attk*unique'>Weapon Attack +15-21</option>
+
+                        <option value='m_attk*epic'>Magic Attack +6-12</option>
+                        <option value='m_attk*unique'>Magic Attack +15-21</option>
+
+                        <option value='crit_rate*epic'>Critical Rate +5-10%</option>
+                        <option value='crit_rate*unique' selected>Critical Rate +15-20%</option>
+
+                        <option value='boss*unique'>Boss Dmg +5-10%</option>
+
+                        <option value='cd_skip*unique'>Cooldown Skip +5-10%</option>
+
+                        <option value='N/A'>N/A</option>
                     </select>
                 </div>
                 <div class='form-group col'>
-                    <label for="flame_type">Flame Type</label>
-                    <select id="flame_type" class="form-control">
-                        <option value='powerful' selected>Powerful (Red)</option>
-                        <option value='eternal'>Eternal (Rainbow)</option>
-                    </select>
-                </div>
-                <div class='form-group col' id="item_level_div">
-                    <label for="item_level">Item Level</label>
-                    <select id="item_level" class="form-control">
-                        <option value="140-159" selected>140-159</option>
-                        <option value="160-179">160-179</option>
-                        <option value="180-199">180-199</option>
-                        <option value="200-219">200-219</option>
+                    <label for="line_3">Line 3</label>
+                    <select id="line_3" class="form-control">
+                        <option value='normal_dmg*epic'>Normal Monster +4-5% Dmg</option>
+                        <option value='normal_dmg*unique'>Normal Monster +7-8% Dmg</option>
+
+                        <option value='abnormal_dmg*epic'>Abnormal Status +4-5% Dmg</option>
+                        <option value='abnormal_dmg*unique'>Abnormal Status +7-8% Dmg</option>
+
+                        <option value='buff_duration*epic'>Buff Duration +19-25%</option>
+                        <option value='buff_duration*unique'>Buff Duration +32-38%</option>
+
+                        <option value='item_drop*epic'>Item Drop +8-10%</option>
+                        <option value='item_drop*unique'>Item Drop +13-15%</option>
+
+                        <option value='meso_drop*epic'>Meso Drop +8-10%</option>
+                        <option value='meso_drop*unique' selected>Meso Drop +13-15%</option>
+
+                        <option value='w_attk*epic'>Weapon Attack +6-12</option>
+                        <option value='w_attk*unique'>Weapon Attack +15-21</option>
+
+                        <option value='m_attk*epic'>Magic Attack +6-12</option>
+                        <option value='m_attk*unique'>Magic Attack +15-21</option>
+
+                        <option value='crit_rate*epic'>Critical Rate +5-10%</option>
+                        <option value='crit_rate*unique'>Critical Rate +15-20%</option>
+
+                        <option value='boss*unique'>Boss Dmg +5-10%</option>
+
+                        <option value='cd_skip*unique'>Cooldown Skip +5-10%</option>
+
+                        <option value='N/A'>N/A</option>
                     </select>
                 </div>
 
             </div>
-            <div class='form-row'>
-                <div class='form-group col text-center remove-bottom-margin'>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flame-advantaged" checked>
-                        <label class="form-check-label" for="flame-advantaged">
-                            Flame-Advantaged Item
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class='form-row' id="statequivalences_title">
-                <div class='form-group col title remove-bottom-margin'>
-                    <h4><span>
-                            Stat Equivalences
-                        </span></h4>
-                    <h5>Use my <u><a class="red" href="../statEquivalentCalculator/">Stat Equivalent Calculator</a></u>
-                        to determine the ratios for your character. Leave this section alone if you are unsure.</h5>
-                </div>
-            </div>
-            <div class='form-row' id="statequivalences">
-                <div class="input-group" id="all_stat_div">
-                    <span class="input-group-text no-rad">1 All Stat % = </span>
-                    <input type="number" class="form-control text-align-right" id="all_stat" value=8
-                        step=0.000000000000001>
-                    <span class="input-group-text white">Main Stat</span>
-                </div>
-                <div class="input-group" id="attack_div">
-                    <span class="input-group-text no-rad">1 Attack = </span>
-                    <input type="number" class="form-control text-align-right" id="attack" value=3
-                        step=0.000000000000001>
-                    <span class="input-group-text white">Main Stat</span>
-                </div>
-                <div class="input-group" id="secondary_stat_div">
-                    <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="secondary_stat" value=10
-                        step=0.000000000000001>
-                    <span class="input-group-text white">Secondary Stat</span>
-                </div>
-                <div class="input-group" id="luk_stat_div" hidden>
-                    <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="luk_stat" value=10
-                        step=0.000000000000001>
-                    <span class="input-group-text white">LUK</span>
-                </div>
-                <div class="input-group" id="dex_stat_div" hidden>
-                    <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="dex_stat" value=10
-                        step=0.000000000000001>
-                    <span class="input-group-text white">DEX</span>
-                </div>
-                <div class="input-group" id="str_stat_div" hidden>
-                    <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="str_stat" value=10
-                        step=0.000000000000001>
-                    <span class="input-group-text white">STR</span>
-                </div>
-                <div class="input-group" id="hp_stat_div" hidden>
-                    <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="hp_stat" value=110
-                        step=0.000000000000001>
-                    <span class="input-group-text white">HP</span>
-                </div>
-            </div>
+
             <div class='form-row mt-14'>
                 <div class='form-group col title remove-bottom-margin'>
                     <h4><span>
-                            Desired Stats
+                            Desired Inner Ability
                         </span></h4>
-                    <h5>State the minimum requirements you want to achieve on bonus stats
-                        below.</h5>
-                </div>
-            </div>
-            <!-- HERE -->
-            <div class='form-row' id="da_desired_stats" hidden>
-                <div class='form-group col'>
-                    <label for="da_attack_tier">Attack Tier</label>
-                    <select id="da_attack_tier" class="form-control">
-                        <option value=0 selected>Tier 0+</option>
-                        <option value=3>Tier 3+</option>
-                        <option value=4>Tier 4+</option>
-                        <option value=5>Tier 5+</option>
-                        <option value=6>Tier 6+</option>
-                        <option value=7>Tier 7</option>
-
-                    </select>
-                </div>
-                <div class='form-group col'>
-                    <label for="hp_tier">HP Tier</label>
-                    <select id="hp_tier" class="form-control">
-                        <option value=0 selected>Tier 0+</option>
-                        <option value=3>Tier 3+</option>
-                        <option value=4>Tier 4+</option>
-                        <option value=5>Tier 5+</option>
-                        <option value=6>Tier 6+</option>
-                        <option value=7>Tier 7</option>
-
-                    </select>
+                    <h5>State the desired inner ability you wish to have on your character. If you are indifferent about a specific line's outcome, select "N/A".</h5>
                 </div>
             </div>
 
-            <div class='form-row' id="weapon_desired_stats" hidden>
+            <div class='form-row'>
                 <div class='form-group col'>
-                    <label for="attack_tier">Attack Tier</label>
-                    <select id="attack_tier" class="form-control">
-                        <option value=0 selected>Tier 0+</option>
-                        <option value=3>Tier 3+</option>
-                        <option value=4>Tier 4+</option>
-                        <option value=5>Tier 5+</option>
-                        <option value=6>Tier 6+</option>
-                        <option value=7>Tier 7</option>
-
+                    <label for="desired_line_1">Line 1</label>
+                    <select id="desired_line_1" class="form-control">
+                        <option value='normal_dmg*legendary'>Normal Monster +9-10% Dmg</option>
+                        <option value='abnormal_dmg*legendary'>Abnormal Status +9-10% Dmg</option>
+                        <option value='buff_duration*legendary'>Buff Duration +44-50%</option>
+                        <option value='item_drop*legendary'>Item Drop +18-20%</option>
+                        <option value='meso_drop*legendary'>Meso Drop +18-20%</option>
+                        <option value='w_attk*legendary'>Weapon Attack +27-30</option>
+                        <option value='m_attk*legendary'>Magic Attack +27-30</option>
+                        <option value='crit_rate*legendary'>Critical Rate +25-30%</option>
+                        <option value='boss*legendary' selected>Boss Dmg +15-20%</option>
+                        <option value='cd_skip*legendary'>Cooldown Skip +15-20%</option>
+                        <option value='att_speed*legendary'>Attack Speed +1</option>
+                        <option value='passive_skill*legendary'>Passive Skills +1</option>
+                        <option value='N/A'>N/A</option>
                     </select>
                 </div>
                 <div class='form-group col'>
-                    <label for="dmg_percent">Dmg % (Boss + Dmg)</label>
-                    <input type="number" class="form-control text-align-center" id="dmg_percent" value=0 min=0 step=1>
-                </div>
-            </div>
+                    <label for="desired_line_2">Line 2</label>
+                    <select id="desired_line_2" class="form-control">
+                        <option value='normal_dmg*epic'>Normal Monster +4-5% Dmg</option>
+                        <option value='normal_dmg*unique'>Normal Monster +7-8% Dmg</option>
 
-            <div class='form-row' id="armor_desired_stats">
-                <div class="input-group width-small">
-                    <input type="number" class="form-control text-align-center border-left border-right-none"
-                        id="desired_stat_armor" value=100>
-                    <span class="input-group-text no-rad">Main Stat</span>
+                        <option value='abnormal_dmg*epic'>Abnormal Status +4-5% Dmg</option>
+                        <option value='abnormal_dmg*unique'>Abnormal Status +7-8% Dmg</option>
+
+                        <option value='buff_duration*epic'>Buff Duration +19-25%</option>
+                        <option value='buff_duration*unique'>Buff Duration +32-38%</option>
+
+                        <option value='item_drop*epic'>Item Drop +8-10%</option>
+                        <option value='item_drop*unique'>Item Drop +13-15%</option>
+
+                        <option value='meso_drop*epic'>Meso Drop +8-10%</option>
+                        <option value='meso_drop*unique'>Meso Drop +13-15%</option>
+
+                        <option value='w_attk*epic'>Weapon Attack +6-12</option>
+                        <option value='w_attk*unique'>Weapon Attack +15-21</option>
+
+                        <option value='m_attk*epic'>Magic Attack +6-12</option>
+                        <option value='m_attk*unique'>Magic Attack +15-21</option>
+
+                        <option value='crit_rate*epic'>Critical Rate +5-10%</option>
+                        <option value='crit_rate*unique' selected>Critical Rate +15-20%</option>
+
+                        <option value='boss*unique'>Boss Dmg +5-10%</option>
+
+                        <option value='cd_skip*unique'>Cooldown Skip +5-10%</option>
+                        <option value='N/A'>N/A</option>
+                    </select>
+                </div>
+                <div class='form-group col'>
+                    <label for="desired_line_3">Line 3</label>
+                    <select id="desired_line_3" class="form-control">
+                        <option value='normal_dmg*epic'>Normal Monster +4-5% Dmg</option>
+                        <option value='normal_dmg*unique'>Normal Monster +7-8% Dmg</option>
+
+                        <option value='abnormal_dmg*epic'>Abnormal Status +4-5% Dmg</option>
+                        <option value='abnormal_dmg*unique'>Abnormal Status +7-8% Dmg</option>
+
+                        <option value='buff_duration*epic'>Buff Duration +19-25%</option>
+                        <option value='buff_duration*unique'>Buff Duration +32-38%</option>
+
+                        <option value='item_drop*epic'>Item Drop +8-10%</option>
+                        <option value='item_drop*unique'>Item Drop +13-15%</option>
+
+                        <option value='meso_drop*epic'>Meso Drop +8-10%</option>
+                        <option value='meso_drop*unique' selected>Meso Drop +13-15%</option>
+
+                        <option value='w_attk*epic'>Weapon Attack +6-12</option>
+                        <option value='w_attk*unique'>Weapon Attack +15-21</option>
+
+                        <option value='m_attk*epic'>Magic Attack +6-12</option>
+                        <option value='m_attk*unique'>Magic Attack +15-21</option>
+
+                        <option value='crit_rate*epic'>Critical Rate +5-10%</option>
+                        <option value='crit_rate*unique'>Critical Rate +15-20%</option>
+
+                        <option value='boss*unique'>Boss Dmg +5-10%</option>
+
+                        <option value='cd_skip*unique'>Cooldown Skip +5-10%</option>
+                        <option value='N/A'>N/A</option>
+                    </select>
                 </div>
             </div>
             <div class='form-row'>
                 <div class='form-group col text-center remove-bottom-margin'>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="guild_discount">
-                        <label class="form-check-label" for="guild_discount">
-                            Guild Discount on Flames
+                        <input class="form-check-input" type="checkbox" value="" id="only_honor" checked disabled>
+                        <label class="form-check-label" for="only_honor">
+                            Use Only Honor
                         </label>
                     </div>
                 </div>
@@ -257,7 +279,7 @@
             <div class='form-row'>
                 <div class='form-group col text-center'>
                     <button id='calculateButton' type="submit"
-                        class="btn btn-primary btnSubmit btn-danger">Calculate</button>
+                        class="btn btn-primary btnSubmit btn-success">Calculate</button>
                 </div>
             </div>
         </form>
