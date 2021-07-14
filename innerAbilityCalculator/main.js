@@ -327,6 +327,8 @@ document.addEventListener("DOMContentLoaded", function () {
             var desired_line_2 = document.getElementById("desired_line_2").value
             var desired_line_3 = document.getElementById("desired_line_3").value
 
+            //here run check that there are no repeated lines
+
             var only_honor = document.getElementById("only_honor").checked
             var fifty_off = false //here fix this
 
@@ -341,6 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(expected_honor)
 
             if (fifty_off == true) {
+                expected_honor = Math.ceil(expected_honor / 2)
             }
 
             document.getElementById('result').style.display = '';
