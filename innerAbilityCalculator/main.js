@@ -1,5 +1,5 @@
 //here make a note on the main page that this assumes youre already legendary
-let line_probabilities = { //here
+let line_probabilities = {
     'rare': 0.8,
     'epic': 0.15,
     'unique': 0.05,
@@ -88,8 +88,8 @@ function honor_cost(lock_info) {
     else if (lock_info == 2) return 18100
 }
 
-function adjust_probability(line_rank, line_prob, locked_lines) {
-    if (line_rank == "rare") var total = 31
+function adjust_probability(line_rank, line_prob, locked_lines) { //here make sure this is properly adjusting after new changes, currently not considering line-rank probability
+    if (line_rank == "rare") var total = 31 //implement this directly into the probability function to make the calculations perfect
     else if (line_rank == "epic") var total = 34
     else if (line_rank == "unique") var total = 40
     else if (line_rank == "legendary") var total = 43
@@ -175,6 +175,97 @@ function reroll_or_lock(current_lines, desired_lines) {
     lines.desired_NAs = desired_NAs / 3
 
     return lines
+}
+
+function probabilitySuccess (probabilities, line_ranks, line_types){ //here add in # of locked lines so we can adjust
+    var number_of_successful_outcomes = line_ranks.length
+
+    if (number_of_successful_outcomes == 1){
+        var line_rank = line_ranks[0]
+        var line_type = line_types[0]
+        var rank_probability = line_probabilities[line_rank]
+        var line_probability = probabilities[0]
+        var unique_probability = 0
+        var unique_line_probability = 0
+
+        if (line_rank == "epic"){
+            var unique_probability = line_probabilities["unique"]
+            var unique_line_probability = abilities_honor[line_type].unique
+        }
+        var p = (line_probability * rank_probability + unique_probability * unique_line_probability) + ( (1 - line_probability) * rank_probability + (1 - rank_probability - unique_probability) + unique_probability * (1 - unique_line_probability) ) * (line_probability * rank_probability + unique_probability * unique_line_probability)
+
+    }
+    if (number_of_successful_outcomes == 2){
+        var line1_rank = line_ranks[0]
+        var line1_type = line_types[0]
+        var rank1_probability = line_probabilities[line1_rank]
+        var line1_probability = probabilities[0]
+
+        var line2_rank = line_ranks[1]
+        var line2_type = line_types[0]
+        var rank2_probability = line_probabilities[line2_rank]
+        var line2_probability = probabilities[1]
+
+        if (line1_rank == "epic"){
+            var unique1_probability = line_probabilities["unique"]
+            var unique1_line_probability = abilities_honor[line1_type].unique
+
+            var line1_success = line1_probability * rank1_probability + unique1_probability * unique1_line_probability
+            var line1_failure = ( (1 - line1_probability) * rank1_probability + (1 - rank1_probability - unique1_probability) + unique1_probability * (1 - unique1_line_probability) )
+        }
+
+        else {
+            var line1_success = line1_probability * rank1_probability
+            var line1_failure = (1 - line1_probability) * rank1_probability + (1 - rank1_probability)
+        }
+
+        if (line2_rank == "epic"){
+            var unique2_probability = line_probabilities["unique"]
+            var unique2_line_probability = abilities_honor[line2_type].unique
+
+            var line2_success = line2_probability * rank2_probability + unique2_probability * unique2_line_probability
+            var line2_failure = ( (1 - line2_probability) * rank2_probability + (1 - rank2_probability - unique2_probability) + unique2_probability * (1 - unique2_line_probability) )
+        }
+
+        else {
+            var line2_success = line2_probability * rank2_probability
+            var line2_failure = (1 - line2_probability) * rank2_probability + (1 - rank2_probability)
+        }
+
+        //12, 1 not2, 2 not1
+        var case1 = line1_success * line2_success * 2
+        var case2 = line1_success * line2_failure * 2
+        var case3 = line2_success * line1_failure * 2
+
+        var p = case1 + case2 + case3
+    }
+    if (number_of_successful_outcomes == 3){ //here
+        var line1_rank = line_ranks[0]
+        var rank1_probability = line_probabilities[line1_rank]
+        var line1_probability = probabilities[0]
+
+        var line2_rank = line_ranks[1]
+        var rank2_probability = line_probabilities[line2_rank]
+        var line2_probability = probabilities[1]
+
+        var line3_rank = line_ranks[2]
+        var rank3_probability = line_probabilities[line3_rank]
+        var line3_probability = probabilities[2]
+
+        //123, 12 not3, 13 not 2, 23 not 1, 1 not23, 2 not13, 3 not 12
+        var case1
+        var case2
+        var case3
+        var case4
+        var case5
+        var case6
+        var case7
+
+        var p = case1 + case2 + case3 + case4 + case5 + case6 + case7
+    }
+
+    return p
+    
 }
 
 function pureHonorSpent(compare_lines) {
@@ -309,6 +400,7 @@ function geoDistrQuantile(p) {
 
     return { mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth }
 }
+
 function isValidCombination(current_lines, desired_lines) {
     var i = 0
     var current_line_types = []
@@ -334,7 +426,6 @@ function isValidCombination(current_lines, desired_lines) {
     return true
 }
 
-//test
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
         $("#toast").toast('show')
@@ -417,4 +508,3 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(loaderOff, 100);
     })
 })
-
