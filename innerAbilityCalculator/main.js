@@ -1,52 +1,52 @@
-//lines
+//here make a note on the main page that this assumes youre already legendary
+let line_probabilities = { //here
+    'rare': 0.8,
+    'epic': 0.15,
+    'unique': 0.05,
+    "legendary": 1
+}
+
 let abilities_honor =
 {
     'normal_dmg':
     {
-        'epic_only': 0.025662,
-        'epic': 0.025662 + 0.017241,
+        'epic': 0.025662,
         'unique': 0.017241,
         "legendary": 0.017761
     },
     'abnormal_dmg':
     {
-        'epic_only': 0.025662,
-        'epic': 0.025662 + 0.017241,
+        'epic': 0.025662,
         'unique': 0.017241,
         "legendary": 0.017761
     },
     'buff_duration':
     {
-        'epic_only': 0.012831,
-        'epic': 0.012831 + 0.008622,
+        'epic': 0.012831,
         'unique': 0.00862,
         "legendary": 0.00888
     },
     'item_drop':
     {
-        'epic_only': 0.025662,
-        'epic': 0.025662 + 0.017241,
+        'epic': 0.025662,
         'unique': 0.017241,
         "legendary": 0.017761
     },
     'meso_drop':
     {
-        'epic_only': 0.025662,
-        'epic': 0.025662 + 0.017241,
+        'epic': 0.025662,
         'unique': 0.017241,
         "legendary": 0.017761
     },
     'w_attk':
     {
-        'epic_only': 0.017108,
-        'epic': 0.017108 + 0.012931,
+        'epic': 0.017108,
         'unique': 0.012931,
         "legendary": 0.022202
     },
     'm_attk':
     {
-        'epic_only': 0.017108,
-        'epic': 0.017108 + 0.012931,
+        'epic': 0.017108,
         'unique': 0.012931,
         "legendary": 0.022202
     },
@@ -264,7 +264,6 @@ function pureHonorSpent(compare_lines) {
         var avg_rolls = 1 / adj_line_1
         honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
     }
-    //here make sure this is working when N/A is thrown into the mix
     return honor_spent
 }
 
