@@ -88,15 +88,6 @@ function honor_cost(lock_info) {
     else if (lock_info == 2) return 18100
 }
 
-function adjust_probability(line_rank, line_prob, locked_lines) { //here make sure this is properly adjusting after new changes, currently not considering line-rank probability
-    if (line_rank == "rare") var total = 31 //implement this directly into the probability function to make the calculations perfect
-    else if (line_rank == "epic") var total = 34
-    else if (line_rank == "unique") var total = 40
-    else if (line_rank == "legendary") var total = 43
-
-    return (line_prob * total) / (total - locked_lines)
-}
-
 function reroll_or_lock(current_lines, desired_lines) {
     //arguments are lists length 3, ("m_attk*legendary", "meso_drop*unique", "N/A")
 
@@ -129,7 +120,7 @@ function reroll_or_lock(current_lines, desired_lines) {
                     repeated_lock_check.push(index)
                     locked_lines++
                 }
-                if(!repeated_roll_check.includes(index)){
+                if (!repeated_roll_check.includes(index)) {
                     lines_to_roll--
                     repeated_roll_check.push(index)
                 }
@@ -139,7 +130,7 @@ function reroll_or_lock(current_lines, desired_lines) {
                 var probability_for_desired_line = 1
                 lines[index] = true
                 desired_NAs++
-                if(!repeated_roll_check.includes(index)){
+                if (!repeated_roll_check.includes(index)) {
                     lines_to_roll--
                     repeated_roll_check.push(index)
                 }
@@ -177,10 +168,34 @@ function reroll_or_lock(current_lines, desired_lines) {
     return lines
 }
 
-function probabilitySuccess (probabilities, line_ranks, line_types){ //here add in # of locked lines so we can adjust
+function getLineSuccess(line_rank, line_type, line_probability, rank_probability, unique_probability, unique_line_probability) {
+    if (line_rank == "epic") {
+        var unique_probability = line_probabilities["unique"]
+        var unique_line_probability = abilities_honor[line_type].unique
+
+        var line_success = line_probability * rank_probability + unique_probability * unique_line_probability
+    }
+
+    else {
+        var line_success = line_probability * rank_probability
+    }
+
+    return line_success
+}
+
+function adjust_probability(line_rank, line_prob, locked_lines) { //here make sure this is properly adjusting after new changes, currently not considering line-rank probability
+    if (line_rank == "rare") var total = 31 //implement this directly into the probability function to make the calculations perfect
+    else if (line_rank == "epic") var total = 34
+    else if (line_rank == "unique") var total = 40
+    else if (line_rank == "legendary") var total = 43
+
+    return (line_prob * total) / (total - locked_lines)
+}
+
+function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines) {
     var number_of_successful_outcomes = line_ranks.length
 
-    if (number_of_successful_outcomes == 1){
+    if (number_of_successful_outcomes == 1) { //here if there is a legendary line rank thats being searched it will change the logic
         var line_rank = line_ranks[0]
         var line_type = line_types[0]
         var rank_probability = line_probabilities[line_rank]
@@ -188,30 +203,38 @@ function probabilitySuccess (probabilities, line_ranks, line_types){ //here add 
         var unique_probability = 0
         var unique_line_probability = 0
 
-        if (line_rank == "epic"){
-            var unique_probability = line_probabilities["unique"]
-            var unique_line_probability = abilities_honor[line_type].unique
-        }
-        var p = (line_probability * rank_probability + unique_probability * unique_line_probability) + ( (1 - line_probability) * rank_probability + (1 - rank_probability - unique_probability) + unique_probability * (1 - unique_line_probability) ) * (line_probability * rank_probability + unique_probability * unique_line_probability)
+        var original_line_success = getLineSuccess(line_rank, line_type, line_probability, rank_probability, unique_probability, unique_line_probability)
+        var line_success = adjust_probability(line_rank, original_line_success, locked_lines)
+        var line_failure = 1 - line_success
 
+        if (line_rank == "legendary") {
+            var p = line_success
+        }
+        else {
+            var p = line_success + line_failure * adjust_probability(line_rank, original_line_success, locked_lines + 1)
+        }
     }
-    if (number_of_successful_outcomes == 2){
+    if (number_of_successful_outcomes == 2) { //here
         var line1_rank = line_ranks[0]
         var line1_type = line_types[0]
         var rank1_probability = line_probabilities[line1_rank]
         var line1_probability = probabilities[0]
+        var unique1_probability = 0
+        var unique1_line_probability = 0
 
         var line2_rank = line_ranks[1]
         var line2_type = line_types[0]
         var rank2_probability = line_probabilities[line2_rank]
         var line2_probability = probabilities[1]
+        var unique2_probability = 0
+        var unique2_line_probability = 0
 
-        if (line1_rank == "epic"){
+        if (line1_rank == "epic") {
             var unique1_probability = line_probabilities["unique"]
             var unique1_line_probability = abilities_honor[line1_type].unique
 
             var line1_success = line1_probability * rank1_probability + unique1_probability * unique1_line_probability
-            var line1_failure = ( (1 - line1_probability) * rank1_probability + (1 - rank1_probability - unique1_probability) + unique1_probability * (1 - unique1_line_probability) )
+            var line1_failure = ((1 - line1_probability) * rank1_probability + (1 - rank1_probability - unique1_probability) + unique1_probability * (1 - unique1_line_probability))
         }
 
         else {
@@ -219,12 +242,12 @@ function probabilitySuccess (probabilities, line_ranks, line_types){ //here add 
             var line1_failure = (1 - line1_probability) * rank1_probability + (1 - rank1_probability)
         }
 
-        if (line2_rank == "epic"){
+        if (line2_rank == "epic") {
             var unique2_probability = line_probabilities["unique"]
             var unique2_line_probability = abilities_honor[line2_type].unique
 
             var line2_success = line2_probability * rank2_probability + unique2_probability * unique2_line_probability
-            var line2_failure = ( (1 - line2_probability) * rank2_probability + (1 - rank2_probability - unique2_probability) + unique2_probability * (1 - unique2_line_probability) )
+            var line2_failure = ((1 - line2_probability) * rank2_probability + (1 - rank2_probability - unique2_probability) + unique2_probability * (1 - unique2_line_probability))
         }
 
         else {
@@ -239,18 +262,53 @@ function probabilitySuccess (probabilities, line_ranks, line_types){ //here add 
 
         var p = case1 + case2 + case3
     }
-    if (number_of_successful_outcomes == 3){ //here
+    if (number_of_successful_outcomes == 3) { //here
         var line1_rank = line_ranks[0]
+        var line1_type = line_types[0]
         var rank1_probability = line_probabilities[line1_rank]
         var line1_probability = probabilities[0]
+        var unique1_probability = 0
+        var unique1_line_probability = 0
 
         var line2_rank = line_ranks[1]
+        var line2_type = line_types[1]
         var rank2_probability = line_probabilities[line2_rank]
         var line2_probability = probabilities[1]
+        var unique2_probability = 0
+        var unique2_line_probability = 0
 
         var line3_rank = line_ranks[2]
+        var line3_type = line_types[2]
         var rank3_probability = line_probabilities[line3_rank]
         var line3_probability = probabilities[2]
+        var unique3_probability = 0
+        var unique2_line_probability = 0
+
+        if (line1_rank == "epic") {
+            var unique1_probability = line_probabilities["unique"]
+            var unique1_line_probability = abilities_honor[line1_type].unique
+
+            var line1_success = line1_probability * rank1_probability + unique1_probability * unique1_line_probability
+            var line1_failure = ((1 - line1_probability) * rank1_probability + (1 - rank1_probability - unique1_probability) + unique1_probability * (1 - unique1_line_probability))
+        }
+
+        else {
+            var line1_success = line1_probability * rank1_probability
+            var line1_failure = (1 - line1_probability) * rank1_probability + (1 - rank1_probability)
+        }
+
+        if (line2_rank == "epic") {
+            var unique2_probability = line_probabilities["unique"]
+            var unique2_line_probability = abilities_honor[line2_type].unique
+
+            var line2_success = line2_probability * rank2_probability + unique2_probability * unique2_line_probability
+            var line2_failure = ((1 - line2_probability) * rank2_probability + (1 - rank2_probability - unique2_probability) + unique2_probability * (1 - unique2_line_probability))
+        }
+
+        else {
+            var line2_success = line2_probability * rank2_probability
+            var line2_failure = (1 - line2_probability) * rank2_probability + (1 - rank2_probability)
+        }
 
         //123, 12 not3, 13 not 2, 23 not 1, 1 not23, 2 not13, 3 not 12
         var case1
@@ -265,14 +323,14 @@ function probabilitySuccess (probabilities, line_ranks, line_types){ //here add 
     }
 
     return p
-    
+
 }
 
 function pureHonorSpent(compare_lines) {
     var number_of_locked_lines = compare_lines.locked_lines
     var desired_NAs = compare_lines.desired_NAs
     var lines_to_roll = 3 - number_of_locked_lines - desired_NAs
-    console.log("lines to roll: " + lines_to_roll, ", number of locked lines:" +number_of_locked_lines)
+    console.log("lines to roll: " + lines_to_roll, ", number of locked lines:" + number_of_locked_lines)
 
     var honor_spent = 0
 
