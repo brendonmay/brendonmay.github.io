@@ -100,7 +100,7 @@ function reroll_or_lock(current_lines, desired_lines) {
         'reroll': { "choice": true, "line": 2 },
         "line_probabilities": { 1: 0, 2: 0, 3: 0 },
         "lines": { 1: "N/A", 2: "N/A", 3: "N/A" },
-        "locked_lines": 0,
+        "locked_lines": [],
         "line_types": {}
     }
 
@@ -108,7 +108,7 @@ function reroll_or_lock(current_lines, desired_lines) {
     var lines_to_roll = 3
     var line_probabilities = { 1: 0, 2: 0, 3: 0 }
     var desired_NAs = 0
-    var locked_lines = 0
+    var locked_lines = []
     var repeated_lock_check = []
     var repeated_roll_check = []
 
@@ -121,7 +121,8 @@ function reroll_or_lock(current_lines, desired_lines) {
                 lines[index] = true
                 if (current_line != "N/A" && !repeated_lock_check.includes(index)) {
                     repeated_lock_check.push(index)
-                    locked_lines++
+                    locked_lines.push(index)
+
                 }
                 if (!repeated_roll_check.includes(index)) {
                     lines_to_roll--
@@ -198,7 +199,7 @@ function adjust_probability(line_rank, line_prob, locked_lines) {
     return (line_prob * total) / (total - locked_lines)
 }
 
-function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines) {
+function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines, locked_lines_list) {
     var number_of_successful_outcomes = line_ranks.length
     var line_successes = {}
 
@@ -215,8 +216,10 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines)
         if (line_ranks[0] == "legendary") {
             var p = line_success
         }
-        else {
-            var p = line_success + line_failure * adjust_probability(line_rank, original_line_success, locked_lines + 1)
+        else { //here not accountinng for locked lines
+            console.log(locked_lines_list)
+            if (locked_lines_list.includes(2) || locked_lines_list.includes(3)) var p = line_success
+            else var p = line_success + line_failure * adjust_probability(line_rank, original_line_success, locked_lines + 1)
 
         }
     }
@@ -236,15 +239,22 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines)
         var original_line2_success = getLineSuccess(line2_rank, line2_type, line2_probability, rank2_probability)
         var line2_success = adjust_probability(line2_rank, original_line2_success, locked_lines)
         var line2_failure = 1 - line2_success
+
         var both_failure = 1 - line1_success - line2_success
         console.log(line_ranks)
+
         if (line_ranks[0] == "legendary") {
             if (not_repeatable.includes(line1_type)) {
                 //12 + 1(not2)2, 1(not2)(not2), (not1)2 + (not1)(not2)2
                 var case1 = line1_success * line2_success + line1_success * line2_failure * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
                 var case2 = line1_success * line2_failure * (1 - adjust_probability(line2_rank, original_line2_success, locked_lines + 1))
                 var case3 = line1_failure * line2_success + line1_failure * line2_failure * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
-
+                
+                if(locked_lines_list.includes(2) || locked_lines_list.includes(3)){
+                    case1 = line1_success * line2_success
+                    case2 = line1_success * line2_failure
+                    case3 = line1_failure * line2_success
+                }
                 var p = case1 + case2 + case3
             }
             else {
@@ -253,6 +263,11 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines)
                 var case2 = line1_success * (1 - adjust_probability(line2_rank, original_line2_success, locked_lines + 1)) * (1 - adjust_probability(line2_rank, original_line2_success, locked_lines + 2))
                 var case3 = line1_failure * (1 - adjust_probability(line2_rank, original_line2_success, locked_lines + 1)) * adjust_probability(line2_rank, original_line2_success, locked_lines + 2) + line1_failure * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
 
+                if(locked_lines_list.includes(2) || locked_lines_list.includes(3)){
+                    case1 = line1_success * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
+                    case2 = line1_success * (1 - adjust_probability(line2_rank, original_line2_success, locked_lines + 1))
+                    case3 = line1_failure * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
+                }
                 var p = case1 + case2 + case3
             }
         }
@@ -263,7 +278,7 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines)
             var case2 = line1_success * (1 - adjust_probability(line2_rank, original_line2_success, locked_lines + 1)) + both_failure * adjust_probability(line1_rank, original_line1_success, locked_lines + 1)
             var case3 = line2_success * (1 - adjust_probability(line1_rank, original_line1_success, locked_lines + 1)) + both_failure * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
 
-            var p = case1 + case2 + case3
+            var p = case1 + case2 + case3   
         }
 
         line_successes[1] = case2
@@ -362,17 +377,13 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines)
 }
 
 function pureHonorSpent(compare_lines) {
-    var number_of_locked_lines = compare_lines.locked_lines
+    var locked_lines_list = compare_lines.locked_lines
+    var number_of_locked_lines = compare_lines.locked_lines.length
     var desired_NAs = compare_lines.desired_NAs
     var lines_to_roll = 3 - number_of_locked_lines - desired_NAs
     console.log("lines to roll: " + lines_to_roll, ", number of locked lines:" + number_of_locked_lines)
 
     var honor_spent = 0
-
-    var line_rank_1 = compare_lines.lines[1]
-    var line_rank_2 = compare_lines.lines[2]
-    var line_rank_3 = compare_lines.lines[3]
-
     var probabilities = []
     var line_ranks = []
     var line_types = []
@@ -387,71 +398,71 @@ function pureHonorSpent(compare_lines) {
         }
         x++
     }
-    console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types)
+    //console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types)
 
     if (lines_to_roll == 3) {
-        var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines)
+        var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list)
         var p = success_info.p
         var avg_rolls = 1 / p
         honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
         //here
-        var outcome_1_info = probabilitySuccess([probabilities[1], probabilities[2]], [line_ranks[1], line_ranks[2]], [line_types[1], line_types[2]], number_of_locked_lines + 1) //line 1 previously successful
+        var outcome_1_info = probabilitySuccess([probabilities[1], probabilities[2]], [line_ranks[1], line_ranks[2]], [line_types[1], line_types[2]], number_of_locked_lines + 1, locked_lines_list) //line 1 previously successful
         var outcome_1 = outcome_1_info.p
-        var outcome_1_line_successes = outcome_1_info.line_successes
 
-        var outcome_2_info = probabilitySuccess([probabilities[0], probabilities[2]], [line_ranks[0], line_ranks[2]], [line_types[0], line_types[2]], number_of_locked_lines + 1) //line 2 previously successful
+        var outcome_2_info = probabilitySuccess([probabilities[0], probabilities[2]], [line_ranks[0], line_ranks[2]], [line_types[0], line_types[2]], number_of_locked_lines + 1, locked_lines_list) //line 2 previously successful
         var outcome_2 = outcome_2_info.p
-        var outcome_2_line_successes = outcome_2_info.line_successes
 
-        var outcome_3_info = probabilitySuccess([probabilities[0], probabilities[1]], [line_ranks[0], line_ranks[1]], [line_types[0], line_types[1]], number_of_locked_lines + 1) //line 3 previously successful
+        var outcome_3_info = probabilitySuccess([probabilities[0], probabilities[1]], [line_ranks[0], line_ranks[1]], [line_types[0], line_types[1]], number_of_locked_lines + 1, locked_lines_list) //line 3 previously successful
         var outcome_3 = outcome_3_info.p
-        var outcome_3_line_successes = outcome_3_info.line_successes
         
-        var outcome_12_info = probabilitySuccess([probabilities[2]], [line_ranks[2]], [line_types[2]], number_of_locked_lines + 2) //line 1&2 previously successful
+        var outcome_12_info = probabilitySuccess([probabilities[2]], [line_ranks[2]], [line_types[2]], number_of_locked_lines + 2, locked_lines_list) //line 1&2 previously successful
         var outcome_12 = outcome_12_info.p
-        var outcome_12_line_successes = outcome_12_info.line_successes
         
-        var outcome_13_info = probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 2) //line 1&3 previously successful
+        var outcome_13_info = probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 2, locked_lines_list) //line 1&3 previously successful
         var outcome_13 = outcome_13_info.p
-        var outcome_13_line_successes = outcome_13_info.line_successes
         
-        var outcome_23_info = probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 2) //line 2&3 previously successful
+        var outcome_23_info = probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 2, locked_lines_list) //line 2&3 previously successful
         var outcome_23 = outcome_23_info.p
-        var outcome_23_line_successes = outcome_23_info.line_successes
-
-        console.log(outcome_1, outcome_1_line_successes)
 
         var new_p = (success_info.line_successes[1] / p) * (outcome_1) + (success_info.line_successes[2] / p) * (outcome_2) + (success_info.line_successes[3] / p) * (outcome_3) + (success_info.line_successes[12] / p) * (outcome_12) + (success_info.line_successes[13] / p) * (outcome_13) + (success_info.line_successes[23] / p) * (outcome_23) + (success_info.line_successes.all) / p
         avg_rolls = 1 / new_p
-        honor_spent += honor_cost(number_of_locked_lines + 1) * avg_rolls
+        honor_spent += honor_cost(number_of_locked_lines.length + 1) * avg_rolls
         
-        var newer_p_1 = ((success_info.line_successes[1] / p) * (outcome_1) / new_p) * (probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 2).p + probabilitySuccess([probabilities[2]], [line_ranks[2]], [line_types[2]], number_of_locked_lines + 2).p) 
-        var newer_p_2 = ((success_info.line_successes[2] / p) * (outcome_2) / new_p) * (probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 2).p + probabilitySuccess([probabilities[2]], [line_ranks[2]], [line_types[2]], number_of_locked_lines + 2).p)
-        var newer_p_3 = ((success_info.line_successes[3] / p) * (outcome_3) / new_p) * (probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 2).p + probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 2).p)
+        var newer_p_1 = ((success_info.line_successes[1] / p) * (outcome_1) / new_p) * (probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 2, locked_lines_list).p + probabilitySuccess([probabilities[2]], [line_ranks[2]], [line_types[2]], number_of_locked_lines + 2, locked_lines_list).p) 
+        var newer_p_2 = ((success_info.line_successes[2] / p) * (outcome_2) / new_p) * (probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 2, locked_lines_list).p + probabilitySuccess([probabilities[2]], [line_ranks[2]], [line_types[2]], number_of_locked_lines + 2, locked_lines_list).p)
+        var newer_p_3 = ((success_info.line_successes[3] / p) * (outcome_3) / new_p) * (probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 2, locked_lines_list).p + probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 2, locked_lines_list).p)
         var newer_p_12 = ((success_info.line_successes[12] / p) * (outcome_12) / new_p) //* (probabilitySuccess([probabilities[2]], [line_ranks[2]], [line_types[2]], number_of_locked_lines + 2).p)
         var newer_p_13 = ((success_info.line_successes[13] / p) * (outcome_13) / new_p) //* (probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 2).p)
         var newer_p_23 = ((success_info.line_successes[23] / p) * (outcome_23) / new_p) //* (probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 2).p)
 
         var newer_p = newer_p_1 + newer_p_2 + newer_p_3 + newer_p_12 + newer_p_13 + newer_p_23
         avg_rolls = 1 / newer_p
-        honor_spent += honor_cost(number_of_locked_lines + 1) * avg_rolls
+        honor_spent += honor_cost(number_of_locked_lines + 2) * avg_rolls
         //here 
     }
     if (lines_to_roll == 2) {
-        var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines)
+        var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list)
         var p = success_info.p
         var avg_rolls = 1 / p
         honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
 
-        var outcome_1 = probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 1).p //line 2 previously successful
-        var outcome_2 = probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 1).p // line 1 previously successful
+        var locked_lines_list1 = locked_lines_list
+        var locked_lines_list2 = locked_lines_list
+        locked_lines_list.push(2)
+        locked_lines_list.push(1)
+
+        var outcome_1 = probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 1, locked_lines_list2).p //line 2 previously successful
+        var outcome_2 = probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 1, locked_lines_list1).p // line 1 previously successful
         var new_p = (success_info.line_successes[2] / p) * (outcome_1) + (success_info.line_successes[1] / p) * (outcome_2) + (success_info.line_successes.all) / p
-        
+        console.log("probabilities: " + probabilities[0], ", line_ranks: " + line_ranks[0], ", line_types: " + line_types[0], ", number_of_locked_lines: " + number_of_locked_lines)
+        console.log("p: " + outcome_1)
         avg_rolls = 1 / (new_p)
         honor_spent += honor_cost(number_of_locked_lines + 1) * avg_rolls
     }
     if (lines_to_roll == 1) {
-        var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines).p
+        var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list).p
+        console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
+        console.log("p: " + p)
         var avg_rolls = 1 / p
         honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
     }
