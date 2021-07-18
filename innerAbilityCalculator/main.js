@@ -1,6 +1,7 @@
 //here include which line with the circulators should be rolled for
 //include the meso cost for circulators
 //include percentiles
+//update homepage, update navbar, also include stat equivalence calc in both
 let line_probabilities = {
     'rare': 0.8,
     'epic': 0.15,
@@ -598,7 +599,7 @@ function run_calculation(current_lines, desired_lines, only_honor) {
         var honor_spent = Math.ceil(pureHonorSpent(compare_lines))
         var circulators_spent = 0
     }
-    return { "honor": honor_spent, "circulators": circulators_spent }
+    return { "honor": honor_spent, "circulators": circulators_spent, "line_to_roll": line_to_roll }
 }
 
 function factorial(number) {
@@ -703,11 +704,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     expected_honor = Math.ceil(expected_honor / 2)
                 }
 
+                if (expected_circulators != 0) var line_to_roll = expected_data.line_to_roll
+
                 document.getElementById('result').style.display = '';
                 document.getElementById('error-container').style.display = 'none';
                 if (send_msg) {
                     document.getElementById('result').innerHTML =
-                    `
+                        `
                     <div class="container secondarycon">
                     <div class=" statBox statBox1" style="background-color:#aaa;">
                         <h2 style="text-align:center;">Results</h2>
@@ -719,18 +722,33 @@ document.addEventListener("DOMContentLoaded", function () {
         `
                 }
                 else {
-                    document.getElementById('result').innerHTML =
-                        `
+                    if (expected_circulators != 0) {
+                        document.getElementById('result').innerHTML =
+                            `
                     <div class="container secondarycon">
                     <div class=" statBox statBox1" style="background-color:#aaa;">
                         <h2 style="text-align:center;">Results</h2>
                             <p style="text-align:center;"">
-                                Expected Miracle Circulators: ${expected_circulators.toLocaleString()}<br />
+                                Expected Miracle Circulators: ${expected_circulators.toLocaleString()} (To roll line ${line_to_roll})<br />
+                                Expected Honor Exp: ${expected_honor.toLocaleString()} (To roll remaining lines)<br />
+                            </p>
+                    </div>
+                    </div>
+        `
+                    }
+                    else {
+                        document.getElementById('result').innerHTML =
+                            `
+                    <div class="container secondarycon">
+                    <div class=" statBox statBox1" style="background-color:#aaa;">
+                        <h2 style="text-align:center;">Results</h2>
+                            <p style="text-align:center;"">
                             Expected Honor Exp: ${expected_honor.toLocaleString()}<br />
                             </p>
                     </div>
                     </div>
         `
+                    }
                 }
             }
 
