@@ -84,6 +84,82 @@ let abilities_honor =
     }
 }
 
+let abilities_circulator =
+{
+    'normal_dmg':
+    {
+        'epic': 0.025662,
+        'unique': 0.017241,
+        "legendary": 0.017761
+    },
+    'abnormal_dmg':
+    {
+        'epic': 0.025662,
+        'unique': 0.017241,
+        "legendary": 0.017761
+    },
+    'buff_duration':
+    {
+        'epic': 0.012831,
+        'unique': 0.00862,
+        "legendary": 0.00888
+    },
+    'item_drop':
+    {
+        'epic': 0.025662,
+        'unique': 0.017241,
+        "legendary": 0.017761
+    },
+    'meso_drop':
+    {
+        'epic': 0.025662,
+        'unique': 0.017241,
+        "legendary": 0.017761
+    },
+    'w_attk':
+    {
+        'epic': 0.017108,
+        'unique': 0.012931,
+        "legendary": 0.022202
+    },
+    'm_attk':
+    {
+        'epic': 0.017108,
+        'unique': 0.012931,
+        "legendary": 0.022202
+    },
+    'crit_rate':
+    {
+        'epic': 0,
+        'unique': 0.00431,
+        "legendary": 0.00444
+    },
+    'boss':
+    {
+        'epic': 0,
+        'unique': 0.00862,
+        "legendary": 0.022202
+    },
+    'att_speed':
+    {
+        'epic': 0,
+        'unique': 0,
+        "legendary": 0.00444
+    },
+    'passive_skill':
+    {
+        'epic': 0,
+        'unique': 0,
+        "legendary": 0.007104
+    },
+    'cd_skip':
+    {
+        'epic': 0,
+        'unique': 0.017241,
+        "legendary": 0.017761
+    }
+}
+
 function honor_cost(lock_info) {
     if (lock_info == 0) return 10100
     else if (lock_info == 1) return 13100
