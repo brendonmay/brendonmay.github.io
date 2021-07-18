@@ -547,14 +547,13 @@ function pureHonorSpent(compare_lines) {
 
         var locked_lines_list1 = locked_lines_list
         var locked_lines_list2 = locked_lines_list
-        locked_lines_list.push(2)
-        locked_lines_list.push(1)
+        locked_lines_list2.push(2)
+        locked_lines_list1.push(1)
 
         var outcome_1 = probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 1, locked_lines_list2).p //line 2 previously successful
         var outcome_2 = probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 1, locked_lines_list1).p // line 1 previously successful
         var new_p = (success_info.line_successes[2] / p) * (outcome_1) + (success_info.line_successes[1] / p) * (outcome_2) + (success_info.line_successes.all) / p
         console.log("probabilities: " + probabilities[0], ", line_ranks: " + line_ranks[0], ", line_types: " + line_types[0], ", number_of_locked_lines: " + number_of_locked_lines)
-        console.log("p: " + outcome_1)
         avg_rolls = 1 / (new_p)
         honor_spent += honor_cost(number_of_locked_lines + 1) * avg_rolls
     }
