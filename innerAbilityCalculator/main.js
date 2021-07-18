@@ -1,5 +1,3 @@
-//here include which line with the circulators should be rolled for
-//include the meso cost for circulators
 //include percentiles
 //update homepage, update navbar, also include stat equivalence calc in both
 let line_probabilities = {
@@ -723,14 +721,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 else {
                     if (expected_circulators != 0) {
+                        var expected_meso = expected_circulators * 19000000
                         document.getElementById('result').innerHTML =
                             `
                     <div class="container secondarycon">
                     <div class=" statBox statBox1" style="background-color:#aaa;">
-                        <h2 style="text-align:center;">Results</h2>
+                        <h2 style="text-align:center;">Expected Cost</h2>
                             <p style="text-align:center;"">
-                                Expected Miracle Circulators: ${expected_circulators.toLocaleString()} (To roll line ${line_to_roll})<br />
-                                Expected Honor Exp: ${expected_honor.toLocaleString()} (To roll remaining lines)<br />
+                                ${expected_circulators.toLocaleString()} Miracle Circulators (To roll line ${line_to_roll})<br />
+                                ${expected_honor.toLocaleString()} Honor Exp (To roll remaining lines)<br /><br>
+ 
+                                <i>${expected_circulators.toLocaleString()} Miracle Circulators = ${expected_meso.toLocaleString()} meso<br /></i>
                             </p>
                     </div>
                     </div>
