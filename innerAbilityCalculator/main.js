@@ -1,5 +1,5 @@
-//include percentiles
-//update homepage, update navbar, also include stat equivalence calc in both
+//here include percentiles
+//here update homepage, update navbar, also include stat equivalence calc in both
 let line_probabilities = {
     'rare': 0.8,
     'epic': 0.15,
