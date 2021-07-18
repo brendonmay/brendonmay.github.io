@@ -68,7 +68,9 @@
         <h1><span>
                 <ion-icon name="flame"></ion-icon>Inner Ability
             </span> Theoretical Probability</h1>
+
     </div>
+
 
     <div class="container maincon">
         <form onsubmit="return false">
@@ -77,6 +79,7 @@
                     <h4><span>
                             Current Inner Ability
                         </span></h4>
+                    <h6>Note: This calculator assumes your current inner ability is <b style="color: rgb(1, 99, 1)">already legendary</b>.</h6>
                     <h5>State the current inner ability you have on your character. If the option isn't availble, select
                         "N/A".</h5>
                 </div>
@@ -176,7 +179,8 @@
                     <h4><span>
                             Desired Inner Ability
                         </span></h4>
-                    <h5>State the desired inner ability you wish to have on your character. If you are indifferent about a specific line's outcome, select "N/A".</h5>
+                    <h5>State the desired inner ability you wish to have on your character. If you are indifferent about
+                        a specific line's outcome, select "N/A".</h5>
                 </div>
             </div>
 
@@ -269,9 +273,15 @@
             <div class='form-row'>
                 <div class='form-group col text-center remove-bottom-margin'>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="only_honor" checked disabled>
+                        <input class="form-check-input" type="checkbox" value="" id="only_honor">
                         <label class="form-check-label" for="only_honor">
                             Use Only Honor
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="fifty">
+                        <label class="form-check-label" for="fifty">
+                            50% Inner Ability Event
                         </label>
                     </div>
                 </div>

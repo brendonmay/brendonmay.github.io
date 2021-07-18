@@ -1,4 +1,6 @@
-//here make a note on the main page that this assumes youre already legendary
+//here include which line with the circulators should be rolled for
+//include the meso cost for circulators
+//include percentiles
 let line_probabilities = {
     'rare': 0.8,
     'epic': 0.15,
@@ -8,7 +10,7 @@ let line_probabilities = {
 
 let not_repeatable = ['passive_skill', 'att_speed']
 
-let abilities_honor =
+let abilities_honor = //here build in uniquep
 {
     'normal_dmg':
     {
@@ -88,56 +90,56 @@ let abilities_circulator =
 {
     'normal_dmg':
     {
-        'epic': 0.025662,
-        'unique': 0.017241,
+        'epic': 0.026223,
+        'unique': 0.017391,
         "legendary": 0.017761
     },
     'abnormal_dmg':
     {
-        'epic': 0.025662,
-        'unique': 0.017241,
+        'epic': 0.026223,
+        'unique': 0.017391,
         "legendary": 0.017761
     },
     'buff_duration':
     {
-        'epic': 0.012831,
-        'unique': 0.00862,
+        'epic': 0.013111,
+        'unique': 0.008695,
         "legendary": 0.00888
     },
     'item_drop':
     {
-        'epic': 0.025662,
-        'unique': 0.017241,
+        'epic': 0.026223,
+        'unique': 0.017391,
         "legendary": 0.017761
     },
     'meso_drop':
     {
-        'epic': 0.025662,
-        'unique': 0.017241,
+        'epic': 0.026223,
+        'unique': 0.017391,
         "legendary": 0.017761
     },
     'w_attk':
     {
-        'epic': 0.017108,
-        'unique': 0.012931,
+        'epic': 0.026223,
+        'unique': 0.021739,
         "legendary": 0.022202
     },
     'm_attk':
     {
-        'epic': 0.017108,
-        'unique': 0.012931,
+        'epic': 0.026223,
+        'unique': 0.021739,
         "legendary": 0.022202
     },
     'crit_rate':
     {
-        'epic': 0,
-        'unique': 0.00431,
+        'epic': 0.017482,
+        'unique': 0.008695,
         "legendary": 0.00444
     },
     'boss':
     {
         'epic': 0,
-        'unique': 0.00862,
+        'unique': 0.021739,
         "legendary": 0.022202
     },
     'att_speed':
@@ -155,7 +157,7 @@ let abilities_circulator =
     'cd_skip':
     {
         'epic': 0,
-        'unique': 0.017241,
+        'unique': 0.017391,
         "legendary": 0.017761
     }
 }
@@ -232,21 +234,26 @@ function reroll_or_lock(current_lines, desired_lines) {
     console.log("lines to roll: " + lines_to_roll)
     if (lines_to_roll == 0) return "done"
     else if (lines_to_roll == 1 || lines_to_roll == 2) {
-        if (lines[2] || lines[3]) { //here fix this logic, circulators should be used to get the hardest one
+        if ((lines[2] && (line_probabilities[2] < line_probabilities[3])) || (lines[3] && (line_probabilities[2] > line_probabilities[3]))) {
             lines.reroll.choice = false
         }
         else {
-            if (line_probabilities[2] > line_probabilities[3]) lines.reroll.line = 3
+            lines.reroll.choice = true
+            if (line_probabilities[2] < line_probabilities[3]) lines.reroll.line = 2
+            else lines.reroll.line = 3
         }
 
     }
     else if (lines_to_roll == 3) {
         lines.reroll.choice = true
+        if (line_probabilities[2] < line_probabilities[3]) lines.reroll.line = 2
+        else lines.reroll.line = 3
     }
 
     lines.locked_lines = locked_lines
     lines.line_probabilities = line_probabilities
     lines.desired_NAs = desired_NAs / 3
+    lines.lines_to_roll = lines_to_roll
 
     return lines
 }
@@ -292,7 +299,7 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
         if (line_ranks[0] == "legendary") {
             var p = line_success
         }
-        else { //here not accountinng for locked lines
+        else {
             console.log(locked_lines_list)
             if (locked_lines_list.includes(2) || locked_lines_list.includes(3)) var p = line_success
             else var p = line_success + line_failure * adjust_probability(line_rank, original_line_success, locked_lines + 1)
@@ -439,7 +446,6 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
             var p = case1 + case2 + case3 + case4 + case5 + case6 + case7
         }
 
-        //here update line_successes, dont know if this method below will work
         line_successes[1] = case5
         line_successes[2] = case6
         line_successes[3] = case7
@@ -452,37 +458,22 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
 
 }
 
-function circulatorsSpent(compare_lines) {
-    var locked_lines_list = compare_lines.locked_lines
-    var number_of_locked_lines = compare_lines.locked_lines.length
-    var desired_NAs = compare_lines.desired_NAs
-    var lines_to_roll = 3 - number_of_locked_lines - desired_NAs
-    console.log("lines to roll: " + lines_to_roll, ", number of locked lines:" + number_of_locked_lines)
+function circulatorsSpent(compare_lines, line_to_roll) {
+    var circulators_spent = 0
+    var probabilities = [compare_lines.line_probabilities[line_to_roll]]
+    var line_ranks = [compare_lines.lines[line_to_roll]]
+    var line_types = [compare_lines.line_types[line_to_roll]]
+    var locked_lines_list = []
+    var number_of_locked_lines = 0
 
-    var honor_spent = 0
-    var probabilities = []
-    var line_ranks = []
-    var line_types = []
-
-    var x = 1
-
-    while (x < 4) {
-        if (compare_lines[x] == false) {
-            probabilities.push(compare_lines.line_probabilities[x])
-            line_ranks.push(compare_lines.lines[x])
-            line_types.push(compare_lines.line_types[x])
-        }
-        x++
-    }
     //console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types)
 
     var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list).p
     console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
     console.log("p: " + p)
-    var avg_rolls = 1 / p
-    honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
+    var circulators_spent = 1 / p
 
-    return honor_spent
+    return circulators_spent
 }
 
 function pureHonorSpent(compare_lines) {
@@ -514,7 +505,7 @@ function pureHonorSpent(compare_lines) {
         var p = success_info.p
         var avg_rolls = 1 / p
         honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
-        //here
+
         var outcome_1_info = probabilitySuccess([probabilities[1], probabilities[2]], [line_ranks[1], line_ranks[2]], [line_types[1], line_types[2]], number_of_locked_lines + 1, locked_lines_list) //line 1 previously successful
         var outcome_1 = outcome_1_info.p
 
@@ -547,7 +538,7 @@ function pureHonorSpent(compare_lines) {
         var newer_p = newer_p_1 + newer_p_2 + newer_p_3 + newer_p_12 + newer_p_13 + newer_p_23
         avg_rolls = 1 / newer_p
         honor_spent += honor_cost(number_of_locked_lines + 2) * avg_rolls
-        //here 
+
     }
     if (lines_to_roll == 2) {
         var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list)
@@ -585,17 +576,29 @@ function run_calculation(current_lines, desired_lines, only_honor) {
         console.log("No computation needed.")
         return 0
     }
+    if (compare_lines.lines_to_roll == 3 && only_honor) {
+        console.log("Recommend they use circulators. This calculation is too high.")
+        return 99
+    }
     var reroll_choice = compare_lines.reroll.choice
     if (only_honor) reroll_choice = false
 
     if (reroll_choice) {
-        line_to_roll = compare_lines.reroll.line
-        var circulators_spent = Math.ceil(circulatorsSpent(compare_lines))
+        if (compare_lines.lines[1] != "N/A") compare_lines[1] = false
+        if (compare_lines.lines[2] != "N/A") compare_lines[2] = false
+        if (compare_lines.lines[3] != "N/A") compare_lines[3] = false
+        var line_to_roll = compare_lines.reroll.line
+        var circulators_spent = Math.ceil(circulatorsSpent(compare_lines, line_to_roll))
+
+        compare_lines[line_to_roll] = true
+        compare_lines.locked_lines = [line_to_roll]
+        var honor_spent = Math.ceil(pureHonorSpent(compare_lines))
     }
     else {
         var honor_spent = Math.ceil(pureHonorSpent(compare_lines))
+        var circulators_spent = 0
     }
-    return honor_spent
+    return { "honor": honor_spent, "circulators": circulators_spent }
 }
 
 function factorial(number) {
@@ -677,16 +680,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
             var isValid = isValidCombination(current_lines, desired_lines)
 
+            var send_msg = false
+
             if (isValid) {
                 var only_honor = document.getElementById("only_honor").checked
-                var fifty_off = false //here fix this
+                var fifty_off = document.getElementById("fifty").checked
 
-                var targetted_line //here identify which line to target with circulators
+                var expected_data = run_calculation(current_lines, desired_lines, only_honor)
+                if (expected_data == 0) {
+                    var expected_honor = 0
+                    var expected_circulators = 0
+                }
+                else if (expected_data == 99) send_msg = true
+                else {
+                    var expected_honor = expected_data.honor
+                    var expected_circulators = expected_data.circulators
+                }
 
-                var expected_honor = run_calculation(current_lines, desired_lines, only_honor)
-                var expected_circulators = 0 //here
-
-                console.log(expected_honor)
+                console.log(expected_honor, expected_circulators)
 
                 if (fifty_off == true) {
                     expected_honor = Math.ceil(expected_honor / 2)
@@ -694,8 +705,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 document.getElementById('result').style.display = '';
                 document.getElementById('error-container').style.display = 'none';
-                document.getElementById('result').innerHTML =
+                if (send_msg) {
+                    document.getElementById('result').innerHTML =
                     `
+                    <div class="container secondarycon">
+                    <div class=" statBox statBox1" style="background-color:#aaa;">
+                        <h2 style="text-align:center;">Results</h2>
+                            <p style="text-align:center;"">
+                                It is not recommended to only use Honor Exp in this instance.<br>The calculation is very complex and the cost is unrealistically high.
+                            </p>
+                    </div>
+                    </div>
+        `
+                }
+                else {
+                    document.getElementById('result').innerHTML =
+                        `
                     <div class="container secondarycon">
                     <div class=" statBox statBox1" style="background-color:#aaa;">
                         <h2 style="text-align:center;">Results</h2>
@@ -706,6 +731,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                     </div>
         `
+                }
             }
 
             else {
