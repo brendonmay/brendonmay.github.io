@@ -213,9 +213,9 @@ let abilities_circulator =
 }
 
 function honor_cost(lock_info) {
-    if (lock_info == 0) return 10100
-    else if (lock_info == 1) return 13100
-    else if (lock_info == 2) return 18100
+    if (lock_info == 0) return 8000
+    else if (lock_info == 1) return 11000
+    else if (lock_info == 2) return 16000
 }
 
 function isPerfect(line_rank) {
@@ -551,6 +551,18 @@ function circulatorsSpent(compare_lines, line_to_roll) {
     return { median_rolls: median_rolls, rolls_25: rolls_25, rolls_75: rolls_75 }
 }
 
+function cloneArray(array){
+    var i = 0
+    var clone = []
+
+    while ( i < array.length ){
+        clone[i] = array[i]
+        i++
+    }
+    
+    return clone
+}
+
 function pureHonorSpent(compare_lines) {
     var locked_lines_list = compare_lines.locked_lines
     var number_of_locked_lines = compare_lines.locked_lines.length
@@ -620,7 +632,7 @@ function pureHonorSpent(compare_lines) {
     if (lines_to_roll == 2) {
         var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list)
         var p = success_info.p
-        //console.log("p(rolling line2 or line3 = " + p)
+        console.log("p(rolling line2 or line3 = " + p)
         var median_rolls = geoDistrQuantile(p).median
         var rolls_25 = geoDistrQuantile(p).twenty_fifth
         var rolls_75 = geoDistrQuantile(p).seventy_fifth
@@ -629,20 +641,27 @@ function pureHonorSpent(compare_lines) {
         honor_spent_25 += honor_cost(number_of_locked_lines) * rolls_25
         honor_spent_75 += honor_cost(number_of_locked_lines) * rolls_75
 
-        var locked_lines_list1 = locked_lines_list
-        var locked_lines_list2 = locked_lines_list
-        locked_lines_list2.push(2)
-        locked_lines_list1.push(1)
+        var locked_lines_list1 = cloneArray(locked_lines_list)
+        var locked_lines_list2 = cloneArray(locked_lines_list)
+
+        if (line_ranks[0] == "legendary" || line_ranks[0] == "legendaryp"){
+            locked_lines_list2.push(2)
+            locked_lines_list1.push(1)
+        }
+        else{
+            locked_lines_list2.push(3)
+            locked_lines_list1.push(2)
+        }
 
         var outcome_1 = probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 1, locked_lines_list2).p //line 2 previously successful
         var outcome_2 = probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 1, locked_lines_list1).p // line 1 previously successful
         var new_p = (success_info.line_successes[2] / p) * (outcome_1) + (success_info.line_successes[1] / p) * (outcome_2) + (success_info.line_successes.all) / p
 
-        // console.log("probabilities: " + probabilities[0], ", line_ranks: " + line_ranks[0], ", line_types: " + line_types[0], ", number_of_locked_lines: " + number_of_locked_lines)
-        // console.log("line1 = " + line_types[0], ", line2 = " + line_types[1])
-        // console.log("p(rolling1|2) = " + (outcome_1), ", percentage of time line 2 occurs before line 2 = " + (success_info.line_successes[2] / p) * 100 + "%")
-        // console.log("p(rolling2|1) = " + (outcome_2), ", percentage of time line 1 occurs before line 2 = " + (success_info.line_successes[1] / p) * 100 + "%")
-        // console.log("p(rolling 1 and 2) = " + (success_info.line_successes.all) / p * 100 + "%")
+        console.log("probabilities: " + probabilities[0], ", line_ranks: " + line_ranks[0], ", line_types: " + line_types[0], ", number_of_locked_lines: " + number_of_locked_lines)
+        console.log("line1 = " + line_types[0], ", line2 = " + line_types[1])
+        console.log("p(rolling1|2) = " + (outcome_1), ", percentage of time line 2 occurs before line 2 = " + (success_info.line_successes[2] / p) * 100 + "%")
+        console.log("p(rolling2|1) = " + (outcome_2), ", percentage of time line 1 occurs before line 2 = " + (success_info.line_successes[1] / p) * 100 + "%")
+        console.log("p(rolling 1 and 2) = " + (success_info.line_successes.all) / p * 100 + "%")
 
         console.log(new_p)
         median_rolls = geoDistrQuantile(new_p).median
