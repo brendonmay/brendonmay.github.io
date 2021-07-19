@@ -257,7 +257,7 @@ function reroll_or_lock(current_lines, desired_lines) {
         var desired_line = 0
         while (desired_line < 3) {
             var index = desired_line + 1
-            if (current_line == desired_lines[desired_line]) {
+            if (current_line == desired_lines[desired_line] || current_line.substring(0, current_line.length - 1) == desired_lines[desired_line]) {
                 lines[index] = true
                 if (current_line != "N/A" && !repeated_lock_check.includes(index)) {
                     repeated_lock_check.push(index)
