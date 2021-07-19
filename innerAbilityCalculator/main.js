@@ -1,4 +1,3 @@
-//here include percentiles
 //here update homepage, update navbar, also include stat equivalence calc in both
 let line_probabilities = {
     'rare': 0.8,
@@ -224,6 +223,7 @@ function isPerfect(line_rank) {
 }
 
 function circProb(line_type, line_rank) {
+    if (line_type == "N/A" || line_rank == "N/A") return 1
     if (line_rank == "epic") {
         abilities_circulator[line_type][line_rank] * line_probabilities[line_rank] + abilities_circulator[line_type]['unique'] * line_probabilities['unique']
     }
@@ -300,8 +300,9 @@ function reroll_or_lock(current_lines, desired_lines) {
         var line_rank2 = lines.lines[2]
         var line_type3 = lines.line_types[3]
         var line_rank3 = lines.lines[3]
+        console.log(line_type2, line_rank2, line_type3, line_rank3)
         var circ_line_prob2 = circProb(line_type2, line_rank2)
-        var circ_line_prob3 = circProb(line_type3, line_rank3) //here
+        var circ_line_prob3 = circProb(line_type3, line_rank3)
         var perfectline2 = isPerfect(line_rank2)
         var perfectline3 = isPerfect(line_rank3)
         console.log(circ_line_prob2, circ_line_prob3)
@@ -530,7 +531,6 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
 }
 
 function circulatorsSpent(compare_lines, line_to_roll) {
-    var circulators_spent = 0
     var line_ranks = [compare_lines.lines[line_to_roll]]
     var line_types = [compare_lines.line_types[line_to_roll]]
     var locked_lines_list = []
@@ -542,9 +542,12 @@ function circulatorsSpent(compare_lines, line_to_roll) {
     var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list).p
     console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
     console.log("p: " + p)
-    var circulators_spent = 1 / p
 
-    return circulators_spent
+    var median_rolls = geoDistrQuantile(p).median
+    var rolls_25 = geoDistrQuantile(p).twenty_fifth
+    var rolls_75 = geoDistrQuantile(p).seventy_fifth
+
+    return { median_rolls: median_rolls, rolls_25: rolls_25, rolls_75: rolls_75 }
 }
 
 function pureHonorSpent(compare_lines) {
@@ -554,7 +557,9 @@ function pureHonorSpent(compare_lines) {
     var lines_to_roll = 3 - number_of_locked_lines - desired_NAs
     console.log("lines to roll: " + lines_to_roll, ", number of locked lines:" + number_of_locked_lines)
 
-    var honor_spent = 0
+    var honor_spent_median = 0
+    var honor_spent_25 = 0
+    var honor_spent_75 = 0
     var probabilities = []
     var line_ranks = []
     var line_types = []
@@ -614,11 +619,14 @@ function pureHonorSpent(compare_lines) {
     if (lines_to_roll == 2) {
         var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list)
         var p = success_info.p
-        console.log("p(rolling line2 or line3 = " + p)
-        var avg_rolls = 1 / p
+        //console.log("p(rolling line2 or line3 = " + p)
         var median_rolls = geoDistrQuantile(p).median
-        console.log("avg rolls = " + avg_rolls, "median rolls = " + median_rolls)
-        honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
+        var rolls_25 = geoDistrQuantile(p).twenty_fifth
+        var rolls_75 = geoDistrQuantile(p).seventy_fifth
+
+        honor_spent_median += honor_cost(number_of_locked_lines) * median_rolls
+        honor_spent_25 += honor_cost(number_of_locked_lines) * rolls_25
+        honor_spent_75 += honor_cost(number_of_locked_lines) * rolls_75
 
         var locked_lines_list1 = locked_lines_list
         var locked_lines_list2 = locked_lines_list
@@ -636,21 +644,33 @@ function pureHonorSpent(compare_lines) {
         // console.log("p(rolling 1 and 2) = " + (success_info.line_successes.all) / p * 100 + "%")
 
         console.log(new_p)
-        avg_rolls = 1 / (new_p)
         median_rolls = geoDistrQuantile(new_p).median
-        console.log("avg rolls = " + avg_rolls, "median rolls = " + median_rolls)
-        honor_spent += honor_cost(number_of_locked_lines + 1) * avg_rolls
+        var rolls_25 = geoDistrQuantile(new_p).twenty_fifth
+        var rolls_75 = geoDistrQuantile(new_p).seventy_fifth
+
+        honor_spent_median += honor_cost(number_of_locked_lines + 1) * median_rolls
+        honor_spent_25 += honor_cost(number_of_locked_lines) * rolls_25
+        honor_spent_75 += honor_cost(number_of_locked_lines) * rolls_75
     }
     if (lines_to_roll == 1) {
         var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list).p
         console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
         console.log("p: " + p)
-        var avg_rolls = 1 / p
+
         var median_rolls = geoDistrQuantile(p).median
-        console.log("avg rolls = " + avg_rolls, "median rolls = " + median_rolls)
-        honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
+        var rolls_25 = geoDistrQuantile(p).twenty_fifth
+        var rolls_75 = geoDistrQuantile(p).seventy_fifth
+
+        honor_spent_median += honor_cost(number_of_locked_lines) * median_rolls
+        honor_spent_25 += honor_cost(number_of_locked_lines) * rolls_25
+        honor_spent_75 += honor_cost(number_of_locked_lines) * rolls_75
+
+        //var skewness = getSkewness(p) //appears to be = 2, same skew as an exponential function
+        // console.log("skewness: " + skewness)
+        //console.log("median rolls = " + median_rolls)
+
     }
-    return honor_spent
+    return { honor_spent_median: honor_spent_median, honor_spent_25: honor_spent_25, honor_spent_75: honor_spent_75 }
 }
 
 function run_calculation(current_lines, desired_lines, only_honor) {
@@ -672,14 +692,14 @@ function run_calculation(current_lines, desired_lines, only_honor) {
         if (compare_lines.lines[2] != "N/A") compare_lines[2] = false
         if (compare_lines.lines[3] != "N/A") compare_lines[3] = false
         var line_to_roll = compare_lines.reroll.line
-        var circulators_spent = Math.ceil(circulatorsSpent(compare_lines, line_to_roll))
+        var circulators_spent = circulatorsSpent(compare_lines, line_to_roll)
 
         compare_lines[line_to_roll] = true
         compare_lines.locked_lines = [line_to_roll]
-        var honor_spent = Math.ceil(pureHonorSpent(compare_lines))
+        var honor_spent = pureHonorSpent(compare_lines)
     }
     else {
-        var honor_spent = Math.ceil(pureHonorSpent(compare_lines))
+        var honor_spent = pureHonorSpent(compare_lines)
         var circulators_spent = 0
     }
     return { "honor": honor_spent, "circulators": circulators_spent, "line_to_roll": line_to_roll }
@@ -698,15 +718,18 @@ function combination(n, r) {
     return factorial(n) / (factorial(r) * factorial(n - r));
 };
 
+function getSkewness(p) {
+    return (2 - p) / (Math.sqrt(1 - p))
+}
+
 function geoDistrQuantile(p) {
     var mean = 1 / p
 
     var median = Math.log(1 - 0.5) / Math.log(1 - p)
     var seventy_fifth = Math.log(1 - 0.75) / Math.log(1 - p)
-    var eighty_fifth = Math.log(1 - 0.85) / Math.log(1 - p)
-    var nintey_fifth = Math.log(1 - 0.95) / Math.log(1 - p)
+    var twenty_fifth = Math.log(1 - 0.25) / Math.log(1 - p)
 
-    return { mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth }
+    return { mean: mean, median: median, seventy_fifth: seventy_fifth, twenty_fifth: twenty_fifth }
 }
 
 function isValidCombination(current_lines, desired_lines, useChaos) {
@@ -733,7 +756,9 @@ function isValidCombination(current_lines, desired_lines, useChaos) {
                 var desired_line_type = desired_lines[z].substring(0, desired_lines[z].indexOf('*'))
                 var desired_line_rank = desired_lines[z].substring(desired_lines[z].indexOf('*') + 1, desired_lines[z].length)
                 if (current_line_type == desired_line_type) {
-                    same_lines++
+                    if (current_line_rank.substring(0, current_line_rank.length - 1) == desired_line_rank || current_line_rank == desired_line_rank.substring(0, desired_line_rank.length - 1) || current_line_rank == desired_line_rank) {
+                        same_lines++
+                    }
                     if (current_line_rank == desired_line_rank) {
                         identical_lines++
                     }
@@ -752,7 +777,6 @@ function isValidCombination(current_lines, desired_lines, useChaos) {
         }
         i++
     }
-
     if (useChaos && same_lines != 3) return "chaos_error"
 
     if (useChaos && identical_lines == 3) return "identical"
@@ -880,6 +904,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <p style="text-align:center;"">
                                     You have inputted an invalid combination of lines.<br />
                                 When using Chaos Circulators, your desired line types must match that of your current line types.<br />
+                                Furthermore, the rank of each line must be the same.
                                 </p>
                         </div>
                     </div>
@@ -910,20 +935,36 @@ document.addEventListener("DOMContentLoaded", function () {
                 var fifty_off = document.getElementById("fifty").checked
 
                 var expected_data = run_calculation(current_lines, desired_lines, only_honor)
+                console.log(expected_data)
                 if (expected_data == 0) {
                     var expected_honor = 0
                     var expected_circulators = 0
+
+                    var honor_spent_median = 0
+                    var honor_spent_25 = 0
+                    var honor_spent_75 = 0
                 }
                 else if (expected_data == 99) send_msg = true
                 else {
                     var expected_honor = expected_data.honor
                     var expected_circulators = expected_data.circulators
+
+                    var honor_spent_median = Math.ceil(expected_honor.honor_spent_median)
+                    var honor_spent_25 = Math.ceil(expected_honor.honor_spent_25)
+                    var honor_spent_75 = Math.ceil(expected_honor.honor_spent_75)
+
+                    var circulators_median = Math.ceil(expected_circulators.median_rolls)
+                    var circulators_25 = Math.ceil(expected_circulators.rolls_25)
+                    var circulators_75 = Math.ceil(expected_circulators.rolls_75)
+
                 }
 
                 console.log(expected_honor, expected_circulators)
 
                 if (fifty_off == true) {
-                    expected_honor = Math.ceil(expected_honor / 2)
+                    honor_spent_median = Math.ceil(honor_spent_median / 2)
+                    honor_spent_25 = Math.ceil(honor_spent_25 / 2)
+                    honor_spent_75 = Math.ceil(honor_spent_75 / 2)
                 }
 
                 if (expected_circulators != 0) var line_to_roll = expected_data.line_to_roll
@@ -945,26 +986,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 else {
                     if (expected_circulators != 0) {
-                        var expected_meso = expected_circulators * 19000000
+                        var expected_median = circulators_median * 19000000
+                        var expected_25 = circulators_25 * 19000000
+                        var expected_75 = circulators_75 * 19000000
                         document.getElementById('result').innerHTML =
                             `
                     <div class="container secondarycon">
                         <div class=" statBoxs statBox1" style="background-color:#aaa;">
-                            <h2 style="text-align:center;">Expected Circulator Cost</h2>
+                            <h2 style="text-align:center;">Miracle Circulator Cost</h2>
                                 <p style="text-align:center;"">
-                                    ${expected_circulators.toLocaleString()} Miracle Circulators<br />
+                                    You are expected to use between:<br>
+                                    ${circulators_25.toLocaleString()} and ${circulators_75.toLocaleString()} Miracle Circulators<br />
     
-                                    <i>(${expected_meso.toLocaleString()} mesos)<br /></i>
+                                    <i>(${expected_25.toLocaleString()} - ${expected_75.toLocaleString()} mesos)<br /></i><br>
 
-                                    <b>Rolling for Line ${line_to_roll}</b>
+                                    <b>Median: ${circulators_median.toLocaleString()} Miracle Circulators<br>
+                                    <i>(${expected_median.toLocaleString()} mesos)<br /></i><br>
+
+                                    Goal: Rolling for Line ${line_to_roll}</b>
                                 </p>
                         </div>
 
                         <div class=" statBoxs statBox1" style="background-color:#aaa;">
-                            <h2 style="text-align:center;">Expected Honor Cost</h2>
+                            <h2 style="text-align:center;">Honor Cost</h2>
                                 <p style="text-align:center;"">
-                                    ${expected_honor.toLocaleString()} Honor Exp<br /><br>
-                                    <b>Rolling Remaining Lines</b>
+                                You are expected to use between:<br>
+                                ${honor_spent_25.toLocaleString()} and ${honor_spent_75.toLocaleString()} Honor Exp<br><br><br>
+
+                                <b>Median: ${honor_spent_median.toLocaleString()} Honor Exp<br><br><br>
+                                    Goal: Rolling Remaining Lines</b>
                                 </p>
                         </div>
                     </div>
@@ -975,9 +1025,13 @@ document.addEventListener("DOMContentLoaded", function () {
                             `
                     <div class="container secondarycon">
                     <div class=" statBox statBox1" style="background-color:#aaa;">
-                        <h2 style="text-align:center;">Expected Honor Cost</h2>
+                        <h2 style="text-align:center;">Honor Cost</h2>
                             <p style="text-align:center;"">
-                            ${expected_honor.toLocaleString()} Honor Exp<br />
+                            You are expected to use between:<br>
+                            ${honor_spent_25.toLocaleString()} and ${honor_spent_75.toLocaleString()} Honor Exp<br><br>
+
+                            <b>Median: ${honor_spent_median.toLocaleString()} Honor Exp
+                            </p>
                             </p>
                     </div>
                     </div>
