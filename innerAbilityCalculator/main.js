@@ -219,8 +219,15 @@ function honor_cost(lock_info) {
     else if (lock_info == 2) return 18100
 }
 
-function circProb(line_type,line_rank){
-    return abilities_circulator[line_type][line_rank]
+function isPerfect(line_rank) {
+    return line_rank.slice(-1) == 'p'
+}
+
+function circProb(line_type, line_rank) {
+    if (line_rank == "epic") {
+        abilities_circulator[line_type][line_rank] * line_probabilities[line_rank] + abilities_circulator[line_type]['unique'] * line_probabilities['unique']
+    }
+    return abilities_circulator[line_type][line_rank] * line_probabilities[line_rank]
 }
 
 function reroll_or_lock(current_lines, desired_lines) {
@@ -295,19 +302,22 @@ function reroll_or_lock(current_lines, desired_lines) {
         var line_rank3 = lines.lines[3]
         var circ_line_prob2 = circProb(line_type2, line_rank2)
         var circ_line_prob3 = circProb(line_type3, line_rank3) //here
-        if ((lines[1] == false && lines_to_roll == 1) || (lines[2] && (circ_line_prob2 < circ_line_prob3)) || (lines[3] && (circ_line_prob2 > circ_line_prob3))) {
+        var perfectline2 = isPerfect(line_rank2)
+        var perfectline3 = isPerfect(line_rank3)
+        console.log(circ_line_prob2, circ_line_prob3)
+        if ((lines[1] == false && lines_to_roll == 1) || (lines[2] && (circ_line_prob2 < circ_line_prob3) && (perfectline2 || !perfectline3)) || (lines[3] && (circ_line_prob2 > circ_line_prob3) && (perfectline3 || !perfectline2))) {
             lines.reroll.choice = false
         }
         else {
             lines.reroll.choice = true
-            if (circ_line_prob2 < circ_line_prob3) lines.reroll.line = 2
+            if ((circ_line_prob2 < circ_line_prob3) && (perfectline2 || !perfectline3)) lines.reroll.line = 2
             else lines.reroll.line = 3
         }
 
     }
     else if (lines_to_roll == 3) {
         lines.reroll.choice = true
-        if (circ_line_prob2 < circ_line_prob3) lines.reroll.line = 2
+        if ((circ_line_prob2 < circ_line_prob3) && (perfectline2 || !perfectline3)) lines.reroll.line = 2
         else lines.reroll.line = 3
     }
 
@@ -782,7 +792,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('fifty').checked = false
             document.getElementById('fifty').disabled = true
         }
-        else{
+        else {
             document.getElementById('only_honor').checked = false
             document.getElementById('only_honor').disabled = false
 
@@ -795,7 +805,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('chaos').checked = false
             document.getElementById('chaos').disabled = true
         }
-        if (document.getElementById("only_honor").checked == false && document.getElementById("fifty").checked == false){
+        if (document.getElementById("only_honor").checked == false && document.getElementById("fifty").checked == false) {
             document.getElementById('chaos').checked = false
             document.getElementById('chaos').disabled = false
         }
@@ -805,7 +815,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('chaos').checked = false
             document.getElementById('chaos').disabled = true
         }
-        if (document.getElementById("only_honor").checked == false && document.getElementById("fifty").checked == false){
+        if (document.getElementById("only_honor").checked == false && document.getElementById("fifty").checked == false) {
             document.getElementById('chaos').checked = false
             document.getElementById('chaos').disabled = false
         }
