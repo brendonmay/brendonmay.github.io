@@ -219,6 +219,10 @@ function honor_cost(lock_info) {
     else if (lock_info == 2) return 18100
 }
 
+function circProb(line_type,line_rank){
+    return abilities_circulator[line_type][line_rank]
+}
+
 function reroll_or_lock(current_lines, desired_lines) {
     //arguments are lists length 3, ("m_attk*legendary", "meso_drop*unique", "N/A")
 
@@ -285,19 +289,25 @@ function reroll_or_lock(current_lines, desired_lines) {
     console.log("lines to roll: " + lines_to_roll)
     if (lines_to_roll == 0) return "done"
     else if (lines_to_roll == 1 || lines_to_roll == 2) {
-        if ((lines[1] == false && lines_to_roll == 1) || (lines[2] && (line_probabilities[2] < line_probabilities[3])) || (lines[3] && (line_probabilities[2] > line_probabilities[3]))) {
+        var line_type2 = lines.line_types[2]
+        var line_rank2 = lines.lines[2]
+        var line_type3 = lines.line_types[3]
+        var line_rank3 = lines.lines[3]
+        var circ_line_prob2 = circProb(line_type2, line_rank2)
+        var circ_line_prob3 = circProb(line_type3, line_rank3) //here
+        if ((lines[1] == false && lines_to_roll == 1) || (lines[2] && (circ_line_prob2 < circ_line_prob3)) || (lines[3] && (circ_line_prob2 > circ_line_prob3))) {
             lines.reroll.choice = false
         }
         else {
             lines.reroll.choice = true
-            if (line_probabilities[2] < line_probabilities[3]) lines.reroll.line = 2
+            if (circ_line_prob2 < circ_line_prob3) lines.reroll.line = 2
             else lines.reroll.line = 3
         }
 
     }
     else if (lines_to_roll == 3) {
         lines.reroll.choice = true
-        if (line_probabilities[2] < line_probabilities[3]) lines.reroll.line = 2
+        if (circ_line_prob2 < circ_line_prob3) lines.reroll.line = 2
         else lines.reroll.line = 3
     }
 
@@ -511,10 +521,10 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
 
 function circulatorsSpent(compare_lines, line_to_roll) {
     var circulators_spent = 0
-    var probabilities = [compare_lines.line_probabilities[line_to_roll]]
     var line_ranks = [compare_lines.lines[line_to_roll]]
     var line_types = [compare_lines.line_types[line_to_roll]]
     var locked_lines_list = []
+    var probabilities = [abilities_circulator[line_types[0]][line_ranks[0]]]
     var number_of_locked_lines = 0
 
     //console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types)
