@@ -219,6 +219,18 @@ body{
     width: calc(100% - 5px);
 }
 
+.statBoxs {
+    background-color: #e9e7e9!important;
+    border-color: #0d7535;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: calc(50% - 5px);
+}
+
 .statBox h2 {
     color: #0d7535;
     margin: 0;
@@ -228,6 +240,22 @@ body{
 }
 
 .statBox p {
+    font-weight: 400;
+    color: #0d7535;
+    margin: 0;
+    font-size: 14px;
+    padding-top: 5px;
+}
+
+.statBoxs h2 {
+    color: #0d7535;
+    margin: 0;
+    font-weight: normal;
+    font-size: 20px;
+    text-decoration: underline;
+}
+
+.statBoxs p {
     font-weight: 400;
     color: #0d7535;
     margin: 0;

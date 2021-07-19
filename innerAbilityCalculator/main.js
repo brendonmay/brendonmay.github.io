@@ -4,83 +4,111 @@ let line_probabilities = {
     'rare': 0.8,
     'epic': 0.15,
     'unique': 0.05,
+    'uniquep': 0.05,
+    'legendaryp': 1,
     "legendary": 1
 }
 
+let chaos_prob = 0.1
+
 let not_repeatable = ['passive_skill', 'att_speed']
 
-let abilities_honor = //here build in uniquep
+let abilities_honor =
 {
     'normal_dmg':
     {
         'epic': 0.025662,
         'unique': 0.017241,
+        'uniquep': 0.017241 * 0.25,
+        'legendaryp': 0.017761 * 0.6,
         "legendary": 0.017761
     },
     'abnormal_dmg':
     {
         'epic': 0.025662,
         'unique': 0.017241,
+        'uniquep': 0.017241 * 0.25,
+        'legendaryp': 0.017761 * 0.6,
         "legendary": 0.017761
     },
     'buff_duration':
     {
         'epic': 0.012831,
         'unique': 0.00862,
+        'uniquep': 0.00862 * 0.1,
+        'legendaryp': 0.00888 * 0.1,
         "legendary": 0.00888
     },
     'item_drop':
     {
         'epic': 0.025662,
         'unique': 0.017241,
+        'uniquep': 0.017241 * 0.25,
+        'legendaryp': 0.017761 * 0.25,
         "legendary": 0.017761
     },
     'meso_drop':
     {
         'epic': 0.025662,
         'unique': 0.017241,
+        'uniquep': 0.017241 * 0.25,
+        'legendaryp': 0.017761 * 0.25,
         "legendary": 0.017761
     },
     'w_attk':
     {
         'epic': 0.017108,
         'unique': 0.012931,
+        'uniquep': 0.012931 * 0.25,
+        'legendaryp': 0.022202 * 0.4,
         "legendary": 0.022202
     },
     'm_attk':
     {
         'epic': 0.017108,
         'unique': 0.012931,
+        'uniquep': 0.012931 * 0.25,
+        'legendaryp': 0.022202 * 0.4,
         "legendary": 0.022202
     },
     'crit_rate':
     {
         'epic': 0,
         'unique': 0.00431,
+        'uniquep': 0.00431 * 0.1,
+        'legendaryp': 0.00444 * 0.1,
         "legendary": 0.00444
     },
     'boss':
     {
         'epic': 0,
         'unique': 0.00862,
+        'uniquep': 0.00862 * 0.1,
+        'legendaryp': 0.022202 * 0.1,
         "legendary": 0.022202
     },
     'att_speed':
     {
         'epic': 0,
         'unique': 0,
+        'uniquep': 0,
+        'legendaryp': 0.00444,
         "legendary": 0.00444
     },
     'passive_skill':
     {
         'epic': 0,
         'unique': 0,
+        'uniquep': 0,
+        'legendaryp': 0.007104,
         "legendary": 0.007104
     },
     'cd_skip':
     {
         'epic': 0,
         'unique': 0.017241,
+        'uniquep': 0.017241 * 0.1,
+        'legendaryp': 0.017761 * 0.1,
         "legendary": 0.017761
     }
 }
@@ -91,72 +119,96 @@ let abilities_circulator =
     {
         'epic': 0.026223,
         'unique': 0.017391,
+        'uniquep': 0.017391 * 0.25,
+        "legendaryp": 0.017761 * 0.6,
         "legendary": 0.017761
     },
     'abnormal_dmg':
     {
         'epic': 0.026223,
         'unique': 0.017391,
+        'uniquep': 0.017391 * 0.25,
+        "legendaryp": 0.017761 * 0.6,
         "legendary": 0.017761
     },
     'buff_duration':
     {
         'epic': 0.013111,
         'unique': 0.008695,
+        'uniquep': 0.008695 * 0.1,
+        "legendaryp": 0.00888 * 0.1,
         "legendary": 0.00888
     },
     'item_drop':
     {
         'epic': 0.026223,
         'unique': 0.017391,
+        'uniquep': 0.017391 * 0.25,
+        "legendaryp": 0.017761 * 0.25,
         "legendary": 0.017761
     },
     'meso_drop':
     {
         'epic': 0.026223,
         'unique': 0.017391,
+        'uniquep': 0.017391 * 0.25,
+        "legendaryp": 0.017761 * 0.25,
         "legendary": 0.017761
     },
     'w_attk':
     {
         'epic': 0.026223,
         'unique': 0.021739,
+        'uniquep': 0.021739 * 0.25,
+        "legendaryp": 0.022202 * 0.4,
         "legendary": 0.022202
     },
     'm_attk':
     {
         'epic': 0.026223,
         'unique': 0.021739,
+        'uniquep': 0.021739 * 0.25,
+        "legendaryp": 0.022202 * 0.4,
         "legendary": 0.022202
     },
     'crit_rate':
     {
         'epic': 0.017482,
         'unique': 0.008695,
+        'uniquep': 0.008695 * 0.1,
+        "legendaryp": 0.00444 * 0.1,
         "legendary": 0.00444
     },
     'boss':
     {
         'epic': 0,
         'unique': 0.021739,
+        'uniquep': 0.021739 * 0.1,
+        "legendaryp": 0.022202 * 0.1,
         "legendary": 0.022202
     },
     'att_speed':
     {
         'epic': 0,
         'unique': 0,
+        'uniquep': 0,
+        'legendaryp': 0.00444,
         "legendary": 0.00444
     },
     'passive_skill':
     {
         'epic': 0,
         'unique': 0,
+        'uniquep': 0,
+        'legendaryp': 0.007104,
         "legendary": 0.007104
     },
     'cd_skip':
     {
         'epic': 0,
         'unique': 0.017391,
+        'unique': 0.017391 * 0.1,
+        "legendary": 0.017761 * 0.1,
         "legendary": 0.017761
     }
 }
@@ -174,7 +226,7 @@ function reroll_or_lock(current_lines, desired_lines) {
         1: false,
         2: false,
         3: false,
-        'reroll': { "choice": true, "line": 2 },
+        'reroll': { "choice": false, "line": 2 },
         "line_probabilities": { 1: 0, 2: 0, 3: 0 },
         "lines": { 1: "N/A", 2: "N/A", 3: "N/A" },
         "locked_lines": [],
@@ -233,7 +285,7 @@ function reroll_or_lock(current_lines, desired_lines) {
     console.log("lines to roll: " + lines_to_roll)
     if (lines_to_roll == 0) return "done"
     else if (lines_to_roll == 1 || lines_to_roll == 2) {
-        if ((lines[2] && (line_probabilities[2] < line_probabilities[3])) || (lines[3] && (line_probabilities[2] > line_probabilities[3]))) {
+        if ((lines[1] == false && lines_to_roll == 1) || (lines[2] && (line_probabilities[2] < line_probabilities[3])) || (lines[3] && (line_probabilities[2] > line_probabilities[3]))) {
             lines.reroll.choice = false
         }
         else {
@@ -275,8 +327,8 @@ function getLineSuccess(line_rank, line_type, line_probability, rank_probability
 function adjust_probability(line_rank, line_prob, locked_lines) {
     if (line_rank == "rare") var total = 31
     else if (line_rank == "epic") var total = 34
-    else if (line_rank == "unique") var total = 40
-    else if (line_rank == "legendary") var total = 43
+    else if (line_rank == "unique" || line_rank == "uniquep") var total = 40
+    else if (line_rank == "legendary" || line_rank == "legendaryp") var total = 43
 
     return (line_prob * total) / (total - locked_lines)
 }
@@ -295,7 +347,7 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
         var line_success = adjust_probability(line_rank, original_line_success, locked_lines)
         var line_failure = 1 - line_success
 
-        if (line_ranks[0] == "legendary") {
+        if (line_ranks[0] == "legendary" || line_ranks[0] == "legendaryp") {
             var p = line_success
         }
         else {
@@ -325,7 +377,7 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
         var both_failure = 1 - line1_success - line2_success
         console.log(line_ranks)
 
-        if (line_ranks[0] == "legendary") {
+        if (line_ranks[0] == "legendary" || line_ranks[0] == "legendaryp") {
             if (not_repeatable.includes(line1_type)) {
                 //12 + 1(not2)2, 1(not2)(not2), (not1)2 + (not1)(not2)2
                 var case1 = line1_success * line2_success + line1_success * line2_failure * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
@@ -542,7 +594,10 @@ function pureHonorSpent(compare_lines) {
     if (lines_to_roll == 2) {
         var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list)
         var p = success_info.p
+        console.log("p(rolling line2 or line3 = " + p)
         var avg_rolls = 1 / p
+        var median_rolls = geoDistrQuantile(p).median
+        console.log("avg rolls = " + avg_rolls, "median rolls = " + median_rolls)
         honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
 
         var locked_lines_list1 = locked_lines_list
@@ -553,8 +608,17 @@ function pureHonorSpent(compare_lines) {
         var outcome_1 = probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 1, locked_lines_list2).p //line 2 previously successful
         var outcome_2 = probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 1, locked_lines_list1).p // line 1 previously successful
         var new_p = (success_info.line_successes[2] / p) * (outcome_1) + (success_info.line_successes[1] / p) * (outcome_2) + (success_info.line_successes.all) / p
-        console.log("probabilities: " + probabilities[0], ", line_ranks: " + line_ranks[0], ", line_types: " + line_types[0], ", number_of_locked_lines: " + number_of_locked_lines)
+
+        // console.log("probabilities: " + probabilities[0], ", line_ranks: " + line_ranks[0], ", line_types: " + line_types[0], ", number_of_locked_lines: " + number_of_locked_lines)
+        // console.log("line1 = " + line_types[0], ", line2 = " + line_types[1])
+        // console.log("p(rolling1|2) = " + (outcome_1), ", percentage of time line 2 occurs before line 2 = " + (success_info.line_successes[2] / p) * 100 + "%")
+        // console.log("p(rolling2|1) = " + (outcome_2), ", percentage of time line 1 occurs before line 2 = " + (success_info.line_successes[1] / p) * 100 + "%")
+        // console.log("p(rolling 1 and 2) = " + (success_info.line_successes.all) / p * 100 + "%")
+
+        console.log(new_p)
         avg_rolls = 1 / (new_p)
+        median_rolls = geoDistrQuantile(new_p).median
+        console.log("avg rolls = " + avg_rolls, "median rolls = " + median_rolls)
         honor_spent += honor_cost(number_of_locked_lines + 1) * avg_rolls
     }
     if (lines_to_roll == 1) {
@@ -562,6 +626,8 @@ function pureHonorSpent(compare_lines) {
         console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
         console.log("p: " + p)
         var avg_rolls = 1 / p
+        var median_rolls = geoDistrQuantile(p).median
+        console.log("avg rolls = " + avg_rolls, "median rolls = " + median_rolls)
         honor_spent += honor_cost(number_of_locked_lines) * avg_rolls
     }
     return honor_spent
@@ -623,15 +689,37 @@ function geoDistrQuantile(p) {
     return { mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth }
 }
 
-function isValidCombination(current_lines, desired_lines) {
+function isValidCombination(current_lines, desired_lines, useChaos) {
+    console.log(current_lines)
+    console.log(desired_lines)
     var i = 0
     var current_line_types = []
     var desired_line_types = []
+    var same_lines = 0
+    var identical_lines = 0
+
     while (i < 3) {
         if (current_lines[i] != "N/A") {
             var line_type = current_lines[i].substring(0, current_lines[i].indexOf('*'))
             if (current_line_types.includes(line_type)) return false
             else current_line_types.push(line_type)
+
+        }
+        if (useChaos) {
+            var current_line_type = current_lines[i].substring(0, current_lines[i].indexOf('*'))
+            var current_line_rank = current_lines[i].substring(current_lines[i].indexOf('*') + 1, current_lines[i].length)
+            var z = 0
+            while (z < 3) {
+                var desired_line_type = desired_lines[z].substring(0, desired_lines[z].indexOf('*'))
+                var desired_line_rank = desired_lines[z].substring(desired_lines[z].indexOf('*') + 1, desired_lines[z].length)
+                if (current_line_type == desired_line_type) {
+                    same_lines++
+                    if (current_line_rank == desired_line_rank) {
+                        identical_lines++
+                    }
+                }
+                z++
+            }
         }
         i++
     }
@@ -645,13 +733,73 @@ function isValidCombination(current_lines, desired_lines) {
         i++
     }
 
+    if (useChaos && same_lines != 3) return "chaos_error"
+
+    if (useChaos && identical_lines == 3) return "identical"
+
     return true
+}
+
+function numberPerfectLines(desired_lines, current_lines) {
+    var i = 0
+    var perfect_lines = 0
+    var perfect_current = 0
+
+    while (i < 3) {
+        if (desired_lines[i].slice(-1) == 'p') perfect_lines++
+        i++
+    }
+
+    i = 0
+    while (i < 3) {
+        if (current_lines[i].slice(-1) == 'p') perfect_current++
+        i++
+    }
+
+    if (perfect_current == 3) return 0
+    return perfect_lines
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
         $("#toast").toast('show')
     }, 1000)
+    document.getElementById("chaos").addEventListener("click", function () {
+        if (document.getElementById("chaos").checked == true) {
+            document.getElementById('only_honor').checked = false
+            document.getElementById('only_honor').disabled = true
+
+            document.getElementById('fifty').checked = false
+            document.getElementById('fifty').disabled = true
+        }
+        else{
+            document.getElementById('only_honor').checked = false
+            document.getElementById('only_honor').disabled = false
+
+            document.getElementById('fifty').checked = false
+            document.getElementById('fifty').disabled = false
+        }
+    })
+    document.getElementById("only_honor").addEventListener("click", function () {
+        if (document.getElementById("only_honor").checked == true) {
+            document.getElementById('chaos').checked = false
+            document.getElementById('chaos').disabled = true
+        }
+        if (document.getElementById("only_honor").checked == false && document.getElementById("fifty").checked == false){
+            document.getElementById('chaos').checked = false
+            document.getElementById('chaos').disabled = false
+        }
+    })
+    document.getElementById("fifty").addEventListener("click", function () {
+        if (document.getElementById("fifty").checked == true) {
+            document.getElementById('chaos').checked = false
+            document.getElementById('chaos').disabled = true
+        }
+        if (document.getElementById("only_honor").checked == false && document.getElementById("fifty").checked == false){
+            document.getElementById('chaos').checked = false
+            document.getElementById('chaos').disabled = false
+        }
+    })
     document.getElementById("calculateButton").addEventListener("click", function () {
         function loaderOn() {
             $('#loader1').show();
@@ -676,11 +824,68 @@ document.addEventListener("DOMContentLoaded", function () {
             var current_lines = [line_1, line_2, line_3]
             var desired_lines = [desired_line_1, desired_line_2, desired_line_3]
 
-            var isValid = isValidCombination(current_lines, desired_lines)
+            var useChaos = document.getElementById('chaos').checked
+
+            var isValid = isValidCombination(current_lines, desired_lines, useChaos)
+            console.log(isValid)
 
             var send_msg = false
 
-            if (isValid) {
+            if (useChaos && isValid != false) {
+                document.getElementById('result').style.display = '';
+                document.getElementById('error-container').style.display = 'none';
+
+                document.getElementById('result').innerHTML =
+                    `
+                <div class="container secondarycon">
+                <div class=" statBox statBox1" style="background-color:#aaa;">
+                    <h2 style="text-align:center;">Expected Chaos Circulators</h2>
+                        <p style="text-align:center;"">
+                        0 Chaos Circulators<br />
+                        </p>
+                </div>
+                </div>
+                `
+
+                if (isValid == "identical") {
+
+                }
+
+                else if (isValid == "chaos_error") {
+                    document.getElementById('result').innerHTML =
+                        `
+                    <div class="container secondarycon">
+                        <div class=" statBox statBox1" style="background-color:#aaa;">
+                            <h2 style="text-align:center;">Error</h2>
+                                <p style="text-align:center;"">
+                                    You have inputted an invalid combination of lines.<br />
+                                When using Chaos Circulators, your desired line types must match that of your current line types.<br />
+                                </p>
+                        </div>
+                    </div>
+                        `
+                }
+
+                else if (isValid == true) {
+                    var number_of_perfect_lines = numberPerfectLines(desired_lines, current_lines)
+                    var p = 0.1 ** number_of_perfect_lines
+                    var expected_chaos = Math.ceil(1 / p)
+                    if (number_of_perfect_lines == 0) expected_chaos = 0
+
+                    document.getElementById('result').innerHTML =
+                        `
+                    <div class="container secondarycon">
+                    <div class=" statBox statBox1" style="background-color:#aaa;">
+                        <h2 style="text-align:center;">Expected Chaos Circulators</h2>
+                            <p style="text-align:center;"">
+                            ${expected_chaos.toLocaleString()} Chaos Circulators<br />
+                            </p>
+                    </div>
+                    </div>
+                    `
+                }
+            }
+            else if (isValid == true) {
                 var only_honor = document.getElementById("only_honor").checked
                 var fifty_off = document.getElementById("fifty").checked
 
@@ -712,7 +917,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class=" statBox statBox1" style="background-color:#aaa;">
                         <h2 style="text-align:center;">Results</h2>
                             <p style="text-align:center;"">
-                                It is not recommended to only use Honor Exp in this instance.<br>The calculation is very complex and the cost is unrealistically high.
+                                It is not recommended to only use Honor Exp in this instance.<br>The calculation is quite complex and has not been fully programmed.
                             </p>
                     </div>
                     </div>
@@ -724,15 +929,24 @@ document.addEventListener("DOMContentLoaded", function () {
                         document.getElementById('result').innerHTML =
                             `
                     <div class="container secondarycon">
-                    <div class=" statBox statBox1" style="background-color:#aaa;">
-                        <h2 style="text-align:center;">Expected Cost</h2>
-                            <p style="text-align:center;"">
-                                ${expected_circulators.toLocaleString()} Miracle Circulators (To roll line ${line_to_roll})<br />
-                                ${expected_honor.toLocaleString()} Honor Exp (To roll remaining lines)<br /><br>
- 
-                                <i>${expected_circulators.toLocaleString()} Miracle Circulators = ${expected_meso.toLocaleString()} meso<br /></i>
-                            </p>
-                    </div>
+                        <div class=" statBoxs statBox1" style="background-color:#aaa;">
+                            <h2 style="text-align:center;">Expected Circulator Cost</h2>
+                                <p style="text-align:center;"">
+                                    ${expected_circulators.toLocaleString()} Miracle Circulators<br />
+    
+                                    <i>(${expected_meso.toLocaleString()} mesos)<br /></i>
+
+                                    <b>Rolling for Line ${line_to_roll}</b>
+                                </p>
+                        </div>
+
+                        <div class=" statBoxs statBox1" style="background-color:#aaa;">
+                            <h2 style="text-align:center;">Expected Honor Cost</h2>
+                                <p style="text-align:center;"">
+                                    ${expected_honor.toLocaleString()} Honor Exp<br /><br>
+                                    <b>Rolling Remaining Lines</b>
+                                </p>
+                        </div>
                     </div>
         `
                     }
@@ -741,9 +955,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             `
                     <div class="container secondarycon">
                     <div class=" statBox statBox1" style="background-color:#aaa;">
-                        <h2 style="text-align:center;">Results</h2>
+                        <h2 style="text-align:center;">Expected Honor Cost</h2>
                             <p style="text-align:center;"">
-                            Expected Honor Exp: ${expected_honor.toLocaleString()}<br />
+                            ${expected_honor.toLocaleString()} Honor Exp<br />
                             </p>
                     </div>
                     </div>
@@ -758,15 +972,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('result').innerHTML =
                     `
                     <div class="container secondarycon">
-                    <div class=" statBox statBox1" style="background-color:#aaa;">
-                        <h2 style="text-align:center;">Results</h2>
-                            <p style="text-align:center;"">
-                                You have inputted an invalid combination of lines.<br />
-                            You cannot have the same type of line appearing more than once.<br />
-                            </p>
-                    </div>
+                        <div class=" statBox statBox1" style="background-color:#aaa;">
+                            <h2 style="text-align:center;">Error</h2>
+                                <p style="text-align:center;"">
+                                    You have inputted an invalid combination of lines.<br />
+                                You cannot have the same type of line appearing more than once.<br />
+                                </p>
+                        </div>
                     </div>
                         `
+
             }
         }
         loaderOn();
