@@ -206,8 +206,8 @@ let abilities_circulator =
     {
         'epic': 0,
         'unique': 0.017391,
-        'unique': 0.017391,
-        "legendary": 0.017761,
+        'uniquep': 0.017391,
+        "legendaryp": 0.017761,
         "legendary": 0.017761
     }
 }
@@ -223,8 +223,9 @@ function isPerfect(line_rank) {
 }
 
 function circProb(line_type, line_rank) {
+    console.log(line_type, line_rank)
     if (line_type == "N/A" || line_rank == "N/A") return 1
-    if (line_rank == "epic") {
+    if (line_rank == "epic") { //here
         abilities_circulator[line_type][line_rank] * line_probabilities[line_rank] + abilities_circulator[line_type]['unique'] * line_probabilities['unique']
     }
     return abilities_circulator[line_type][line_rank] * line_probabilities[line_rank]
