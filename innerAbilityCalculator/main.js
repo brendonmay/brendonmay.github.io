@@ -119,72 +119,72 @@ let abilities_circulator =
     {
         'epic': 0.026223,
         'unique': 0.017391,
-        'uniquep': 0.017391 * 0.25,
-        "legendaryp": 0.017761 * 0.6,
+        'uniquep': 0.017391,
+        "legendaryp": 0.017761,
         "legendary": 0.017761
     },
     'abnormal_dmg':
     {
         'epic': 0.026223,
         'unique': 0.017391,
-        'uniquep': 0.017391 * 0.25,
-        "legendaryp": 0.017761 * 0.6,
+        'uniquep': 0.017391,
+        "legendaryp": 0.017761,
         "legendary": 0.017761
     },
     'buff_duration':
     {
         'epic': 0.013111,
         'unique': 0.008695,
-        'uniquep': 0.008695 * 0.1,
-        "legendaryp": 0.00888 * 0.1,
+        'uniquep': 0.008695,
+        "legendaryp": 0.00888,
         "legendary": 0.00888
     },
     'item_drop':
     {
         'epic': 0.026223,
         'unique': 0.017391,
-        'uniquep': 0.017391 * 0.25,
-        "legendaryp": 0.017761 * 0.25,
+        'uniquep': 0.017391,
+        "legendaryp": 0.017761,
         "legendary": 0.017761
     },
     'meso_drop':
     {
         'epic': 0.026223,
         'unique': 0.017391,
-        'uniquep': 0.017391 * 0.25,
-        "legendaryp": 0.017761 * 0.25,
+        'uniquep': 0.017391,
+        "legendaryp": 0.017761,
         "legendary": 0.017761
     },
     'w_attk':
     {
         'epic': 0.026223,
         'unique': 0.021739,
-        'uniquep': 0.021739 * 0.25,
-        "legendaryp": 0.022202 * 0.4,
+        'uniquep': 0.021739,
+        "legendaryp": 0.022202,
         "legendary": 0.022202
     },
     'm_attk':
     {
         'epic': 0.026223,
         'unique': 0.021739,
-        'uniquep': 0.021739 * 0.25,
-        "legendaryp": 0.022202 * 0.4,
+        'uniquep': 0.021739,
+        "legendaryp": 0.022202,
         "legendary": 0.022202
     },
     'crit_rate':
     {
         'epic': 0.017482,
         'unique': 0.008695,
-        'uniquep': 0.008695 * 0.1,
-        "legendaryp": 0.00444 * 0.1,
+        'uniquep': 0.008695,
+        "legendaryp": 0.00444,
         "legendary": 0.00444
     },
     'boss':
     {
         'epic': 0,
         'unique': 0.021739,
-        'uniquep': 0.021739 * 0.1,
-        "legendaryp": 0.022202 * 0.1,
+        'uniquep': 0.021739,
+        "legendaryp": 0.022202,
         "legendary": 0.022202
     },
     'att_speed':
@@ -207,8 +207,8 @@ let abilities_circulator =
     {
         'epic': 0,
         'unique': 0.017391,
-        'unique': 0.017391 * 0.1,
-        "legendary": 0.017761 * 0.1,
+        'unique': 0.017391,
+        "legendary": 0.017761,
         "legendary": 0.017761
     }
 }
