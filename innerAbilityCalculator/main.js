@@ -312,13 +312,23 @@ function reroll_or_lock(current_lines, desired_lines) {
         }
         else {
             lines.reroll.choice = true
-            if ((circ_line_prob2 < circ_line_prob3) && (perfectline2 || !perfectline3)) lines.reroll.line = 2
+            if ((circ_line_prob2 < circ_line_prob3) && (perfectline2 || !perfectline3)) lines.reroll.line = 2 //here
             else lines.reroll.line = 3
         }
 
     }
     else if (lines_to_roll == 3) {
         lines.reroll.choice = true
+        var line_type2 = lines.line_types[2]
+        var line_rank2 = lines.lines[2]
+        var line_type3 = lines.line_types[3]
+        var line_rank3 = lines.lines[3]
+        console.log(line_type2, line_rank2, line_type3, line_rank3)
+        var circ_line_prob2 = circProb(line_type2, line_rank2)
+        var circ_line_prob3 = circProb(line_type3, line_rank3)
+        var perfectline2 = isPerfect(line_rank2)
+        var perfectline3 = isPerfect(line_rank3)
+        console.log(circ_line_prob2, circ_line_prob3)
         if ((circ_line_prob2 < circ_line_prob3) && (perfectline2 || !perfectline3)) lines.reroll.line = 2
         else lines.reroll.line = 3
     }
