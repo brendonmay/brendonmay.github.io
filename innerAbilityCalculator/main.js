@@ -907,6 +907,7 @@ function numberPerfectLines(desired_lines, current_lines) {
     var perfect_lines = []
     var ranks = []
     var perfect_current = []
+    var roll = false
 
     while (i < 3) {
         if (current_lines[i].slice(-1) == 'p') {
@@ -919,16 +920,15 @@ function numberPerfectLines(desired_lines, current_lines) {
 
     while (i < 3) {
         if (desired_lines[i].slice(-1) == 'p') {
-            if (!perfect_current.includes(desired_lines[i].substring(0, desired_lines[i].indexOf('*')))) {
-                perfect_lines.push(desired_lines[i].substring(0, desired_lines[i].indexOf('*')))
-                ranks.push(desired_lines[i].substring(desired_lines[i].indexOf('*') + 1, desired_lines[i].length))
-            }
+            if (!perfect_current.includes(desired_lines[i].substring(0, desired_lines[i].indexOf('*')))) roll = true
+            perfect_lines.push(desired_lines[i].substring(0, desired_lines[i].indexOf('*')))
+            ranks.push(desired_lines[i].substring(desired_lines[i].indexOf('*') + 1, desired_lines[i].length))
         }
         i++
     }
 
 
-    if (perfect_current.length == 3) return 0
+    if (perfect_current.length == 3 || roll == false) return 0
     return { lines: perfect_lines, ranks: ranks }
 }
 
