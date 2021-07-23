@@ -1007,6 +1007,32 @@ function performExperiment(cubeType, itemLevel, itemCategory, desiredResult, sta
 
 }
 
+let tier_rates = {
+  "red": {
+    0: 0.14,
+    1: 0.06,
+    2: 0.025
+  },
+  "black": {
+    0: 0.17,
+    1: 0.11,
+    2: 0.05
+  }
+}
+
+let tier_rates_DMT = {
+  "red": {
+    0: 0.14 * 2,
+    1: 0.06 * 2,
+    2: 0.025 * 2
+  },
+  "black": {
+    0: 0.17 * 2,
+    1: 0.11 * 2,
+    2: 0.05 * 2
+  }
+}
+
 function getProbability(item_type, desired_outcome, cube_type, currentTier, desiredTier, itemLevel) {
   var probabilities = {
     'weapon': {
@@ -1525,7 +1551,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
       probability = probability + prob_1sec_line_1 * prob_2sec_line_2 * prob_2sec_line_3
     }
 
-    if (desired_outcome != "5SecCD" && desired_outcome != "6SecCD" ) {
+    if (desired_outcome != "5SecCD" && desired_outcome != "6SecCD") {
       //2 1 1
       probability = probability + prob_2sec_line_1 * prob_1sec_line_2 * prob_1sec_line_3
       //1 2 1
@@ -1542,7 +1568,6 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     }
   }
 
-  //here
   if (desired_outcome == "2SecCDAnd2Stat" || desired_outcome == "2SecCDAnd2HP" || desired_outcome == "2SecCDAnd2ALL") {
     var stat = "stat"
     if (desired_outcome == "2SecCDAnd2HP") stat = "hp"
@@ -1756,7 +1781,6 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
 
     var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11 + probability_12
   }
-
 
   if (desired_outcome == "2LMeso" || desired_outcome == "2LDrop" || desired_outcome == "2LDropOrMeso") {
     var meso_and_drop = false
@@ -2094,7 +2118,7 @@ function getProbability(item_type, desired_outcome, cube_type, currentTier, desi
     probability = probability + prob_12_att_line_1 * prob_12_att_line_3 * prob_stat_line_2
     //S 12A 12A
     probability = probability + prob_12_att_line_3 * prob_12_att_line_2 * prob_stat_line_1
-    
+
   }
   if (desired_outcome == "2LATT") {
     //12 OR 13 OR 23 OR 123
@@ -2974,6 +2998,15 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (currentTier == 2 || currentTier == 3) {
       $('#desiredTier').append("<option value=3 selected>Legendary</option>");
     }
+
+    if (currentTier != 3){
+      document.getElementById("desiredStats").disabled = true
+      document.getElementById("desiredStats").value = "any"
+      
+    }
+    else {
+      document.getElementById("desiredStats").disabled = false
+    }
   });
 
   document.getElementById('desiredTier').addEventListener("change", function () {
@@ -3074,6 +3107,69 @@ document.addEventListener("DOMContentLoaded", function () {
       $('#loader2').hide()
     }
 
+    function getTierCosts(currentTier, desiredTier, cubeType, DMT) {
+      var tier_up_rates = tier_rates
+      if (DMT) tier_up_rates = tier_rates_DMT
+      if (currentTier == 3) return {mean: 0, median: 0, seventy_fifth: 0, eighty_fifth: 0, nintey_fifth: 0}
+      if (currentTier == 2) {
+        var p = tier_up_rates[cubeType][currentTier]
+        var stats = geoDistrQuantile(p)
+        var mean = Math.round(stats.mean)
+        var median = Math.round(stats.median)
+        var seventy_fifth = Math.round(stats.seventy_fifth)
+        var eighty_fifth = Math.round(stats.eighty_fifth)
+        var nintey_fifth = Math.round(stats.nintey_fifth)
+
+        return {mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth}
+      }
+      if (currentTier == 1) {
+        var p = tier_up_rates[cubeType][currentTier]
+        var stats = geoDistrQuantile(p)
+        var mean = Math.round(stats.mean)
+        var median = Math.round(stats.median)
+        var seventy_fifth = Math.round(stats.seventy_fifth)
+        var eighty_fifth = Math.round(stats.eighty_fifth)
+        var nintey_fifth = Math.round(stats.nintey_fifth)
+
+        var p = tier_up_rates[cubeType][currentTier + 1]
+        var stats = geoDistrQuantile(p)
+        mean += Math.round(stats.mean)
+        median += Math.round(stats.median)
+        seventy_fifth += Math.round(stats.seventy_fifth)
+        eighty_fifth += Math.round(stats.eighty_fifth)
+        nintey_fifth += Math.round(stats.nintey_fifth)
+
+        return {mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth}
+      }
+      if (currentTier == 0) {
+        var p = tier_up_rates[cubeType][currentTier]
+        var stats = geoDistrQuantile(p)
+        var mean = Math.round(stats.mean)
+        var median = Math.round(stats.median)
+        var seventy_fifth = Math.round(stats.seventy_fifth)
+        var eighty_fifth = Math.round(stats.eighty_fifth)
+        var nintey_fifth = Math.round(stats.nintey_fifth)
+
+        var p = tier_up_rates[cubeType][currentTier + 1]
+        var stats = geoDistrQuantile(p)
+        mean += Math.round(stats.mean)
+        median += Math.round(stats.median)
+        seventy_fifth += Math.round(stats.seventy_fifth)
+        eighty_fifth += Math.round(stats.eighty_fifth)
+        nintey_fifth += Math.round(stats.nintey_fifth)
+
+        var p = tier_up_rates[cubeType][currentTier + 2]
+        var stats = geoDistrQuantile(p)
+        mean += Math.round(stats.mean)
+        median += Math.round(stats.median)
+        seventy_fifth += Math.round(stats.seventy_fifth)
+        eighty_fifth += Math.round(stats.eighty_fifth)
+        nintey_fifth += Math.round(stats.nintey_fifth)
+
+        return {mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth}
+      }
+    }
+
     function runCalculator() {
       var itemType = document.getElementById('itemType').value;
       var cubeType = document.getElementById('cubeType').value;
@@ -3081,19 +3177,29 @@ document.addEventListener("DOMContentLoaded", function () {
       //var totalTrials = parseInt(document.getElementById('totalTrials').value);
       var itemLevel = parseInt(document.getElementById('itemLevel').value);
       var desiredTier = parseInt(document.getElementById('desiredTier').value);
+      var DMT = document.getElementById('DMT').checked
 
       //Todo: meso/drop/CDhat/
       var desiredStat = document.getElementById('desiredStats').value;
 
       //insert logic here
       var p = getProbability(itemType, desiredStat, cubeType, currentTier, desiredTier, itemLevel)
+      var tier_up = getTierCosts(currentTier, desiredTier, cubeType, DMT)
       var stats = geoDistrQuantile(p)
 
-      var mean = Math.round(stats.mean)
-      var median = Math.round(stats.median)
-      var seventy_fifth = Math.round(stats.seventy_fifth)
-      var eighty_fifth = Math.round(stats.eighty_fifth)
-      var nintey_fifth = Math.round(stats.nintey_fifth)
+      if (desiredStat == "any") {
+        stats.mean = 0
+        stats.median = 0
+        stats.seventy_fifth = 0
+        stats.eighty_fifth = 0
+        stats.nintey_fifth = 0
+      }
+
+      var mean = Math.round(stats.mean) + tier_up.mean
+      var median = Math.round(stats.median) + tier_up.median
+      var seventy_fifth = Math.round(stats.seventy_fifth) + tier_up.seventy_fifth
+      var eighty_fifth = Math.round(stats.eighty_fifth) + tier_up.eighty_fifth
+      var nintey_fifth = Math.round(stats.nintey_fifth) + tier_up.nintey_fifth
 
       var mean_cost = cubingCost(cubeType, itemLevel, mean)
       var median_cost = cubingCost(cubeType, itemLevel, median)
@@ -3101,19 +3207,6 @@ document.addEventListener("DOMContentLoaded", function () {
       var eighty_fifth_cost = cubingCost(cubeType, itemLevel, eighty_fifth)
       var ninety_fifth_cost = cubingCost(cubeType, itemLevel, nintey_fifth)
 
-      if (currentTier == desiredTier && desiredStat == "any") {
-        mean = 0
-        median = 0
-        seventy_fifth = 0
-        eighty_fifth = 0
-        nintey_fifth = 0
-
-        mean_cost = 0
-        median_cost = 0
-        seventy_fifth_cost = 0
-        eighty_fifth_cost = 0
-        ninety_fifth_cost = 0
-      }
 
       //new logic ends here
 
