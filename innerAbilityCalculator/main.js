@@ -212,6 +212,94 @@ let abilities_circulator =
     }
 }
 
+let chaos_circulator =
+{
+    'normal_dmg':
+    {
+        'unique': 1,
+        'uniquep': 0.25,
+        "legendaryp": 0.6,
+        "legendary": 1
+    },
+    'abnormal_dmg':
+    {
+        'unique': 1,
+        'uniquep': 0.25,
+        "legendaryp": 0.6,
+        "legendary": 1
+    },
+    'buff_duration':
+    {
+        'unique': 1,
+        'uniquep': 0.1,
+        "legendaryp": 0.1,
+        "legendary": 1
+    },
+    'item_drop':
+    {
+        'unique': 1,
+        'uniquep': 0.25,
+        "legendaryp": 0.25,
+        "legendary": 1
+    },
+    'meso_drop':
+    {
+        'unique': 1,
+        'uniquep': 0.25,
+        "legendaryp": 0.25,
+        "legendary": 1
+    },
+    'w_attk':
+    {
+        'unique': 1,
+        'uniquep': 0.25,
+        "legendaryp": 0.4,
+        "legendary": 1
+    },
+    'm_attk':
+    {
+        'unique': 1,
+        'uniquep': 0.25,
+        "legendaryp": 0.4,
+        "legendary": 1
+    },
+    'crit_rate':
+    {
+        'unique': 1,
+        'uniquep': 0.1,
+        "legendaryp": 0.1,
+        "legendary": 1
+    },
+    'boss':
+    {
+        'unique': 1,
+        'uniquep': 0.1,
+        "legendaryp": 0.1,
+        "legendary": 1
+    },
+    'att_speed':
+    {
+        'unique': 1,
+        'uniquep': 1,
+        'legendaryp': 1,
+        "legendary": 1
+    },
+    'passive_skill':
+    {
+        'unique': 1,
+        'uniquep': 1,
+        'legendaryp': 1,
+        "legendary": 1
+    },
+    'cd_skip':
+    {
+        'unique': 1,
+        'uniquep': 0.1,
+        "legendaryp": 0.1,
+        "legendary": 1
+    }
+}
+
 function honor_cost(lock_info) {
     if (lock_info == 0) return 8000
     else if (lock_info == 1) return 11000
@@ -312,7 +400,7 @@ function reroll_or_lock(current_lines, desired_lines) {
         }
         else {
             lines.reroll.choice = true
-            if ((circ_line_prob2 < circ_line_prob3) && (perfectline2 || !perfectline3)) lines.reroll.line = 2 //here
+            if ((circ_line_prob2 < circ_line_prob3) && (perfectline2 || !perfectline3)) lines.reroll.line = 2
             else lines.reroll.line = 3
         }
 
@@ -561,15 +649,15 @@ function circulatorsSpent(compare_lines, line_to_roll) {
     return { median_rolls: median_rolls, rolls_25: rolls_25, rolls_75: rolls_75 }
 }
 
-function cloneArray(array){
+function cloneArray(array) {
     var i = 0
     var clone = []
 
-    while ( i < array.length ){
+    while (i < array.length) {
         clone[i] = array[i]
         i++
     }
-    
+
     return clone
 }
 
@@ -654,11 +742,11 @@ function pureHonorSpent(compare_lines) {
         var locked_lines_list1 = cloneArray(locked_lines_list)
         var locked_lines_list2 = cloneArray(locked_lines_list)
 
-        if (line_ranks[0] == "legendary" || line_ranks[0] == "legendaryp"){
+        if (line_ranks[0] == "legendary" || line_ranks[0] == "legendaryp") {
             locked_lines_list2.push(2)
             locked_lines_list1.push(1)
         }
-        else{
+        else {
             locked_lines_list2.push(3)
             locked_lines_list1.push(2)
         }
@@ -816,22 +904,32 @@ function isValidCombination(current_lines, desired_lines, useChaos) {
 
 function numberPerfectLines(desired_lines, current_lines) {
     var i = 0
-    var perfect_lines = 0
-    var perfect_current = 0
+    var perfect_lines = []
+    var ranks = []
+    var perfect_current = []
+    var roll = false
 
     while (i < 3) {
-        if (desired_lines[i].slice(-1) == 'p') perfect_lines++
+        if (current_lines[i].slice(-1) == 'p') {
+            perfect_current.push(current_lines[i].substring(0, current_lines[i].indexOf('*')))
+        }
         i++
     }
 
     i = 0
+
     while (i < 3) {
-        if (current_lines[i].slice(-1) == 'p') perfect_current++
+        if (desired_lines[i].slice(-1) == 'p') {
+            if (!perfect_current.includes(desired_lines[i].substring(0, desired_lines[i].indexOf('*')))) roll = true
+            perfect_lines.push(desired_lines[i].substring(0, desired_lines[i].indexOf('*')))
+            ranks.push(desired_lines[i].substring(desired_lines[i].indexOf('*') + 1, desired_lines[i].length))
+        }
         i++
     }
 
-    if (perfect_current == 3) return 0
-    return perfect_lines
+
+    if (perfect_current.length == 3 || roll == false) return 0
+    return { lines: perfect_lines, ranks: ranks }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -921,7 +1019,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 `
 
-                if (isValid == "identical") {
+                if (isValid == "identical") { //here
 
                 }
 
@@ -943,9 +1041,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 else if (isValid == true) {
                     var number_of_perfect_lines = numberPerfectLines(desired_lines, current_lines)
-                    var p = 0.1 ** number_of_perfect_lines
+                    console.log(number_of_perfect_lines)
+                    var p = 1
+                    var i = 0
+                    if (number_of_perfect_lines.lines != 0) {
+                        while (i < number_of_perfect_lines.lines.length) {
+                            var line_type = number_of_perfect_lines.lines[i]
+                            var line_rank = number_of_perfect_lines.ranks[i]
+                            var chaos_prob = chaos_circulator[line_type][line_rank]
+                            p *= chaos_prob
+                            console.log(line_type, line_rank, chaos_prob, p)
+                            i++
+                        }
+                    }
                     var expected_chaos = Math.ceil(1 / p)
-                    if (number_of_perfect_lines == 0) expected_chaos = 0
+                    if (number_of_perfect_lines.lines.length == 0) expected_chaos = 0
 
                     document.getElementById('result').innerHTML =
                         `
