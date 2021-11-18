@@ -26,6 +26,14 @@ function bossGain(level, mobbing) {
     }
 }
 
+function mobGain(level, mobbing) {
+    if (!mobbing) {
+        return 0;
+    } else {
+       return 0.03 * Math.min(level, 5) + 0.04 * Math.max(0, level - 5);
+    }
+}
+
 // let bossGain = (level, mobbing) => 
 let attGain = (level) => 3 * level;
 
@@ -45,13 +53,13 @@ function calculateOptimalCommon(data, progress, cb, mobbing) {
         data.points = oldPoints;
     };
 
-    let inner = loop(loop(loop(loop(loop(() => {
+    let inner = loop(loop(loop(loop(loop(loop(() => {
         let damage = calculateDamageCommon(
             data.primary + statGain(counters[6]),
             data.secondary + statGain(counters[0]),
             data.cdmg + cdmgGain(counters[3]),
             data.boss + bossGain(counters[1], mobbing),
-            data.dmg + dmgGain(counters[2]),
+            data.dmg + dmgGain(counters[2]) + mobGain(counters[7], mobbing),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
             data.att + attGain(counters[5]),
             data.pdr
@@ -66,6 +74,7 @@ function calculateOptimalCommon(data, progress, cb, mobbing) {
                 'ied': counters[4],
                 'att': counters[5],
                 'primary': counters[6],
+                'mob': counters[7],
                 'extra points': data.points,
                 'score': damage,
                 'primary_base': data.primary + statGain(counters[6]),
@@ -73,13 +82,13 @@ function calculateOptimalCommon(data, progress, cb, mobbing) {
                 'cdmg_base': data.cdmg + cdmgGain(counters[3]),
                 'boss_base': data.boss + bossGain(counters[1], mobbing),
                 'ied_base': (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
-                'dmg_base': data.dmg + dmgGain(counters[2]),
+                'dmg_base': data.dmg + dmgGain(counters[2]) + mobGain(counters[7], mobbing),
                 'att_base':  data.att + attGain(counters[5])
             };
             cb(optimalConfig);
             // (primary, secondary, cdmg, boss, dmg, ied, att, pdr)
         }
-    })))));
+    }))))));
     for (let j = 0; j <= data.i; ++j) {
         data.points = data.points - pointCost(j);
     }

@@ -989,7 +989,7 @@ function calculateStat(element) {
                     if (increment < 2 && (element.dataset.id == 'critRate' || element.dataset.id == 'statResist')) {
                         increment++;
                     }
-                    if (increment < 4 && element.dataset.id == 'bDamage') {
+                    if (increment < 4 && (element.dataset.id == 'bDamage' || element.dataset.id == 'mobDamage')) {
                         increment++;
                     }
                 }
@@ -1043,7 +1043,7 @@ function ncalculateStat(element) {
                     if (increment < 2 && (element.dataset.id == 'ncritRate' || element.dataset.id == 'nstatResist')) {
                         increment++;
                     }
-                    if (increment < 4 && element.dataset.id == 'nbDamage') {
+                    if (increment < 4 && (element.dataset.id == 'nbDamage' || element.dataset.id == 'nmobDamage')) {
                         increment++;
                     }
                 }
@@ -3126,6 +3126,9 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('nbDamageSelect').value = bestResult.boss;
             nupdatePoints(document.getElementById('nbDamageSelect'));
 
+            document.getElementById('nmobDamageSelect').value = bestResult.mob;
+            nupdatePoints(document.getElementById('nmobDamageSelect'));
+
             document.getElementById('ncritDmgSelect').value = bestResult.cdmg;
             nupdatePoints(document.getElementById('ncritDmgSelect'));
 
@@ -3999,6 +4002,9 @@ function optimizeWSE() {
 
     document.getElementById('nbDamageSelect').value = 0;
     nupdatePoints(document.getElementById('nbDamageSelect'));
+
+    document.getElementById('nmobDamageSelect').value = 0;
+    nupdatePoints(document.getElementById('nmobDamageSelect'));
 
     document.getElementById('nstatResistSelect').value = 0;
     nupdatePoints(document.getElementById('nstatResistSelect'));
