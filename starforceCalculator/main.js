@@ -613,7 +613,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('trials').value = 1000;
         }
     })
-    $('select').on('change', function() {
+    $('#item_type').on('change', function() {
         if (document.getElementById("tyrant").selected){
             //enable AEE checkbox to be clicked
             document.getElementById('AEE').disabled = false;
