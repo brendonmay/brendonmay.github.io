@@ -1128,6 +1128,15 @@
                                     </td> -->
                                 </tr>
                                 <tr>
+                                    <td>Damage To Normal Mobs</td>
+                                    <td>
+                                        <select id='mobdmgSelect' class="form-control defaultpicker smaller"
+                                            data-max-level="15" data-percent data-id="mobDamage" data-type="1"
+                                            data-value="2" onchange="updatePoints(this)"></select>
+                                    </td>
+                                    <td id="mobDamage"></td>
+                                </tr>
+                                <tr>
                                     <td>Status Resistance</td>
                                     <td>
                                         <select id='statResistSelect' class="form-control defaultpicker smaller"
@@ -1352,6 +1361,16 @@
                                             data-value="2" onchange="nupdatePoints(this)"></select>
                                     </td>
                                     <td id="nbDamage"></td>
+
+                                </tr>
+                                <tr>
+                                    <td>Damage To Normal Mobs</td>
+                                    <td>
+                                        <select id='nmobDamageSelect' disabled class="form-control defaultpicker smaller"
+                                            data-max-level="15" data-percent data-id="nmobDamage" data-type="1"
+                                            data-value="2" onchange="nupdatePoints(this)"></select>
+                                    </td>
+                                    <td id="nmobDamage"></td>
 
                                 </tr>
                                 <tr>
