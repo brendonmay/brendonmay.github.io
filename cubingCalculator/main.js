@@ -40,6 +40,13 @@ let tier_rates_DMT = {
   }
 }
 
+function getPrimeLineValue(itemLevel, desiredTier, type) {
+  const levelBonus = itemLevel >= 160 && !(type === "hp") ? 1 : 0;
+  const base = type === "all" ? 0 : 3;
+
+  return base + (3 * desiredTier) + levelBonus;
+}
+
 function get3LStatOptionAmounts(prime) {
   const ppp = prime * 3;
   const ppn = ppp - 3;
@@ -92,10 +99,8 @@ function addNormalOptionGroup(prefix, valueText, textText, groupLabel, optionAmo
   }
 }
 
-function addNormalStatOptions(itemLevel) {
-  const levelBonus = itemLevel >= 160 ? 1 : 0;
-
-  const regPrime = 12 + levelBonus;
+function addNormalStatOptions(itemLevel, desiredTier) {
+  const regPrime = getPrimeLineValue(itemLevel, desiredTier)
   const regOptionAmounts = get3LStatOptionAmounts(regPrime);
   addNormalOptionGroup("regStat",
       "PercLUK",
@@ -103,7 +108,7 @@ function addNormalStatOptions(itemLevel) {
       "Regular Stat",
       regOptionAmounts);
 
-  const hpPrime = 12;
+  const hpPrime = getPrimeLineValue(itemLevel, desiredTier, "hp");
   const hpOptionAmounts = get3LStatOptionAmounts(hpPrime);
   addNormalOptionGroup("hpStat",
       "PercHP",
@@ -111,8 +116,13 @@ function addNormalStatOptions(itemLevel) {
       "Max HP (Demon Avenger)",
       hpOptionAmounts);
 
-  const allStatPrime = 9 + levelBonus;
-  const allStatOptionAmounts = get3LStatOptionAmounts(allStatPrime);
+  const allStatPrime = getPrimeLineValue(itemLevel, desiredTier, "all");
+
+  const allStatOptionAmounts = desiredTier === 1 ?
+      // Not enough all stat lines to use 3L options lol.
+      // Instead, we add some values corresponding to all stat + some regular stat lines.
+      [1, 3, 4, 5, 6, 9] :
+      get3LStatOptionAmounts(allStatPrime);
   addNormalOptionGroup("allStat",
       "PercALL",
       "All Stat",
@@ -126,10 +136,8 @@ function removeNormalStatOptions() {
   removeGroupIfExists("allStatGroup");
 }
 
-function addCommonWSEOptions(itemLevel) {
-  const levelBonus = itemLevel >= 160 ? 1 : 0;
-
-  const prime = 12 + levelBonus;
+function addCommonWSEOptions(itemLevel, desiredTier) {
+  const prime = getPrimeLineValue(itemLevel, desiredTier);
   const optionAmounts = get3LStatOptionAmounts(prime);
   addNormalOptionGroup("attack",
       "PercATT",
@@ -150,10 +158,8 @@ function removeCommonWSEOptions() {
   removeGroupIfExists("attackAndIEDGroup");
 }
 
-function addCommonSEOptions(itemLevel) {
-  const levelBonus = itemLevel >= 160 ? 1 : 0;
-
-  const prime = 12 + levelBonus;
+function addCommonSEOptions(itemLevel, desiredTier) {
+  const prime = getPrimeLineValue(itemLevel, desiredTier);
   const [_, pn, pp] = get2LStatOptionAmounts(prime);
 
   if (document.getElementById(`attackAndBossGroup`)) {
@@ -283,20 +289,22 @@ function removeCDOptions() {
 }
 
 function updateDesiredStats() {
-  var itemType = document.getElementById('itemType').value;
-  var itemLevel = parseInt(document.getElementById('itemLevel').value);
+  const itemType = document.getElementById('itemType').value;
+  const itemLevel = parseInt(document.getElementById('itemLevel').value);
+  const desiredTier = parseInt(document.getElementById('desiredTier').value);
+  debugger;
 
   if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
     removeNormalStatOptions();
-    addCommonWSEOptions(itemLevel);
+    addCommonWSEOptions(itemLevel, desiredTier);
 
     if (itemType !== 'emblem') {
-      addCommonSEOptions(itemLevel);
+      addCommonSEOptions(itemLevel, desiredTier);
     } else {
       removeCommonSEOptions()
     }
   } else {
-    addNormalStatOptions(itemLevel);
+    addNormalStatOptions(itemLevel, desiredTier);
     removeCommonWSEOptions();
     removeCommonSEOptions();
   }
@@ -342,21 +350,24 @@ document.addEventListener("DOMContentLoaded", function () {
     $desiredTier.append("<option value=3 selected>Legendary</option>");
 
     const desiredStatsElement = document.getElementById("desiredStats");
-    if (currentTier === 0){
+    if (currentTier !== 3){
       desiredStatsElement.disabled = true
       desiredStatsElement.value = "any"
-      
     }
     else {
+      updateDesiredStats();
       desiredStatsElement.disabled = false
     }
   });
 
   document.getElementById('desiredTier').addEventListener("change", function () {
-    var desiredTier = $(this).val();
+    const desiredTier = $(this).val();
+    const currentTier = $(this).val();
+    const desiredStatsElement = document.getElementById("desiredStats");
 
-    if (desiredTier !== 0) {
-      updateDesiredStats()
+    if (currentTier === desiredTier) {
+      updateDesiredStats();
+      desiredStatsElement.disabled = false
     }
     else {
       $desiredStats.empty();
