@@ -41,24 +41,28 @@ let tier_rates_DMT = {
 }
 
 function addNormalStatOptions() {
-  $('#desiredStats').append("<optgroup id='regStatGroup' label='Regular Stat'></optgroup>");
-  $('#regStatGroup').append("<option id='any1' value='21PercLUK'>21%+ Stat</option>");
-  $('#regStatGroup').append("<option id='any2' value='24PercLUK'>24%+ Stat</option>");
-  $('#regStatGroup').append("<option id='any3' value='27PercLUK'>27%+ Stat</option>");
-  $('#regStatGroup').append("<option id='any4' value='30PercLUK'>30%+ Stat</option>");
-  $('#regStatGroup').append("<option id='any22' value='33PercLUK'>33%+ Stat</option>");
+  const $desiredStats = $('#desiredStats');
+  $desiredStats.append("<optgroup id='regStatGroup' label='Regular Stat'></optgroup>");
+  const $regStatGroup = $('#regStatGroup');
+  $regStatGroup.append("<option id='any1' value='21PercLUK'>21%+ Stat</option>");
+  $regStatGroup.append("<option id='any2' value='24PercLUK'>24%+ Stat</option>");
+  $regStatGroup.append("<option id='any3' value='27PercLUK'>27%+ Stat</option>");
+  $regStatGroup.append("<option id='any4' value='30PercLUK'>30%+ Stat</option>");
+  $regStatGroup.append("<option id='any22' value='33PercLUK'>33%+ Stat</option>");
 
-  $('#desiredStats').append("<optgroup id='hpStatGroup' label='Max HP (Demon Avenger)'></optgroup>");
-  $('#hpStatGroup').append("<option id='any16' value='21PercHP'>21%+ Max HP</option>");
-  $('#hpStatGroup').append("<option id='any17' value='24PercHP'>24%+ Max HP</option>");
-  $('#hpStatGroup').append("<option id='any18' value='30PercHP'>30%+ Max HP</option>");
-  $('#hpStatGroup').append("<option id='any23' value='33PercHP'>33%+ Max HP</option>");
+  $desiredStats.append("<optgroup id='hpStatGroup' label='Max HP (Demon Avenger)'></optgroup>");
+  const $hpStatGroup = $('#hpStatGroup');
+  $hpStatGroup.append("<option id='any16' value='21PercHP'>21%+ Max HP</option>");
+  $hpStatGroup.append("<option id='any17' value='24PercHP'>24%+ Max HP</option>");
+  $hpStatGroup.append("<option id='any18' value='30PercHP'>30%+ Max HP</option>");
+  $hpStatGroup.append("<option id='any23' value='33PercHP'>33%+ Max HP</option>");
 
-  $('#desiredStats').append("<optgroup id='allStatGroup' label='All Stat (For Xenon)'></optgroup>");
-  $('#allStatGroup').append("<option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>");
-  $('#allStatGroup').append("<option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>");
-  $('#allStatGroup').append("<option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>");
-  $('#allStatGroup').append("<option id='any24' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
+  $desiredStats.append("<optgroup id='allStatGroup' label='All Stat (For Xenon)'></optgroup>");
+  const $allStatGroup = $('#allStatGroup');
+  $allStatGroup.append("<option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>");
+  $allStatGroup.append("<option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>");
+  $allStatGroup.append("<option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>");
+  $allStatGroup.append("<option id='any24' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
 }
 
 function removeNormalStatOptions() {
