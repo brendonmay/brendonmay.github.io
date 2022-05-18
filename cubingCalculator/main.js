@@ -251,6 +251,40 @@ function removeDropAndMesoOptions() {
   removeGroupIfExists("dropMesoGroup");
 }
 
+function addCDOptions() {
+  if (document.getElementById(`CDGroup`)) {
+  } else {
+    ////2SecCD, 3SecCD, 4SecCD, 2SecCDAndStat, 2SecCDAndHP, 2SecCDAndALL, 2SecCDAnd2Stat, 2SecCDAnd2HP, 2SecCDAnd2ALL, 3SecCDAndStat, 3SecCDAndHP, 3SecCDAndALL, 4SecCDAndStat, 4SecCDAndHP, 4SecCDAndALL
+    $desiredStats.append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
+    const $CDGroup = $('#CDGroup');
+    $CDGroup.append("<option id='hat' value='2SecCD'>-2sec+ CD Reduction</option>");
+    $CDGroup.append("<option id='hat1' value='3SecCD'>-3sec+ CD Reduction</option>");
+    $CDGroup.append("<option id='hat2' value='4SecCD'>-4sec+ CD Reduction</option>");
+    $CDGroup.append("<option id='hat15' value='5SecCD'>-5sec+ CD Reduction</option>");
+    $CDGroup.append("<option id='hat16' value='6SecCD'>-6sec+ CD Reduction</option>");
+
+    $CDGroup.append("<option id='hat3' value='2SecCDAndStat'>-2sec+ CD Reduction and Stat%</option>");
+    $CDGroup.append("<option id='hat4' value='2SecCDAndHP'>-2sec+ CD Reduction and MaxHP%</option>");
+    $CDGroup.append("<option id='hat5' value='2SecCDAndALL'>-2sec+ CD Reduction and All Stat%</option>");
+
+    $CDGroup.append("<option id='hat6' value='2SecCDAnd2Stat'>-2sec+ CD Reduction and 2 Line Stat%</option>");
+    $CDGroup.append("<option id='hat7' value='2SecCDAnd2HP'>-2sec+ CD Reduction and 2 Line Max HP%</option>");
+    $CDGroup.append("<option id='hat8' value='2SecCDAnd2ALL'>-2sec+ CD Reduction and 2 Line All Stat%</option>");
+
+    $CDGroup.append("<option id='hat9' value='3SecCDAndStat'>-3sec+ CD Reduction and Stat%</option>");
+    $CDGroup.append("<option id='hat10' value='3SecCDAndHP'>-3sec+ CD Reduction and Max HP%</option>");
+    $CDGroup.append("<option id='hat11' value='3SecCDAndALL'>-3sec+ CD Reduction and All Stat%</option>");
+
+    $CDGroup.append("<option id='hat12' value='4SecCDAndStat'>-4sec+ CD Reduction and Stat%</option>");
+    $CDGroup.append("<option id='hat13' value='4SecCDAndHP'>-4sec+ CD Reduction and Max HP%</option>");
+    $CDGroup.append("<option id='hat14' value='4SecCDAndALL'>-4sec+ CD Reduction and All Stat%</option>");
+  }
+}
+
+function removeCDOptions() {
+  removeGroupIfExists("CDGroup");
+}
+
 function updateDesiredStats() {
   var itemType = document.getElementById('itemType').value;
   var itemLevel = parseInt(document.getElementById('itemLevel').value);
@@ -281,31 +315,11 @@ function updateDesiredStats() {
   } else {
     removeDropAndMesoOptions();
   }
-  ////2SecCD, 3SecCD, 4SecCD, 2SecCDAndStat, 2SecCDAndHP, 2SecCDAndALL, 2SecCDAnd2Stat, 2SecCDAnd2HP, 2SecCDAnd2ALL, 3SecCDAndStat, 3SecCDAndHP, 3SecCDAndALL, 4SecCDAndStat, 4SecCDAndHP, 4SecCDAndALL
-  if (itemType == 'hat') {
-    if (document.getElementById('accessory') === null) {
-      $('#desiredStats').append("<option id='hat' value='2SecCD'>-2sec+ CD Reduction</option>");
-      $('#desiredStats').append("<option id='hat1' value='3SecCD'>-3sec+ CD Reduction</option>");
-      $('#desiredStats').append("<option id='hat2' value='4SecCD'>-4sec+ CD Reduction</option>");
-      $('#desiredStats').append("<option id='hat15' value='5SecCD'>-5sec+ CD Reduction</option>");
-      $('#desiredStats').append("<option id='hat16' value='6SecCD'>-6sec+ CD Reduction</option>");
 
-      $('#desiredStats').append("<option id='hat3' value='2SecCDAndStat'>-2sec+ CD Reduction and Stat%</option>");
-      $('#desiredStats').append("<option id='hat4' value='2SecCDAndHP'>-2sec+ CD Reduction and MaxHP%</option>");
-      $('#desiredStats').append("<option id='hat5' value='2SecCDAndALL'>-2sec+ CD Reduction and All Stat%</option>");
-
-      $('#desiredStats').append("<option id='hat6' value='2SecCDAnd2Stat'>-2sec+ CD Reduction and 2 Line Stat%</option>");
-      $('#desiredStats').append("<option id='hat7' value='2SecCDAnd2HP'>-2sec+ CD Reduction and 2 Line Max HP%</option>");
-      $('#desiredStats').append("<option id='hat8' value='2SecCDAnd2ALL'>-2sec+ CD Reduction and 2 Line All Stat%</option>");
-
-      $('#desiredStats').append("<option id='hat9' value='3SecCDAndStat'>-3sec+ CD Reduction and Stat%</option>");
-      $('#desiredStats').append("<option id='hat10' value='3SecCDAndHP'>-3sec+ CD Reduction and Max HP%</option>");
-      $('#desiredStats').append("<option id='hat11' value='3SecCDAndALL'>-3sec+ CD Reduction and All Stat%</option>");
-
-      $('#desiredStats').append("<option id='hat12' value='4SecCDAndStat'>-4sec+ CD Reduction and Stat%</option>");
-      $('#desiredStats').append("<option id='hat13' value='4SecCDAndHP'>-4sec+ CD Reduction and Max HP%</option>");
-      $('#desiredStats').append("<option id='hat14' value='4SecCDAndALL'>-4sec+ CD Reduction and All Stat%</option>");
-    }
+  if (itemType === 'hat') {
+    addCDOptions();
+  } else {
+    removeCDOptions();
   }
 }
 
