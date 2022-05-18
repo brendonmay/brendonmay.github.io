@@ -40,35 +40,65 @@ let tier_rates_DMT = {
   }
 }
 
-function addNormalStatOptions() {
-  const $desiredStats = $('#desiredStats');
-  $desiredStats.append("<optgroup id='regStatGroup' label='Regular Stat'></optgroup>");
-  const $regStatGroup = $('#regStatGroup');
-  $regStatGroup.append("<option id='any1' value='21PercLUK'>21%+ Stat</option>");
-  $regStatGroup.append("<option id='any2' value='24PercLUK'>24%+ Stat</option>");
-  $regStatGroup.append("<option id='any3' value='27PercLUK'>27%+ Stat</option>");
-  $regStatGroup.append("<option id='any4' value='30PercLUK'>30%+ Stat</option>");
-  $regStatGroup.append("<option id='any22' value='33PercLUK'>33%+ Stat</option>");
+function getStatOptionAmounts(prime) {
+  const ppp = prime * 3;
+  return [ppp - 15, ppp - 12, ppp - 9, ppp - 6, ppp - 3, ppp];
+}
 
-  $desiredStats.append("<optgroup id='hpStatGroup' label='Max HP (Demon Avenger)'></optgroup>");
-  const $hpStatGroup = $('#hpStatGroup');
-  $hpStatGroup.append("<option id='any16' value='21PercHP'>21%+ Max HP</option>");
-  $hpStatGroup.append("<option id='any17' value='24PercHP'>24%+ Max HP</option>");
-  $hpStatGroup.append("<option id='any18' value='30PercHP'>30%+ Max HP</option>");
-  $hpStatGroup.append("<option id='any23' value='33PercHP'>33%+ Max HP</option>");
 
-  $desiredStats.append("<optgroup id='allStatGroup' label='All Stat (For Xenon)'></optgroup>");
-  const $allStatGroup = $('#allStatGroup');
-  $allStatGroup.append("<option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>");
-  $allStatGroup.append("<option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>");
-  $allStatGroup.append("<option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>");
-  $allStatGroup.append("<option id='any24' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
+const $desiredStats = $('#desiredStats');
+
+function addNormalOptionGroup(prefix, valueText, textText, groupLabel, optionAmounts) {
+  // If the optgroup already exists, change the values and text in case the user changed the item level.
+  if (document.getElementById(`${prefix}Group`)) {
+    optionAmounts.forEach((val, i) => {
+      const $option = $(`${prefix}${i}`);
+      $option.attr("value", `${val}${valueText}`);
+      $option.text(`${val}%+ Stat`);
+    });
+  } else {
+    // Create the optgroup and options.
+    $desiredStats.append(`<optgroup id='${prefix}StatGroup' label='${groupLabel}'></optgroup>`);
+    const $statGroup = $(`#${prefix}StatGroup`);
+    optionAmounts.forEach((val, i) => $statGroup.append(
+        `<option id='${prefix}Stat${i}' value='${val}${valueText}'>${val}%+ ${textText}</option>`));
+  }
+}
+
+function addNormalStatOptions(itemLevel) {
+  const levelBonus = itemLevel >= 160 ? 1 : 0;
+
+  const regPrime = 12 + levelBonus;
+  const regOptionAmounts = getStatOptionAmounts(regPrime);
+  addNormalOptionGroup("regStat",
+      "PercLUK",
+      "Stat",
+      "Regular Stat",
+      regOptionAmounts);
+
+  const hpPrime = 12;
+  const hpOptionAmounts = getStatOptionAmounts(hpPrime);
+  addNormalOptionGroup("hpStat",
+      "PercHP",
+      "Max HP",
+      "Max HP (Demon Avenger)",
+      hpOptionAmounts);
+
+  const allStatPrime = 9 + levelBonus;
+  const allStatOptionAmounts = getStatOptionAmounts(allStatPrime);
+  addNormalOptionGroup("allStat",
+      "PercALL",
+      "All Stat",
+      "All Stat (For Xenon)",
+      allStatOptionAmounts);
 }
 
 function removeNormalStatOptions() {
-  $('#regStatGroup').remove();
-  $('#hpStatGroup').remove();
-  $('#allStatGroup').remove();
+  if (document.getElementById('regStatGroup')) {
+    $('#regStatGroup').remove();
+    $('#hpStatGroup').remove();
+    $('#allStatGroup').remove();
+  }
 }
 
 function updatedDesiredStats() {
@@ -97,62 +127,13 @@ function updatedDesiredStats() {
     i++
   }
 
-  if (itemType != 'weapon' && itemType != 'secondary' && itemType != 'emblem') {
-    if (itemLevel < 151) {
-      if (!document.getElementById('any1')) {
-        addNormalStatOptions();
-      }
-
-    }
-    else {
-      if (!document.getElementById('any8')) {
-        $('#desiredStats').append("<option id='any8' value='23PercLUK'>23%+ Stat</option>");
-        $('#desiredStats').append("<option id='any9' value='26PercLUK'>26%+ Stat</option>");
-        $('#desiredStats').append("<option id='any10' value='27PercLUK'>27%+ Stat</option>");
-        $('#desiredStats').append("<option id='any11' value='30PercLUK'>30%+ Stat</option>");
-        $('#desiredStats').append("<option id='any12' value='33PercLUK'>33%+ Stat</option>");
-        $('#desiredStats').append("<option id='any25' value='36PercLUK'>36%+ Stat</option>");
-
-        $('#desiredStats').append("<option id='any19' value='21PercHP'>21%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any20' value='24PercHP'>24%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any21' value='30PercHP'>30%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any26' value='33PercHP'>33%+ Max HP</option>");
-
-        $('#desiredStats').append("<option id='any13' value='17PercALL'>17%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any14' value='20PercALL'>20%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any15' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any27' value='27PercALL'>27%+ All Stat (For Xenon)</option>");
-      }
-    }
+  if (itemType !== 'weapon' && itemType !== 'secondary' && itemType !== 'emblem') {
+    addNormalStatOptions(itemLevel);
+  } else {
+    removeNormalStatOptions();
   }
 
   if (itemType == 'weapon' || itemType == 'secondary') {
-    if (itemLevel < 151) {
-      if (document.getElementById('regStatGroup')) {
-        removeNormalStatOptions();
-      }
-    }
-    else {
-      if (document.getElementById('any8')) {
-        $('#any8').remove();
-        $('#any9').remove();
-        $('#any10').remove();
-        $('#any11').remove();
-        $('#any12').remove();
-        $('#any13').remove();
-        $('#any14').remove();
-        $('#any15').remove();
-
-        $('#any19').remove();
-        $('#any20').remove();
-        $('#any21').remove();
-
-        $('#any25').remove();
-        $('#any26').remove();
-        $('#any27').remove();
-      }
-    }
-
     if (document.getElementById('weaponsecondaryshield') === null) {
       $('#desiredStats').append("<option id='weaponsecondaryshield' value='2LATT'>2 Line Attack%</option>");
       $('#desiredStats').append("<option id='weaponsecondaryshield2' value='3LATT'>3 Line Attack%</option>");
@@ -180,45 +161,6 @@ function updatedDesiredStats() {
   }
 
   else if (itemType == 'emblem') {
-    if (itemLevel < 151) {
-      if (document.getElementById('any1')) {
-        $('#any1').remove();
-        $('#any2').remove();
-        $('#any3').remove();
-        $('#any4').remove();
-        $('#any5').remove();
-        $('#any6').remove();
-        $('#any7').remove();
-
-        $('#any16').remove();
-        $('#any17').remove();
-        $('#any18').remove();
-
-        $('#any22').remove();
-        $('#any23').remove();
-        $('#any24').remove();
-      }
-    }
-    else {
-      if (document.getElementById('any8')) {
-        $('#any8').remove();
-        $('#any9').remove();
-        $('#any10').remove();
-        $('#any11').remove();
-        $('#any12').remove();
-        $('#any13').remove();
-        $('#any14').remove();
-        $('#any15').remove();
-
-        $('#any19').remove();
-        $('#any20').remove();
-        $('#any21').remove();
-
-        $('#any25').remove();
-        $('#any26').remove();
-        $('#any27').remove();
-      }
-    }
     if (document.getElementById('emblem') === null) {
       $('#desiredStats').append("<option id='emblem' value='2LATT'>2 Line Attack%</option>");
       $('#desiredStats').append("<option id='emblem2' value='3LATT'>3 Line Attack%</option>");
