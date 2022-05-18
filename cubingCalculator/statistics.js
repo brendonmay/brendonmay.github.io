@@ -1,3 +1,5 @@
+// Helper functions to calculate the various statistics displayed.
+
 function choose(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
