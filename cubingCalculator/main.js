@@ -329,46 +329,45 @@ document.addEventListener("DOMContentLoaded", function () {
   //   $("#toast").toast('hide')
   // }, 3000)
   document.getElementById("currentTier").addEventListener("change", function () {
-    var currentTier = $(this).val();
-    $('#desiredTier').empty();
+    const currentTier = parseInt($(this).val());
+    const $desiredTier = $('#desiredTier');
+    $desiredTier.empty();
 
-    if (currentTier == 0) {
-      $('#desiredTier').append("<option value=1>Epic</option>");
-      $('#desiredTier').append("<option value=2>Unique</option>");
-      $('#desiredTier').append("<option value=3 selected>Legendary</option>");
-    } else if (currentTier == 1) {
-      $('#desiredTier').append("<option value=2>Unique</option>");
-      $('#desiredTier').append("<option value=3 selected>Legendary</option>");
-    } else if (currentTier == 2 || currentTier == 3) {
-      $('#desiredTier').append("<option value=3 selected>Legendary</option>");
+    if (currentTier <= 1) {
+      $desiredTier.append("<option value=1>Epic</option>");
     }
+    if (currentTier <= 2) {
+      $desiredTier.append("<option value=2>Unique</option>");
+    }
+    $desiredTier.append("<option value=3 selected>Legendary</option>");
 
-    if (currentTier != 3){
-      document.getElementById("desiredStats").disabled = true
-      document.getElementById("desiredStats").value = "any"
+    const desiredStatsElement = document.getElementById("desiredStats");
+    if (currentTier === 0){
+      desiredStatsElement.disabled = true
+      desiredStatsElement.value = "any"
       
     }
     else {
-      document.getElementById("desiredStats").disabled = false
+      desiredStatsElement.disabled = false
     }
   });
 
   document.getElementById('desiredTier').addEventListener("change", function () {
     var desiredTier = $(this).val();
 
-    if (desiredTier == 3) {
+    if (desiredTier !== 0) {
       updateDesiredStats()
     }
     else {
-      $('#desiredStats').empty();
-      $('#desiredStats').append("<option id='any' value='any'>Any</option>");
+      $desiredStats.empty();
+      $desiredStats.append("<option id='any' value='any'>Any</option>");
     }
   });
 
   document.getElementById("itemType").addEventListener("change", function () {
     // document.getElementById('error-container').style.display = '';
     var desiredTier = document.getElementById('desiredTier').value
-    if (desiredTier == 3) {
+    if (desiredTier !== 0) {
       updateDesiredStats();
       document.getElementById("desiredStats").selectedIndex = 0; //Option 10
     }
