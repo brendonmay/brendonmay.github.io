@@ -1,0 +1,118 @@
+{
+    "legendary": [
+        [
+            "STR %",
+            12,
+            10.8108
+        ],
+        [
+            "DEX %",
+            12,
+            10.8108
+        ],
+        [
+            "INT %",
+            12,
+            10.8108
+        ],
+        [
+            "LUK %",
+            12,
+            10.8108
+        ],
+        [
+            "Max HP %",
+            12,
+            10.8108
+        ],
+        [
+            "Max MP %",
+            12,
+            10.8108
+        ],
+        [
+            "Defense %",
+            12,
+            10.8108
+        ],
+        [
+            "All Stats %",
+            9,
+            8.1081
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 20% damage when hit",
+            8.1081
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 40% damage when hit",
+            8.1081
+        ]
+    ],
+    "unique": [
+        [
+            "STR %",
+            9,
+            8.9286
+        ],
+        [
+            "DEX %",
+            9,
+            8.9286
+        ],
+        [
+            "INT %",
+            9,
+            8.9286
+        ],
+        [
+            "LUK %",
+            9,
+            8.9286
+        ],
+        [
+            "Max HP %",
+            9,
+            10.7143
+        ],
+        [
+            "Max MP %",
+            9,
+            10.7143
+        ],
+        [
+            "Defense %",
+            9,
+            7.1429
+        ],
+        [
+            "All Stats %",
+            6,
+            7.1429
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 20% damage when hit",
+            7.1429
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 40% damage when hit",
+            7.1429
+        ],
+        [
+            "Decent Skill",
+            "Decent Hyper Body",
+            7.1429
+        ],
+        [
+            "Junk",
+            [
+                "Increase efficiency of HP recovery items and skills by : +30%"
+            ],
+            7.1429
+        ]
+    ]
+}

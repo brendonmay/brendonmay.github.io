@@ -1,0 +1,160 @@
+{
+    "legendary": [
+        [
+            "STR %",
+            12,
+            4.5455
+        ],
+        [
+            "DEX %",
+            12,
+            4.5455
+        ],
+        [
+            "INT %",
+            12,
+            4.5455
+        ],
+        [
+            "LUK %",
+            12,
+            4.5455
+        ],
+        [
+            "Max HP %",
+            12,
+            6.8182
+        ],
+        [
+            "Max MP %",
+            12,
+            6.8182
+        ],
+        [
+            "Defense %",
+            12,
+            6.8182
+        ],
+        [
+            "Damage %",
+            8,
+            9.0909
+        ],
+        [
+            "All Stats %",
+            9,
+            4.5455
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 20% damage when hit",
+            6.8182
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 40% damage when hit",
+            6.8182
+        ],
+        [
+            "Chance to auto steal %",
+            3,
+            6.8182
+        ],
+        [
+            "Chance to auto steal %",
+            5,
+            6.8182
+        ],
+        [
+            "Chance to auto steal %",
+            7,
+            6.8182
+        ],
+        [
+            "Decent Skill",
+            "Decent Speed Booster",
+            6.8182
+        ],
+        [
+            "Junk",
+            [
+                "Increase efficiency of HP recovery items and skills by : +40%"
+            ],
+            6.8182
+        ]
+    ],
+    "unique": [
+        [
+            "STR %",
+            9,
+            5.7143
+        ],
+        [
+            "DEX %",
+            9,
+            5.7143
+        ],
+        [
+            "INT %",
+            9,
+            5.7143
+        ],
+        [
+            "LUK %",
+            9,
+            5.7143
+        ],
+        [
+            "Max HP %",
+            9,
+            8.5714
+        ],
+        [
+            "Max MP %",
+            9,
+            8.5714
+        ],
+        [
+            "Defense %",
+            9,
+            8.5714
+        ],
+        [
+            "All Stats %",
+            6,
+            2.8571
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 20% damage when hit",
+            8.5714
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 40% damage when hit",
+            8.5714
+        ],
+        [
+            "Chance to auto steal %",
+            1,
+            8.5714
+        ],
+        [
+            "Chance to auto steal %",
+            2,
+            8.5714
+        ],
+        [
+            "Decent Skill",
+            "Decent Sharp Eyes",
+            5.7143
+        ],
+        [
+            "Junk",
+            [
+                "Increase efficiency of HP recovery items and skills by : +30%"
+            ],
+            8.5714
+        ]
+    ]
+}

@@ -1,0 +1,133 @@
+{
+    "legendary": [
+        [
+            "STR %",
+            12,
+            8.8889
+        ],
+        [
+            "DEX %",
+            12,
+            8.8889
+        ],
+        [
+            "INT %",
+            12,
+            8.8889
+        ],
+        [
+            "LUK %",
+            12,
+            8.8889
+        ],
+        [
+            "Max HP %",
+            12,
+            8.8889
+        ],
+        [
+            "Max MP %",
+            12,
+            8.8889
+        ],
+        [
+            "Defense %",
+            12,
+            8.8889
+        ],
+        [
+            "All Stats %",
+            9,
+            6.6667
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 20% damage when hit",
+            6.6667
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 40% damage when hit",
+            6.6667
+        ],
+        [
+            "Skill Cooldown Reduction",
+            1,
+            6.6667
+        ],
+        [
+            "Skill Cooldown Reduction",
+            2,
+            4.4444
+        ],
+        [
+            "Decent Skill",
+            "Decent Advanced Blessing",
+            6.6667
+        ]
+    ],
+    "unique": [
+        [
+            "STR %",
+            9,
+            8.9286
+        ],
+        [
+            "DEX %",
+            9,
+            8.9286
+        ],
+        [
+            "INT %",
+            9,
+            8.9286
+        ],
+        [
+            "LUK %",
+            9,
+            8.9286
+        ],
+        [
+            "Max HP %",
+            9,
+            10.7143
+        ],
+        [
+            "Max MP %",
+            9,
+            10.7143
+        ],
+        [
+            "Defense %",
+            9,
+            7.1429
+        ],
+        [
+            "All Stats %",
+            6,
+            7.1429
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 20% damage when hit",
+            7.1429
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 40% damage when hit",
+            7.1429
+        ],
+        [
+            "Decent Skill",
+            "Decent Mystic Door",
+            7.1429
+        ],
+        [
+            "Junk",
+            [
+                "Increase efficiency of HP recovery items and skills by : +30%"
+            ],
+            7.1429
+        ]
+    ]
+}

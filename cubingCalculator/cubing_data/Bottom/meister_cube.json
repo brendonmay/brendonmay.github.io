@@ -1,0 +1,127 @@
+{
+    "legendary": [
+        [
+            "STR %",
+            12,
+            5.8824
+        ],
+        [
+            "DEX %",
+            12,
+            5.8824
+        ],
+        [
+            "INT %",
+            12,
+            5.8824
+        ],
+        [
+            "LUK %",
+            12,
+            5.8824
+        ],
+        [
+            "Max HP %",
+            12,
+            8.8235
+        ],
+        [
+            "Max MP %",
+            12,
+            8.8235
+        ],
+        [
+            "Defense %",
+            12,
+            8.8235
+        ],
+        [
+            "All Stats %",
+            9,
+            5.8824
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 20% damage when hit",
+            8.8235
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 40% damage when hit",
+            8.8235
+        ],
+        [
+            "Junk",
+            [
+                "30% chance to reflect 50% of damage taken",
+                "30% chance to reflect 70% of damage taken",
+                "Increase efficiency of HP recovery items and skills by : +40%"
+            ],
+            26.470499999999998
+        ]
+    ],
+    "unique": [
+        [
+            "STR %",
+            9,
+            6.8966
+        ],
+        [
+            "DEX %",
+            9,
+            6.8966
+        ],
+        [
+            "INT %",
+            9,
+            6.8966
+        ],
+        [
+            "LUK %",
+            9,
+            6.8966
+        ],
+        [
+            "Max HP %",
+            9,
+            10.3448
+        ],
+        [
+            "Max MP %",
+            9,
+            10.3448
+        ],
+        [
+            "Defense %",
+            9,
+            10.3448
+        ],
+        [
+            "All Stats %",
+            6,
+            3.4483
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 20% damage when hit",
+            10.3448
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 40% damage when hit",
+            10.3448
+        ],
+        [
+            "Decent Skill",
+            "Decent Hyper Body",
+            6.8966
+        ],
+        [
+            "Junk",
+            [
+                "Increase efficiency of HP recovery items and skills by : +30%"
+            ],
+            10.3448
+        ]
+    ]
+}

@@ -1,0 +1,132 @@
+{
+    "legendary": [
+        [
+            "STR %",
+            12,
+            9.0909
+        ],
+        [
+            "DEX %",
+            12,
+            9.0909
+        ],
+        [
+            "INT %",
+            12,
+            9.0909
+        ],
+        [
+            "LUK %",
+            12,
+            9.0909
+        ],
+        [
+            "Max HP %",
+            12,
+            9.0909
+        ],
+        [
+            "Max MP %",
+            12,
+            9.0909
+        ],
+        [
+            "Defense %",
+            12,
+            9.0909
+        ],
+        [
+            "Damage %",
+            8,
+            9.0909
+        ],
+        [
+            "All Stats %",
+            9,
+            6.8182
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 20% damage when hit",
+            6.8182
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 40% damage when hit",
+            6.8182
+        ],
+        [
+            "Decent Skill",
+            "Decent Speed Booster",
+            6.8182
+        ]
+    ],
+    "unique": [
+        [
+            "STR %",
+            9,
+            8.3333
+        ],
+        [
+            "DEX %",
+            9,
+            8.3333
+        ],
+        [
+            "INT %",
+            9,
+            8.3333
+        ],
+        [
+            "LUK %",
+            9,
+            8.3333
+        ],
+        [
+            "Max HP %",
+            9,
+            10.0
+        ],
+        [
+            "Max MP %",
+            9,
+            10.0
+        ],
+        [
+            "Defense %",
+            9,
+            6.6667
+        ],
+        [
+            "All Stats %",
+            6,
+            6.6667
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 20% damage when hit",
+            6.6667
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 40% damage when hit",
+            6.6667
+        ],
+        [
+            "Decent Skill",
+            "Decent Sharp Eyes",
+            6.6667
+        ],
+        [
+            "Junk",
+            [
+                "+1 STR per 10 character levels",
+                "+1 DEX per 10 character levels",
+                "+1 INT per 10 character levels",
+                "+1 LUK per 10 character levels",
+                "Increase efficiency of HP recovery items and skills by : +30%"
+            ],
+            13.3335
+        ]
+    ]
+}
