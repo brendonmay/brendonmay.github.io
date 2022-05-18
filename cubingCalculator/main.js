@@ -190,8 +190,7 @@ function removeCommonSEOptions() {
 }
 
 function addCritDamageOptions() {
-  if (document.getElementById(`critDamageGroup`)) {
-  } else {
+  if (!document.getElementById(`critDamageGroup`)) {
     $desiredStats.append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
     const $critDamageGroup = $('#critDamageGroup');
     $critDamageGroup.append("<option id='gloves' value='1LCrit'>1 Line Crit Dmg%</option>");
@@ -219,8 +218,7 @@ function removeCritDamageOptions() {
 }
 
 function addDropAndMesoOptions() {
-  if (document.getElementById(`dropMesoGroup`)) {
-  } else {
+  if (!document.getElementById(`dropMesoGroup`)) {
     $desiredStats.append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
     const $dropMesoGroup = $('#dropMesoGroup');
     $dropMesoGroup.append("<option id='accessory3' value='1LMeso'>1 Line Mesos Obtained%</option>");
@@ -252,8 +250,7 @@ function removeDropAndMesoOptions() {
 }
 
 function addCDOptions() {
-  if (document.getElementById(`CDGroup`)) {
-  } else {
+  if (!document.getElementById(`CDGroup`)) {
     ////2SecCD, 3SecCD, 4SecCD, 2SecCDAndStat, 2SecCDAndHP, 2SecCDAndALL, 2SecCDAnd2Stat, 2SecCDAnd2HP, 2SecCDAnd2ALL, 3SecCDAndStat, 3SecCDAndHP, 3SecCDAndALL, 4SecCDAndStat, 4SecCDAndHP, 4SecCDAndALL
     $desiredStats.append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
     const $CDGroup = $('#CDGroup');
