@@ -1,4 +1,4 @@
-import C from "./c";
+import C from "./c.js";
 
 const Game = {};
 
