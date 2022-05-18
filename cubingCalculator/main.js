@@ -42,7 +42,19 @@ let tier_rates_DMT = {
 
 function getStatOptionAmounts(prime) {
   const ppp = prime * 3;
-  return [ppp - 15, ppp - 12, ppp - 9, ppp - 6, ppp - 3, ppp];
+  const ppn = ppp - 3;
+  const pnn = ppp - 6;
+  const pna = ppp - 9;
+  const paa = ppp - 12;
+  const aaa = ppp - 15;
+  // -15 is the lowest we go since in epic tier we're down to 3%.
+  // Most people don't care for lower values in unique/legendary anyway.
+  return [aaa,
+    paa,
+    pna,
+    pnn,
+    ppn,
+    ppp];
 }
 
 
