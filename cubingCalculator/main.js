@@ -221,7 +221,7 @@ function removeCritDamageOptions() {
 function addDropAndMesoOptions() {
   if (document.getElementById(`dropMesoGroup`)) {
   } else {
-    $desiredStats.append(`<optgroup id='dropMesoGroup' label='Crit Damage'></optgroup>`);
+    $desiredStats.append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
     const $dropMesoGroup = $('#dropMesoGroup');
     $dropMesoGroup.append("<option id='accessory3' value='1LMeso'>1 Line Mesos Obtained%</option>");
     $dropMesoGroup.append("<option id='accessory4' value='1LDrop'>1 Line Item Drop%</option>");
