@@ -189,6 +189,35 @@ function removeCommonSEOptions() {
   removeGroupIfExists("attackAndBossGroup");
 }
 
+function addCritDamageOptions() {
+  if (document.getElementById(`critDamageGroup`)) {
+  } else {
+    $desiredStats.append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
+    const $critDamageGroup = $('#critDamageGroup');
+    $critDamageGroup.append("<option id='gloves' value='1LCrit'>1 Line Crit Dmg%</option>");
+
+    $critDamageGroup.append("<option id='gloves1' value='1LCritAndStat'>1 Line Crit Dmg% and Stat%</option>");
+    $critDamageGroup.append("<option id='gloves2' value='1LCritAndALL'>1 Line Crit Dmg% and All Stat%</option>");
+    $critDamageGroup.append("<option id='gloves3' value='1LCritandHP'>1 Line Crit Dmg% and MaxHP%</option>");
+
+    $critDamageGroup.append("<option id='gloves8' value='1LCritAnd2Stat'>1 Line Crit Dmg% and 2L Stat%</option>");
+    $critDamageGroup.append("<option id='gloves9' value='1LCritAnd2ALL'>1 Line Crit Dmg% and 2L All Stat%</option>");
+    $critDamageGroup.append("<option id='gloves10' value='1LCritand2HP'>1 Line Crit Dmg% and 2L MaxHP%</option>");
+
+    $critDamageGroup.append("<option id='gloves4' value='2LCrit'>2 Line Crit Dmg%</option>");
+
+    $critDamageGroup.append("<option id='gloves5' value='2LCritAndStat'>2 Line Crit Dmg% and Stat%</option>");
+    $critDamageGroup.append("<option id='gloves6' value='2LCritAndALL'>2 Line Crit Dmg% and All Stat%</option>");
+    $critDamageGroup.append("<option id='gloves7' value='2CritandHP'>2 Line Crit Dmg% and MaxHP%</option>");
+
+    $critDamageGroup.append("<option id='gloves8' value='3LCrit'>3 Line Crit Dmg%</option>");
+  }
+}
+
+function removeCritDamageOptions() {
+  removeGroupIfExists("critDamageGroup");
+}
+
 function updateDesiredStats() {
   var itemType = document.getElementById('itemType').value;
   var itemLevel = parseInt(document.getElementById('itemLevel').value);
@@ -208,29 +237,13 @@ function updateDesiredStats() {
     removeCommonSEOptions();
   }
 
-  if (itemType == 'gloves') {//1LCritandHP, 2LCritAndStat, 2LCritAndALL, 2LCritandHP
-    if (document.getElementById('gloves') === null) {
-      $('#desiredStats').append("<option id='gloves' value='1LCrit'>1 Line Crit Dmg%</option>");
-
-      $('#desiredStats').append("<option id='gloves1' value='1LCritAndStat'>1 Line Crit Dmg% and Stat%</option>");
-      $('#desiredStats').append("<option id='gloves2' value='1LCritAndALL'>1 Line Crit Dmg% and All Stat%</option>");
-      $('#desiredStats').append("<option id='gloves3' value='1LCritandHP'>1 Line Crit Dmg% and MaxHP%</option>");
-
-      $('#desiredStats').append("<option id='gloves8' value='1LCritAnd2Stat'>1 Line Crit Dmg% and 2L Stat%</option>");
-      $('#desiredStats').append("<option id='gloves9' value='1LCritAnd2ALL'>1 Line Crit Dmg% and 2L All Stat%</option>");
-      $('#desiredStats').append("<option id='gloves10' value='1LCritand2HP'>1 Line Crit Dmg% and 2L MaxHP%</option>");
-
-      $('#desiredStats').append("<option id='gloves4' value='2LCrit'>2 Line Crit Dmg%</option>");
-
-      $('#desiredStats').append("<option id='gloves5' value='2LCritAndStat'>2 Line Crit Dmg% and Stat%</option>");
-      $('#desiredStats').append("<option id='gloves6' value='2LCritAndALL'>2 Line Crit Dmg% and All Stat%</option>");
-      $('#desiredStats').append("<option id='gloves7' value='2CritandHP'>2 Line Crit Dmg% and MaxHP%</option>");
-
-      $('#desiredStats').append("<option id='gloves8' value='3LCrit'>3 Line Crit Dmg%</option>");
-    }
+  if (itemType === 'gloves') {
+    addCritDamageOptions();
+  } else {
+    removeCritDamageOptions();
   }
 
-  else if (itemType == 'accessory') {
+  if (itemType == 'accessory') {
     if (document.getElementById('accessory') === null) {
       $('#desiredStats').append("<option id='accessory3' value='1LMeso'>1 Line Mesos Obtained%</option>");
       $('#desiredStats').append("<option id='accessory4' value='1LDrop'>1 Line Item Drop%</option>");
