@@ -218,6 +218,39 @@ function removeCritDamageOptions() {
   removeGroupIfExists("critDamageGroup");
 }
 
+function addDropAndMesoOptions() {
+  if (document.getElementById(`dropMesoGroup`)) {
+  } else {
+    $desiredStats.append(`<optgroup id='dropMesoGroup' label='Crit Damage'></optgroup>`);
+    const $dropMesoGroup = $('#dropMesoGroup');
+    $dropMesoGroup.append("<option id='accessory3' value='1LMeso'>1 Line Mesos Obtained%</option>");
+    $dropMesoGroup.append("<option id='accessory4' value='1LDrop'>1 Line Item Drop%</option>");
+    $dropMesoGroup.append("<option id='accessory5' value='1LDropOrMeso'>1 Line of Item Drop% or Mesos Obtained%</option>");
+
+    $dropMesoGroup.append("<option id='accessory6' value='1LMesoAndStat'>1 Line Mesos Obtained% and Stat%</option>");
+    $dropMesoGroup.append("<option id='accessory7' value='1LMesoAndALL'>1 Line Mesos Obtained% and All Stat%</option>");
+    $dropMesoGroup.append("<option id='accessory8' value='1LMesoAndHP'>1 Line Mesos Obtained% and MaxHP%</option>");
+
+    $dropMesoGroup.append("<option id='accessory9' value='1LDropAndStat'>1 Line Item Drop% and Stat%</option>");
+    $dropMesoGroup.append("<option id='accessory10' value='1LDropAndALL'>1 Line Item Drop% and All Stat%</option>");
+    $dropMesoGroup.append("<option id='accessory11' value='1LDropAndHP'>1 Line Item Drop% and MaxHP%</option>");
+
+    $dropMesoGroup.append("<option id='accessory12' value='1LDropOrMesoAndStat'>1 Line of (Item Drop% or Mesos Obtained%) with Stat%</option>");
+    $dropMesoGroup.append("<option id='accessory13' value='1LDropOrMesoAndALL'>1 Line of (Item Drop% or Mesos Obtained%) with All Stat%</option>");
+    $dropMesoGroup.append("<option id='accessory14' value='1LDropOrMesoAndHP'>1 Line of (Item Drop% or Mesos Obtained%) with MaxHP%</option>");
+
+    $dropMesoGroup.append("<option id='accessory' value='2LMeso'>2 Line Mesos Obtained%</option>");
+    $dropMesoGroup.append("<option id='accessory1' value='2LDrop'>2 Line Item Drop%</option>");
+    $dropMesoGroup.append("<option id='accessory2' value='2LDropOrMeso'>2 Lines Involving Item Drop% or Mesos Obtained%</option>");
+
+    $dropMesoGroup.append("<option id='accessory' value='3LMeso'>3 Line Mesos Obtained%</option>");
+  }
+}
+
+function removeDropAndMesoOptions() {
+  removeGroupIfExists("dropMesoGroup");
+}
+
 function updateDesiredStats() {
   var itemType = document.getElementById('itemType').value;
   var itemLevel = parseInt(document.getElementById('itemLevel').value);
@@ -243,31 +276,13 @@ function updateDesiredStats() {
     removeCritDamageOptions();
   }
 
-  if (itemType == 'accessory') {
-    if (document.getElementById('accessory') === null) {
-      $('#desiredStats').append("<option id='accessory3' value='1LMeso'>1 Line Mesos Obtained%</option>");
-      $('#desiredStats').append("<option id='accessory4' value='1LDrop'>1 Line Item Drop%</option>");
-      $('#desiredStats').append("<option id='accessory5' value='1LDropOrMeso'>1 Line of Item Drop% or Mesos Obtained%</option>");
-
-      $('#desiredStats').append("<option id='accessory6' value='1LMesoAndStat'>1 Line Mesos Obtained% and Stat%</option>");
-      $('#desiredStats').append("<option id='accessory7' value='1LMesoAndALL'>1 Line Mesos Obtained% and All Stat%</option>");
-      $('#desiredStats').append("<option id='accessory8' value='1LMesoAndHP'>1 Line Mesos Obtained% and MaxHP%</option>");
-
-      $('#desiredStats').append("<option id='accessory9' value='1LDropAndStat'>1 Line Item Drop% and Stat%</option>");
-      $('#desiredStats').append("<option id='accessory10' value='1LDropAndALL'>1 Line Item Drop% and All Stat%</option>");
-      $('#desiredStats').append("<option id='accessory11' value='1LDropAndHP'>1 Line Item Drop% and MaxHP%</option>");
-
-      $('#desiredStats').append("<option id='accessory12' value='1LDropOrMesoAndStat'>1 Line of (Item Drop% or Mesos Obtained%) with Stat%</option>");
-      $('#desiredStats').append("<option id='accessory13' value='1LDropOrMesoAndALL'>1 Line of (Item Drop% or Mesos Obtained%) with All Stat%</option>");
-      $('#desiredStats').append("<option id='accessory14' value='1LDropOrMesoAndHP'>1 Line of (Item Drop% or Mesos Obtained%) with MaxHP%</option>");
-
-      $('#desiredStats').append("<option id='accessory' value='2LMeso'>2 Line Mesos Obtained%</option>");
-      $('#desiredStats').append("<option id='accessory1' value='2LDrop'>2 Line Item Drop%</option>");
-      $('#desiredStats').append("<option id='accessory2' value='2LDropOrMeso'>2 Lines Involving Item Drop% or Mesos Obtained%</option>");
-    }
+  if (itemType === 'accessory') {
+    addDropAndMesoOptions();
+  } else {
+    removeDropAndMesoOptions();
   }
   ////2SecCD, 3SecCD, 4SecCD, 2SecCDAndStat, 2SecCDAndHP, 2SecCDAndALL, 2SecCDAnd2Stat, 2SecCDAnd2HP, 2SecCDAnd2ALL, 3SecCDAndStat, 3SecCDAndHP, 3SecCDAndALL, 4SecCDAndStat, 4SecCDAndHP, 4SecCDAndALL
-  else if (itemType == 'hat') {
+  if (itemType == 'hat') {
     if (document.getElementById('accessory') === null) {
       $('#desiredStats').append("<option id='hat' value='2SecCD'>-2sec+ CD Reduction</option>");
       $('#desiredStats').append("<option id='hat1' value='3SecCD'>-3sec+ CD Reduction</option>");
