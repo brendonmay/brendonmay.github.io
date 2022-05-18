@@ -57,23 +57,23 @@ function getStatOptionAmounts(prime) {
     ppp];
 }
 
-
 const $desiredStats = $('#desiredStats');
 
 function addNormalOptionGroup(prefix, valueText, textText, groupLabel, optionAmounts) {
-  // If the optgroup already exists, change the values and text in case the user changed the item level.
+  // If the optgroup already exists, update the values and text in case the user changed the item level.
   if (document.getElementById(`${prefix}Group`)) {
     optionAmounts.forEach((val, i) => {
-      const $option = $(`${prefix}${i}`);
+      const $option = $(`#${prefix}${i}`);
       $option.attr("value", `${val}${valueText}`);
       $option.text(`${val}%+ Stat`);
     });
   } else {
+    debugger;
     // Create the optgroup and options.
-    $desiredStats.append(`<optgroup id='${prefix}StatGroup' label='${groupLabel}'></optgroup>`);
-    const $statGroup = $(`#${prefix}StatGroup`);
+    $desiredStats.append(`<optgroup id='${prefix}Group' label='${groupLabel}'></optgroup>`);
+    const $statGroup = $(`#${prefix}Group`);
     optionAmounts.forEach((val, i) => $statGroup.append(
-        `<option id='${prefix}Stat${i}' value='${val}${valueText}'>${val}%+ ${textText}</option>`));
+        `<option id='${prefix}${i}' value='${val}${valueText}'>${val}%+ ${textText}</option>`));
   }
 }
 
@@ -113,31 +113,9 @@ function removeNormalStatOptions() {
   }
 }
 
-function updatedDesiredStats() {
+function updateDesiredStats() {
   var itemType = document.getElementById('itemType').value;
   var itemLevel = parseInt(document.getElementById('itemLevel').value);
-  var length = document.getElementById('desiredStats').options.length;
-  var i = 0;
-  var ids_to_remove = [];
-  var ids_to_keep = [];
-
-  while (i < length) {
-    var current_id = document.getElementById('desiredStats').options[i].id;
-    if (current_id.includes(itemType) || current_id.includes('any')) {
-      ids_to_keep.push(current_id);
-      i++
-    } else {
-      ids_to_remove.push(current_id);
-      i++
-    }
-  }
-  i = 0;
-  while (i < ids_to_remove.length) {
-    var current_id = ids_to_remove[i];
-    //document.getElementById(current_id).remove();
-    $('#' + current_id).remove();
-    i++
-  }
 
   if (itemType !== 'weapon' && itemType !== 'secondary' && itemType !== 'emblem') {
     addNormalStatOptions(itemLevel);
@@ -296,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var desiredTier = $(this).val();
 
     if (desiredTier == 3) {
-      updatedDesiredStats()
+      updateDesiredStats()
     }
     else {
       $('#desiredStats').empty();
@@ -308,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // document.getElementById('error-container').style.display = '';
     var desiredTier = document.getElementById('desiredTier').value
     if (desiredTier == 3) {
-      updatedDesiredStats();
+      updateDesiredStats();
       document.getElementById("desiredStats").selectedIndex = 0; //Option 10
     }
   });
@@ -327,52 +305,13 @@ document.addEventListener("DOMContentLoaded", function () {
     var itemType = document.getElementById('itemType').value;
     var desiredTier = document.getElementById('desiredTier').value
 
-    if (desiredTier == 3) {
-      // Empty the desiredStats select option list
-      $('#desiredStats').empty();
-
-      if (itemLevel < 71 || itemLevel > 200) {
-        $('#desiredStats').append("<option value='N/A' disabled selected>Your item level must be between 71 and 200</option>");
-        document.getElementById('calculateButton').disabled = true;
-      } else if (itemLevel >= 71 && itemLevel < 151) {
-        $('#desiredStats').append("<option id='any' value='any'>Any</option>");
-        $('#desiredStats').append("<option id='any1' value='21PercLUK'>21%+ Stat</option>");
-        $('#desiredStats').append("<option id='any2' value='24PercLUK'>24%+ Stat</option>");
-        $('#desiredStats').append("<option id='any3' value='27PercLUK'>27%+ Stat</option>");
-        $('#desiredStats').append("<option id='any4' value='30PercLUK'>30%+ Stat</option>");
-        $('#desiredStats').append("<option id='any22' value='33PercLUK'>33%+ Stat</option>");
-
-        $('#desiredStats').append("<option id='any16' value='21PercHP'>21%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any17' value='24PercHP'>24%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any18' value='30PercHP'>30%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any23' value='33PercHP'>33%+ Max HP</option>");
-
-        $('#desiredStats').append("<option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any24' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
-        document.getElementById('calculateButton').disabled = false;
-      } else if (itemLevel >= 151 && itemLevel <= 200) {
-        $('#desiredStats').append("<option id='any' value='any'>Any</option>");
-        $('#desiredStats').append("<option id='any8' value='23PercLUK'>23%+ Stat</option>");
-        $('#desiredStats').append("<option id='any9' value='26PercLUK'>26%+ Stat</option>");
-        $('#desiredStats').append("<option id='any10' value='27PercLUK'>27%+ Stat</option>");
-        $('#desiredStats').append("<option id='any11' value='30PercLUK'>30%+ Stat</option>");
-        $('#desiredStats').append("<option id='any12' value='33PercLUK'>33%+ Stat</option>");
-        $('#desiredStats').append("<option id='any25' value='36PercLUK'>36%+ Stat</option>");
-
-        $('#desiredStats').append("<option id='any19' value='21PercHP'>21%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any20' value='24PercHP'>24%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any21' value='30PercHP'>30%+ Max HP</option>");
-        $('#desiredStats').append("<option id='any26' value='33PercHP'>33%+ Max HP</option>");
-
-        $('#desiredStats').append("<option id='any13' value='17PercALL'>17%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any14' value='20PercALL'>20%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any15' value='24PercALL'>24%+ All Stat (For Xenon)</option>");
-        $('#desiredStats').append("<option id='any27' value='27PercALL'>27%+ All Stat (For Xenon)</option>");
-        document.getElementById('calculateButton').disabled = false;
-      }
-      updatedDesiredStats();
+    if (itemLevel < 71 || itemLevel > 200) {
+      $desiredStats.empty();
+      $desiredStats.append("<option value='N/A' disabled selected>Your item level must be between 71 and 200</option>");
+      document.getElementById('calculateButton').disabled = true;
+    } else {
+      updateDesiredStats();
+      document.getElementById('calculateButton').disabled = false;
     }
 
 
@@ -623,5 +562,8 @@ document.addEventListener("DOMContentLoaded", function () {
     //console.log(repeatExperiment('black', 150, 'hat', '3SecCD', 100, 3, 3))
   });
 }, false);
+
+// Populate the select options:
+updateDesiredStats();
 
 Game.init();
