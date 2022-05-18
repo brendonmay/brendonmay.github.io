@@ -40,7 +40,7 @@ let tier_rates_DMT = {
   }
 }
 
-function getStatOptionAmounts(prime) {
+function get3LStatOptionAmounts(prime) {
   const ppp = prime * 3;
   const ppn = ppp - 3;
   const pnn = ppp - 6;
@@ -57,7 +57,23 @@ function getStatOptionAmounts(prime) {
     ppp];
 }
 
+function get2LStatOptionAmounts(prime) {
+  // For when we want to do stuff like 2L + boss.
+  const pp = prime * 2;
+  const pn = pp - 3;
+  const nn = pp - 6;
+  return [nn,
+    pn,
+    pp];
+}
+
 const $desiredStats = $('#desiredStats');
+
+function removeGroupIfExists(id) {
+  if (document.getElementById(id)) {
+    $(`#${id}`).remove();
+  }
+}
 
 function addNormalOptionGroup(prefix, valueText, textText, groupLabel, optionAmounts) {
   // If the optgroup already exists, update the values and text in case the user changed the item level.
@@ -65,10 +81,9 @@ function addNormalOptionGroup(prefix, valueText, textText, groupLabel, optionAmo
     optionAmounts.forEach((val, i) => {
       const $option = $(`#${prefix}${i}`);
       $option.attr("value", `${val}${valueText}`);
-      $option.text(`${val}%+ Stat`);
+      $option.text(`${val}%+ ${textText}`);
     });
   } else {
-    debugger;
     // Create the optgroup and options.
     $desiredStats.append(`<optgroup id='${prefix}Group' label='${groupLabel}'></optgroup>`);
     const $statGroup = $(`#${prefix}Group`);
@@ -81,7 +96,7 @@ function addNormalStatOptions(itemLevel) {
   const levelBonus = itemLevel >= 160 ? 1 : 0;
 
   const regPrime = 12 + levelBonus;
-  const regOptionAmounts = getStatOptionAmounts(regPrime);
+  const regOptionAmounts = get3LStatOptionAmounts(regPrime);
   addNormalOptionGroup("regStat",
       "PercLUK",
       "Stat",
@@ -89,7 +104,7 @@ function addNormalStatOptions(itemLevel) {
       regOptionAmounts);
 
   const hpPrime = 12;
-  const hpOptionAmounts = getStatOptionAmounts(hpPrime);
+  const hpOptionAmounts = get3LStatOptionAmounts(hpPrime);
   addNormalOptionGroup("hpStat",
       "PercHP",
       "Max HP",
@@ -97,7 +112,7 @@ function addNormalStatOptions(itemLevel) {
       hpOptionAmounts);
 
   const allStatPrime = 9 + levelBonus;
-  const allStatOptionAmounts = getStatOptionAmounts(allStatPrime);
+  const allStatOptionAmounts = get3LStatOptionAmounts(allStatPrime);
   addNormalOptionGroup("allStat",
       "PercALL",
       "All Stat",
@@ -106,65 +121,94 @@ function addNormalStatOptions(itemLevel) {
 }
 
 function removeNormalStatOptions() {
-  if (document.getElementById('regStatGroup')) {
-    $('#regStatGroup').remove();
-    $('#hpStatGroup').remove();
-    $('#allStatGroup').remove();
+  removeGroupIfExists("regStatGroup");
+  removeGroupIfExists("hpStatGroup");
+  removeGroupIfExists("allStatGroup");
+}
+
+function addCommonWSEOptions(itemLevel) {
+  const levelBonus = itemLevel >= 160 ? 1 : 0;
+
+  const prime = 12 + levelBonus;
+  const optionAmounts = get3LStatOptionAmounts(prime);
+  addNormalOptionGroup("attack",
+      "PercATT",
+      "Attack",
+      "Attack",
+      optionAmounts);
+
+  const IEDOptionAmounts = get2LStatOptionAmounts(prime);
+  addNormalOptionGroup("attackAndIED",
+      "ATTandIED",
+      "Attack and IED",
+      "Attack With 1 Line of IED",
+      IEDOptionAmounts);
+}
+
+function removeCommonWSEOptions() {
+  removeGroupIfExists("attackGroup");
+  removeGroupIfExists("attackAndIEDGroup");
+}
+
+function addCommonSEOptions(itemLevel) {
+  const levelBonus = itemLevel >= 160 ? 1 : 0;
+
+  const prime = 12 + levelBonus;
+  const [_, pn, pp] = get2LStatOptionAmounts(prime);
+
+  if (document.getElementById(`attackAndBossGroup`)) {
+    const PNATT30BOSS = $("#PNATT30BOSS");
+    const PNATT35BOSS = $("#PNATT35BOSS");
+    const PNATT40BOSS = $("#PNATT40BOSS");
+    const PPATT30BOSS = $("#PPATT30BOSS");
+
+    PNATT30BOSS.attr("value", `${pn}ATT30BOSS`);
+    PNATT35BOSS.attr("value", `${pn}ATT35BOSS`);
+    PNATT40BOSS.attr("value", `${pn}ATT40BOSS`);
+    PPATT30BOSS.attr("value", `${pp}ATT30BOSS`);
+
+    PNATT30BOSS.text(`${pn}%+ Attack and 30%+ Boss`);
+    PNATT35BOSS.text(`${pn}%+ Attack and 35%+ Boss`);
+    PNATT40BOSS.text(`${pn}%+ Attack and 40%+ Boss`);
+    PPATT30BOSS.text(`${pp}%+ Attack and 30%+ Boss`);
+  } else {
+    $desiredStats.append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
+    const $attackAndBossGroup = $('#attackAndBossGroup');
+    $attackAndBossGroup.append("<option id='1Att1Boss' value='1ATTand1BOSS'>1 Line Attack% + 1 Line Boss%</option>");
+    $attackAndBossGroup.append("<option id='1Att2Boss' value='1ATTand2BOSS'>1 Line Attack% + 2 Line Boss%</option>");
+    $attackAndBossGroup.append("<option id='2Att1Boss' value='2ATTand1BOSS'>2 Line Attack% + 1 Line Boss%</option>");
+
+    $attackAndBossGroup.append(`<option id='$PNATT30BOSS' value='${pn}ATT30BOSS'>${pn}%+ Attack and 30%+ Boss</option>`);
+    $attackAndBossGroup.append(`<option id='$PNATT35BOSS' value='${pn}ATT35BOSS'>${pn}%+ Attack and 35%+ Boss</option>`);
+    $attackAndBossGroup.append(`<option id='$PNATT40BOSS' value='${pn}ATT40BOSS'>${pn}%+ Attack and 40%+ Boss</option>`);
+    $attackAndBossGroup.append(`<option id='$PPATT30BOSS' value='${pp}ATT30BOSS'>${pp}%+ Attack and 30%+ Boss</option>`);
   }
+}
+
+function removeCommonSEOptions() {
+  removeGroupIfExists("attackAndBossGroup");
 }
 
 function updateDesiredStats() {
   var itemType = document.getElementById('itemType').value;
   var itemLevel = parseInt(document.getElementById('itemLevel').value);
 
-  if (itemType !== 'weapon' && itemType !== 'secondary' && itemType !== 'emblem') {
-    addNormalStatOptions(itemLevel);
-  } else {
+  if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
     removeNormalStatOptions();
+    addCommonWSEOptions(itemLevel);
+
+    if (itemType !== 'emblem') {
+      addCommonSEOptions(itemLevel);
+    } else {
+      removeCommonSEOptions()
+    }
+  } else {
+    addNormalStatOptions(itemLevel);
+    removeCommonWSEOptions();
+    removeCommonSEOptions();
   }
 
-  if (itemType == 'weapon' || itemType == 'secondary') {
-    if (document.getElementById('weaponsecondaryshield') === null) {
-      $('#desiredStats').append("<option id='weaponsecondaryshield' value='2LATT'>2 Line Attack%</option>");
-      $('#desiredStats').append("<option id='weaponsecondaryshield2' value='3LATT'>3 Line Attack%</option>");
-
-    }
-    if (document.getElementById('weaponsecondaryshield1') === null) {
-      $('#desiredStats').append("<option id='weaponsecondaryshield1' value='2ATTand1IED'>2 Line Attack% + 1 Line IED%</option>");
-      $('#desiredStats').append("<option id='weaponsecondaryshield9' value='21ATTandIED'>21%+ Attack and IED</option>");
-      $('#desiredStats').append("<option id='weaponsecondaryshield10' value='24ATTandIED'>24%+ Attack and IED</option>");
-
-    }
-    if (document.getElementById('weaponsecondaryshield3') === null) {
-      $('#desiredStats').append("<option id='weaponsecondaryshield3' value='1ATTand2BOSS'>1 Line Attack% + 2 Line Boss%</option>");
-
-    }
-    if (document.getElementById('weaponsecondaryshield4') === null) {
-      $('#desiredStats').append("<option id='weaponsecondaryshield4' value='2ATTand1BOSS'>2 Line Attack% + 1 Line Boss%</option>");
-
-      $('#desiredStats').append("<option id='weaponsecondaryshield5' value='21ATT30BOSS'>21%+ Attack and 30%+ Boss</option>");
-      $('#desiredStats').append("<option id='weaponsecondaryshield6' value='21ATT35BOSS'>21%+ Attack and 35%+ Boss</option>");
-      $('#desiredStats').append("<option id='weaponsecondaryshield7' value='21ATT40BOSS'>21%+ Attack and 40%+ Boss</option>");
-      $('#desiredStats').append("<option id='weaponsecondaryshield8' value='24ATT30BOSS'>24%+ Attack and 30%+ Boss</option>");
-    }
-
-  }
-
-  else if (itemType == 'emblem') {
-    if (document.getElementById('emblem') === null) {
-      $('#desiredStats').append("<option id='emblem' value='2LATT'>2 Line Attack%</option>");
-      $('#desiredStats').append("<option id='emblem2' value='3LATT'>3 Line Attack%</option>");
-    }
-    if (document.getElementById('emblem1') === null) {
-      $('#desiredStats').append("<option id='emblem1' value='2ATTand1IED'>2 Line Attack% + 1 Line IED%</option>");
-    }
-    if (document.getElementById('emblem7') === null) {
-      $('#desiredStats').append("<option id='emblem7' value='21ATTandIED'>21%+ Attack and IED</option>");
-      $('#desiredStats').append("<option id='emblem8' value='24ATTandIED'>24%+ Attack and IED</option>");
-    }
-  }
-
-  else if (itemType == 'gloves') {//1LCritandHP, 2LCritAndStat, 2LCritAndALL, 2LCritandHP
+  if (itemType == 'gloves') {//1LCritandHP, 2LCritAndStat, 2LCritAndALL, 2LCritandHP
     if (document.getElementById('gloves') === null) {
       $('#desiredStats').append("<option id='gloves' value='1LCrit'>1 Line Crit Dmg%</option>");
 
