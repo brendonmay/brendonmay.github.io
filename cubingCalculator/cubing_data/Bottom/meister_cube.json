@@ -26,16 +26,6 @@
             8.8235
         ],
         [
-            "Max MP %",
-            12,
-            8.8235
-        ],
-        [
-            "Defense %",
-            12,
-            8.8235
-        ],
-        [
             "All Stats %",
             9,
             5.8824
@@ -53,11 +43,13 @@
         [
             "Junk",
             [
+                "Max MP : +12%",
+                "Defense : +12%",
                 "30% chance to reflect 50% of damage taken",
                 "30% chance to reflect 70% of damage taken",
                 "Increase efficiency of HP recovery items and skills by : +40%"
             ],
-            26.470499999999998
+            44.11749999999999
         ]
     ],
     "unique": [
@@ -87,16 +79,6 @@
             10.3448
         ],
         [
-            "Max MP %",
-            9,
-            10.3448
-        ],
-        [
-            "Defense %",
-            9,
-            10.3448
-        ],
-        [
             "All Stats %",
             6,
             3.4483
@@ -119,9 +101,11 @@
         [
             "Junk",
             [
+                "Max MP : +9%",
+                "Defense : +9%",
                 "Increase efficiency of HP recovery items and skills by : +30%"
             ],
-            10.3448
+            31.034399999999998
         ]
     ]
 }

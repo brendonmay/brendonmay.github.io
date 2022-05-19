@@ -26,16 +26,6 @@
             9.3023
         ],
         [
-            "Max MP %",
-            12,
-            9.3023
-        ],
-        [
-            "Defense %",
-            12,
-            9.3023
-        ],
-        [
             "All Stats %",
             9,
             6.9767
@@ -59,6 +49,14 @@
             "Chance of being invincible for seconds when hit",
             "4% of being invincible for 7 seconds when attacked",
             6.9767
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +12%",
+                "Defense : +12%"
+            ],
+            18.6046
         ]
     ],
     "unique": [
@@ -88,16 +86,6 @@
             9.0909
         ],
         [
-            "Max MP %",
-            9,
-            9.0909
-        ],
-        [
-            "Defense %",
-            9,
-            6.0606
-        ],
-        [
             "All Stats %",
             6,
             6.0606
@@ -125,11 +113,13 @@
         [
             "Junk",
             [
+                "Max MP : +9%",
+                "Defense : +9%",
                 "30% chance to reflect 50% of damage taken",
                 "30% chance to reflect 70% of damage taken",
                 "Increase efficiency of HP recovery items and skills by : +30%"
             ],
-            15.151499999999999
+            30.303
         ]
     ]
 }

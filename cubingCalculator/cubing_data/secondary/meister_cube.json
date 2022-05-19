@@ -3,157 +3,149 @@
         [
             "STR %",
             12,
-            8.5106
+            8.3333
         ],
         [
             "DEX %",
             12,
-            8.5106
+            8.3333
         ],
         [
             "INT %",
             12,
-            8.5106
+            8.3333
         ],
         [
             "LUK %",
             12,
-            8.5106
+            8.3333
         ],
         [
             "ATT %",
             12,
-            4.2553
+            4.1667
         ],
         [
             "ATT %",
             12,
-            4.2553
+            4.1667
         ],
         [
             "Critical Chance %",
             12,
-            4.2553
+            4.1667
         ],
         [
             "Damage %",
             12,
-            4.2553
+            4.1667
         ],
         [
             "All Stats %",
             9,
-            6.383
+            8.3333
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             35,
-            4.2553
+            4.1667
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             40,
-            4.2553
+            2.0833
         ],
         [
             "Chance to ignore % damage when hit",
             "10% chance to ignore 20% damage when hit",
-            6.383
+            12.5
         ],
         [
             "Chance to ignore % damage when hit",
             "10% chance to ignore 40% damage when hit",
-            6.383
+            12.5
         ],
         [
-            "Damage %",
+            "Boss Damage",
             30,
-            4.2553
+            4.1667
         ],
         [
-            "Damage %",
+            "Boss Damage",
             35,
-            4.2553
+            4.1667
         ],
         [
-            "Damage %",
+            "Boss Damage",
             40,
-            4.2553
-        ],
-        [
-            "Junk",
-            [
-                "+1 ATT per 10 character levels",
-                "+1 MATT per 10 character levels"
-            ],
-            8.5106
+            2.0833
         ]
     ],
     "unique": [
         [
             "STR %",
             9,
-            9.8039
+            9.5238
         ],
         [
             "DEX %",
             9,
-            9.8039
+            9.5238
         ],
         [
             "INT %",
             9,
-            9.8039
+            9.5238
         ],
         [
             "LUK %",
             9,
-            9.8039
+            9.5238
         ],
         [
             "ATT %",
             9,
-            5.8824
+            4.7619
         ],
         [
             "ATT %",
             9,
-            5.8824
+            4.7619
         ],
         [
             "Critical Chance %",
             9,
-            7.8431
+            4.7619
         ],
         [
             "Damage %",
             9,
-            5.8824
+            4.7619
         ],
         [
             "All Stats %",
             6,
-            7.8431
+            4.7619
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             30,
-            5.8824
+            4.7619
         ],
         [
             "Chance to ignore % damage when hit",
             "5% chance to ignore 20% damage when hit",
-            7.8431
+            14.2857
         ],
         [
             "Chance to ignore % damage when hit",
             "5% chance to ignore 40% damage when hit",
-            7.8431
+            14.2857
         ],
         [
-            "Damage %",
+            "Boss Damage",
             30,
-            5.8824
+            4.7619
         ]
     ]
 }

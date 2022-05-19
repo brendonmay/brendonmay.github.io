@@ -26,16 +26,6 @@
             10.8108
         ],
         [
-            "Max MP %",
-            12,
-            10.8108
-        ],
-        [
-            "Defense %",
-            12,
-            10.8108
-        ],
-        [
             "All Stats %",
             9,
             8.1081
@@ -49,6 +39,14 @@
             "Chance to ignore % damage when hit",
             "10% chance to ignore 40% damage when hit",
             8.1081
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +12%",
+                "Defense : +12%"
+            ],
+            21.6216
         ]
     ],
     "unique": [
@@ -78,16 +76,6 @@
             11.5385
         ],
         [
-            "Max MP %",
-            9,
-            11.5385
-        ],
-        [
-            "Defense %",
-            9,
-            7.6923
-        ],
-        [
             "All Stats %",
             6,
             7.6923
@@ -105,9 +93,11 @@
         [
             "Junk",
             [
+                "Max MP : +9%",
+                "Defense : +9%",
                 "Increase efficiency of HP recovery items and skills by : +30%"
             ],
-            7.6923
+            26.9231
         ]
     ]
 }

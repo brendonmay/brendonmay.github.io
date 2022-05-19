@@ -26,19 +26,17 @@
             16.6667
         ],
         [
-            "Max MP %",
-            6,
-            16.6667
-        ],
-        [
-            "Defense %",
-            6,
-            16.6667
-        ],
-        [
             "All Stats %",
             3,
             5.5556
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +6%",
+                "Defense : +6%"
+            ],
+            33.3334
         ]
     ],
     "rare": [
@@ -103,16 +101,6 @@
             7.1429
         ],
         [
-            "Max MP %",
-            3,
-            7.1429
-        ],
-        [
-            "Defense %",
-            3,
-            7.1429
-        ],
-        [
             "All Stats Flat",
             5,
             4.7619
@@ -120,10 +108,12 @@
         [
             "Junk",
             [
+                "Max MP : +3%",
+                "Defense : +3%",
                 "Recover 24 HP per 4 seconds",
                 "Recover 24 MP per 4 seconds"
             ],
-            14.2858
+            28.5716
         ]
     ]
 }

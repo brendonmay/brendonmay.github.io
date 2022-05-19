@@ -46,12 +46,12 @@
             8.5714
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             35,
             5.7143
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             40,
             5.7143
         ],
@@ -111,7 +111,7 @@
             10.0
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             30,
             7.5
         ]

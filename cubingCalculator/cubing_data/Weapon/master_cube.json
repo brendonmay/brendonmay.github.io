@@ -46,12 +46,12 @@
             6.6667
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             30,
             6.6667
         ],
         [
-            "Damage %",
+            "Boss Damage",
             30,
             6.6667
         ]
@@ -83,11 +83,6 @@
             11.5385
         ],
         [
-            "Max MP %",
-            6,
-            11.5385
-        ],
-        [
             "ATT %",
             6,
             3.8462
@@ -113,17 +108,18 @@
             3.8462
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             15,
             3.8462
         ],
         [
             "Junk",
             [
+                "Max MP : +6%",
                 "3% chance to recover 53 HP when attacking",
                 "3% chance to recover 53 MP when attacking"
             ],
-            23.077
+            34.615500000000004
         ]
     ]
 }

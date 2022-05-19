@@ -26,16 +26,6 @@
             14.2857
         ],
         [
-            "Max MP %",
-            9,
-            14.2857
-        ],
-        [
-            "Defense %",
-            9,
-            14.2857
-        ],
-        [
             "All Stats %",
             6,
             4.7619
@@ -43,9 +33,11 @@
         [
             "Junk",
             [
+                "Max MP : +9%",
+                "Defense : +9%",
                 "Increase efficiency of HP recovery items and skills by : +30%"
             ],
-            14.2857
+            42.8571
         ]
     ],
     "epic": [
@@ -75,19 +67,17 @@
             16.6667
         ],
         [
-            "Max MP %",
-            6,
-            16.6667
-        ],
-        [
-            "Defense %",
-            6,
-            16.6667
-        ],
-        [
             "All Stats %",
             3,
             5.5556
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +6%",
+                "Defense : +6%"
+            ],
+            33.3334
         ]
     ]
 }

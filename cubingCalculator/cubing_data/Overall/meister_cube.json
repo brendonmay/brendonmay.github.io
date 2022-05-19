@@ -26,16 +26,6 @@
             8.8235
         ],
         [
-            "Max MP %",
-            12,
-            8.8235
-        ],
-        [
-            "Defense %",
-            12,
-            8.8235
-        ],
-        [
             "All Stats %",
             9,
             5.8824
@@ -63,9 +53,11 @@
         [
             "Junk",
             [
+                "Max MP : +12%",
+                "Defense : +12%",
                 "Increase efficiency of HP recovery items and skills by : +40%"
             ],
-            8.8235
+            26.470499999999998
         ]
     ],
     "unique": [
@@ -91,16 +83,6 @@
         ],
         [
             "Max HP %",
-            9,
-            9.0909
-        ],
-        [
-            "Max MP %",
-            9,
-            9.0909
-        ],
-        [
-            "Defense %",
             9,
             9.0909
         ],
@@ -132,9 +114,11 @@
         [
             "Junk",
             [
+                "Max MP : +9%",
+                "Defense : +9%",
                 "Increase efficiency of HP recovery items and skills by : +30%"
             ],
-            9.0909
+            27.2727
         ]
     ]
 }

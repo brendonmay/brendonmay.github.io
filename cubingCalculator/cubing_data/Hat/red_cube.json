@@ -26,16 +26,6 @@
             8.8889
         ],
         [
-            "Max MP %",
-            12,
-            8.8889
-        ],
-        [
-            "Defense %",
-            12,
-            8.8889
-        ],
-        [
             "All Stats %",
             9,
             6.6667
@@ -64,6 +54,14 @@
             "Decent Skill",
             "Decent Advanced Blessing",
             6.6667
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +12%",
+                "Defense : +12%"
+            ],
+            17.7778
         ]
     ],
     "unique": [
@@ -93,16 +91,6 @@
             10.7143
         ],
         [
-            "Max MP %",
-            9,
-            10.7143
-        ],
-        [
-            "Defense %",
-            9,
-            7.1429
-        ],
-        [
             "All Stats %",
             6,
             7.1429
@@ -125,9 +113,11 @@
         [
             "Junk",
             [
+                "Max MP : +9%",
+                "Defense : +9%",
                 "Increase efficiency of HP recovery items and skills by : +30%"
             ],
-            7.1429
+            25.0001
         ]
     ]
 }

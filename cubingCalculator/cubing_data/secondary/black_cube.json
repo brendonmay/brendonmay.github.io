@@ -46,12 +46,12 @@
             6.383
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             35,
             4.2553
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             40,
             4.2553
         ],
@@ -66,17 +66,17 @@
             6.383
         ],
         [
-            "Damage %",
+            "Boss Damage",
             30,
             4.2553
         ],
         [
-            "Damage %",
+            "Boss Damage",
             35,
             4.2553
         ],
         [
-            "Damage %",
+            "Boss Damage",
             40,
             4.2553
         ],
@@ -136,7 +136,7 @@
             7.8431
         ],
         [
-            "Defense %",
+            "Ignore Enemy Defense %",
             30,
             5.8824
         ],
@@ -151,7 +151,7 @@
             7.8431
         ],
         [
-            "Damage %",
+            "Boss Damage",
             30,
             5.8824
         ]

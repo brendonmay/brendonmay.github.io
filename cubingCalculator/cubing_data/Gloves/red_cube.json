@@ -26,17 +26,7 @@
             9.0909
         ],
         [
-            "Max MP %",
-            12,
-            9.0909
-        ],
-        [
-            "Defense %",
-            12,
-            9.0909
-        ],
-        [
-            "Damage %",
+            "Critical Damage %",
             8,
             9.0909
         ],
@@ -59,6 +49,14 @@
             "Decent Skill",
             "Decent Speed Booster",
             6.8182
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +12%",
+                "Defense : +12%"
+            ],
+            18.1818
         ]
     ],
     "unique": [
@@ -88,16 +86,6 @@
             10.0
         ],
         [
-            "Max MP %",
-            9,
-            10.0
-        ],
-        [
-            "Defense %",
-            9,
-            6.6667
-        ],
-        [
             "All Stats %",
             6,
             6.6667
@@ -120,13 +108,15 @@
         [
             "Junk",
             [
+                "Max MP : +9%",
+                "Defense : +9%",
                 "+1 STR per 10 character levels",
                 "+1 DEX per 10 character levels",
                 "+1 INT per 10 character levels",
                 "+1 LUK per 10 character levels",
                 "Increase efficiency of HP recovery items and skills by : +30%"
             ],
-            13.3335
+            30.000199999999992
         ]
     ]
 }

@@ -3,61 +3,41 @@
         [
             "STR %",
             12,
-            5.8824
+            9.0909
         ],
         [
             "DEX %",
             12,
-            5.8824
+            9.0909
         ],
         [
             "INT %",
             12,
-            5.8824
+            9.0909
         ],
         [
             "LUK %",
             12,
-            5.8824
+            9.0909
         ],
         [
             "Max HP %",
             12,
-            8.8235
-        ],
-        [
-            "Max MP %",
-            12,
-            8.8235
-        ],
-        [
-            "Defense %",
-            12,
-            8.8235
+            13.6364
         ],
         [
             "All Stats %",
             9,
-            5.8824
-        ],
-        [
-            "Meso Amount %",
-            20,
-            8.8235
-        ],
-        [
-            "Item Drop Rate %",
-            20,
-            8.8235
+            9.0909
         ],
         [
             "Junk",
             [
-                "MP consumption of all skills : -15%",
-                "MP consumption of all skills : -30%",
+                "Max MP : +12%",
+                "Defense : +12%",
                 "Increase efficiency of HP recovery items and skills by : +40%"
             ],
-            26.470499999999998
+            40.9092
         ]
     ],
     "unique": [
@@ -87,16 +67,6 @@
             14.2857
         ],
         [
-            "Max MP %",
-            9,
-            14.2857
-        ],
-        [
-            "Defense %",
-            9,
-            14.2857
-        ],
-        [
             "All Stats %",
             6,
             4.7619
@@ -104,9 +74,11 @@
         [
             "Junk",
             [
+                "Max MP : +9%",
+                "Defense : +9%",
                 "Increase efficiency of HP recovery items and skills by : +30%"
             ],
-            14.2857
+            42.8571
         ]
     ]
 }
