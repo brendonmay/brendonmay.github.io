@@ -158,41 +158,36 @@ function removeCommonWSEOptions() {
   removeGroupIfExists("attackAndIEDGroup");
 }
 
+function removeCommonSEOptions() {
+  removeGroupIfExists("attackAndBossGroup");
+}
+
 function addCommonSEOptions(itemLevel, desiredTier) {
   const prime = getPrimeLineValue(itemLevel, desiredTier);
   const [_, pn, pp] = get2LStatOptionAmounts(prime);
 
-  if (document.getElementById(`attackAndBossGroup`)) {
-    const PNATT30BOSS = $("#PNATT30BOSS");
-    const PNATT35BOSS = $("#PNATT35BOSS");
-    const PNATT40BOSS = $("#PNATT40BOSS");
-    const PPATT30BOSS = $("#PPATT30BOSS");
+  // To avoid having to figure out which lines to change when changing potential tier.
+  removeCommonSEOptions();
 
-    PNATT30BOSS.attr("value", `${pn}ATT30BOSS`);
-    PNATT35BOSS.attr("value", `${pn}ATT35BOSS`);
-    PNATT40BOSS.attr("value", `${pn}ATT40BOSS`);
-    PPATT30BOSS.attr("value", `${pp}ATT30BOSS`);
+  // Epic
+  if (desiredTier === 1) {
+    // No boss damage in epic.
+    return;
+  }
 
-    PNATT30BOSS.text(`${pn}%+ Attack and 30%+ Boss`);
-    PNATT35BOSS.text(`${pn}%+ Attack and 35%+ Boss`);
-    PNATT40BOSS.text(`${pn}%+ Attack and 40%+ Boss`);
-    PPATT30BOSS.text(`${pp}%+ Attack and 30%+ Boss`);
-  } else {
-    $desiredStats.append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
-    const $attackAndBossGroup = $('#attackAndBossGroup');
-    $attackAndBossGroup.append("<option id='1Att1Boss' value='1ATTand1BOSS'>1 Line Attack% + 1 Line Boss%</option>");
-    $attackAndBossGroup.append("<option id='1Att2Boss' value='1ATTand2BOSS'>1 Line Attack% + 2 Line Boss%</option>");
-    $attackAndBossGroup.append("<option id='2Att1Boss' value='2ATTand1BOSS'>2 Line Attack% + 1 Line Boss%</option>");
+  $desiredStats.append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
+  const $attackAndBossGroup = $('#attackAndBossGroup');
+  $attackAndBossGroup.append("<option id='1Att1Boss' value='1ATTand1BOSS'>1 Line Attack% + 1 Line Boss%</option>");
+  $attackAndBossGroup.append("<option id='1Att2Boss' value='1ATTand2BOSS'>1 Line Attack% + 2 Line Boss%</option>");
+  $attackAndBossGroup.append("<option id='2Att1Boss' value='2ATTand1BOSS'>2 Line Attack% + 1 Line Boss%</option>");
 
-    $attackAndBossGroup.append(`<option id='$PNATT30BOSS' value='${pn}ATT30BOSS'>${pn}%+ Attack and 30%+ Boss</option>`);
+  $attackAndBossGroup.append(`<option id='$PNATT30BOSS' value='${pn}ATT30BOSS'>${pn}%+ Attack and 30%+ Boss</option>`);
+  if (desiredTier === 3) {
+    // Unique doesn't have more than 30% boss
     $attackAndBossGroup.append(`<option id='$PNATT35BOSS' value='${pn}ATT35BOSS'>${pn}%+ Attack and 35%+ Boss</option>`);
     $attackAndBossGroup.append(`<option id='$PNATT40BOSS' value='${pn}ATT40BOSS'>${pn}%+ Attack and 40%+ Boss</option>`);
-    $attackAndBossGroup.append(`<option id='$PPATT30BOSS' value='${pp}ATT30BOSS'>${pp}%+ Attack and 30%+ Boss</option>`);
   }
-}
-
-function removeCommonSEOptions() {
-  removeGroupIfExists("attackAndBossGroup");
+  $attackAndBossGroup.append(`<option id='$PPATT30BOSS' value='${pp}ATT30BOSS'>${pp}%+ Attack and 30%+ Boss</option>`);
 }
 
 function removeCritDamageOptions() {
@@ -304,7 +299,6 @@ function updateDesiredStats() {
   const itemType = document.getElementById('itemType').value;
   const itemLevel = parseInt(document.getElementById('itemLevel').value);
   const desiredTier = parseInt(document.getElementById('desiredTier').value);
-  debugger;
 
   if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
     removeNormalStatOptions();
@@ -351,6 +345,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("currentTier").addEventListener("change", function () {
     const currentTier = parseInt($(this).val());
     const $desiredTier = $('#desiredTier');
+    const desiredTier = parseInt($desiredTier.val());
     $desiredTier.empty();
 
     if (currentTier <= 1) {
@@ -362,28 +357,29 @@ document.addEventListener("DOMContentLoaded", function () {
     $desiredTier.append("<option value=3 selected>Legendary</option>");
 
     const desiredStatsElement = document.getElementById("desiredStats");
-    if (currentTier !== 3){
+    if (currentTier !== desiredTier){
       desiredStatsElement.disabled = true
       desiredStatsElement.value = "any"
     }
     else {
       updateDesiredStats();
-      desiredStatsElement.disabled = false
+      desiredStatsElement.disabled = false;
     }
   });
 
   document.getElementById('desiredTier').addEventListener("change", function () {
     const desiredTier = $(this).val();
-    const currentTier = $(this).val();
+    const currentTier = $('#currentTier').val();
     const desiredStatsElement = document.getElementById("desiredStats");
 
     if (currentTier === desiredTier) {
       updateDesiredStats();
-      desiredStatsElement.disabled = false
+      desiredStatsElement.disabled = false;
     }
     else {
       $desiredStats.empty();
       $desiredStats.append("<option id='any' value='any'>Any</option>");
+      desiredStatsElement.disabled = true;
     }
   });
 
@@ -408,7 +404,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Set selected option as variable
     var itemLevel = parseInt($(this).val());
     var itemType = document.getElementById('itemType').value;
-    var desiredTier = document.getElementById('desiredTier').value
+    const desiredTier = document.getElementById('desiredTier').value
+    const currentTier = document.getElementById('currentTier').value
 
     if (itemLevel < 71 || itemLevel > 200) {
       $desiredStats.empty();
