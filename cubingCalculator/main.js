@@ -195,7 +195,15 @@ function removeCommonSEOptions() {
   removeGroupIfExists("attackAndBossGroup");
 }
 
-function addCritDamageOptions() {
+function removeCritDamageOptions() {
+  removeGroupIfExists("critDamageGroup");
+}
+
+function addCritDamageOptions(desiredTier) {
+  if (desiredTier !== 3) {
+    removeCritDamageOptions();
+    return;
+  }
   if (!document.getElementById(`critDamageGroup`)) {
     $desiredStats.append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
     const $critDamageGroup = $('#critDamageGroup');
@@ -219,11 +227,15 @@ function addCritDamageOptions() {
   }
 }
 
-function removeCritDamageOptions() {
-  removeGroupIfExists("critDamageGroup");
+function removeDropAndMesoOptions() {
+  removeGroupIfExists("dropMesoGroup");
 }
 
-function addDropAndMesoOptions() {
+function addDropAndMesoOptions(desiredTier) {
+  if (desiredTier !== 3) {
+    removeDropAndMesoOptions();
+    return;
+  }
   if (!document.getElementById(`dropMesoGroup`)) {
     $desiredStats.append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
     const $dropMesoGroup = $('#dropMesoGroup');
@@ -251,11 +263,15 @@ function addDropAndMesoOptions() {
   }
 }
 
-function removeDropAndMesoOptions() {
-  removeGroupIfExists("dropMesoGroup");
+function removeCDOptions() {
+  removeGroupIfExists("CDGroup");
 }
 
-function addCDOptions() {
+function addCDOptions(desiredTier) {
+  if (desiredTier !== 3) {
+    removeCDOptions();
+    return;
+  }
   if (!document.getElementById(`CDGroup`)) {
     ////2SecCD, 3SecCD, 4SecCD, 2SecCDAndStat, 2SecCDAndHP, 2SecCDAndALL, 2SecCDAnd2Stat, 2SecCDAnd2HP, 2SecCDAnd2ALL, 3SecCDAndStat, 3SecCDAndHP, 3SecCDAndALL, 4SecCDAndStat, 4SecCDAndHP, 4SecCDAndALL
     $desiredStats.append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
@@ -284,10 +300,6 @@ function addCDOptions() {
   }
 }
 
-function removeCDOptions() {
-  removeGroupIfExists("CDGroup");
-}
-
 function updateDesiredStats() {
   const itemType = document.getElementById('itemType').value;
   const itemLevel = parseInt(document.getElementById('itemLevel').value);
@@ -310,19 +322,19 @@ function updateDesiredStats() {
   }
 
   if (itemType === 'gloves') {
-    addCritDamageOptions();
+    addCritDamageOptions(desiredTier);
   } else {
     removeCritDamageOptions();
   }
 
   if (itemType === 'accessory') {
-    addDropAndMesoOptions();
+    addDropAndMesoOptions(desiredTier);
   } else {
     removeDropAndMesoOptions();
   }
 
   if (itemType === 'hat') {
-    addCDOptions();
+    addCDOptions(desiredTier);
   } else {
     removeCDOptions();
   }
