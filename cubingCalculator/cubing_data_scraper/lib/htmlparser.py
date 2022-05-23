@@ -166,7 +166,7 @@ def parse_html_files(html_files, output_dir):
 if __name__ == "__main__":
     # NOTE: When running this as a standalone script, we need to call it as a module in order to resolve the
     # sibling import to translator.py (otherwise an import error will occur). To do so:
-    # first cd to scrape_cubing_data, then call `python -m lib.htmlparser`
+    # cd one level up from this file and run: `python -m lib.htmlparser`
 
     PARENT_DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_DIR = os.path.join(PARENT_DIR, "test")
