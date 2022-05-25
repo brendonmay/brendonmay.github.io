@@ -3,7 +3,7 @@ import {getProbability} from "./getProbability.js";
 import C from "./c.js";
 import Game from "./game.js";
 import {geoDistrQuantile} from "./statistics.js";
-import {cubingCost} from "./cubes.js";
+import {cubingCost, tier_rates, tier_rates_DMT} from "./cubes.js";
 
 function asset(what) {
   return "url(" + C.assetsDir + what + ")";
@@ -11,33 +11,6 @@ function asset(what) {
 
 function soundasset(what) {
   return C.soundDir + what + "?raw=true";
-}
-
-
-let tier_rates = {
-  "red": {
-    0: 0.14,
-    1: 0.06,
-    2: 0.025
-  },
-  "black": {
-    0: 0.17,
-    1: 0.11,
-    2: 0.05
-  }
-}
-
-let tier_rates_DMT = {
-  "red": {
-    0: 0.14 * 2,
-    1: 0.06 * 2,
-    2: 0.025 * 2
-  },
-  "black": {
-    0: 0.17 * 2,
-    1: 0.11 * 2,
-    2: 0.05 * 2
-  }
 }
 
 function getPrimeLineValue(itemLevel, desiredTier, type) {
