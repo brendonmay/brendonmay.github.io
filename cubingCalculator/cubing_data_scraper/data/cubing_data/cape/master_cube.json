@@ -1,0 +1,96 @@
+{
+    "unique": [
+        [
+            "STR %",
+            9,
+            7.4074
+        ],
+        [
+            "DEX %",
+            9,
+            7.4074
+        ],
+        [
+            "INT %",
+            9,
+            7.4074
+        ],
+        [
+            "LUK %",
+            9,
+            7.4074
+        ],
+        [
+            "Max HP %",
+            9,
+            11.1111
+        ],
+        [
+            "All Stats %",
+            6,
+            3.7037
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 20% damage when hit",
+            11.1111
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 40% damage when hit",
+            11.1111
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +9%",
+                "Defense : +9%",
+                "Increase efficiency of HP recovery items and skills by : +30%"
+            ],
+            33.3333
+        ]
+    ],
+    "epic": [
+        [
+            "STR %",
+            6,
+            7.4074
+        ],
+        [
+            "DEX %",
+            6,
+            7.4074
+        ],
+        [
+            "INT %",
+            6,
+            7.4074
+        ],
+        [
+            "LUK %",
+            6,
+            7.4074
+        ],
+        [
+            "Max HP %",
+            6,
+            11.1111
+        ],
+        [
+            "All Stats %",
+            3,
+            3.7037
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +6%",
+                "Defense : +6%",
+                "20% chance to ignore 25 damage when hit",
+                "20% chance to ignore 38 damage when hit",
+                "30% chance to ignore 51 damage when hit"
+            ],
+            55.5555
+        ]
+    ]
+}

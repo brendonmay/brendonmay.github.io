@@ -1,0 +1,95 @@
+{
+    "legendary": [
+        [
+            "STR %",
+            12,
+            9.3023
+        ],
+        [
+            "DEX %",
+            12,
+            9.3023
+        ],
+        [
+            "INT %",
+            12,
+            9.3023
+        ],
+        [
+            "LUK %",
+            12,
+            9.3023
+        ],
+        [
+            "Max HP %",
+            12,
+            9.3023
+        ],
+        [
+            "All Stats %",
+            9,
+            6.9767
+        ],
+        [
+            "Meso Amount %",
+            20,
+            6.9767
+        ],
+        [
+            "Item Drop Rate %",
+            20,
+            6.9767
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +12%",
+                "Defense : +12%",
+                "MP consumption of all skills : -15%",
+                "MP consumption of all skills : -30%"
+            ],
+            32.558
+        ]
+    ],
+    "unique": [
+        [
+            "STR %",
+            9,
+            11.3636
+        ],
+        [
+            "DEX %",
+            9,
+            11.3636
+        ],
+        [
+            "INT %",
+            9,
+            11.3636
+        ],
+        [
+            "LUK %",
+            9,
+            11.3636
+        ],
+        [
+            "Max HP %",
+            9,
+            13.6364
+        ],
+        [
+            "All Stats %",
+            6,
+            9.0909
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +9%",
+                "Defense : +9%",
+                "Increase efficiency of HP recovery items and skills by : +30%"
+            ],
+            31.818199999999997
+        ]
+    ]
+}

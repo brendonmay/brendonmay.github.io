@@ -1,0 +1,124 @@
+{
+    "legendary": [
+        [
+            "STR %",
+            12,
+            5.8824
+        ],
+        [
+            "DEX %",
+            12,
+            5.8824
+        ],
+        [
+            "INT %",
+            12,
+            5.8824
+        ],
+        [
+            "LUK %",
+            12,
+            5.8824
+        ],
+        [
+            "Max HP %",
+            12,
+            8.8235
+        ],
+        [
+            "All Stats %",
+            9,
+            5.8824
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 20% damage when hit",
+            8.8235
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "10% chance to ignore 40% damage when hit",
+            8.8235
+        ],
+        [
+            "Increase invincibility time after being hit",
+            3,
+            8.8235
+        ],
+        [
+            "Chance of being invincible for seconds when hit",
+            "4% of being invincible for 7 seconds when attacked",
+            8.8235
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +12%",
+                "Defense : +12%",
+                "Increase efficiency of HP recovery items and skills by : +40%"
+            ],
+            26.470499999999998
+        ]
+    ],
+    "unique": [
+        [
+            "STR %",
+            9,
+            6.0606
+        ],
+        [
+            "DEX %",
+            9,
+            6.0606
+        ],
+        [
+            "INT %",
+            9,
+            6.0606
+        ],
+        [
+            "LUK %",
+            9,
+            6.0606
+        ],
+        [
+            "Max HP %",
+            9,
+            9.0909
+        ],
+        [
+            "All Stats %",
+            6,
+            3.0303
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 20% damage when hit",
+            9.0909
+        ],
+        [
+            "Chance to ignore % damage when hit",
+            "5% chance to ignore 40% damage when hit",
+            9.0909
+        ],
+        [
+            "Increase invincibility time after being hit",
+            2,
+            9.0909
+        ],
+        [
+            "Chance of being invincible for seconds when hit",
+            "2% of being invincible for 7 seconds when attacked",
+            9.0909
+        ],
+        [
+            "Junk",
+            [
+                "Max MP : +9%",
+                "Defense : +9%",
+                "Increase efficiency of HP recovery items and skills by : +30%"
+            ],
+            27.2727
+        ]
+    ]
+}

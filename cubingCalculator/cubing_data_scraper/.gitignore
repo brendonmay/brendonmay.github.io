@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# python
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# pycharm
+.idea/
+
+# don't track downloaded html files, raw json, or test data
+lib/test/
+data/source_data/
+
