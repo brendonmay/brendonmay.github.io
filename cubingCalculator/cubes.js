@@ -1,12 +1,29 @@
 // Functions and constants relating to the different cubes.
 
-export function cubingCost(cubeType, itemLevel, totalCubeCount) {
-    if (cubeType == 'red') {
-        cubeCost = 12000000;
-    } else {
-        cubeCost = 22000000;
+function getCubeCost(cubeType) {
+    switch (cubeType) {
+        case "red":
+            return 12000000;
+        case "black":
+            return 22000000;
+        case "master":
+            return 7500000;
+        default:
+            return 0;
     }
-    var revealPotentialCost = 20 * itemLevel ** 2
+}
+
+function getRevealCostConstant(itemLevel) {
+    if (itemLevel < 30) { return 0; }
+    if (itemLevel <= 70) { return 0.5; }
+    if (itemLevel <= 120) { return 2.5; }
+    return 20;
+}
+
+export function cubingCost(cubeType, itemLevel, totalCubeCount) {
+    const cubeCost = getCubeCost(cubeType);
+    const revealCostConst = getRevealCostConstant(itemLevel);
+    const revealPotentialCost = revealCostConst * itemLevel ** 2
     return cubeCost * totalCubeCount + totalCubeCount * revealPotentialCost
 }
 
