@@ -4,7 +4,7 @@ import C from "./c.js";
 import Game from "./game.js";
 import {geoDistrQuantile} from "./statistics.js";
 import {cubingCost, tier_rates, tier_rates_DMT} from "./cubes.js";
-import {$desiredStats, updateDesiredStats} from "./updateDesiredStats";
+import {$desiredStats, updateDesiredStats} from "./updateDesiredStats.js";
 
 function asset(what) {
   return "url(" + C.assetsDir + what + ")";
