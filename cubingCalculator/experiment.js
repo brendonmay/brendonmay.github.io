@@ -1,9 +1,83 @@
-import {median, percentile} from "./statistics";
+import {geoDistrQuantile, median, percentile} from "./statistics";
 import C from "./c";
 import Game from "./game";
 import {cubingCost} from "./cubes";
+import {getProbability} from "./getProbability";
 
 // Old code from when the calculator used simulation instead of math.
+
+// Old code in the runCalculator function.
+function runCalculator() {
+    //console.log(repeatExperiment('red', 150, 'weapon', '2LATT', 1, 3, 3))
+    // Highcharts.chart('container', {
+    //   title: {
+    //     text: 'Frequency Histogram'
+    //   },
+
+    //   xAxis: [{
+    //     title: {
+    //       text: ''
+    //     },
+    //     alignTicks: false,
+    //     visible: false,
+    //     opposite: true
+    //   }, {
+    //     title: {
+    //       text: 'Meso Cost (in Billions)'
+    //     },
+    //     alignTicks: false,
+    //     opposite: false
+    //   }],
+
+    //   yAxis: [{
+    //     title: {
+    //       text: ''
+    //     },
+    //     visible: false,
+    //     opposite: true
+    //   }, {
+    //     title: {
+    //       text: 'Frequency'
+    //     },
+    //     opposite: false
+    //   }],
+
+    //   plotOptions: {
+    //     histogram: {
+    //       accessibility: {
+    //         pointDescriptionFormatter: function (point) {
+    //           var ix = point.index + 1,
+    //             x1 = point.x.toFixed(3),
+    //             x2 = point.x2.toFixed(3),
+    //             val = point.y;
+    //           return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
+    //         }
+    //       }
+    //     }
+    //   },
+
+    //   series: [{
+    //     name: 'Histogram',
+    //     type: 'histogram',
+    //     color: '#135273',
+    //     xAxis: 1,
+    //     yAxis: 1,
+    //     baseSeries: 's1',
+    //     zIndex: -1
+    //   }, {
+    //     name: '',
+    //     type: 'scatter',
+    //     visible: false,
+    //     data: mesoDataForGraph,
+    //     id: 's1',
+    //     marker: {
+    //       radius: 0
+    //     }
+    //   }]
+    // });
+    //document.getElementById("graphhere").style.display = '';
+}
+
 
 function atLeastTwoLines(boolLine1, boolLine2, boolLine3) {
     if (boolLine1 && boolLine2) return {
