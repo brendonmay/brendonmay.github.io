@@ -56,84 +56,24 @@ function loaderOff() {
 }
 
 function getTierCosts(currentTier, desiredTier, cubeType, DMT) {
-  var tier_up_rates = tier_rates
-  if (DMT) tier_up_rates = tier_rates_DMT
-  if (currentTier == 3) return {mean: 0, median: 0, seventy_fifth: 0, eighty_fifth: 0, nintey_fifth: 0}
-  if (currentTier == 2) {
-    var p = tier_up_rates[cubeType][currentTier]
-    var stats = geoDistrQuantile(p)
-    var mean = Math.round(stats.mean)
-    var median = Math.round(stats.median)
-    var seventy_fifth = Math.round(stats.seventy_fifth)
-    var eighty_fifth = Math.round(stats.eighty_fifth)
-    var nintey_fifth = Math.round(stats.nintey_fifth)
-
-    return {
-      mean: mean,
-      median: median,
-      seventy_fifth: seventy_fifth,
-      eighty_fifth: eighty_fifth,
-      nintey_fifth: nintey_fifth
-    }
+  const tier_up_rates = (DMT) ? tier_rates_DMT: tier_rates;
+  let mean = 0, median = 0, seventy_fifth = 0, eighty_fifth = 0, nintey_fifth = 0;
+  for (let i = currentTier; i < desiredTier; i++) {
+    const p = tier_up_rates[cubeType][currentTier];
+    const stats = geoDistrQuantile(p);
+    mean += Math.round(stats.mean);
+    median += Math.round(stats.median);
+    seventy_fifth += Math.round(stats.seventy_fifth);
+    eighty_fifth += Math.round(stats.eighty_fifth);
+    nintey_fifth += Math.round(stats.nintey_fifth);
   }
-  if (currentTier == 1) {
-    var p = tier_up_rates[cubeType][currentTier]
-    var stats = geoDistrQuantile(p)
-    var mean = Math.round(stats.mean)
-    var median = Math.round(stats.median)
-    var seventy_fifth = Math.round(stats.seventy_fifth)
-    var eighty_fifth = Math.round(stats.eighty_fifth)
-    var nintey_fifth = Math.round(stats.nintey_fifth)
-
-    var p = tier_up_rates[cubeType][currentTier + 1]
-    var stats = geoDistrQuantile(p)
-    mean += Math.round(stats.mean)
-    median += Math.round(stats.median)
-    seventy_fifth += Math.round(stats.seventy_fifth)
-    eighty_fifth += Math.round(stats.eighty_fifth)
-    nintey_fifth += Math.round(stats.nintey_fifth)
-
-    return {
-      mean: mean,
-      median: median,
-      seventy_fifth: seventy_fifth,
-      eighty_fifth: eighty_fifth,
-      nintey_fifth: nintey_fifth
-    }
-  }
-  if (currentTier == 0) {
-    var p = tier_up_rates[cubeType][currentTier]
-    var stats = geoDistrQuantile(p)
-    var mean = Math.round(stats.mean)
-    var median = Math.round(stats.median)
-    var seventy_fifth = Math.round(stats.seventy_fifth)
-    var eighty_fifth = Math.round(stats.eighty_fifth)
-    var nintey_fifth = Math.round(stats.nintey_fifth)
-
-    var p = tier_up_rates[cubeType][currentTier + 1]
-    var stats = geoDistrQuantile(p)
-    mean += Math.round(stats.mean)
-    median += Math.round(stats.median)
-    seventy_fifth += Math.round(stats.seventy_fifth)
-    eighty_fifth += Math.round(stats.eighty_fifth)
-    nintey_fifth += Math.round(stats.nintey_fifth)
-
-    var p = tier_up_rates[cubeType][currentTier + 2]
-    var stats = geoDistrQuantile(p)
-    mean += Math.round(stats.mean)
-    median += Math.round(stats.median)
-    seventy_fifth += Math.round(stats.seventy_fifth)
-    eighty_fifth += Math.round(stats.eighty_fifth)
-    nintey_fifth += Math.round(stats.nintey_fifth)
-
-    return {
-      mean: mean,
-      median: median,
-      seventy_fifth: seventy_fifth,
-      eighty_fifth: eighty_fifth,
-      nintey_fifth: nintey_fifth
-    }
-  }
+  return {
+    mean,
+    median,
+    seventy_fifth,
+    eighty_fifth,
+    nintey_fifth
+  };
 }
 
 function runCalculator() {
