@@ -14,6 +14,36 @@ function soundasset(what) {
   return C.soundDir + what + "?raw=true";
 }
 
+const $desiredTier = $('#desiredTier');
+
+function updateDesiredTierOptions(currentTier) {
+  $desiredTier.empty();
+
+  if (currentTier <= 1) {
+    $desiredTier.append("<option value=1>Epic</option>");
+  }
+  if (currentTier <= 2) {
+    $desiredTier.append("<option value=2>Unique</option>");
+  }
+  $desiredTier.append("<option value=3 selected>Legendary</option>");
+}
+
+const $cubeType = $('#cubeType');
+
+function updateCubeTypeOptions(desiredTier) {
+  $cubeType.empty();
+
+  if (desiredTier <= 1) {
+    $cubeType.append("<option value='occult'>Occult</option>");
+  }
+  if (desiredTier <= 2) {
+    $cubeType.append("<option value='master'>Master</option>");
+  }
+  $cubeType.append("<option value='meister'>Meister</option>");
+  $cubeType.append("<option value='red'>Red</option>");
+  $cubeType.append("<option value='black' selected>Black</option>");
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   setTimeout(function () {
     $("#toast").toast('show')
@@ -24,17 +54,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // }, 3000)
   document.getElementById("currentTier").addEventListener("change", function () {
     const currentTier = parseInt($(this).val());
-    const $desiredTier = $('#desiredTier');
     const desiredTier = parseInt($desiredTier.val());
-    $desiredTier.empty();
 
-    if (currentTier <= 1) {
-      $desiredTier.append("<option value=1>Epic</option>");
-    }
-    if (currentTier <= 2) {
-      $desiredTier.append("<option value=2>Unique</option>");
-    }
-    $desiredTier.append("<option value=3 selected>Legendary</option>");
+    updateDesiredTierOptions(currentTier);
+    updateCubeTypeOptions(desiredTier);
 
     const desiredStatsElement = document.getElementById("desiredStats");
     if (currentTier !== desiredTier){
@@ -51,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const desiredTier = $(this).val();
     const currentTier = $('#currentTier').val();
     const desiredStatsElement = document.getElementById("desiredStats");
+    updateCubeTypeOptions(desiredTier);
 
     if (currentTier === desiredTier) {
       updateDesiredStats();
