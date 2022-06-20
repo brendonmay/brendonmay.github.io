@@ -96,14 +96,15 @@ function kmsCost(current_star, item_level) {
 }
 
 function gmsCost(current_star, item_level) {
+    // The GMS starforce changes in Destiny just multiplied the costs by 0.78 for all the parts where we were paying extra.
     if (current_star >= 20) {
-        return 1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 100;
+        return 0.78 * (1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 100);
     }
     if (current_star >= 18) {
-        return 1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 110;
+        return 0.78 * (1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 110);
     }
     if (current_star >= 15) {
-        return 1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 120;
+        return 0.78 * (1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 120);
     }
     if (current_star >= 10) {
         return 1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 400;
@@ -140,6 +141,13 @@ const SERVER_COST_FUNCTIONS = {
     "tmsr": tmsRebootCost,
 }
 
+function getBaseCost(server, current_star, item_level) {
+    const costFn = SERVER_COST_FUNCTIONS[server];
+    const attempt_cost = costFn(current_star, item_level);
+    // The game rounds to the nearest 100.
+    return Math.round(attempt_cost / 100) * 100;
+}
+
 function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chance_time, item_type, server) {
     if (item_type == "tyrant"){
         var attempt_cost = item_level**3.56;
@@ -172,9 +180,7 @@ function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, 
         if (thirty_off) {
             multiplier = multiplier - 0.3;
         }
-
-        const costFn = SERVER_COST_FUNCTIONS[server];
-        const attempt_cost = costFn(current_star, item_level) * multiplier;
+        const attempt_cost = getBaseCost(server, current_star, item_level) * multiplier;
         return parseFloat(attempt_cost.toFixed(0))
     }
 }
