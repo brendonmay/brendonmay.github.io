@@ -246,9 +246,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("itemLevel").addEventListener("change", function () {
     // Set selected option as variable
     var itemLevel = parseInt($(this).val());
-    var itemType = document.getElementById('itemType').value;
-    const desiredTier = document.getElementById('desiredTier').value
-    const currentTier = document.getElementById('currentTier').value
 
     if (itemLevel < 71 || itemLevel > 200) {
       $desiredStats.empty();
