@@ -37,7 +37,12 @@ function determineLegionStats(legion_level) {
         8500: 37,
         9000: 38,
         9500: 39,
-        10000: 40
+        10000: 40,
+        10500: 41,
+        11000: 42,
+        11500: 43,
+        12000: 44,
+        12500: 45
     }
 
     var number_of_attackers = attacker_data[legion_rank]
