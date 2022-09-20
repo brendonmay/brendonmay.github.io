@@ -2355,7 +2355,8 @@ function getClassData(maple_class) {
             'attPercent': 4,
             'iedPercent': [44, 20],
             'dmgPercent': 20,
-            'bossPercent': 0
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Pathfinder': {
