@@ -1284,6 +1284,10 @@ function getPrimaryAndSecondaryStatType(maple_class) {
             'primaryStatType': 'DEX',
             'secondaryStatType': 'STR'
         },
+        'Kain': {
+            'primaryStatType': 'DEX',
+            'secondaryStatType': 'STR'
+        },
         'Kaiser': {
             'primaryStatType': 'STR',
             'secondaryStatType': 'DEX'
@@ -1293,6 +1297,10 @@ function getPrimaryAndSecondaryStatType(maple_class) {
             'secondaryStatType': 'LUK'
         },
         'Kinesis': {
+            'primaryStatType': 'INT',
+            'secondaryStatType': 'LUK'
+        },
+        'Lara': {
             'primaryStatType': 'INT',
             'secondaryStatType': 'LUK'
         },
@@ -1409,6 +1417,7 @@ function getMultiplier(weapon_type, maple_class) {
         'wand': 1.00, //good
         'wand_adventure': 1.20, //good
         'whip_blade': 1.3125, //good
+        'whispershot': 1.30, //good
     };
 
     if (maple_class == 'Hero') {
@@ -2246,6 +2255,14 @@ function getClassData(maple_class) {
             'critDmg': 0
         },
 
+        'Kain': {
+            'attPercent': 34,
+            'iedPercent': [10, 30],
+            'dmgPercent': 10,
+            'bossPercent': 10,
+            'critDmg': 40
+        },
+
         'Kaiser': {
             'attPercent': 34,
             'iedPercent': [40, 20],
@@ -2268,6 +2285,14 @@ function getClassData(maple_class) {
             'dmgPercent': 0,
             'bossPercent': 30,
             'critDmg': 0
+        },
+
+        'Lara': {
+            'attPercent': 4,
+            'iedPercent': [40],
+            'dmgPercent': 25, // 20% base + 5% from level 2 link
+            'bossPercent': 10,
+            'critDmg': 20
         },
 
         'Luminous': {

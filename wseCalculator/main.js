@@ -1394,6 +1394,13 @@ function getClassData(maple_class) {
             'bossPercent': 20
         },
 
+        'Kain': {
+            'attPercent': 34,
+            'iedPercent': [10, 30],
+            'dmgPercent': 10,
+            'bossPercent': 10,
+        },
+
         'Kaiser': {
             'attPercent': 34,
             'iedPercent': [40, 20],
@@ -1413,6 +1420,13 @@ function getClassData(maple_class) {
             'iedPercent': [20],
             'dmgPercent': 0,
             'bossPercent': 30
+        },
+
+        'Lara': {
+            'attPercent': 4,
+            'iedPercent': [40, 20],
+            'dmgPercent': 20,
+            'bossPercent': 10,
         },
 
         'Luminous': {
