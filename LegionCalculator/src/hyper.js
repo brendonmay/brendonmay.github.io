@@ -2121,11 +2121,11 @@ function determineNumberofLines(combination, stat) {
 function getClassData(maple_class) {
     var class_data = {
         'Adele': {
-            'attPercent': 14,
-            'iedPercent': [20, 20, 10, 10, 5, 5, 5],
-            'dmgPercent': 20,
-            'bossPercent': 0,
-            'critDmg': 0
+            'attPercent': 14, // 10% from Recalling Greatness + 4% from Echo of Hero
+            'iedPercent': [20, 10, 10, 5, 5], // Ruination (20%) + Noble Summons (10%) + Grave Proclamation (10%) + Resonance Rush x2 (2 * 5%) 
+            'dmgPercent': 22, // 20% from Grave Proclamation + level 2 link skill (2% per pt member)
+            'bossPercent': 14, // 10% from Strive + level 2 link skill
+            'critDmg': 10 // 10% from Recalling Greatness
         },
 
         'Angelic Buster': {
