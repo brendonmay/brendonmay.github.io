@@ -5,11 +5,11 @@
 export const emptyInputObject = {
     percStat: 0, // At least this much % stat including % allstat lines.
     lineStat: 0, // At least this many lines of % stat including allstat lines.
-    allStat: 0, // At least this much % all stat including 1/3rd of % STR, DEX, and LUK. For Xenons.
+    percAllStat: 0, // At least this much % all stat including 1/3rd of % STR, DEX, and LUK. For Xenons.
     percHp: 0, // At least this much % HP. For DA.
     lineHp: 0, // At least this many lines of % HP. For DA.
-    percAtk: 0,// At least this much % atk.
-    lineAtk: 0, // At least this many lines of % atk.
+    percAtt: 0,// At least this much % atk.
+    lineAtt: 0, // At least this many lines of % atk.
     percBoss: 0,
     lineBoss: 0,
     lineIed: 0,
