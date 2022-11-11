@@ -9,7 +9,7 @@ function get3LStatOptionAmounts(prime) {
     const ppp = prime * 3;
     const ppn = ppp - 3;
     const pnn = ppp - 6;
-    const pna = ppp - 9; // This doesn't work for max HP legendary but the 3 DAs won't complain.
+    const pna = ppp - 9; // This doesn't work for max HP legendary, but it's not worth a special case.
     const paa = ppp - 12;
     const aaa = ppp - 15;
     // -15 is the lowest we go since in epic tier we're down to 3%.
