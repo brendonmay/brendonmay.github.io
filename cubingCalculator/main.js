@@ -1,5 +1,5 @@
 //function l(what) {return document.getElementById(what);}
-import {getProbability} from "./getProbability.js";
+import {getOldProbability} from "./getOldProbability.js";
 import C from "./c.js";
 import Game from "./game.js";
 import {geoDistrQuantile} from "./statistics.js";
@@ -89,7 +89,7 @@ function runCalculator() {
   var desiredStat = document.getElementById('desiredStats').value;
 
   //insert logic here
-  var p = getProbability(itemType, desiredStat, cubeType, currentTier, desiredTier, itemLevel)
+  var p = getOldProbability(itemType, desiredStat, cubeType, currentTier, desiredTier, itemLevel)
   var tier_up = getTierCosts(currentTier, desiredTier, cubeType, DMT)
   var stats = geoDistrQuantile(p)
 

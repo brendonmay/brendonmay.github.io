@@ -1,3 +1,7 @@
+// Note(sethyboy0) This file contains the code that the calculator used to calculate the probability before the big
+// rework that scrapes Nexon's official data from their Korean website. I'll let Brendon decide if he wants to keep it
+// around or not.
+
 var probabilities = {
     'weapon': {
         "line_1":
@@ -415,7 +419,7 @@ var probabilities = {
 
 }
 
-export function getProbability(item_type, desired_outcome, cube_type, currentTier, desiredTier, itemLevel) {
+export function getOldProbability(item_type, desired_outcome, cube_type, currentTier, desiredTier, itemLevel) {
 
     function prob_meso_drop(line, boss_and_drop, probabilities, cube_type, item_type) {
         if (boss_and_drop) {

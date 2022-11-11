@@ -1,10 +1,11 @@
-import {geoDistrQuantile, median, percentile} from "./statistics";
-import C from "./c";
-import Game from "./game";
-import {cubingCost} from "./cubes";
-import {getProbability} from "./getProbability";
+import {geoDistrQuantile, median, percentile} from "./statistics.js";
+import C from "./c.js";
+import Game from "./game.js";
+import {cubingCost} from "./cubes.js";
+import {getOldProbability} from "./getOldProbability.js";
 
-// Old code from when the calculator used simulation instead of math.
+// Note(sethyboy0) This file contains old code from when the calculator used simulation instead of math.
+// I'll let Brendon decide if he wants to keep it around or not.
 
 // Old code in the runCalculator function.
 function runCalculator() {
