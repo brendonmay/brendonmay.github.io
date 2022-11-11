@@ -6,6 +6,7 @@ function getPrimeLineValue(itemLevel, desiredTier, type) {
 }
 
 function get3LStatOptionAmounts(prime) {
+    // To keep things understandable -> p = prime, n = nonprime, a = allstat.
     const ppp = prime * 3;
     const ppn = ppp - 3;
     const pnn = ppp - 6;
@@ -40,20 +41,20 @@ function removeGroupIfExists(id) {
     }
 }
 
-function addNormalOptionGroup(prefix, valueText, textText, groupLabel, optionAmounts) {
+function addNormalOptionGroup(prefix, valueText, displayText, groupLabel, optionAmounts) {
     // If the optgroup already exists, update the values and text in case the user changed the item level.
     if (document.getElementById(`${prefix}Group`)) {
         optionAmounts.forEach((val, i) => {
             const $option = $(`#${prefix}${i}`);
             $option.attr("value", `${val}${valueText}`);
-            $option.text(`${val}%+ ${textText}`);
+            $option.text(`${val}%+ ${displayText}`);
         });
     } else {
         // Create the optgroup and options.
         $desiredStats.append(`<optgroup id='${prefix}Group' label='${groupLabel}'></optgroup>`);
         const $statGroup = $(`#${prefix}Group`);
         optionAmounts.forEach((val, i) => $statGroup.append(
-            `<option id='${prefix}${i}' value='${val}${valueText}'>${val}%+ ${textText}</option>`));
+            `<option id='${prefix}${i}' value='${val}${valueText}'>${val}%+ ${displayText}</option>`));
     }
 }
 
