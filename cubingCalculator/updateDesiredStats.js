@@ -1,3 +1,31 @@
+import {emptyInputObject} from "./getProbability.js";
+// Note(sethyboy0) This file contains the functions that update the options in the desired stats dropdown as the user
+// configures everything else. It also contains the function that translates between the <select> <option> values and
+// the object that the probability calculator uses.
+
+/**
+ * This function translates the string that comes from the select element to the object that the probability calculator
+ * uses. To make it simple to add more options to the calculator I'm going with the following system for <select>
+ * <option> values:
+ *
+ * Each <option>'s value will be a string that looks like v1&v2&v3, where each v looks like "s+n". s is the name of the
+ * stat and n is a number for how much of it we want. Each v is separated by & to make it easy to parse. s and n are
+ * likewise separated by + so they are easy to parse and unambiguous.
+ *
+ * For what the possible stats are, see emptyInputObject in getProbability.js
+ *
+ * @param webInput (string) The value from the HTML element.
+ */
+function translateInputToObject(webInput) {
+    const vals = webInput.split("&");
+    const output = Object.assign({}, emptyInputObject);
+    for (const val of vals) {
+        const [stat, amount] = val.split("+");
+        output[stat] += parseInt(amount);
+    }
+    return output;
+}
+
 function getPrimeLineValue(itemLevel, desiredTier, type) {
     const levelBonus = itemLevel >= 160 && !(type === "hp") ? 1 : 0;
     const base = type === "all" ? 0 : 3;
