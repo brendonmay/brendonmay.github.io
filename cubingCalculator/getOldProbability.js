@@ -472,7 +472,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
     //hat
 
-    if (desired_outcome == "4SecCD" || desired_outcome == "3SecCD" || desired_outcome == "2SecCD" || desired_outcome == "5SecCD" || desired_outcome == "6SecCD") {
+    if (desired_outcome == "secCooldown+4" || desired_outcome == "secCooldown+3" || desired_outcome == "secCooldown+2" || desired_outcome == "secCooldown+5" || desired_outcome == "secCooldown+6") {
         var prob_2sec_line_1 = prob_line("line_1", "cd_2", probabilities, cube_type, item_type)
         var prob_2sec_line_2 = prob_line("line_2", "cd_2", probabilities, cube_type, item_type)
         var prob_2sec_line_3 = prob_line("line_3", "cd_2", probabilities, cube_type, item_type)
@@ -487,7 +487,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = 0
 
-        if (desired_outcome == "2SecCD") {
+        if (desired_outcome == "secCooldown+2") {
             //2 O O
             probability = probability + prob_2sec_line_1 * prob_other_line_2 * prob_other_line_3
             //O 2 O
@@ -502,7 +502,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
             //O 1 1
             probability = probability + prob_1sec_line_3 * prob_1sec_line_2 * prob_other_line_1
         }
-        if (desired_outcome == "3SecCD" || desired_outcome == "2SecCD") {
+        if (desired_outcome == "secCooldown+3" || desired_outcome == "secCooldown+2") {
             //2 O 1
             probability = probability + prob_2sec_line_1 * prob_other_line_2 * prob_1sec_line_3
             //2 1 O
@@ -522,7 +522,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         //2 2 2
         probability = probability + prob_2sec_line_1 * prob_2sec_line_2 * prob_2sec_line_3
 
-        if (desired_outcome != "6SecCD") {
+        if (desired_outcome != "secCooldown+6") {
             //2 2 1
             probability = probability + prob_2sec_line_1 * prob_2sec_line_2 * prob_1sec_line_3
             //2 1 2
@@ -531,7 +531,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
             probability = probability + prob_1sec_line_1 * prob_2sec_line_2 * prob_2sec_line_3
         }
 
-        if (desired_outcome != "5SecCD" && desired_outcome != "6SecCD") {
+        if (desired_outcome != "secCooldown+5" && desired_outcome != "secCooldown+6") {
             //2 1 1
             probability = probability + prob_2sec_line_1 * prob_1sec_line_2 * prob_1sec_line_3
             //1 2 1
@@ -548,10 +548,10 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         }
     }
 
-    if (desired_outcome == "2SecCDAnd2Stat" || desired_outcome == "2SecCDAnd2HP" || desired_outcome == "2SecCDAnd2ALL") {
+    if (desired_outcome == "secCooldown+2&lineStat+2" || desired_outcome == "secCooldown+2&lineHp+2" || desired_outcome == "secCooldown+2&lineAllStat+2") {
         var stat = "stat"
-        if (desired_outcome == "2SecCDAnd2HP") stat = "hp"
-        if (desired_outcome == "2SecCDAnd2ALL") stat = "all"
+        if (desired_outcome == "secCooldown+2&lineHp+2") stat = "hp"
+        if (desired_outcome == "secCooldown+2&lineAllStat+2") stat = "all"
 
         var cd_line_1 = probabilities[item_type]["line_1"]["cd_2"][cube_type]
         var cd_line_2 = probabilities[item_type]["line_2"]["cd_2"][cube_type]
@@ -571,10 +571,10 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         probability = probability + cd_line_3 * stat_line_2 * stat_line_1
     }
 
-    if (desired_outcome == "4SecCDAndStat" || desired_outcome == "4SecCDAndHP" || desired_outcome == "4SecCDAndALL" || desired_outcome == "2SecCDAndStat" || desired_outcome == "2SecCDAndHP" || desired_outcome == "2SecCDAndALL" || desired_outcome == "3SecCDAndStat" || desired_outcome == "3SecCDAndHP" || desired_outcome == "3SecCDAndALL") {
-        if (desired_outcome == "4SecCDAndStat" || desired_outcome == "3SecCDAndStat" || desired_outcome == "2SecCDAndStat") var stat = "stat"
-        if (desired_outcome == "4SecCDAndHP" || desired_outcome == "3SecCDAndHP" || desired_outcome == "2SecCDAndHP") var stat = "hp"
-        if (desired_outcome == "4SecCDAndALL" || desired_outcome == "3SecCDAndALL" || desired_outcome == "2SecCDAndALL") var stat = "all"
+    if (desired_outcome == "secCooldown+4&lineStat+1" || desired_outcome == "secCooldown+4&lineHp+1" || desired_outcome == "secCooldown+4&lineAllStat+1" || desired_outcome == "secCooldown+2&lineStat+1" || desired_outcome == "secCooldown+2&lineHp+1" || desired_outcome == "secCooldown+2&lineAllStat+1" || desired_outcome == "secCooldown+3&lineStat+1" || desired_outcome == "secCooldown+3&lineHp+1" || desired_outcome == "secCooldown+3&lineAllStat+1") {
+        if (desired_outcome == "secCooldown+4&lineStat+1" || desired_outcome == "secCooldown+3&lineStat+1" || desired_outcome == "secCooldown+2&lineStat+1") var stat = "stat"
+        if (desired_outcome == "secCooldown+4&lineHp+1" || desired_outcome == "secCooldown+3&lineHp+1" || desired_outcome == "secCooldown+2&lineHp+1") var stat = "hp"
+        if (desired_outcome == "secCooldown+4&lineAllStat+1" || desired_outcome == "secCooldown+3&lineAllStat+1" || desired_outcome == "secCooldown+2&lineAllStat+1") var stat = "all"
 
         var prob_2sec_line_1 = prob_line("line_1", "cd_2", probabilities, cube_type, item_type)
         var prob_2sec_line_2 = prob_line("line_2", "cd_2", probabilities, cube_type, item_type)
@@ -594,7 +594,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = 0
 
-        if (desired_outcome == "2SecCDAndStat" || desired_outcome == "2SecCDAndHP" || desired_outcome == "2SecCDAndALL") {
+        if (desired_outcome == "secCooldown+2&lineStat+1" || desired_outcome == "secCooldown+2&lineHp+1" || desired_outcome == "secCooldown+2&lineAllStat+1") {
             //2 O S
             probability = probability + prob_2sec_line_1 * prob_other_line_2 * prob_stat_line_3
             //2 S O
@@ -616,7 +616,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
             probability = probability + prob_1sec_line_2 * prob_1sec_line_3 * prob_stat_line_1
         }
 
-        if (desired_outcome == "3SecCDAndStat" || desired_outcome == "3SecCDAndHP" || desired_outcome == "3SecCDAndALL" || desired_outcome == "2SecCDAndStat" || desired_outcome == "2SecCDAndHP" || desired_outcome == "2SecCDAndALL") {
+        if (desired_outcome == "secCooldown+3&lineStat+1" || desired_outcome == "secCooldown+3&lineHp+1" || desired_outcome == "secCooldown+3&lineAllStat+1" || desired_outcome == "secCooldown+2&lineStat+1" || desired_outcome == "secCooldown+2&lineHp+1" || desired_outcome == "secCooldown+2&lineAllStat+1") {
             //2 1 S
             probability = probability + prob_2sec_line_1 * prob_1sec_line_2 * prob_stat_line_3
             //2 S 1
@@ -640,19 +640,19 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
     }
 
     //accessory
-    if (desired_outcome == "1LMeso" || desired_outcome == "1LDrop") {
+    if (desired_outcome == "lineMeso+1" || desired_outcome == "lineDrop+1") {
         var prob_meso_line_1 = prob_meso_drop("line_1", false, probabilities, cube_type, item_type)
         var prob_meso_line_2 = prob_meso_drop("line_2", false, probabilities, cube_type, item_type)
         var prob_meso_line_3 = prob_meso_drop("line_3", false, probabilities, cube_type, item_type)
         //MMM
         var probability_1 = prob_meso_line_1 * prob_meso_line_2 * prob_meso_line_3
-        if (desired_outcome == "1LDrop") { //3l drop not possible
+        if (desired_outcome == "lineDrop+1") { //3l drop not possible
             probability_1 = 0
         }
 
         //MMO
         var probability_2 = prob_meso_line_1 * prob_meso_line_2 * (1 - prob_meso_line_1 * prob_meso_line_3)
-        if (desired_outcome == "1LDrop") { //3l drop not possible
+        if (desired_outcome == "lineDrop+1") { //3l drop not possible
             probability_2 = prob_meso_line_1 * prob_meso_line_2
         }
         //MOM
@@ -669,7 +669,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7
     }
-    if (desired_outcome == "1LDropOrMeso") {
+    if (desired_outcome == "lineMesoOrDrop+1") {
         //similar to above but 2*P(M) = P(M or D)
         var prob_meso_line_1 = prob_meso_drop("line_1", true, probabilities, cube_type, item_type)
         var prob_meso_line_2 = prob_meso_drop("line_2", true, probabilities, cube_type, item_type)
@@ -698,22 +698,22 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
     }
 
-    if (desired_outcome == "1LDropOrMesoAndHP" || desired_outcome == "1LDropOrMesoAndALL" || desired_outcome == "1LDropOrMesoAndStat" || desired_outcome == "1LMesoAndStat" || desired_outcome == "1LDropAndStat" || desired_outcome == "1LMesoAndALL" || desired_outcome == "1LDropAndALL" || desired_outcome == "1LMesoAndHP" || desired_outcome == "1LDropAndHP") {
+    if (desired_outcome == "lineMesoOrDrop+1&lineHp+1" || desired_outcome == "lineMesoOrDrop+1&lineAllStat+1" || desired_outcome == "lineMesoOrDrop+1&lineStat+1" || desired_outcome == "lineMeso+1&lineStat+1" || desired_outcome == "lineDrop+1&lineStat+1" || desired_outcome == "lineMeso+1&lineAllStat+1" || desired_outcome == "lineDrop+1&lineAllStat+1" || desired_outcome == "lineMeso+1&lineHp+1" || desired_outcome == "lineDrop+1&lineHp+1") {
         var stat
         var meso_and_drop = true
 
-        if (desired_outcome == "1LDropOrMesoAndHP") stat = "hp"
-        if (desired_outcome == "1LDropOrMesoAndALL") stat = "all"
-        if (desired_outcome == "1LDropOrMesoAndStat") stat = "stat"
-        if (desired_outcome == "1LMesoAndStat" || desired_outcome == "1LDropAndStat") {
+        if (desired_outcome == "lineMesoOrDrop+1&lineHp+1") stat = "hp"
+        if (desired_outcome == "lineMesoOrDrop+1&lineAllStat+1") stat = "all"
+        if (desired_outcome == "lineMesoOrDrop+1&lineStat+1") stat = "stat"
+        if (desired_outcome == "lineMeso+1&lineStat+1" || desired_outcome == "lineDrop+1&lineStat+1") {
             stat = "stat"
             meso_and_drop = false
         }
-        if (desired_outcome == "1LMesoAndALL" || desired_outcome == "1LDropAndALL") {
+        if (desired_outcome == "lineMeso+1&lineAllStat+1" || desired_outcome == "lineDrop+1&lineAllStat+1") {
             stat = "all"
             meso_and_drop = false
         }
-        if (desired_outcome == "1LMesoAndHP" || desired_outcome == "1LDropAndHP") {
+        if (desired_outcome == "lineMeso+1&lineHp+1" || desired_outcome == "lineDrop+1&lineHp+1") {
             stat = "hp"
             meso_and_drop = false
         }
@@ -762,9 +762,9 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11 + probability_12
     }
 
-    if (desired_outcome == "2LMeso" || desired_outcome == "2LDrop" || desired_outcome == "2LDropOrMeso") {
+    if (desired_outcome == "lineMeso+2" || desired_outcome == "lineDrop+2" || desired_outcome == "lineMesoOrDrop+2") {
         var meso_and_drop = false
-        if (desired_outcome == "2LDropOrMeso") meso_and_drop = true
+        if (desired_outcome == "lineMesoOrDrop+2") meso_and_drop = true
 
         var prob_meso_line_1 = prob_meso_drop("line_1", meso_and_drop, probabilities, cube_type, item_type)
         var prob_meso_line_2 = prob_meso_drop("line_2", meso_and_drop, probabilities, cube_type, item_type)
@@ -772,13 +772,13 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         //MMM
         var probability_1 = prob_meso_line_1 * prob_meso_line_2 * prob_meso_line_3
-        if (desired_outcome == "2LDrop") { //3l drop not possible
+        if (desired_outcome == "lineDrop+2") { //3l drop not possible
             probability_1 = 0
         }
 
         //MMO
         var probability_2 = prob_meso_line_1 * prob_meso_line_2 * (1 - prob_meso_line_3)
-        if (desired_outcome == "2LDrop") { //3l drop not possible
+        if (desired_outcome == "lineDrop+2") { //3l drop not possible
             probability_2 = prob_meso_line_1 * prob_meso_line_2
         }
         //MOM
@@ -790,7 +790,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
     }
 
     //gloves
-    if (desired_outcome == "1LCrit") {
+    if (desired_outcome == "lineCritDamage+1") {
         //COO
         var probability_5 = probabilities[item_type].line_1.crit[cube_type] * (1 - probabilities[item_type].line_2.crit[cube_type]) * (1 - probabilities[item_type].line_3.crit[cube_type])
 
@@ -818,7 +818,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
     }
 
-    if (desired_outcome == "1LCritAndStat") {
+    if (desired_outcome == "lineCritDamage+1&lineStat+1") {
         //C S OTHER
         var probability_7 = probabilities[item_type].line_1.crit[cube_type] * (probabilities[item_type].line_2["12_stat"][cube_type] + probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type] + probabilities[item_type].line_2["6_all"][cube_type]) * (1 - probabilities[item_type].line_3.crit[cube_type] - (probabilities[item_type].line_3["12_stat"][cube_type] + probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type] + probabilities[item_type].line_3["6_all"][cube_type]))
 
@@ -860,7 +860,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11 + probability_12
 
     }
-    if (desired_outcome == "1LCritAndALL") {
+    if (desired_outcome == "lineCritDamage+1&lineAllStat+1") {
         //C S OTHER
         var probability_7 = probabilities[item_type].line_1.crit[cube_type] * (probabilities[item_type].line_2["9_all"][cube_type] + probabilities[item_type].line_2["6_all"][cube_type]) * (1 - probabilities[item_type].line_3.crit[cube_type] - (probabilities[item_type].line_3["9_all"][cube_type] + probabilities[item_type].line_3["6_all"][cube_type]))
 
@@ -902,7 +902,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11 + probability_12
 
     }
-    if (desired_outcome == "1LCritandHP") {
+    if (desired_outcome == "lineCritDamage+1&lineHp+1") {
         //C S OTHER
         var probability_7 = probabilities[item_type].line_1.crit[cube_type] * (probabilities[item_type].line_2["12_hp"][cube_type] + probabilities[item_type].line_2["9_hp"][cube_type]) * (1 - probabilities[item_type].line_3.crit[cube_type] - (probabilities[item_type].line_3["12_hp"][cube_type] + probabilities[item_type].line_3["9_hp"][cube_type]))
 
@@ -945,7 +945,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
     }
 
-    if (desired_outcome == "1LCritAnd2Stat") {
+    if (desired_outcome == "lineCritDamage+1&lineStat+2") {
         //CSS
         var probability_1 = probabilities[item_type].line_1.crit[cube_type] * (probabilities[item_type].line_2["12_stat"][cube_type] + probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type] + probabilities[item_type].line_2["6_all"][cube_type]) * (probabilities[item_type].line_3["12_stat"][cube_type] + probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type] + probabilities[item_type].line_3["6_all"][cube_type])
 
@@ -957,7 +957,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = probability_1 + probability_2 + probability_3
     }
-    if (desired_outcome == "1LCritAnd2ALL") {
+    if (desired_outcome == "lineCritDamage+1&lineAllStat+2") {
         //CAA
         var probability_1 = probabilities[item_type].line_1.crit[cube_type] * (probabilities[item_type].line_2["9_all"][cube_type] + probabilities[item_type].line_2["6_all"][cube_type]) * (probabilities[item_type].line_3["9_all"][cube_type] + probabilities[item_type].line_3["6_all"][cube_type])
 
@@ -969,7 +969,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = probability_1 + probability_2 + probability_3
     }
-    if (desired_outcome == "1LCritand2HP") {
+    if (desired_outcome == "lineCritDamage+1&lineHp+2") {
         //C,H,H
         var probability_1 = probabilities[item_type].line_1.crit[cube_type] * (probabilities[item_type].line_2["12_hp"][cube_type] + probabilities[item_type].line_2["9_hp"][cube_type]) * (probabilities[item_type].line_3["12_hp"][cube_type] + probabilities[item_type].line_3["9_hp"][cube_type])
 
@@ -982,7 +982,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3
     }
 
-    if (desired_outcome == "2LCrit") {
+    if (desired_outcome == "lineCritDamage+2") {
         //CCO
         var probability_1 = probabilities[item_type].line_1.crit[cube_type] * probabilities[item_type].line_2.crit[cube_type] * (1 - probabilities[item_type].line_3.crit[cube_type])
 
@@ -998,12 +998,12 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3 + probability_4
     }
 
-    if (desired_outcome == "3LCrit") {
+    if (desired_outcome == "lineCritDamage+3") {
         //CCC
         var probability = probabilities[item_type].line_1.crit[cube_type] * probabilities[item_type].line_2.crit[cube_type] * probabilities[item_type].line_3.crit[cube_type]
     }
 
-    if (desired_outcome == "2LCritAndStat") {
+    if (desired_outcome == "lineCritDamage+2&lineStat+1") {
         //SCC
         var probability_1 = (probabilities[item_type].line_1["12_stat"][cube_type] + probabilities[item_type].line_1["9_all"][cube_type]) * probabilities[item_type].line_2.crit[cube_type] * probabilities[item_type].line_3.crit[cube_type]
 
@@ -1016,7 +1016,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3
     }
 
-    if (desired_outcome == "2LCritAndALL") {
+    if (desired_outcome == "lineCritDamage+2&lineAllStat+1") {
         //ACC
         var probability_1 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2.crit[cube_type] * probabilities[item_type].line_3.crit[cube_type]
 
@@ -1029,7 +1029,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3
     }
 
-    if (desired_outcome == "2CritandHP") {
+    if (desired_outcome == "lineCritDamage+2&lineHp+1") {
         //HCC
         var probability_1 = probabilities[item_type].line_1["12_hp"][cube_type] * probabilities[item_type].line_2.crit[cube_type] * probabilities[item_type].line_3.crit[cube_type]
 
@@ -1043,13 +1043,13 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
     }
 
     //WSE
-    if (desired_outcome == "21ATT30BOSS" || desired_outcome == "21ATT35BOSS" || desired_outcome == "21ATT40BOSS" || desired_outcome == "24ATT30BOSS" || desired_outcome == "21ATTandIED" || desired_outcome == "24ATTandIED") {
+    if (desired_outcome == "percAtt+21&percBoss+30" || desired_outcome == "percAtt+21&percBoss+35" || desired_outcome == "percAtt+21&percBoss+40" || desired_outcome == "percAtt+24&percBoss+30" || desired_outcome == "lineIed+1&percAtt+21" || desired_outcome == "lineIed+1&percAtt+24") {
         var stat = "30_boss"
         var att = 21
-        if (desired_outcome == "24ATTandIED" || desired_outcome == "24ATT30BOSS") att = 24
-        if (desired_outcome == "21ATT35BOSS") stat = "35_boss"
-        if (desired_outcome == "21ATT40BOSS") stat = "40_boss"
-        if (desired_outcome == "21ATTandIED" || desired_outcome == "24ATTandIED") stat = "ied"
+        if (desired_outcome == "lineIed+1&percAtt+24" || desired_outcome == "percAtt+24&percBoss+30") att = 24
+        if (desired_outcome == "percAtt+21&percBoss+35") stat = "35_boss"
+        if (desired_outcome == "percAtt+21&percBoss+40") stat = "40_boss"
+        if (desired_outcome == "lineIed+1&percAtt+21" || desired_outcome == "lineIed+1&percAtt+24") stat = "ied"
 
         var prob_12_att_line_1 = probabilities[item_type].line_1["12_attack"][cube_type]
         var prob_12_att_line_2 = probabilities[item_type].line_2["12_attack"][cube_type]
@@ -1118,20 +1118,20 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
     if (desired_outcome == "3LATT") {
         var probability = probabilities[item_type].line_1.attack[cube_type] * probabilities[item_type].line_2.attack[cube_type] * probabilities[item_type].line_3.attack[cube_type]
     }
-    if (desired_outcome == "1ATTand2BOSS") {
+    if (desired_outcome == "lineAtt+1&lineBoss+2") {
         var probability_1 = probabilities[item_type].line_1.boss[cube_type] * probabilities[item_type].line_2.boss[cube_type] * (100 * probabilities[item_type].line_3.attack[cube_type]) / (100 - 100 * probabilities[item_type].line_3.boss[cube_type])
         var probability_2 = probabilities[item_type].line_1.boss[cube_type] * probabilities[item_type].line_2.attack[cube_type] * probabilities[item_type].line_3.boss[cube_type]
         var probability_3 = probabilities[item_type].line_1.attack[cube_type] * probabilities[item_type].line_2.boss[cube_type] * probabilities[item_type].line_3.boss[cube_type]
         var probability = probability_1 + probability_2 + probability_3
     }
-    if (desired_outcome == "2ATTand1BOSS") {
+    if (desired_outcome == "lineAtt+2&lineBoss+1") {
         var probability_1 = probabilities[item_type].line_1.attack[cube_type] * probabilities[item_type].line_2.attack[cube_type] * probabilities[item_type].line_3.boss[cube_type]
         var probability_2 = probabilities[item_type].line_1.attack[cube_type] * probabilities[item_type].line_2.boss[cube_type] * probabilities[item_type].line_3.attack[cube_type]
         var probability_3 = probabilities[item_type].line_1.boss[cube_type] * probabilities[item_type].line_2.attack[cube_type] * probabilities[item_type].line_3.attack[cube_type]
         var probability = probability_1 + probability_2 + probability_3
     }
     //item_level >= 151
-    if (desired_outcome == "26PercLUK") {
+    if (desired_outcome == "percStat+26") {
         //12+12+OTHER (would be ommited = 26)
         var probability_18 = probabilities[item_type].line_1["12_stat"][cube_type] * probabilities[item_type].line_2["12_stat"][cube_type] * (1 - probabilities[item_type].line_3["12_stat"][cube_type] - probabilities[item_type].line_3["9_stat"][cube_type] - probabilities[item_type].line_3["9_all"][cube_type] - probabilities[item_type].line_3["6_all"][cube_type])
 
@@ -1151,7 +1151,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_17 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         ///////////////////////////////////////
-        //add in all the 27percluk
+        //add in all the percStat+27
         //12+9+6
         var probability_10 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * probabilities[item_type].line_3["6_all"][cube_type]
 
@@ -1169,7 +1169,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_14 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * probabilities[item_type].line_3["12_stat"][cube_type]
 
         ////////////////////////////////////////////
-        //add in all the 30percluk
+        //add in all the percStat+30
         var probability_1 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         //12+12+9
@@ -1199,7 +1199,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11 + probability_12 + probability_13 + probability_14 + probability_15 + probability_16 + probability_17 + probability_18 + probability_19 + probability_20
 
     }
-    if (desired_outcome == "27PercLUK" && itemLevel >= 151) {
+    if (desired_outcome == "percStat+27" && itemLevel >= 151) {
         //12+6+6
         var probability_15 = probabilities[item_type].line_1["12_stat"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * probabilities[item_type].line_3["6_all"][cube_type]
 
@@ -1210,7 +1210,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_17 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         ///////////////////////////////////////
-        //add in all the 27percluk
+        //add in all the percStat+27
         //12+9+6
         var probability_10 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * probabilities[item_type].line_3["6_all"][cube_type]
 
@@ -1228,7 +1228,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_14 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * probabilities[item_type].line_3["12_stat"][cube_type]
 
         ////////////////////////////////////////////
-        //add in all the 30percluk
+        //add in all the percStat+30
         var probability_1 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         //12+12+9
@@ -1261,8 +1261,8 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
     //item_level < 151
     //HP will follow same logic as ALL Stat
-    if (desired_outcome == "15PercALL" || desired_outcome == "17PercALL" || desired_outcome == "21PercHP") {
-        if (desired_outcome == "15PercALL" || desired_outcome == "17PercALL") {
+    if (desired_outcome == "percAllStat+15" || desired_outcome == "percAllStat+17" || desired_outcome == "percHP+21") {
+        if (desired_outcome == "percAllStat+15" || desired_outcome == "percAllStat+17") {
             var prime = '9_all'
             var sub = '6_all'
         } else {
@@ -1282,7 +1282,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_11 = (1 - probabilities[item_type].line_1[prime][cube_type]) * probabilities[item_type].line_2[sub][cube_type] * probabilities[item_type].line_3[prime][cube_type]
 
         /////////////////
-        //18PercALL
+        //percAllStat+18
         // 9+9+other
         var probability_5 = probabilities[item_type].line_1[prime][cube_type] * probabilities[item_type].line_2[prime][cube_type] * (1 - probabilities[item_type].line_3[sub][cube_type] - probabilities[item_type].line_3[prime][cube_type])
 
@@ -1308,9 +1308,9 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11
     }
-    //HP will follow same logic and Perc ALL
-    if (desired_outcome == "18PercALL" || desired_outcome == "20PercALL" || desired_outcome == "24PercHP") {
-        if (desired_outcome == "18PercALL" || desired_outcome == "20PercALL") {
+    //HP will follow same logic and perc ALL
+    if (desired_outcome == "percAllStat+18" || desired_outcome == "percAllStat+20" || desired_outcome == "percHP+24") {
+        if (desired_outcome == "percAllStat+18" || desired_outcome == "percAllStat+20") {
             var prime = '9_all'
             var sub = '6_all'
         } else {
@@ -1343,9 +1343,9 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7
     }
-    //HP will follow same logic and PercALL
-    if (desired_outcome == "21PercALL" || desired_outcome == "24PercALL" || desired_outcome == "30PercHP") {
-        if (desired_outcome == "21PercALL" || desired_outcome == "24PercALL") {
+    //HP will follow same logic and percAllStat
+    if (desired_outcome == "percAllStat+21" || desired_outcome == "percAllStat+24" || desired_outcome == "percHP+30") {
+        if (desired_outcome == "percAllStat+21" || desired_outcome == "percAllStat+24") {
             var prime = '9_all'
             var sub = '6_all'
         } else {
@@ -1366,7 +1366,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = probability_1 + probability_2 + probability_3 + probability_4
     }
-    if (desired_outcome == "21PercLUK" || desired_outcome == "23PercLUK") {
+    if (desired_outcome == "percStat+21" || desired_outcome == "percStat+23") {
         //12+9+OTHER
         var probability_21 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * (1 - probabilities[item_type].line_3["12_stat"][cube_type] - probabilities[item_type].line_3["9_stat"][cube_type] - probabilities[item_type].line_3["9_all"][cube_type] - probabilities[item_type].line_3["6_all"][cube_type])
 
@@ -1390,7 +1390,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_27 = (1 - probabilities[item_type].line_1["12_stat"][cube_type] - probabilities[item_type].line_1["9_all"][cube_type]) * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * probabilities[item_type].line_3["12_stat"][cube_type]
 
         //////////////////////////////////////
-        //add in all 24percluk
+        //add in all percStat+24
         //12+12+OTHER
         var probability_18 = probabilities[item_type].line_1["12_stat"][cube_type] * probabilities[item_type].line_2["12_stat"][cube_type] * (1 - probabilities[item_type].line_3["12_stat"][cube_type] - probabilities[item_type].line_3["9_stat"][cube_type] - probabilities[item_type].line_3["9_all"][cube_type] - probabilities[item_type].line_3["6_all"][cube_type])
 
@@ -1410,7 +1410,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_17 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         ///////////////////////////////////////
-        //add in all the 27percluk
+        //add in all the percStat+27
         //12+9+6
         var probability_10 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * probabilities[item_type].line_3["6_all"][cube_type]
 
@@ -1428,7 +1428,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_14 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * probabilities[item_type].line_3["12_stat"][cube_type]
 
         ////////////////////////////////////////////
-        //add in all the 30percluk
+        //add in all the percStat+30
         var probability_1 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         //12+12+9
@@ -1458,7 +1458,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11 + probability_12 + probability_13 + probability_14 + probability_15 + probability_16 + probability_17 + probability_18 + probability_19 + probability_20 + probability_21 + probability_22 + probability_23 + probability_24 + probability_25 + probability_26 + probability_27
 
     }
-    if (desired_outcome == "24PercLUK" && itemLevel < 151) {
+    if (desired_outcome == "percStat+24" && itemLevel < 151) {
         //12+12+OTHER (would be ommited = 26)
         var probability_18 = probabilities[item_type].line_1["12_stat"][cube_type] * probabilities[item_type].line_2["12_stat"][cube_type] * (1 - probabilities[item_type].line_3["12_stat"][cube_type] - probabilities[item_type].line_3["9_stat"][cube_type] - probabilities[item_type].line_3["9_all"][cube_type] - probabilities[item_type].line_3["6_all"][cube_type])
 
@@ -1478,7 +1478,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_17 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         ///////////////////////////////////////
-        //add in all the 27percluk
+        //add in all the percStat+27
         //12+9+6
         var probability_10 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * probabilities[item_type].line_3["6_all"][cube_type]
 
@@ -1496,7 +1496,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_14 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * probabilities[item_type].line_3["12_stat"][cube_type]
 
         ////////////////////////////////////////////
-        //add in all the 30percluk
+        //add in all the percStat+30
         var probability_1 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         //12+12+9
@@ -1526,7 +1526,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11 + probability_12 + probability_13 + probability_14 + probability_15 + probability_16 + probability_17 + probability_18 + probability_19 + probability_20
 
     }
-    if ((desired_outcome == "27PercLUK" && itemLevel < 151) || (desired_outcome == "30PercLUK" && itemLevel >= 151)) {
+    if ((desired_outcome == "percStat+27" && itemLevel < 151) || (desired_outcome == "percStat+30" && itemLevel >= 151)) {
         //12+9+6
         var probability_10 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * probabilities[item_type].line_3["6_all"][cube_type]
 
@@ -1544,7 +1544,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability_14 = probabilities[item_type].line_1["9_all"][cube_type] * probabilities[item_type].line_2["6_all"][cube_type] * probabilities[item_type].line_3["12_stat"][cube_type]
 
         ////////////////////////////////////////////
-        //add in all the 30percluk
+        //add in all the percStat+30
         var probability_1 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
         //12+12+9
@@ -1574,7 +1574,7 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11 + probability_12 + probability_13 + probability_14
 
     }
-    if ((desired_outcome == "30PercLUK" && itemLevel < 151) || (desired_outcome == "33PercLUK" && itemLevel >= 151)) {
+    if ((desired_outcome == "percStat+30" && itemLevel < 151) || (desired_outcome == "percStat+33" && itemLevel >= 151)) {
         //12+9+9
         var probability_1 = probabilities[item_type].line_1["12_stat"][cube_type] * (probabilities[item_type].line_2["9_stat"][cube_type] + probabilities[item_type].line_2["9_all"][cube_type]) * (probabilities[item_type].line_3["9_stat"][cube_type] + probabilities[item_type].line_3["9_all"][cube_type])
 
@@ -1604,9 +1604,9 @@ export function getOldProbability(item_type, desired_outcome, cube_type, current
 
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9
     }
-    if ((desired_outcome == "36PercLUK") || (desired_outcome == "27PercALL") || (desired_outcome == "33PercLUK" && itemLevel <= 150) || desired_outcome == "33PercHP" || (desired_outcome == "24PercALL" && itemLevel <= 150)) {
-        if (desired_outcome == "36PercLUK" || desired_outcome == "33PercLUK") var stat = "stat"
-        else if (desired_outcome == "36PercHP" || desired_outcome == "33PercHP") var stat = "hp"
+    if ((desired_outcome == "percStat+36") || (desired_outcome == "percAllStat+27") || (desired_outcome == "percStat+33" && itemLevel <= 150) || desired_outcome == "percHP+33" || (desired_outcome == "percAllStat+24" && itemLevel <= 150)) {
+        if (desired_outcome == "percStat+36" || desired_outcome == "percStat+33") var stat = "stat"
+        else if (desired_outcome == "percHP+36" || desired_outcome == "percHP+33") var stat = "hp"
         else var stat = "all"
         var prob_12_line_1 = prob_line("line_1", stat, probabilities, cube_type, item_type, 12)
         var prob_12_line_2 = prob_line("line_2", stat, probabilities, cube_type, item_type, 12)

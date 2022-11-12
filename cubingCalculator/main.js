@@ -177,9 +177,9 @@ const calculateResults = function () {
   loaderOn();
   setTimeout(loaderOff, 100);
 
-  //console.log(performExperiment('black', 150, 'earring', '2LDropOrMeso', 3, 3))
+  //console.log(performExperiment('black', 150, 'earring', 'lineMesoOrDrop+2', 3, 3))
 
-  //console.log(repeatExperiment('black', 150, 'hat', '3SecCD', 100, 3, 3))
+  //console.log(repeatExperiment('black', 150, 'hat', 'secCooldown+3', 100, 3, 3))
 };
 
 

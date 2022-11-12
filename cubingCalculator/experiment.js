@@ -282,66 +282,66 @@ function performExperiment(cubeType, itemLevel, itemCategory, desiredResult, sta
                     break;
                 }
 
-            }//1LCrit, 1LCritAndStat, 1LCritAndALL, 1LCritandHP, 2LCritAndStat, 2LCritAndALL, 2LCritandHP
-            if (desiredResult == '1LCrit') {
+            }//lineCritDamage+1, lineCritDamage+1&lineStat+1, lineCritDamage+1&lineAllStat+1, lineCritDamage+1&lineHp+1, lineCritDamage+2&lineStat+1, lineCritDamage+2&lineAllStat+1, lineCritDamage+2andHP
+            if (desiredResult == 'lineCritDamage+1') {
                 if (isCritRate(firstLine) || isCritRate(secondLine) || isCritRate(thirdLine)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2CritandHP') {
+            if (desiredResult == 'lineCritDamage+2&lineHp+1') {
                 if ((atLeastTwoLines(isCritRate(firstLine), isCritRate(secondLine), isCritRate(thirdLine)).isTrue) && (isHPPercent(firstLine) || isHPPercent(secondLine) || isHPPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2LCritAndALL') {
+            if (desiredResult == 'lineCritDamage+2&lineAllStat+1') {
                 if ((atLeastTwoLines(isCritRate(firstLine), isCritRate(secondLine), isCritRate(thirdLine)).isTrue) && (isALLPercent(firstLine) || isALLPercent(secondLine) || isALLPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2LCritAndStat') {
+            if (desiredResult == 'lineCritDamage+2&lineStat+1') {
                 if ((atLeastTwoLines(isCritRate(firstLine), isCritRate(secondLine), isCritRate(thirdLine)).isTrue) && ((isSTATPercent(firstLine, 'LUK') || isSTATPercent(secondLine, 'LUK') || isSTATPercent(thirdLine, 'LUK')))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LCritand2HP') {
+            if (desiredResult == 'lineCritDamage+1&lineHp+2') {
                 if ((isCritRate(firstLine) || isCritRate(secondLine) || isCritRate(thirdLine)) && (atLeastTwoLines(isHPPercent(firstLine), isHPPercent(secondLine), isHPPercent(thirdLine)).isTrue)) {
                     break;
                 }
             }
-            if (desiredResult == '1LCritAnd2ALL') {
+            if (desiredResult == 'lineCritDamage+1&lineAllStat+2') {
                 if ((isCritRate(firstLine) || isCritRate(secondLine) || isCritRate(thirdLine)) && (atLeastTwoLines(isALLPercent(firstLine), isALLPercent(secondLine), isALLPercent(thirdLine)).isTrue)) {
                     break;
                 }
             }
-            if (desiredResult == '1LCritAnd2Stat') {
+            if (desiredResult == 'lineCritDamage+1&lineStat+2') {
                 if ((isCritRate(firstLine) || isCritRate(secondLine) || isCritRate(thirdLine)) && (atLeastTwoLines(isSTATPercent(firstLine, 'LUK'), isSTATPercent(secondLine, 'LUK'), isSTATPercent(thirdLine, 'LUK')).isTrue)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LCritandHP') {
+            if (desiredResult == 'lineCritDamage+1&lineHp+1') {
                 if ((isCritRate(firstLine) || isCritRate(secondLine) || isCritRate(thirdLine)) && (isHPPercent(firstLine) || isHPPercent(secondLine) || isHPPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LCritAndALL') {
+            if (desiredResult == 'lineCritDamage+1&lineAllStat+1') {
                 if ((isCritRate(firstLine) || isCritRate(secondLine) || isCritRate(thirdLine)) && (isALLPercent(firstLine) || isALLPercent(secondLine) || isALLPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LCritAndStat') {
+            if (desiredResult == 'lineCritDamage+1&lineStat+1') {
                 if ((isCritRate(firstLine) || isCritRate(secondLine) || isCritRate(thirdLine)) && ((isSTATPercent(firstLine, 'LUK') || isSTATPercent(secondLine, 'LUK') || isSTATPercent(thirdLine, 'LUK')))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2LCrit') {
+            if (desiredResult == 'lineCritDamage+2') {
                 if (atLeastTwoLines(isCritRate(firstLine), isCritRate(secondLine), isCritRate(thirdLine)).isTrue) {
                     notSuccessful = false;
                     break;
@@ -372,7 +372,7 @@ function performExperiment(cubeType, itemLevel, itemCategory, desiredResult, sta
                     }
                 }
             }
-            if (desiredResult == '2ATTand1BOSS') {
+            if (desiredResult == 'lineAtt+2&lineBoss+1') {
                 var potObj = atLeastTwoLines(isAttackPercent(firstLine), isAttackPercent(secondLine), isAttackPercent(thirdLine));
                 var hasTwoATTLines = potObj.isTrue;
                 if (hasTwoATTLines) {
@@ -397,8 +397,8 @@ function performExperiment(cubeType, itemLevel, itemCategory, desiredResult, sta
                     }
                 }
             }
-            if (desiredResult == '1ATTand2BOSS') {
-                //1ATTand2BOSS * 1.5*1.75
+            if (desiredResult == 'lineAtt+1&lineBoss+2') {
+                //lineAtt+1&lineBoss+2 * 1.5*1.75
                 var potObj = atLeastTwoLines(isBossLine(firstLine), isBossLine(secondLine), isBossLine(thirdLine));
                 var hasTwoBOSSLines = potObj.isTrue;
                 if (hasTwoBOSSLines) {
@@ -424,7 +424,7 @@ function performExperiment(cubeType, itemLevel, itemCategory, desiredResult, sta
                 }
             }
             //this is excludes HP
-            if (desiredResult.includes('Perc')) { //21PercLUK, 24PercALL for Example (21) can be any stat 15%+
+            if (desiredResult.includes('perc')) { //percStat+21, percAllStat+24 for Example (21) can be any stat 15%+
                 var desiredPercent = parseInt(desiredResult.slice(0, 2));
                 var desiredStat = desiredResult.slice(desiredResult.length - 3, desiredResult.length);
                 var potentialStat = 0;
@@ -454,181 +454,181 @@ function performExperiment(cubeType, itemLevel, itemCategory, desiredResult, sta
                 }
                 if (potentialStat >= desiredPercent) notSuccessful = false;
             }
-            if (desiredResult == '2LMeso') {
+            if (desiredResult == 'lineMeso+2') {
                 if (atLeastTwoLines(isMesoDrop(firstLine), isMesoDrop(secondLine), isMesoDrop(thirdLine)).isTrue) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2LDrop') {
+            if (desiredResult == 'lineDrop+2') {
                 if (atLeastTwoLines(isItemDrop(firstLine), isItemDrop(secondLine), isItemDrop(thirdLine)).isTrue) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2LDropOrMeso') {
+            if (desiredResult == 'lineMesoOrDrop+2') {
                 if (atLeastTwoLines(isMesoOrDrop(firstLine), isMesoOrDrop(secondLine), isMesoOrDrop(thirdLine)).isTrue) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LMeso') {
+            if (desiredResult == 'lineMeso+1') {
                 if (isMesoDrop(firstLine) || isMesoDrop(secondLine) || isMesoDrop(thirdLine)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LDrop') {
+            if (desiredResult == 'lineDrop+1') {
                 if (isItemDrop(firstLine) || isItemDrop(secondLine) || isItemDrop(thirdLine)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LDropOrMeso') {
+            if (desiredResult == 'lineMesoOrDrop+1') {
                 if (isMesoOrDrop(firstLine) || isMesoOrDrop(secondLine) || isMesoOrDrop(thirdLine)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LMesoAndStat') {
+            if (desiredResult == 'lineMeso+1&lineStat+1') {
                 if ((isMesoDrop(firstLine) || isMesoDrop(secondLine) || isMesoDrop(thirdLine)) && (isSTATPercent(firstLine, 'LUK') || isSTATPercent(secondLine, 'LUK') || isSTATPercent(thirdLine, 'LUK'))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LMesoAndHP') {
+            if (desiredResult == 'lineMeso+1&lineHp+1') {
                 if ((isMesoDrop(firstLine) || isMesoDrop(secondLine) || isMesoDrop(thirdLine)) && (isHPPercent(firstLine) || isHPPercent(secondLine) || isHPPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LMesoAndALL') {
+            if (desiredResult == 'lineMeso+1&lineAllStat+1') {
                 if ((isMesoDrop(firstLine) || isMesoDrop(secondLine) || isMesoDrop(thirdLine)) && (isALLPercent(firstLine) || isALLPercent(secondLine) || isALLPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LDropAndStat') {
+            if (desiredResult == 'lineDrop+1&lineStat+1') {
                 if ((isItemDrop(firstLine) || isItemDrop(secondLine) || isItemDrop(thirdLine)) && (isSTATPercent(firstLine, 'LUK') || isSTATPercent(secondLine, 'LUK') || isSTATPercent(thirdLine, 'LUK'))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LDropAndHP') {
+            if (desiredResult == 'lineDrop+1&lineHp+1') {
                 if ((isItemDrop(firstLine) || isItemDrop(secondLine) || isItemDrop(thirdLine)) && (isHPPercent(firstLine) || isHPPercent(secondLine) || isHPPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LDropAndALL') {
+            if (desiredResult == 'lineDrop+1&lineAllStat+1') {
                 if ((isItemDrop(firstLine) || isItemDrop(secondLine) || isItemDrop(thirdLine)) && (isALLPercent(firstLine) || isALLPercent(secondLine) || isALLPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LDropOrMesoAndStat') {
+            if (desiredResult == 'lineMesoOrDrop+1&lineStat+1') {
                 if ((isMesoOrDrop(firstLine) || isMesoOrDrop(secondLine) || isMesoOrDrop(thirdLine)) && (isSTATPercent(firstLine, 'LUK') || isSTATPercent(secondLine, 'LUK') || isSTATPercent(thirdLine, 'LUK'))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LDropOrMesoAndHP') {
+            if (desiredResult == 'lineMesoOrDrop+1&lineHp+1') {
                 if ((isMesoOrDrop(firstLine) || isMesoOrDrop(secondLine) || isMesoOrDrop(thirdLine)) && (isHPPercent(firstLine) || isHPPercent(secondLine) || isHPPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '1LDropOrMesoAndALL') {
+            if (desiredResult == 'lineMesoOrDrop+1&lineAllStat+1') {
                 if ((isMesoOrDrop(firstLine) || isMesoOrDrop(secondLine) || isMesoOrDrop(thirdLine)) && (isALLPercent(firstLine) || isALLPercent(secondLine) || isALLPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
             //-------------------------------Hat-------------------------------//
-            if (desiredResult == '2SecCD') {
+            if (desiredResult == 'secCooldown+2') {
                 if (atLeastTwoSecCD(firstLine, secondLine, thirdLine)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '3SecCD') {
+            if (desiredResult == 'secCooldown+3') {
                 if (atLeastThreeSecCD(firstLine, secondLine, thirdLine)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '4SecCD') {
+            if (desiredResult == 'secCooldown+4') {
                 if (atLeastFourSecCD(firstLine, secondLine, thirdLine)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '4SecCDAndStat') {
+            if (desiredResult == 'secCooldown+4&lineStat+1') {
                 if (atLeastFourSecCD(firstLine, secondLine, thirdLine) && (isSTATPercent(firstLine, 'LUK') || isSTATPercent(secondLine, 'LUK') || isSTATPercent(thirdLine, 'LUK'))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '4SecCDAndHP') {
+            if (desiredResult == 'secCooldown+4&lineHp+1') {
                 if (atLeastFourSecCD(firstLine, secondLine, thirdLine) && (isHPPercent(firstLine) || isHPPercent(secondLine) || isHPPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '4SecCDAndALL') {
+            if (desiredResult == 'secCooldown+4&lineAllStat+1') {
                 if (atLeastFourSecCD(firstLine, secondLine, thirdLine) && (isALLPercent(firstLine) || isALLPercent(secondLine) || isALLPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '3SecCDAndStat') {
+            if (desiredResult == 'secCooldown+3&lineStat+1') {
                 if (atLeastThreeSecCD(firstLine, secondLine, thirdLine) && (isSTATPercent(firstLine, 'LUK') || isSTATPercent(secondLine, 'LUK') || isSTATPercent(thirdLine, 'LUK'))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '3SecCDAndHP') {
+            if (desiredResult == 'secCooldown+3&lineHp+1') {
                 if (atLeastThreeSecCD(firstLine, secondLine, thirdLine) && (isHPPercent(firstLine) || isHPPercent(secondLine) || isHPPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '3SecCDAndALL') {
+            if (desiredResult == 'secCooldown+3&lineAllStat+1') {
                 if (atLeastThreeSecCD(firstLine, secondLine, thirdLine) && (isALLPercent(firstLine) || isALLPercent(secondLine) || isALLPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2SecCDAndStat') {
+            if (desiredResult == 'secCooldown+2&lineStat+1') {
                 if (atLeastTwoSecCD(firstLine, secondLine, thirdLine) && (isSTATPercent(firstLine, 'LUK') || isSTATPercent(secondLine, 'LUK') || isSTATPercent(thirdLine, 'LUK'))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2SecCDAndHP') {
+            if (desiredResult == 'secCooldown+2&lineHp+1') {
                 if (atLeastTwoSecCD(firstLine, secondLine, thirdLine) && (isHPPercent(firstLine) || isHPPercent(secondLine) || isHPPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2SecCDAndALL') {
+            if (desiredResult == 'secCooldown+2&lineAllStat+1') {
                 if (atLeastTwoSecCD(firstLine, secondLine, thirdLine) && (isALLPercent(firstLine) || isALLPercent(secondLine) || isALLPercent(thirdLine))) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2SecCDAnd2Stat') {
+            if (desiredResult == 'secCooldown+2&lineStat+2') {
                 if (atLeastTwoSecCD(firstLine, secondLine, thirdLine) && (atLeastTwoLines(isSTATPercent(firstLine, 'LUK'), isSTATPercent(secondLine, 'LUK'), isSTATPercent(thirdLine, 'LUK')).isTrue)) {
                     notSuccessful = false;
                     break;
                 }
             }
-            if (desiredResult == '2SecCDAnd2HP') {
+            if (desiredResult == 'secCooldown+2&lineHp+2') {
                 if (atLeastTwoSecCD(firstLine, secondLine, thirdLine) && (atLeastTwoLines(isHPPercent(firstLine), isHPPercent(secondLine), isHPPercent(thirdLine)).isTrue)) {
                     break;
                 }
             }
-            if (desiredResult == '2SecCDAnd2ALL') {
+            if (desiredResult == 'secCooldown+2&lineAllStat+2') {
                 if (atLeastTwoSecCD(firstLine, secondLine, thirdLine) && (atLeastTwoLines(isALLPercent(firstLine), isALLPercent(secondLine), isALLPercent(thirdLine)).isTrue)) {
                     break;
                 }
