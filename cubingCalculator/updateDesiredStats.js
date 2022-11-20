@@ -16,7 +16,7 @@ import {emptyInputObject} from "./getProbability.js";
  *
  * @param webInput (string) The value from the HTML element.
  */
-function translateInputToObject(webInput) {
+export function translateInputToObject(webInput) {
     const vals = webInput.split("&");
     const output = Object.assign({}, emptyInputObject);
     for (const val of vals) {

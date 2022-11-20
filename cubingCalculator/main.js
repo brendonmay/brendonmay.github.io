@@ -1,10 +1,11 @@
 //function l(what) {return document.getElementById(what);}
 import {getOldProbability} from "./getOldProbability.js";
+import {getProbability} from "./getProbability.js";
 import C from "./c.js";
 import Game from "./game.js";
 import {geoDistrQuantile} from "./statistics.js";
 import {cubingCost, tier_rates, tier_rates_DMT} from "./cubes.js";
-import {$desiredStats, updateDesiredStats} from "./updateDesiredStats.js";
+import {$desiredStats, translateInputToObject, updateDesiredStats} from "./updateDesiredStats.js";
 
 function asset(what) {
   return "url(" + C.assetsDir + what + ")";
@@ -76,7 +77,9 @@ function getTierCosts(currentTier, desiredTier, cubeType, DMT) {
   };
 }
 
-function runCalculator() {
+// Note(sethyboy0) this function is async because it has to await getProability.
+// See readCubingData in getProbability.js for an explanation.
+async function runCalculator() {
   var itemType = document.getElementById('itemType').value;
   var cubeType = document.getElementById('cubeType').value;
   var currentTier = parseInt(document.getElementById('currentTier').value);
@@ -87,6 +90,10 @@ function runCalculator() {
 
   //Todo: meso/drop/CDhat/
   var desiredStat = document.getElementById('desiredStats').value;
+
+  const probabilityInputObject = translateInputToObject(desiredStat);
+  const prob = await getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
+  console.log(prob);
 
   //insert logic here
   var p = getOldProbability(itemType, desiredStat, cubeType, currentTier, desiredTier, itemLevel)
