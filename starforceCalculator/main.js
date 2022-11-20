@@ -97,19 +97,8 @@ function kmsCost(current_star, item_level) {
 
 function gmsCost(current_star, item_level) {
     // The GMS starforce changes in Destiny just multiplied the costs by 0.78 for all the parts where we were paying extra.
-    if (current_star >= 20) {
-        return 0.78 * (1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 100);
-    }
-    if (current_star >= 18) {
-        return 0.78 * (1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 110);
-    }
-    if (current_star >= 15) {
-        return 0.78 * (1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 120);
-    }
-    if (current_star >= 10) {
-        return 1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 400;
-    }
-    return 1000 + item_level ** 3 * (current_star + 1) / 25;
+    // In ignition they just gave us KMS prices.
+    return kmsCost(current_star, item_level);
 }
 
 function tmsRegCost(current_star, item_level) {
