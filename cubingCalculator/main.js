@@ -160,6 +160,8 @@ async function runCalculator() {
   const probabilityInputObject = translateInputToObject(desiredStat);
   const prob = await getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
   console.log(prob);
+  const newStats = geoDistrQuantile(prob || 1);
+  console.log(newStats);
 
   //insert logic here
   var p = getOldProbability(itemType, desiredStat, cubeType, currentTier, desiredTier, itemLevel)
