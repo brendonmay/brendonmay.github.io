@@ -26,7 +26,7 @@ export const emptyInputObject = {
 // The other option is to generate a file when generating the jsons that imports all of the data and contains a function
 // to get the data you need for the itemType and cubeType.
 export async function readCubingData(itemType, cubeType) {
-    const data = await fetch(`./cubing_data_scraper/data/cubing_data/${itemType}/${cubeType}.json`);
+    const data = await fetch(`./cubing_data_scraper/data/cubing_data/${itemType}/${cubeType}_cube.json`);
     return data.json();
 }
 
@@ -39,6 +39,7 @@ const tierNumberToText = {
 
 async function getCubeLines(desiredTier, itemType, cubeType) {
     const rawData = await readCubingData(itemType, cubeType);
+    console.log(rawData);
     const primeTextKey = tierNumberToText[desiredTier];
     const nonPrimeTextKey = tierNumberToText[desiredTier - 1];
     return [rawData[primeTextKey], rawData[nonPrimeTextKey]];
