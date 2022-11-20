@@ -1,5 +1,3 @@
-import C from "./c.js";
-
 const Game = {};
 
 Game.isDragging = false;
@@ -131,5 +129,3 @@ Game.parseP = function () {
 Game.init = function () {
     Game.parseP();
 }
-
-export default Game;

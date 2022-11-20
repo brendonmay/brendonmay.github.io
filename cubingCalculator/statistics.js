@@ -4,7 +4,7 @@ function choose(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function geoDistrQuantile(p) {
+function geoDistrQuantile(p) {
     var mean = 1 / p
 
     var median = Math.log(1 - 0.5) / Math.log(1 - p)
@@ -21,7 +21,7 @@ export function geoDistrQuantile(p) {
     }
 }
 
-export function percentile(arr, p) {
+function percentile(arr, p) {
     if (arr.length === 0) return 0;
     if (typeof p !== 'number') throw new TypeError('p must be a number');
     if (p <= 0) return arr[0];
@@ -76,7 +76,7 @@ function average(data) {
     return avg;
 }
 
-export function median(values) {
+function median(values) {
 
     values.sort(function (a, b) {
         return a - b;

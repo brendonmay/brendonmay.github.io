@@ -2,7 +2,7 @@
 // contains the functions that read the scraped options from the json files.
 
 // These are all the possible kinds of input the probability calculator can look for.
-export const emptyInputObject = {
+const emptyInputObject = {
     percStat: 0, // At least this much % stat including % allstat lines.
     lineStat: 0, // At least this many lines of % stat including allstat lines.
     percAllStat: 0, // At least this much % all stat including 1/3rd of % STR, DEX, and LUK. For Xenons.
@@ -25,7 +25,7 @@ export const emptyInputObject = {
 // need to split runCalculator into 2 parts and call the second part in fetch's .then();
 // The other option is to generate a file when generating the jsons that imports all of the data and contains a function
 // to get the data you need for the itemType and cubeType.
-export async function readCubingData(itemType, cubeType) {
+async function readCubingData(itemType, cubeType) {
     const data = await fetch(`./cubing_data_scraper/data/cubing_data/${itemType}/${cubeType}_cube.json`);
     return data.json();
 }
@@ -44,6 +44,6 @@ async function getCubeLines(desiredTier, itemType, cubeType) {
     return [rawData[primeTextKey], rawData[nonPrimeTextKey]];
 }
 
-export async function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
+async function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
     const [primeLines, nonPrimeLines] = await getCubeLines(desiredTier, itemType, cubeType);
 }

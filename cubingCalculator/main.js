@@ -1,11 +1,4 @@
 //function l(what) {return document.getElementById(what);}
-import {getOldProbability} from "./getOldProbability.js";
-import {getProbability} from "./getProbability.js";
-import C from "./c.js";
-import Game from "./game.js";
-import {geoDistrQuantile} from "./statistics.js";
-import {cubingCost, tier_rates, tier_rates_DMT} from "./cubes.js";
-import {$desiredStats, translateInputToObject, updateDesiredStats} from "./updateDesiredStats.js";
 
 function asset(what) {
   return "url(" + C.assetsDir + what + ")";
@@ -267,9 +260,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("calculateButton").addEventListener("click", calculateResults);
-}, false);
 
-// Populate the select options:
-updateDesiredStats();
+  // Populate the select options:
+  updateDesiredStats();
+}, false);
 
 Game.init();

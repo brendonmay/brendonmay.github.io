@@ -1,4 +1,3 @@
-import {emptyInputObject} from "./getProbability.js";
 // Note(sethyboy0) This file contains the functions that update the options in the desired stats dropdown as the user
 // configures everything else. It also contains the function that translates between the <select> <option> values and
 // the object that the probability calculator uses.
@@ -16,7 +15,7 @@ import {emptyInputObject} from "./getProbability.js";
  *
  * @param webInput (string) The value from the HTML element.
  */
-export function translateInputToObject(webInput) {
+function translateInputToObject(webInput) {
     const vals = webInput.split("&");
     const output = Object.assign({}, emptyInputObject);
     for (const val of vals) {
@@ -61,7 +60,7 @@ function get2LStatOptionAmounts(prime) {
         pp];
 }
 
-export const $desiredStats = $('#desiredStats');
+const $desiredStats = $('#desiredStats');
 
 function removeGroupIfExists(id) {
     if (document.getElementById(id)) {
@@ -282,7 +281,7 @@ function addCDOptions(desiredTier) {
     }
 }
 
-export function updateDesiredStats() {
+function updateDesiredStats() {
     const itemType = document.getElementById('itemType').value;
     const itemLevel = parseInt(document.getElementById('itemLevel').value);
     const desiredTier = parseInt(document.getElementById('desiredTier').value);

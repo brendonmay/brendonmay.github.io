@@ -419,7 +419,7 @@ var probabilities = {
 
 }
 
-export function getOldProbability(item_type, desired_outcome, cube_type, currentTier, desiredTier, itemLevel) {
+function getOldProbability(item_type, desired_outcome, cube_type, currentTier, desiredTier, itemLevel) {
 
     function prob_meso_drop(line, boss_and_drop, probabilities, cube_type, item_type) {
         if (boss_and_drop) {

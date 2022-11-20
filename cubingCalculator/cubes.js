@@ -20,7 +20,7 @@ function getRevealCostConstant(itemLevel) {
     return 20;
 }
 
-export function cubingCost(cubeType, itemLevel, totalCubeCount) {
+function cubingCost(cubeType, itemLevel, totalCubeCount) {
     const cubeCost = getCubeCost(cubeType);
     const revealCostConst = getRevealCostConstant(itemLevel);
     const revealPotentialCost = revealCostConst * itemLevel ** 2
@@ -30,7 +30,7 @@ export function cubingCost(cubeType, itemLevel, totalCubeCount) {
 // Nexon rates: https://maplestory.nexon.com/Guide/OtherProbability/cube/strange
 // GMS community calculated rates: https://docs.google.com/spreadsheets/d/1od_hep5Y6x2ljfrh4M8zj5RwlpgYDRn5uTymx4iLPyw/pubhtml#
 // Nexon rates used when they match close enough to ours.
-export const tier_rates = {
+const tier_rates = {
     "occult": {
         0: 0.009901
     },
@@ -62,7 +62,7 @@ export const tier_rates = {
 }
 
 // DMT is only for cash shop cubes.
-export const tier_rates_DMT = {
+const tier_rates_DMT = {
     "occult": tier_rates.occult,
     "master": tier_rates.master,
     "meister": tier_rates.meister,
@@ -81,7 +81,7 @@ export const tier_rates_DMT = {
 // Prime line rates for each line for each cube for the highest tier they can roll.
 // In order of first, second, third.
 // Assuming we have the same prime line rates as KMS (see the tier up rates link above).
-export const prime_line_rates = {
+const prime_line_rates = {
     "occult": [1, 0.009901, 0.009901],
     "master": [1, 0.01858, 0.01858],
     "meister": [1, 0.001996, 0.001996],
