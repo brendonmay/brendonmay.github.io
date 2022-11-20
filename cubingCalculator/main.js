@@ -77,37 +77,7 @@ function getTierCosts(currentTier, desiredTier, cubeType, DMT) {
   };
 }
 
-// Note(sethyboy0) this function is async because it has to await getProability.
-// See readCubingData in getProbability.js for an explanation.
-async function runCalculator() {
-  var itemType = document.getElementById('itemType').value;
-  var cubeType = document.getElementById('cubeType').value;
-  var currentTier = parseInt(document.getElementById('currentTier').value);
-  //var totalTrials = parseInt(document.getElementById('totalTrials').value);
-  var itemLevel = parseInt(document.getElementById('itemLevel').value);
-  var desiredTier = parseInt(document.getElementById('desiredTier').value);
-  var DMT = document.getElementById('DMT').checked
-
-  //Todo: meso/drop/CDhat/
-  var desiredStat = document.getElementById('desiredStats').value;
-
-  const probabilityInputObject = translateInputToObject(desiredStat);
-  const prob = await getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
-  console.log(prob);
-
-  //insert logic here
-  var p = getOldProbability(itemType, desiredStat, cubeType, currentTier, desiredTier, itemLevel)
-  var tier_up = getTierCosts(currentTier, desiredTier, cubeType, DMT)
-  var stats = geoDistrQuantile(p)
-
-  if (desiredStat == "any") {
-    stats.mean = 0
-    stats.median = 0
-    stats.seventy_fifth = 0
-    stats.eighty_fifth = 0
-    stats.nintey_fifth = 0
-  }
-
+function outputStatsToUi(stats, tier_up, cubeType, itemLevel) {
   var mean = Math.round(stats.mean) + tier_up.mean
   var median = Math.round(stats.median) + tier_up.median
   var seventy_fifth = Math.round(stats.seventy_fifth) + tier_up.seventy_fifth
@@ -119,12 +89,6 @@ async function runCalculator() {
   var seventy_fifth_cost = cubingCost(cubeType, itemLevel, seventy_fifth)
   var eighty_fifth_cost = cubingCost(cubeType, itemLevel, eighty_fifth)
   var ninety_fifth_cost = cubingCost(cubeType, itemLevel, nintey_fifth)
-
-
-  //new logic ends here
-
-
-  //var results = repeatExperiment(cubeType, itemLevel, itemType, desiredStat, totalTrials, currentTier, desiredTier);
 
   var averageCubeCount = mean //results.averageCubeCount
   var averageCost = mean_cost //results.averageCost
@@ -177,6 +141,40 @@ async function runCalculator() {
       </div>
     </div>
         `
+}
+
+// Note(sethyboy0) this function is async because it has to await getProability.
+// See readCubingData in getProbability.js for an explanation.
+async function runCalculator() {
+  var itemType = document.getElementById('itemType').value;
+  var cubeType = document.getElementById('cubeType').value;
+  var currentTier = parseInt(document.getElementById('currentTier').value);
+  //var totalTrials = parseInt(document.getElementById('totalTrials').value);
+  var itemLevel = parseInt(document.getElementById('itemLevel').value);
+  var desiredTier = parseInt(document.getElementById('desiredTier').value);
+  var DMT = document.getElementById('DMT').checked
+
+  //Todo: meso/drop/CDhat/
+  var desiredStat = document.getElementById('desiredStats').value;
+
+  const probabilityInputObject = translateInputToObject(desiredStat);
+  const prob = await getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
+  console.log(prob);
+
+  //insert logic here
+  var p = getOldProbability(itemType, desiredStat, cubeType, currentTier, desiredTier, itemLevel)
+  var tier_up = getTierCosts(currentTier, desiredTier, cubeType, DMT)
+  var stats = geoDistrQuantile(p)
+
+  if (desiredStat === "any") {
+    stats.mean = 0
+    stats.median = 0
+    stats.seventy_fifth = 0
+    stats.eighty_fifth = 0
+    stats.nintey_fifth = 0
+  }
+
+  outputStatsToUi(stats, tier_up, cubeType, itemLevel)
 }
 
 
