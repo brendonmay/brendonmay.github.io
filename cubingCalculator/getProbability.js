@@ -39,7 +39,6 @@ const tierNumberToText = {
 
 async function getCubeLines(desiredTier, itemType, cubeType) {
     const rawData = await readCubingData(itemType, cubeType);
-    console.log(rawData);
     const primeTextKey = tierNumberToText[desiredTier];
     const nonPrimeTextKey = tierNumberToText[desiredTier - 1];
     return [rawData[primeTextKey], rawData[nonPrimeTextKey]];
