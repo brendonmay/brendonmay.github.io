@@ -20,3 +20,30 @@ export const emptyInputObject = {
     lineMesoOrDrop: 0, // At least this many lines of meso OR drop.
     secCooldown: 0, // At least this many seconds of cooldown reduction.
 }
+
+// Note(sethyboy0) This is the function that causes everything to be async because it uses fetch. To not use async, we'd
+// need to split runCalculator into 2 parts and call the second part in fetch's .then();
+// The other option is to generate a file when generating the jsons that imports all of the data and contains a function
+// to get the data you need for the itemType and cubeType.
+export async function readCubingData(itemType, cubeType) {
+    const data = await fetch(`./cubing_data_scraper/data/cubing_data/${itemType}/${cubeType}.json`);
+    return data.json();
+}
+
+const tierNumberToText = {
+    3: "legendary",
+    2: "unique",
+    1: "epic",
+    0: "rare",
+}
+
+async function getCubeLines(desiredTier, itemType, cubeType) {
+    const rawData = await readCubingData(itemType, cubeType);
+    const primeTextKey = tierNumberToText[desiredTier];
+    const nonPrimeTextKey = tierNumberToText[desiredTier - 1];
+    return [rawData[primeTextKey], rawData[nonPrimeTextKey]];
+}
+
+export async function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
+    const [primeLines, nonPrimeLines] = await getCubeLines(desiredTier, itemType, cubeType);
+}
