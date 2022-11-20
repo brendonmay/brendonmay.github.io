@@ -95,12 +95,6 @@ function kmsCost(current_star, item_level) {
     return 1000 + item_level ** 3 * (current_star + 1) / 25;
 }
 
-function gmsCost(current_star, item_level) {
-    // The GMS starforce changes in Destiny just multiplied the costs by 0.78 for all the parts where we were paying extra.
-    // In ignition they just gave us KMS prices.
-    return kmsCost(current_star, item_level);
-}
-
 function tmsRegCost(current_star, item_level) {
     if (current_star >= 20) {
         return 1000 + item_level ** 3 * ((current_star + 1) ** 2.7) / 40;
@@ -123,8 +117,8 @@ function tmsRebootCost(current_star, item_level) {
 }
 
 // Map from server input value to the associated cost function.
+// As of the ignition update GMS uses KMS starforce prices.
 const SERVER_COST_FUNCTIONS = {
-    "gms": gmsCost,
     "kms": kmsCost,
     "tms": tmsRegCost,
     "tmsr": tmsRebootCost,
