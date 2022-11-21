@@ -129,95 +129,55 @@ def format_rates_list(potential_lines_list):
     return output_list, error_list
 
 
-# take raw cubing data from json file and generate a formatted set of files and folder structure
-# that can be used as input for the cubing calculator script
-# ----------------------------------------------------------------------------------------------------------------------
-# TODO move this logic for extracting the correct data into raw_potentials_list out of this method
-#  and/or make it more generic
-# cube_item_tiers_dict stores the two tiers of potentials that each cube type can roll lines from
-# (see caveat in note)
-# format is -> cube type: (item tier of "prime" lines, item tier of "non-prime" lines)
-# cubes can only roll lines from two tiers of potentials based on the item's tier, grouped into:
-#   1. "prime line" -> the same tier as the item (e.g. "legendary" line on a "legendary" item)
-#   2. "non-prime line" -> one tier below the item  (e.g. "unique" line on a "legendary" item)
-# NOTE: currently, this dictionary only includes the case where the item tier matches the cube tier (most common)
-# e.g. using a master craftsman's cube on a "unique" item as opposed to "rare" or "epic"
-#
-# raw_potentials_list is populated by extracting the lines from raw data that correspond to the item tier for that
-# iteration. specifically, the entire list under the "first_line" key of the raw data is extracted.
-# (this works because the first line can only roll potential lines that match the item tier which gives us a list of
-# all the potential lines specific to that item tier. The list for the second and third line on the other hand, contain
-# lines from both this item tier as well as those from one item tier below)
-def format_cubing_data(raw_json_file, output_dir, level_range="120to200"):
+# format raw data for easier parsing by javascript files, save it as a json
+# each entry is stored as a tuple with format: (category, value, rate as float)
+def format_cubing_data(raw_json_file, output_dir):
     with open(raw_json_file, "r") as fh:
         raw_data_dictionary = json.load(fh)
 
-    # formatted data will be nested dictionary of: item type -> cube type -> item tier -> formatted rates list
+    # structure is: lvl range -> item type -> cube type -> item tier -> line number -> list of rates
+    # "list of rates" is the portion that will be formatted. hierarchy matches the raw dictionary otherwise.
     formatted_data = {}
 
     # keep track of lines that did not match any regex patterns for debugging
     full_error_list = []
 
-    # the two item tiers that correspond to prime and non-prime lines for a given cube
-    cube_item_tiers_dict = {
-        "black": ("legendary", "unique"),
-        "red": ("legendary", "unique"),
-        "meister": ("legendary", "unique"),
-        "master": ("unique", "epic"),
-        "occult": ("epic", "rare"),
-    }
+    for (level_range, item_type_data) in raw_data_dictionary.items():
+        formatted_data[level_range] = {}
 
-    # extract relevant items from raw data and populate the formatted data dictionary after processing them
-    for (item_type, raw_cube_data) in raw_data_dictionary[level_range].items():
-        formatted_data[item_type] = {}
+        for (item_type, cube_data) in item_type_data.items():
+            formatted_data[level_range][item_type] = {}
 
-        for (cube_type, item_tiers) in cube_item_tiers_dict.items():
-            pot_lines_data = {}
+            for (cube_type, item_tier_data) in cube_data.items():
+                formatted_data[level_range][item_type][cube_type] = {}
 
-            for tier in item_tiers:
-                try:
-                    raw_potentials_list = raw_cube_data[cube_type][tier]["first_line"]
-                except Exception as e:
-                    print("Failed to get data for item: {}, cube: {}, tier: {}. Error: {}".format(
-                        item_type, cube_type, tier, e))
-                    continue
-                (pot_lines_data[tier], error_list) = format_rates_list(raw_potentials_list)
-                full_error_list += error_list
-                print("Finished processing data for item: {}, cube: {}, tier: {}".format(
-                    item_type, cube_type, tier))
-            if len(pot_lines_data) > 0:
-                formatted_data[item_type][cube_type] = pot_lines_data
+                for (item_tier, line_data) in item_tier_data.items():
+                    formatted_data[level_range][item_type][cube_type][item_tier] = {}
+
+                    for (line_num, rates) in line_data.items():
+                        formatted_data[level_range][item_type][cube_type][item_tier][line_num] = {}
+
+                        raw_potentials_list = raw_data_dictionary[level_range][item_type][cube_type][item_tier][line_num]
+                        (formatted_rates, error_list) = format_rates_list(raw_potentials_list)
+                        formatted_data[level_range][item_type][cube_type][item_tier][line_num] = formatted_rates
+                        full_error_list += error_list
 
     if len(full_error_list) > 0:
         print("Failed to match lines for:")
         print(full_error_list)
 
-    # create folder structure and divide data into separate files:
-    # root data folder -> item type folders -> one json file for each cube type with rate data
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    # save full formatted data dictionary as a single jsonf ile
+    full_formatted_data_file = os.path.join(output_dir, "formatted_data.json")
+    full_dump = json.dumps(formatted_data, ensure_ascii=False, indent=4)
+    with open(full_formatted_data_file, 'w') as f:
+        f.write(full_dump)
 
-    for (item_type, cube_type_dict) in formatted_data.items():
-        # make separate folders for each item type
-        item_dir_path = os.path.join(output_dir, item_type)
-        if not os.path.exists(item_dir_path):
-            os.makedirs(item_dir_path)
-
-        # write to json file for each cube type
-        for (cube_type, item_tier_dict) in cube_type_dict.items():
-            filename = os.path.join(item_dir_path, "{}_cube.json".format(cube_type))
-            dump = json.dumps(item_tier_dict, ensure_ascii=False, indent=4)
-            with open(filename, 'w') as f:
-                f.write(dump)
-            print("Cubing data for item: {}, cube type: {} has been saved to: {}".format(
-                item_type, cube_type, filename
-            ))
+    print("formatted json file saved to: {}".format(full_formatted_data_file))
 
 
 if __name__ == "__main__":
     PARENT_DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_DIR = os.path.join(PARENT_DIR, "test")
-    JSON_FILE = os.path.join(TEST_DIR, "source_data", "raw_data_english.json")
-    OUTPUT_DIR = os.path.join(TEST_DIR, "cubing_data")
+    JSON_FILE = os.path.join(TEST_DIR, "raw_data_english.json")
 
-    format_cubing_data(JSON_FILE, OUTPUT_DIR)
+    format_cubing_data(JSON_FILE, TEST_DIR)
