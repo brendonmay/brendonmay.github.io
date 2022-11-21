@@ -122,7 +122,7 @@ TRANSLATION_TABLE = [
     ("유니크 등급", "unique_item"),
     ("첫 번째 옵션", "first_line"),
     ("두 번째 옵션", "second_line"),
-    ("세 번째 옵션", "third line"),
+    ("세 번째 옵션", "third_line"),
     ("노멀", "normal"),
     ("레어", "rare"),
     ("에픽", "epic"),
