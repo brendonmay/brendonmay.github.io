@@ -60,8 +60,6 @@ function get2LStatOptionAmounts(prime) {
         pp];
 }
 
-const $desiredStats = $('#desiredStats');
-
 function removeGroupIfExists(id) {
     if (document.getElementById(id)) {
         $(`#${id}`).remove();
@@ -78,7 +76,7 @@ function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, op
         });
     } else {
         // Create the optgroup and options.
-        $desiredStats.append(`<optgroup id='${prefix}Group' label='${groupLabel}'></optgroup>`);
+        $('#desiredStats').append(`<optgroup id='${prefix}Group' label='${groupLabel}'></optgroup>`);
         const $statGroup = $(`#${prefix}Group`);
         optionAmounts.forEach((val, i) => $statGroup.append(
             `<option id='${prefix}${i}' value='${statValueName}+${val}'>${val}%+ ${displayText}</option>`));
@@ -161,7 +159,7 @@ function addCommonSEOptions(itemLevel, desiredTier) {
         return;
     }
 
-    $desiredStats.append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
+    $('#desiredStats').append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
     const $attackAndBossGroup = $('#attackAndBossGroup');
     $attackAndBossGroup.append("<option id='percAtt+1&percBoss+1' value='lineAtt+1&lineBoss+1'>1 Line Attack% + 1 Line Boss%</option>");
     $attackAndBossGroup.append("<option id='percAtt+1&percBoss+2' value='lineAtt+1&lineBoss+2'>1 Line Attack% + 2 Line Boss%</option>");
@@ -186,7 +184,7 @@ function addCritDamageOptions(desiredTier) {
         return;
     }
     if (!document.getElementById(`critDamageGroup`)) {
-        $desiredStats.append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
+        $('#desiredStats').append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
         const $critDamageGroup = $('#critDamageGroup');
         $critDamageGroup.append("<option id='gloves' value='lineCritDamage+1'>1 Line Crit Dmg%</option>");
 
@@ -218,7 +216,7 @@ function addDropAndMesoOptions(desiredTier) {
         return;
     }
     if (!document.getElementById(`dropMesoGroup`)) {
-        $desiredStats.append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
+        $('#desiredStats').append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
         const $dropMesoGroup = $('#dropMesoGroup');
         $dropMesoGroup.append("<option id='accessory3' value='lineMeso+1'>1 Line Mesos Obtained%</option>");
         $dropMesoGroup.append("<option id='accessory4' value='lineDrop+1'>1 Line Item Drop%</option>");
@@ -255,7 +253,7 @@ function addCDOptions(desiredTier) {
     }
     if (!document.getElementById(`CDGroup`)) {
         ////secCooldown+2, secCooldown+3, secCooldown+4, secCooldown+2&lineStat+1, secCooldown+2&lineHp+1, secCooldown+2&lineAllStat+1, secCooldown+2&lineStat+2, secCooldown+2&lineHp+2, secCooldown+2&lineAllStat+2, secCooldown+3&lineStat+1, secCooldown+3&lineHp+1, secCooldown+3&lineAllStat+1, secCooldown+4&lineStat+1, secCooldown+4&lineHp+1, secCooldown+4&lineAllStat+1
-        $desiredStats.append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
+        $('#desiredStats').append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
         const $CDGroup = $('#CDGroup');
         $CDGroup.append("<option id='hat' value='secCooldown+2'>-2sec+ CD Reduction</option>");
         $CDGroup.append("<option id='hat1' value='secCooldown+3'>-3sec+ CD Reduction</option>");

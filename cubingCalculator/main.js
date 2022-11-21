@@ -8,9 +8,8 @@ function soundasset(what) {
   return C.soundDir + what + "?raw=true";
 }
 
-const $desiredTier = $('#desiredTier');
-
 function updateDesiredTierOptions(currentTier) {
+  const $desiredTier = $('#desiredTier');
   $desiredTier.empty();
 
   if (currentTier <= 1) {
@@ -193,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // }, 3000)
   document.getElementById("currentTier").addEventListener("change", function () {
     const currentTier = parseInt($(this).val());
-    const desiredTier = parseInt($desiredTier.val());
+    const desiredTier = parseInt($('#desiredTier').val());
 
     updateDesiredTierOptions(currentTier);
     updateCubeTypeOptions(desiredTier);
@@ -209,6 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  const $desiredStats = $('#desiredStats');
   document.getElementById('desiredTier').addEventListener("change", function () {
     const desiredTier = $(this).val();
     const currentTier = $('#currentTier').val();
@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("calculateButton").addEventListener("click", calculateResults);
 
-  // Populate the select options:
+// Populate the select options:
   updateDesiredStats();
 }, false);
 
