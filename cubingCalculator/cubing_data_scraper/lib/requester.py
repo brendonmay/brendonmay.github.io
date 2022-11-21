@@ -76,33 +76,33 @@ PAYLOAD_DICT = {
     "item_levels": {
 
         # for now, we're only interested in this one
-        "120to200": 120,
+        "lvl120to200": 120,
 
         # this logic is from the script portion of the response data from Nexon's webiste.
         # not sure why every 10 levels gets its own category until 120
-        "0to9": 0,
-        "11to19": 11,
-        "21to29": 21,
-        "31to39": 31,
-        "41to49": 41,
-        "51to59": 51,
-        "61to69": 61,
-        "71to79": 71,
-        "81to89": 81,
-        "91to99": 91,
-        "101to109": 101,
-        "111to119": 111,
-        "201to250": 201,
-        "20": 20,
-        "30": 30,
-        "40": 40,
-        "50": 50,
-        "60": 60,
-        "70": 70,
-        "80": 80,
-        "90": 90,
-        "100": 100,
-        "110": 110,
+        "lvl0to9": 0,
+        "lvl11to19": 11,
+        "lvl21to29": 21,
+        "lvl31to39": 31,
+        "lvl41to49": 41,
+        "lvl51to59": 51,
+        "lvl61to69": 61,
+        "lvl71to79": 71,
+        "lvl81to89": 81,
+        "lvl91to99": 91,
+        "lvl101to109": 101,
+        "lvl111to119": 111,
+        "lvl201to250": 201,
+        "lvl20": 20,
+        "lvl30": 30,
+        "lvl40": 40,
+        "lvl50": 50,
+        "lvl60": 60,
+        "lvl70": 70,
+        "lvl80": 80,
+        "lvl90": 90,
+        "lvl100": 100,
+        "lvl110": 110,
     }
 }
 
@@ -148,7 +148,7 @@ def _convert_options_to_payload(options):
 def generate_common_options_list():
     options_list = []
 
-    level_range = "120to200"
+    level_range = "lvl120to200"
     items_required = [
         "weapon", "emblem", "secondary", "hat", "top", "overall", "bottom", "shoes", "gloves", "cape",
         "belt", "shoulder", "ring", "heart",
@@ -184,10 +184,12 @@ def download_html_files(output_dir, url=REQUEST_URL, header=None, options_list=N
     if options_list is None:
         options_list = generate_common_options_list()
 
+    output_dir = os.path.abspath(output_dir)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     print("Total requests to make: {}".format(len(options_list)))
+    print("Output directory: {}".format(output_dir))
     print("Displaying up to first 5 requests:")
     for (index, options) in enumerate(options_list[:5], start=1):
         print("Request {}/{}: {}".format(index, len(options_list), options))
@@ -215,12 +217,12 @@ if __name__ == "__main__":
         "cube_type": "black",
         "item_tier": "legendary",
         "item_type": "weapon",
-        "level_range": "120to200",
+        "level_range": "lvl120to200",
     }
 
     PARENT_DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_DIR = os.path.join(PARENT_DIR, "test")
-    OUTPUT_DIR = os.path.join(TEST_DIR, "source_data", "html_files")
+    OUTPUT_DIR = os.path.join(TEST_DIR, "html_files")
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
     html_files_list = download_html_files(OUTPUT_DIR, options_list=[TEST_OPTIONS, ])

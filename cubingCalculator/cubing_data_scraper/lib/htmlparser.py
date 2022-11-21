@@ -170,8 +170,8 @@ if __name__ == "__main__":
 
     PARENT_DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_DIR = os.path.join(PARENT_DIR, "test")
-    SOURCE_FILES_DIR = os.path.join(TEST_DIR, "source_data")
-    HTML_FILES_DIR = os.path.join(SOURCE_FILES_DIR, "html_files")
+    HTML_FILES_DIR = os.path.join(TEST_DIR, "html_files")
 
     source_html_files = get_html_files(HTML_FILES_DIR)
-    raw_json_file = parse_html_files(source_html_files, SOURCE_FILES_DIR)
+    raw_json_file = parse_html_files(source_html_files, TEST_DIR)
+
