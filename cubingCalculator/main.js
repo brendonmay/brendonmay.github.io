@@ -149,13 +149,13 @@ async function runCalculator() {
   var desiredStat = document.getElementById('desiredStats').value;
 
   const probabilityInputObject = translateInputToObject(desiredStat);
-  const prob = await getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
+  const prob = getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
   console.log(prob);
   const newStats = geoDistrQuantile(prob || 1);
   console.log(newStats);
 
   //insert logic here
-  var p = getOldProbability(itemType, desiredStat, cubeType, currentTier, desiredTier, itemLevel)
+  var p = prob;
   var tier_up = getTierCosts(currentTier, desiredTier, cubeType, DMT)
   var stats = geoDistrQuantile(p)
 
