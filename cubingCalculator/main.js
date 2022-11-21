@@ -21,9 +21,8 @@ function updateDesiredTierOptions(currentTier) {
   $desiredTier.append("<option value=3 selected>Legendary</option>");
 }
 
-const $cubeType = $('#cubeType');
-
 function updateCubeTypeOptions(desiredTier) {
+  const $cubeType = $('#cubeType');
   $cubeType.empty();
 
   if (desiredTier <= 1) {
