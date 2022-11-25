@@ -29,7 +29,7 @@ function checkPercStat(outcome, requiredVal) {
 
 function checkPercAllStat(outcome, requiredVal) {
     let actualVal = 0;
-    for (const [category, val, _] in outcome) {
+    for (const [category, val, _] of outcome) {
         if (category === "All Stats %") {
             actualVal += val;
         }
@@ -87,21 +87,7 @@ function _getNumLines(desiredCategory, outcome) {
 }
 
 
-const tierNumberToText = {
-    3: "legendary",
-    2: "unique",
-    1: "epic",
-    0: "rare",
-}
-
-async function getCubeLines(desiredTier, itemType, cubeType) {
-    const rawData = await readCubingData(itemType, cubeType);
-    const primeTextKey = tierNumberToText[desiredTier];
-    const nonPrimeTextKey = tierNumberToText[desiredTier - 1];
-    return [rawData[primeTextKey], rawData[nonPrimeTextKey]];
-}
-
-
+// mapping desired lines from form submission to category labels from cubeRates data
 // TODO(ming) enforce consistency between these input options and what users are able to choose on the website
 // make a single data structure/class to hold the values and the categories that meet them instead of keeping two separate objects
 // we need to make sure this matches
@@ -144,6 +130,7 @@ const INPUT_FIELDS_FUNCTION_MAP = {
 }
 
 
+// generate a list of relevant categories based on the lines the user wants. this will be used for filtering outcomes.
 function getUsefulCategories(probabilityInput) {
     let usefulCategories = [];
     for (const field in INPUT_CATEGORY_MAP) {
@@ -218,8 +205,8 @@ function checkRequirements(outcome, requirements) {
                 return false;
             }
             // console.log("meets requirements for desired field:", field, "with val of:", requirements[field]);
-            console.log("Meets desired category=STR % with val=", requirements[field]);
-            console.log("categories are: [", outcome[0][0], ",", outcome[1][0], ",", outcome[2][0], "]");
+            // console.log("Meets desired category=STR % with val=", requirements[field]);
+            // console.log("categories are: [", outcome[0][0], ",", outcome[1][0], ",", outcome[2][0], "]");
 
         }
     }
@@ -241,45 +228,72 @@ function calculateRate(outcome, filteredRates) {
     return chance;
 }
 
+const tierNumberToText = {
+    3: "legendary",
+    2: "unique",
+    1: "epic",
+    0: "rare",
+}
+
+function convertItemType(itemType) {
+    // use ring for accessory option (cubeData lists rates per specific accessory so just use ring since they are all
+    // the same)
+    // Note(ming) KMS website does not have badge data. mapping badge to heart for now
+    if (itemType === "accessory") {
+        return "ring";
+    }
+    else if (itemType === "badge") {
+        return "heart";
+    }
+    else {
+        return itemType;
+    }
+}
+
 function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
-    console.log("tier: ", desiredTier, "item: ", itemType, "cube: ", cubeType);
+    console.log(`tier=${desiredTier}, item=${itemType}, cube=${cubeType}`);
+    console.log("probability input", probabilityInput);
+
+    // convert parts of input for easier mapping to keys in cubeRates
     const tier = tierNumberToText[desiredTier];
+    const itemLabel = convertItemType(itemType);
 
-    const l1 = cubeRates.lvl120to200[itemType][cubeType][tier].first_line;
-    const l2 = cubeRates.lvl120to200[itemType][cubeType][tier].second_line;
-    const l3 = cubeRates.lvl120to200[itemType][cubeType][tier].third_line;
-    console.log("first line", l1);
-    console.log("second line", l2);
-    console.log("third line", l3);
+    // get the cubing data for this input criteria from cubeRates
+    const cubeData = {
+        first_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].first_line,
+        second_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].second_line,
+        third_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].third_line,
+    };
+    console.log("cubeData", cubeData);
 
-    // get the desired criteria
-    const desiredLines = probabilityInput;
-    console.log("desired lines", desiredLines);
-    const usefulCategories = getUsefulCategories(desiredLines);
-    console.log("useful categories", usefulCategories);
+    // get a list of categories that match the desired lines
+    const usefulCategories = getUsefulCategories(probabilityInput);
+    console.log("usefulCategories", usefulCategories);
 
-    // generate filtered rates list for first, second, third lines that we deem useful based on our input list
-    // we still include any "special" lines that affect rates of subsequent lines even if we don't want them
-    // anything else is not useful nor affect calculations, so they all get lumped into a single junk entry
-    const filteredRates = [];
-    filteredRates.push(getFilteredRates(usefulCategories, l1));
-    filteredRates.push(getFilteredRates(usefulCategories, l2));
-    filteredRates.push(getFilteredRates(usefulCategories, l3));
-    console.log("filtered rates: ", filteredRates);
+    // generate filtered version of cubing data that only contains lines relevant for our calculation.
+    // this includes both desired lines and any "special" lines that affect rates of subsequent lines (even if
+    // we don't want them).
+    // anything else gets lumped into a single junk entry.
+    const filteredCubeData = {
+        first_line: getFilteredRates(usefulCategories, cubeData.first_line),
+        second_line: getFilteredRates(usefulCategories, cubeData.second_line),
+        third_line: getFilteredRates(usefulCategories, cubeData.third_line),
+    };
+    console.log("filteredCubeData", filteredCubeData);
 
     // loop through all possible permutations using these filtered rates lists
     let total_chance = 0;
-    let total_count = 1;
+    let total_count = 0;
     let count_useful = 0;
-    for (const line1 of filteredRates[0]) {
-        for (const line2 of filteredRates[1]) {
-            for (const line3 of filteredRates[2]) {
+    for (const line1 of filteredCubeData.first_line) {
+        for (const line2 of filteredCubeData.second_line) {
+            for (const line3 of filteredCubeData.third_line) {
                 // check if this outcome meets our needs
                 const outcome = [line1, line2, line3];
-                if (checkRequirements(outcome, desiredLines)) {
+                if (checkRequirements(outcome, probabilityInput)) {
                     // calculate chance of this outcome occurring
                     console.log("=== Outcome ", total_count, "===")
-                    total_chance += calculateRate(outcome, filteredRates);
+                    total_chance += calculateRate(outcome, filteredCubeData);
                     count_useful++;
                 }
                 total_count++;
