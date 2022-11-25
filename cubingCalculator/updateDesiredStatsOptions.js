@@ -92,7 +92,7 @@ const statOptionsMap = {
     },
     hp: {
         prefix: "hpStat",
-        statValueName: "perHp",
+        statValueName: "percHp",
         displayText: "Max HP",
         groupLabel: "Max HP (Demon Avenger)",
     },
