@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
       $desiredStats.append("<option value='N/A' disabled selected>Your item level must be between 71 and 200</option>");
       document.getElementById('calculateButton').disabled = true;
     } else {
-      updateDesiredStatsOptions();
+      updateDesiredStats();
       document.getElementById('calculateButton').disabled = false;
     }
 
