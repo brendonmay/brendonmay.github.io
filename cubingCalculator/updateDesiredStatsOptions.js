@@ -27,7 +27,7 @@ function translateInputToObject(webInput) {
 
 function getPrimeLineValue(itemLevel, desiredTier, type) {
     const levelBonus = itemLevel >= 160 && !(type === "hp") ? 1 : 0;
-    const base = type === "all" ? 0 : 3;
+    const base = type === "allStat" ? 0 : 3;
 
     return base + (3 * desiredTier) + levelBonus;
 }
@@ -83,35 +83,41 @@ function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, op
     }
 }
 
-function addNormalStatOptions(itemLevel, desiredTier) {
-    const regPrime = getPrimeLineValue(itemLevel, desiredTier)
-    const regOptionAmounts = get3LStatOptionAmounts(regPrime);
-    addNormalOptionGroup("regStat",
-        "percStat",
-        "Stat",
-        "Regular Stat",
-        regOptionAmounts);
+const statOptionsMap = {
+    normal: {
+        prefix: "regStat",
+        statValueName: "percStat",
+        displayText: "Stat",
+        groupLabel: "Regular Stat",
+    },
+    hp: {
+        prefix: "hpStat",
+        statValueName: "perHp",
+        displayText: "Max HP",
+        groupLabel: "Max HP (Demon Avenger)",
+    },
+    allStat: {
+        prefix: "allStat",
+        statValueName: "percAllStat",
+        displayText: "All Stat",
+        groupLabel: "All Stat (For Xenon)",
+    }
+}
 
-    const hpPrime = getPrimeLineValue(itemLevel, desiredTier, "hp");
-    const hpOptionAmounts = get3LStatOptionAmounts(hpPrime);
-    addNormalOptionGroup("hpStat",
-        "percHp",
-        "Max HP",
-        "Max HP (Demon Avenger)",
-        hpOptionAmounts);
-
-    const allStatPrime = getPrimeLineValue(itemLevel, desiredTier, "all");
-
-    const allStatOptionAmounts = desiredTier === 1 ?
+function addNormalStatOptions(itemLevel, desiredTier, statType) {
+    const primeLineValue = getPrimeLineValue(itemLevel, desiredTier, statType)
+    const needSpecialAmounts = statType === "allStat" && desiredTier === 1;
+    const optionAmounts = needSpecialAmounts ?
         // Not enough all stat lines to use 3L options lol.
         // Instead, we add some values corresponding to all stat + some regular stat lines.
         [1, 3, 4, 5, 6, 9] :
-        get3LStatOptionAmounts(allStatPrime);
-    addNormalOptionGroup("allStat",
-        "percAllStat",
-        "All Stat",
-        "All Stat (For Xenon)",
-        allStatOptionAmounts);
+        get3LStatOptionAmounts(primeLineValue);
+    const { prefix, statValueName, displayText, groupLabel } = statOptionsMap[statType];
+    addNormalOptionGroup(prefix,
+        statValueName,
+        displayText,
+        groupLabel,
+        optionAmounts);
 }
 
 function removeNormalStatOptions() {
@@ -283,21 +289,7 @@ function updateDesiredStatsOptions() {
     const itemType = document.getElementById('itemType').value;
     const itemLevel = parseInt(document.getElementById('itemLevel').value);
     const desiredTier = parseInt(document.getElementById('desiredTier').value);
-
-    if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
-        removeNormalStatOptions();
-        addCommonWSEOptions(itemLevel, desiredTier);
-
-        if (itemType !== 'emblem') {
-            addCommonSEOptions(itemLevel, desiredTier);
-        } else {
-            removeCommonSEOptions()
-        }
-    } else {
-        addNormalStatOptions(itemLevel, desiredTier);
-        removeCommonWSEOptions();
-        removeCommonSEOptions();
-    }
+    const statType = document.getElementById('statType').value;
 
     if (itemType === 'gloves') {
         addCritDamageOptions(desiredTier);
@@ -315,5 +307,22 @@ function updateDesiredStatsOptions() {
         addCDOptions(desiredTier);
     } else {
         removeCDOptions();
+    }
+
+    // Do this part last because changing stat type causes the new stat options to go to the bottom.
+    // That looks weird if they were at the top to start with so this makes sure they're always at the bottom.
+    removeNormalStatOptions();
+    if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
+        addCommonWSEOptions(itemLevel, desiredTier);
+
+        if (itemType !== 'emblem') {
+            addCommonSEOptions(itemLevel, desiredTier);
+        } else {
+            removeCommonSEOptions()
+        }
+    } else {
+        addNormalStatOptions(itemLevel, desiredTier, statType);
+        removeCommonWSEOptions();
+        removeCommonSEOptions();
     }
 }

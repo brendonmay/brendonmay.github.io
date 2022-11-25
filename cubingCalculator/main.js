@@ -183,6 +183,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  document.getElementById("statType").addEventListener("change", function () {
+    const desiredTier = parseInt($('#desiredTier').val());
+    if (desiredTier !== 0) {
+      updateDesiredStats();
+    }
+  });
+
 
   document.getElementById("itemLevel").addEventListener("change", function () {
     // Set selected option as variable
