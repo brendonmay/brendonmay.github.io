@@ -57,7 +57,11 @@ function updateCurrentTier(desiredTier) {
     return currentTierVal;
 }
 
-function updateDesiredStats(currentTier, desiredTier, cubeType) {
+function updateDesiredStats() {
+    const cubeType = $('#cubeType').val();
+    const currentTier = parseInt($('#currentTier').val());
+    const desiredTier = parseInt($('#desiredTier').val());
+
     const cubeTypeMatches = maxCubeTier[cubeType] === desiredTier;
     const canPickStat = currentTier === desiredTier && cubeTypeMatches;
     const $desiredStats = $('#desiredStats');

@@ -155,33 +155,31 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("currentTier").addEventListener("change", function () {
     const currentTier = parseInt($(this).val());
     const desiredTier = updateDesiredTier(currentTier);
-    const cubeType = updateCubeType(desiredTier, currentTier);
+    updateCubeType(desiredTier, currentTier);
 
-    updateDesiredStats(currentTier, desiredTier, cubeType);
+    updateDesiredStats();
   });
 
   const $desiredStats = $('#desiredStats');
   document.getElementById('desiredTier').addEventListener("change", function () {
     const desiredTier = parseInt($(this).val());
     const currentTier = updateCurrentTier(desiredTier);
-    const cubeType = updateCubeType(desiredTier, currentTier);
-    updateDesiredStats(currentTier, desiredTier, cubeType);
+    updateCubeType(desiredTier, currentTier);
+    updateDesiredStats();
   });
 
   document.getElementById("itemType").addEventListener("change", function () {
     var desiredTier = document.getElementById('desiredTier').value
     if (desiredTier !== 0) {
-      updateDesiredStatsOptions();
+      updateDesiredStats();
       document.getElementById("desiredStats").selectedIndex = 0; //Option 10
     }
   });
 
   document.getElementById("cubeType").addEventListener("change", function () {
-    const cubeType = $(this).val();
-    const currentTier = parseInt($('#currentTier').val());
     const desiredTier = parseInt($('#desiredTier').val());
     if (desiredTier !== 0) {
-      updateDesiredStats(currentTier, desiredTier, cubeType);
+      updateDesiredStats();
     }
   });
 
