@@ -8,19 +8,6 @@ function soundasset(what) {
   return C.soundDir + what + "?raw=true";
 }
 
-function updateDesiredTierOptions(currentTier) {
-  const $desiredTier = $('#desiredTier');
-  $desiredTier.empty();
-
-  if (currentTier <= 1) {
-    $desiredTier.append("<option value=1>Epic</option>");
-  }
-  if (currentTier <= 2) {
-    $desiredTier.append("<option value=2>Unique</option>");
-  }
-  $desiredTier.append("<option value=3 selected>Legendary</option>");
-}
-
 function updateCubeTypeOptions(desiredTier) {
   const $cubeType = $('#cubeType');
   $cubeType.empty();
@@ -134,9 +121,7 @@ function outputStatsToUi(stats, tier_up, cubeType, itemLevel) {
         `
 }
 
-// Note(sethyboy0) this function is async because it has to await getProability.
-// See readCubingData in getProbability.js for an explanation.
-async function runCalculator() {
+function runCalculator() {
   var itemType = document.getElementById('itemType').value;
   var cubeType = document.getElementById('cubeType').value;
   var currentTier = parseInt(document.getElementById('currentTier').value);
@@ -174,10 +159,6 @@ async function runCalculator() {
 const calculateResults = function () {
   loaderOn();
   setTimeout(loaderOff, 100);
-
-  //console.log(performExperiment('black', 150, 'earring', 'lineMesoOrDrop+2', 3, 3))
-
-  //console.log(repeatExperiment('black', 150, 'hat', 'secCooldown+3', 100, 3, 3))
 };
 
 
@@ -186,9 +167,6 @@ document.addEventListener("DOMContentLoaded", function () {
     $("#toast").toast('show')
   }, 1000)
 
-  // setTimeout(function(){
-  //   $("#toast").toast('hide')
-  // }, 3000)
   document.getElementById("currentTier").addEventListener("change", function () {
     const currentTier = parseInt($(this).val());
     const desiredTier = parseInt($('#desiredTier').val());
@@ -226,21 +204,12 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("itemType").addEventListener("change", function () {
-    // document.getElementById('error-container').style.display = '';
     var desiredTier = document.getElementById('desiredTier').value
     if (desiredTier !== 0) {
       updateDesiredStats();
       document.getElementById("desiredStats").selectedIndex = 0; //Option 10
     }
   });
-
-  // document.getElementById("totalTrials").addEventListener("change", function () {
-  //   document.getElementById('error-container').style.display = '';
-  // });
-
-  // document.getElementById("desiredStats").addEventListener("change", function () {
-  //   document.getElementById('error-container').style.display = '';
-  // });
 
   document.getElementById("itemLevel").addEventListener("change", function () {
     // Set selected option as variable
@@ -260,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("calculateButton").addEventListener("click", calculateResults);
 
-// Populate the select options:
+  // Populate the select options:
   updateDesiredStats();
 }, false);
 

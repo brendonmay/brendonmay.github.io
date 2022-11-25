@@ -17,6 +17,7 @@
 <script src="c.js"></script>
 <script src="game.js"></script>
 <script src="statistics.js"></script>
+<script src="updateOtherElements.js"></script>
 <script src="updateDesiredStats.js"></script>
 <script src="cubes.js"></script>
 <script src="getOldProbability.js"></script>
@@ -107,7 +108,6 @@
                     <option value='overall'>Overall</option>
                     <option value='top'>Top</option>
                     <option value='secondary'>Secondary</option>
-                    <!-- <option value='shield'>Shield</option> -->
                     <option value='shoes' selected>Shoes</option>
                     <option value='shoulder'>Shoulder</option>
                     <option value='weapon'>Weapon</option>
@@ -124,7 +124,7 @@
             <div class='form-group col'>
                 <label for="currentTier">Current Tier</label>
                 <select id="currentTier" class="form-control">
-                    <option value=0>Rare</option> <!-- this should be selected by defualt -->
+                    <option value=0>Rare</option>
                     <option value=1>Epic</option>
                     <option value=2>Unique</option>
                     <option value=3 selected>Legendary</option>
@@ -146,6 +146,9 @@
             <div class='form-group col-3'>
                 <label for="desiredTier">Desired Tier</label>
                 <select id="desiredTier" class="form-control">
+                    <option value=0>Rare</option>
+                    <option value=1>Epic</option>
+                    <option value=2>Unique</option>
                     <option value=3 selected>Legendary</option>
                 </select>
             </div>
