@@ -1,20 +1,11 @@
-// You can't tier down, so we hide lower desired tiers for convenience.
-function updateDesiredTierOptions(currentTier) {
+// Update desired tier when the user changes current tier to something above it.
+// Since you can't tier down, they'll have to change it regardless.
+function updateDesiredTier(currentTier) {
     const $desiredTier = $('#desiredTier');
-    const $desiredTierOptions = $desiredTier.find("option");
 
-    // Update selected option before hiding the others.
-    // Doing it the other way around breaks things.
     const currentDesiredTier = parseInt($desiredTier.val());
     if (currentDesiredTier < currentTier) {
+        // This doesn't trigger change handlers which is nice.
         $desiredTier.val("" + currentTier);
-    }
-
-    for (const o of $desiredTierOptions) {
-        const $option = $(o);
-        const v = parseInt($option.val());
-        const relevantOption = v >= currentTier;
-        $option.prop("disabled", !relevantOption);
-        $option.toggle(relevantOption);
     }
 }

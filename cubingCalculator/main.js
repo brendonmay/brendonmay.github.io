@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentTier = parseInt($(this).val());
     const desiredTier = parseInt($('#desiredTier').val());
 
-    updateDesiredTierOptions(currentTier);
+    updateDesiredTier(currentTier);
     updateCubeTypeOptions(desiredTier);
 
     const desiredStatsElement = document.getElementById("desiredStats");
