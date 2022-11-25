@@ -21,76 +21,12 @@ const emptyInputObject = {
     secCooldown: 0, // At least this many seconds of cooldown reduction.
 }
 
-
-function checkPercStat(outcome, requiredVal) {
-    return (_getTotalVal("STR %", outcome) + _getTotalVal("All Stats %", outcome)) >= requiredVal;
-}
-
-function checkPercAllStat(outcome, requiredVal) {
-    let actualVal = 0;
-    for (const [category, val, _] of outcome) {
-        if (category === "All Stats %") {
-            actualVal += val;
-        }
-        else if (["STR %", "DEX %", "LUK %"].includes(category)) {
-            actualVal += val / 3;
-        }
-    }
-    return actualVal >= requiredVal;
-}
-
-function checkPercAttack(outcome, requiredVal) {
-    return (_getTotalVal("ATT %", outcome) >= requiredVal);
-}
-
-function checkLineStat(outcome, requiredVal) {
-    return (_getNumLines("STR %", outcome) + _getNumLines("All Stats %", outcome)) >= requiredVal;
-}
-
-function checkLineAllStat(outcome, requiredVal) {
-    return _getNumLines("All Stats %", outcome) >= requiredVal;
-}
-
-function checkPercHp(outcome, requiredVal) {
-    return _getTotalVal("Max HP %", outcome) >= requiredVal;
-}
-
-function checkLineMesoOrDrop(outcome, requiredVal) {
-    return (_getNumLines("Meso Amount %", outcome) + _getNumLines("Item Drop Rate %", outcome)) >= requiredVal;
-}
-
-function checkSecCooldown(outcome, requiredVal) {
-    return _getTotalVal("Skill Cooldown Reduction", outcome) >= requiredVal;
-}
-
-function _getTotalVal(desiredCategory, outcome) {
-    let actualVal = 0;
-    for (const [category, val, _] of outcome) {
-        // console.log("desiredCategory:", desiredCategory, "category:", category, "val:", val)
-        if (category === desiredCategory) {
-            actualVal += val;
-        }
-    }
-
-    // console.log("calculating total val for: ", desiredCategory, "result is: ", actualVal);
-    return actualVal;
-}
-
-function _getNumLines(desiredCategory, outcome) {
-    let actualVal = 0;
-    for (const [category, val, _] of outcome) {
-        if (category === desiredCategory) {
-            actualVal += 1;
-        }
-    }
-    return actualVal;
-}
-
-
-// mapping desired lines from form submission to category labels from cubeRates data
-// TODO(ming) enforce consistency between these input options and what users are able to choose on the website
-// make a single data structure/class to hold the values and the categories that meet them instead of keeping two separate objects
-// we need to make sure this matches
+// mapping for desired lines from submission form to categories in json data that contribute to a match
+// using STR % to represent stat % for STR, LUK, INT, DEX since they all have the same rates
+// using ATT % to represent both ATT and MATT % for the same reason
+// Assumptions used in calculations:
+// - All Stats % counts as 1 line of stat %
+// - STR, DEX or LUK % each count as 1/3 All Stats %
 const INPUT_CATEGORY_MAP = {
     percStat:["STR %", "All Stats %"],
     lineStat:["STR %", "All Stats %"],
@@ -110,36 +46,68 @@ const INPUT_CATEGORY_MAP = {
     secCooldown:["Skill Cooldown Reduction"],
 }
 
-const INPUT_FIELDS_FUNCTION_MAP = {
-    "percStat": checkPercStat,
-    "lineStat": checkLineStat,
-    "percAllStat": checkPercAllStat,
-    // "lineAllStat",
-    // "percHp",
-    // "lineHp",
-    "percAtt": checkPercAttack,
-    // "lineAtt",
-    // "percBoss",
-    // "lineBoss",
-    // "lineIed",
-    // "lineCritDamage",
-    // "lineMeso",
-    // "lineDrop",
-    // "lineMesoOrDrop",
-    // "secCooldown",
+// type of calculation can be total number of lines or a value sum (e.g. stat percent, CDR)
+const CALC_TYPE = {
+    LINE: 0,
+    VAL: 1,
 }
 
+// mapping between an input requirement and a function for checking if it has been satisfied by the specified "outcome"
+// where "outcome" refers to 3 lines of potential that could be rolled
+const OUTCOME_MATCH_FUNCTION_MAP = {
+    percStat: (outcome, requiredVal) => (_calculateTotal(outcome, "STR %", CALC_TYPE.VAL)
+        + _calculateTotal(outcome, "All Stats %", CALC_TYPE.VAL)) >= requiredVal,
+    lineStat: (outcome, requiredVal) => (_calculateTotal(outcome, "STR %")
+        + _calculateTotal(outcome, "All Stats %")) >= requiredVal,
+    percAllStat: checkPercAllStat,
+    lineAllStat: (outcome, requiredVal) => _calculateTotal(outcome, "All Stats %") >= requiredVal,
+    percHp: (outcome, requiredVal) => _calculateTotal(outcome, "Max HP %", CALC_TYPE.VAL) >= requiredVal,
+    lineHp: (outcome, requiredVal) => _calculateTotal(outcome, "Max HP %") >= requiredVal,
+    percAtt: (outcome, requiredVal) => _calculateTotal(outcome, "ATT %", CALC_TYPE.VAL) >= requiredVal,
+    lineAtt: (outcome, requiredVal) => _calculateTotal(outcome, "ATT %") >= requiredVal,
+    percBoss: (outcome, requiredVal) => _calculateTotal(outcome, "Boss Damage", CALC_TYPE.VAL) >= requiredVal,
+    lineBoss: (outcome, requiredVal) => _calculateTotal(outcome, "Boss Damage") >= requiredVal,
+    lineIed: (outcome, requiredVal) => _calculateTotal(outcome, "Ignore Enemy Defense %") >= requiredVal,
+    lineCritDamage: (outcome, requiredVal) => _calculateTotal(outcome, "Critical Damage %") >= requiredVal,
+    lineMeso: (outcome, requiredVal) => _calculateTotal(outcome, "Meso Amount %") >= requiredVal,
+    lineDrop: (outcome, requiredVal) => _calculateTotal(outcome, "Item Drop Rate %") >= requiredVal,
+    lineMesoOrDrop: (outcome, requiredVal) => _calculateTotal(outcome, "Meso Amount %")
+        + _calculateTotal(outcome, "Item Drop Rate %") >= requiredVal,
+    secCooldown: (outcome, requiredVal) => _calculateTotal(outcome, "Skill Cooldown Reduction", CALC_TYPE.VAL) >= requiredVal,
+}
 
-// generate a list of relevant categories based on the lines the user wants. this will be used for filtering outcomes.
-function getUsefulCategories(probabilityInput) {
-    let usefulCategories = [];
-    for (const field in INPUT_CATEGORY_MAP) {
-        if (probabilityInput[field] > 0) {
-            usefulCategories = usefulCategories.concat(INPUT_CATEGORY_MAP[field]);
+// calculate total All Stats %
+// where STR, DEX or LUK % each count as 1/3 All Stats %
+function checkPercAllStat(outcome, requiredVal) {
+    let actualVal = 0;
+    for (const [category, val, _] of outcome) {
+        if (category === "All Stats %") {
+            actualVal += val;
+        }
+        else if (["STR %", "DEX %", "LUK %"].includes(category)) {
+            actualVal += val / 3;
         }
     }
-    return Array.from(new Set(usefulCategories));
+    return actualVal >= requiredVal;
 }
+
+// get the total number of lines or total value of a specific category in this outcome
+// calcType: specifies whether we are calculating number of lines or total value (defaults to lines if not specified)
+function _calculateTotal(outcome, desiredCategory, calcType=CALC_TYPE.LINE) {
+    let actualVal = 0;
+    for (const [category, val, _] of outcome) {
+        if (category === desiredCategory) {
+            if (calcType === CALC_TYPE.VAL) {
+                actualVal += val;
+            }
+            else if (calcType === CALC_TYPE.LINE) {
+                actualVal += 1;
+            }
+        }
+    }
+    return actualVal;
+}
+
 
 const SPECIAL_CATEGORY_MAX_1 = [
     "Decent Skill",
@@ -174,24 +142,46 @@ function isSpecialLine(category) {
     return SPECIAL_CATEGORY_MAX_2.concat(SPECIAL_CATEGORY_MAX_1).includes(category);
 }
 
+// generate a list of relevant categories based on the input
+// this will be used to consolidate entries from the list of rates prior to generating all the possible outcomes to
+// calculate
+function getUsefulCategories(probabilityInput) {
+    let usefulCategories = [];
+    for (const field in INPUT_CATEGORY_MAP) {
+        if (probabilityInput[field] > 0) {
+            usefulCategories = usefulCategories.concat(INPUT_CATEGORY_MAP[field]);
+        }
+    }
+    return Array.from(new Set(usefulCategories));
+}
+
+// consolidate number of entries in the rates list to only the lines we care about
+// all other categories we don't care about get lumped into a single entry for junk lines
 // Note(ming) need to still keep around "special" lines which can impact the probability of 2nd or 3rd lines even
 // if we don't want them
-function getFilteredRates(desiredCategories, ratesList) {
+function getFilteredRates(ratesList, usefulCategories) {
     const filteredRates = [];
     let junk_rate = 0.0;
+    let junk_categories = []
 
     for (const item of ratesList) {
         const [category, val, rate] = item;
 
-        if (desiredCategories.includes(category) || isSpecialLine(category)) {
+        if (usefulCategories.includes(category) || isSpecialLine(category)) {
             filteredRates.push(item);
+        }
+        else if (category === "Junk") {
+            junk_rate += rate;
+            console.log("junk val", val);
+            junk_categories = junk_categories.concat(val);
         }
         else {
             junk_rate += rate;
+            junk_categories.push(`${category} (${val})`);
         }
     }
 
-    filteredRates.push(["Junk", [], junk_rate]);
+    filteredRates.push(["Junk", junk_categories, junk_rate]);
     return filteredRates;
 }
 
@@ -199,18 +189,11 @@ function getFilteredRates(desiredCategories, ratesList) {
 function checkRequirements(outcome, requirements) {
     for (const field in requirements) {
         if (requirements[field] > 0) {
-            let result = INPUT_FIELDS_FUNCTION_MAP[field](outcome, requirements[field]);
-            if (!result) {
-                // console.log("doesn't meet requirements for desired field:", field, "with val of:", requirements[field]);
+            if (!OUTCOME_MATCH_FUNCTION_MAP[field](outcome, requirements[field])) {
                 return false;
             }
-            // console.log("meets requirements for desired field:", field, "with val of:", requirements[field]);
-            // console.log("Meets desired category=STR % with val=", requirements[field]);
-            // console.log("categories are: [", outcome[0][0], ",", outcome[1][0], ",", outcome[2][0], "]");
-
         }
     }
-
     return true;
 }
 
@@ -266,22 +249,17 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
     };
     console.log("cubeData", cubeData);
 
-    // get a list of categories that match the desired lines
+    // generate filtered version of cubing data that only contains lines relevant for our calculation
     const usefulCategories = getUsefulCategories(probabilityInput);
     console.log("usefulCategories", usefulCategories);
-
-    // generate filtered version of cubing data that only contains lines relevant for our calculation.
-    // this includes both desired lines and any "special" lines that affect rates of subsequent lines (even if
-    // we don't want them).
-    // anything else gets lumped into a single junk entry.
     const filteredCubeData = {
-        first_line: getFilteredRates(usefulCategories, cubeData.first_line),
-        second_line: getFilteredRates(usefulCategories, cubeData.second_line),
-        third_line: getFilteredRates(usefulCategories, cubeData.third_line),
+        first_line: getFilteredRates(cubeData.first_line, usefulCategories),
+        second_line: getFilteredRates(cubeData.second_line, usefulCategories),
+        third_line: getFilteredRates(cubeData.third_line, usefulCategories),
     };
     console.log("filteredCubeData", filteredCubeData);
 
-    // loop through all possible permutations using these filtered rates lists
+    // loop through all possible outcomes and sum up the rate of outcomes that match the input
     let total_chance = 0;
     let total_count = 0;
     let count_useful = 0;
