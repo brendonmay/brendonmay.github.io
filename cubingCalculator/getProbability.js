@@ -24,7 +24,6 @@ const emptyInputObject = {
 
 function checkPercStat(outcome, requiredVal) {
     return (_getTotalVal("STR %", outcome) + _getTotalVal("All Stats %", outcome)) >= requiredVal;
-    // return _getTotalVal("STR %", outcome) >= requiredVal;
 }
 
 function checkPercAllStat(outcome, requiredVal) {
@@ -40,11 +39,12 @@ function checkPercAllStat(outcome, requiredVal) {
     return actualVal >= requiredVal;
 }
 
+function checkPercAttack(outcome, requiredVal) {
+    return (_getTotalVal("ATT %", outcome) >= requiredVal);
+}
+
 function checkLineStat(outcome, requiredVal) {
-    // console.log("Desired category=STR % with val=", requiredVal);
-    // console.log("Actual categories are: [", outcome[0][0], ",", outcome[1][0], ",", outcome[2][0], "]");
     return (_getNumLines("STR %", outcome) + _getNumLines("All Stats %", outcome)) >= requiredVal;
-    // return _getNumLines("STR %", outcome) >= requiredVal;
 }
 
 function checkLineAllStat(outcome, requiredVal) {
@@ -117,7 +117,7 @@ const INPUT_FIELDS_FUNCTION_MAP = {
     // "lineAllStat",
     // "percHp",
     // "lineHp",
-    // "percAtt",
+    "percAtt": checkPercAttack,
     // "lineAtt",
     // "percBoss",
     // "lineBoss",
