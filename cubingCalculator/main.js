@@ -187,10 +187,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const $desiredStats = $('#desiredStats');
   document.getElementById('desiredTier').addEventListener("change", function () {
-    const desiredTier = $(this).val();
-    const currentTier = $('#currentTier').val();
+    const desiredTier = parseInt($(this).val());
+    const currentTier = parseInt($('#currentTier').val());
     const desiredStatsElement = document.getElementById("desiredStats");
     updateCubeTypeOptions(desiredTier);
+    updateCurrentTier(desiredTier)
 
     if (currentTier === desiredTier) {
       updateDesiredStatsOptions();
