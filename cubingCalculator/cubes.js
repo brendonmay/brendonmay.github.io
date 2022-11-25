@@ -88,3 +88,11 @@ const prime_line_rates = {
     "red": [1, 0.1, 0.01],
     "black": [1, 0.2, 0.05]
 }
+
+const maxCubeTier = {
+    "occult": 1,
+    "master": 2,
+    "meister": 3,
+    "red": 3,
+    "black": 3,
+}

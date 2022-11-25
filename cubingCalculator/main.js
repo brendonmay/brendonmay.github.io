@@ -154,37 +154,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("currentTier").addEventListener("change", function () {
     const currentTier = parseInt($(this).val());
-    updateDesiredTier(currentTier);
-    const desiredTier = parseInt($('#desiredTier').val());
+    const desiredTier = updateDesiredTier(currentTier);
+    const cubeType = updateCubeType(desiredTier, currentTier);
 
-    const desiredStatsElement = document.getElementById("desiredStats");
-    if (currentTier !== desiredTier){
-      desiredStatsElement.disabled = true
-      desiredStatsElement.value = "any"
-    }
-    else {
-      updateDesiredStatsOptions();
-      desiredStatsElement.disabled = false;
-    }
+    updateDesiredStats(currentTier, desiredTier, cubeType);
   });
 
   const $desiredStats = $('#desiredStats');
   document.getElementById('desiredTier').addEventListener("change", function () {
     const desiredTier = parseInt($(this).val());
-    const currentTier = parseInt($('#currentTier').val());
-    const desiredStatsElement = document.getElementById("desiredStats");
-    updateCubeType(desiredTier);
-    updateCurrentTier(desiredTier)
-
-    if (currentTier === desiredTier) {
-      updateDesiredStatsOptions();
-      desiredStatsElement.disabled = false;
-    }
-    else {
-      $desiredStats.empty();
-      $desiredStats.append("<option id='any' value='any'>Any</option>");
-      desiredStatsElement.disabled = true;
-    }
+    const currentTier = updateCurrentTier(desiredTier);
+    const cubeType = updateCubeType(desiredTier, currentTier);
+    updateDesiredStats(currentTier, desiredTier, cubeType);
   });
 
   document.getElementById("itemType").addEventListener("change", function () {
@@ -194,6 +175,16 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("desiredStats").selectedIndex = 0; //Option 10
     }
   });
+
+  document.getElementById("cubeType").addEventListener("change", function () {
+    const cubeType = $(this).val();
+    const currentTier = parseInt($('#currentTier').val());
+    const desiredTier = parseInt($('#desiredTier').val());
+    if (desiredTier !== 0) {
+      updateDesiredStats(currentTier, desiredTier, cubeType);
+    }
+  });
+
 
   document.getElementById("itemLevel").addEventListener("change", function () {
     // Set selected option as variable
