@@ -86,19 +86,19 @@ function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, op
 const statOptionsMap = {
     normal: {
         prefix: "regStat",
-        statValueName: "percStat",
+        statValueName: "Stat",
         displayText: "Stat",
         groupLabel: "Regular Stat",
     },
     hp: {
         prefix: "hpStat",
-        statValueName: "percHp",
+        statValueName: "Hp",
         displayText: "Max HP",
         groupLabel: "Max HP (Demon Avenger)",
     },
     allStat: {
         prefix: "allStat",
-        statValueName: "percAllStat",
+        statValueName: "AllStat",
         displayText: "All Stat",
         groupLabel: "All Stat (For Xenon)",
     }
@@ -114,7 +114,7 @@ function addNormalStatOptions(itemLevel, desiredTier, statType) {
         get3LStatOptionAmounts(primeLineValue);
     const { prefix, statValueName, displayText, groupLabel } = statOptionsMap[statType];
     addNormalOptionGroup(prefix,
-        statValueName,
+        `perc${statValueName}`,
         displayText,
         groupLabel,
         optionAmounts);
@@ -252,13 +252,13 @@ function removeCDOptions() {
     removeGroupIfExists("CDGroup");
 }
 
-function addCDOptions(desiredTier) {
+function addCDOptions(desiredTier, statType) {
     if (desiredTier !== 3) {
         removeCDOptions();
         return;
     }
+    const { statValueName, displayText } = statOptionsMap[statType];
     if (!document.getElementById(`CDGroup`)) {
-        ////secCooldown+2, secCooldown+3, secCooldown+4, secCooldown+2&lineStat+1, secCooldown+2&lineHp+1, secCooldown+2&lineAllStat+1, secCooldown+2&lineStat+2, secCooldown+2&lineHp+2, secCooldown+2&lineAllStat+2, secCooldown+3&lineStat+1, secCooldown+3&lineHp+1, secCooldown+3&lineAllStat+1, secCooldown+4&lineStat+1, secCooldown+4&lineHp+1, secCooldown+4&lineAllStat+1
         $('#desiredStats').append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
         const $CDGroup = $('#CDGroup');
         $CDGroup.append("<option id='hat' value='secCooldown+2'>-2sec+ CD Reduction</option>");
@@ -267,21 +267,10 @@ function addCDOptions(desiredTier) {
         $CDGroup.append("<option id='hat15' value='secCooldown+5'>-5sec+ CD Reduction</option>");
         $CDGroup.append("<option id='hat16' value='secCooldown+6'>-6sec+ CD Reduction</option>");
 
-        $CDGroup.append("<option id='hat3' value='secCooldown+2&lineStat+1'>-2sec+ CD Reduction and Stat%</option>");
-        $CDGroup.append("<option id='hat4' value='secCooldown+2&lineHp+1'>-2sec+ CD Reduction and MaxHP%</option>");
-        $CDGroup.append("<option id='hat5' value='secCooldown+2&lineAllStat+1'>-2sec+ CD Reduction and All Stat%</option>");
-
-        $CDGroup.append("<option id='hat6' value='secCooldown+2&lineStat+2'>-2sec+ CD Reduction and 2 Line Stat%</option>");
-        $CDGroup.append("<option id='hat7' value='secCooldown+2&lineHp+2'>-2sec+ CD Reduction and 2 Line Max HP%</option>");
-        $CDGroup.append("<option id='hat8' value='secCooldown+2&lineAllStat+2'>-2sec+ CD Reduction and 2 Line All Stat%</option>");
-
-        $CDGroup.append("<option id='hat9' value='secCooldown+3&lineStat+1'>-3sec+ CD Reduction and Stat%</option>");
-        $CDGroup.append("<option id='hat10' value='secCooldown+3&lineHp+1'>-3sec+ CD Reduction and Max HP%</option>");
-        $CDGroup.append("<option id='hat11' value='secCooldown+3&lineAllStat+1'>-3sec+ CD Reduction and All Stat%</option>");
-
-        $CDGroup.append("<option id='hat12' value='secCooldown+4&lineStat+1'>-4sec+ CD Reduction and Stat%</option>");
-        $CDGroup.append("<option id='hat13' value='secCooldown+4&lineHp+1'>-4sec+ CD Reduction and Max HP%</option>");
-        $CDGroup.append("<option id='hat14' value='secCooldown+4&lineAllStat+1'>-4sec+ CD Reduction and All Stat%</option>");
+        $CDGroup.append(`<option id='hat3' value='secCooldown+2&line${statValueName}+1'>-2sec+ CD Reduction and 1 Line %${displayText}</option>`);
+        $CDGroup.append(`<option id='hat6' value='secCooldown+2&line${statValueName}+2'>-2sec+ CD Reduction and 2 Line %${displayText}</option>`);
+        $CDGroup.append(`<option id='hat9' value='secCooldown+3&line${statValueName}+1'>-3sec+ CD Reduction and 1 Line %${displayText}</option>`);
+        $CDGroup.append(`<option id='hat12' value='secCooldown+4&line${statValueName}+1'>-4sec+ CD Reduction and 1 Line %${displayText}</option>`);
     }
 }
 
@@ -304,7 +293,7 @@ function updateDesiredStatsOptions() {
     }
 
     if (itemType === 'hat') {
-        addCDOptions(desiredTier);
+        addCDOptions(desiredTier, statType);
     } else {
         removeCDOptions();
     }
