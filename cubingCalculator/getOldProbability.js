@@ -1261,7 +1261,7 @@ function getOldProbability(item_type, desired_outcome, cube_type, currentTier, d
 
     //item_level < 151
     //HP will follow same logic as ALL Stat
-    if (desired_outcome == "percAllStat+15" || desired_outcome == "percAllStat+17" || desired_outcome == "percHP+21") {
+    if (desired_outcome == "percAllStat+15" || desired_outcome == "percAllStat+17" || desired_outcome == "percHp+21") {
         if (desired_outcome == "percAllStat+15" || desired_outcome == "percAllStat+17") {
             var prime = '9_all'
             var sub = '6_all'
@@ -1309,7 +1309,7 @@ function getOldProbability(item_type, desired_outcome, cube_type, currentTier, d
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9 + probability_10 + probability_11
     }
     //HP will follow same logic and perc ALL
-    if (desired_outcome == "percAllStat+18" || desired_outcome == "percAllStat+20" || desired_outcome == "percHP+24") {
+    if (desired_outcome == "percAllStat+18" || desired_outcome == "percAllStat+20" || desired_outcome == "percHp+24") {
         if (desired_outcome == "percAllStat+18" || desired_outcome == "percAllStat+20") {
             var prime = '9_all'
             var sub = '6_all'
@@ -1344,7 +1344,7 @@ function getOldProbability(item_type, desired_outcome, cube_type, currentTier, d
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7
     }
     //HP will follow same logic and percAllStat
-    if (desired_outcome == "percAllStat+21" || desired_outcome == "percAllStat+24" || desired_outcome == "percHP+30") {
+    if (desired_outcome == "percAllStat+21" || desired_outcome == "percAllStat+24" || desired_outcome == "percHp+30") {
         if (desired_outcome == "percAllStat+21" || desired_outcome == "percAllStat+24") {
             var prime = '9_all'
             var sub = '6_all'
@@ -1604,9 +1604,9 @@ function getOldProbability(item_type, desired_outcome, cube_type, currentTier, d
 
         var probability = probability_1 + probability_2 + probability_3 + probability_4 + probability_5 + probability_6 + probability_7 + probability_8 + probability_9
     }
-    if ((desired_outcome == "percStat+36") || (desired_outcome == "percAllStat+27") || (desired_outcome == "percStat+33" && itemLevel <= 150) || desired_outcome == "percHP+33" || (desired_outcome == "percAllStat+24" && itemLevel <= 150)) {
+    if ((desired_outcome == "percStat+36") || (desired_outcome == "percAllStat+27") || (desired_outcome == "percStat+33" && itemLevel <= 150) || desired_outcome == "percHp+33" || (desired_outcome == "percAllStat+24" && itemLevel <= 150)) {
         if (desired_outcome == "percStat+36" || desired_outcome == "percStat+33") var stat = "stat"
-        else if (desired_outcome == "percHP+36" || desired_outcome == "percHP+33") var stat = "hp"
+        else if (desired_outcome == "percHp+36" || desired_outcome == "percHp+33") var stat = "hp"
         else var stat = "all"
         var prob_12_line_1 = prob_line("line_1", stat, probabilities, cube_type, item_type, 12)
         var prob_12_line_2 = prob_line("line_2", stat, probabilities, cube_type, item_type, 12)

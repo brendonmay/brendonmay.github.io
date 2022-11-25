@@ -95,7 +95,7 @@ function addNormalStatOptions(itemLevel, desiredTier) {
     const hpPrime = getPrimeLineValue(itemLevel, desiredTier, "hp");
     const hpOptionAmounts = get3LStatOptionAmounts(hpPrime);
     addNormalOptionGroup("hpStat",
-        "percHP",
+        "percHp",
         "Max HP",
         "Max HP (Demon Avenger)",
         hpOptionAmounts);
