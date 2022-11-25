@@ -279,7 +279,7 @@ function addCDOptions(desiredTier) {
     }
 }
 
-function updateDesiredStats() {
+function updateDesiredStatsOptions() {
     const itemType = document.getElementById('itemType').value;
     const itemLevel = parseInt(document.getElementById('itemLevel').value);
     const desiredTier = parseInt(document.getElementById('desiredTier').value);

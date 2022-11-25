@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
       desiredStatsElement.value = "any"
     }
     else {
-      updateDesiredStats();
+      updateDesiredStatsOptions();
       desiredStatsElement.disabled = false;
     }
   });
@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCubeTypeOptions(desiredTier);
 
     if (currentTier === desiredTier) {
-      updateDesiredStats();
+      updateDesiredStatsOptions();
       desiredStatsElement.disabled = false;
     }
     else {
@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("itemType").addEventListener("change", function () {
     var desiredTier = document.getElementById('desiredTier').value
     if (desiredTier !== 0) {
-      updateDesiredStats();
+      updateDesiredStatsOptions();
       document.getElementById("desiredStats").selectedIndex = 0; //Option 10
     }
   });
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
       $desiredStats.append("<option value='N/A' disabled selected>Your item level must be between 71 and 200</option>");
       document.getElementById('calculateButton').disabled = true;
     } else {
-      updateDesiredStats();
+      updateDesiredStatsOptions();
       document.getElementById('calculateButton').disabled = false;
     }
 
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("calculateButton").addEventListener("click", calculateResults);
 
   // Populate the select options:
-  updateDesiredStats();
+  updateDesiredStatsOptions();
 }, false);
 
 Game.init();
