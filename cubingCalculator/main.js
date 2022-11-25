@@ -8,21 +8,6 @@ function soundasset(what) {
   return C.soundDir + what + "?raw=true";
 }
 
-function updateCubeTypeOptions(desiredTier) {
-  const $cubeType = $('#cubeType');
-  $cubeType.empty();
-
-  if (desiredTier <= 1) {
-    $cubeType.append("<option value='occult'>Occult</option>");
-  }
-  if (desiredTier <= 2) {
-    $cubeType.append("<option value='master'>Master</option>");
-  }
-  $cubeType.append("<option value='meister'>Meister</option>");
-  $cubeType.append("<option value='red'>Red</option>");
-  $cubeType.append("<option value='black' selected>Black</option>");
-}
-
 function loaderOn() {
   $('#loader1').show();
   $('#loader2').show();
@@ -169,10 +154,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("currentTier").addEventListener("change", function () {
     const currentTier = parseInt($(this).val());
-    const desiredTier = parseInt($('#desiredTier').val());
-
     updateDesiredTier(currentTier);
-    updateCubeTypeOptions(desiredTier);
+    const desiredTier = parseInt($('#desiredTier').val());
 
     const desiredStatsElement = document.getElementById("desiredStats");
     if (currentTier !== desiredTier){
@@ -190,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const desiredTier = parseInt($(this).val());
     const currentTier = parseInt($('#currentTier').val());
     const desiredStatsElement = document.getElementById("desiredStats");
-    updateCubeTypeOptions(desiredTier);
+    updateCubeType(desiredTier);
     updateCurrentTier(desiredTier)
 
     if (currentTier === desiredTier) {
