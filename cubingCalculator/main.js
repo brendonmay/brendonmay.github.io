@@ -1,12 +1,3 @@
-//function l(what) {return document.getElementById(what);}
-function asset(what) {
-  return "url(" + C.assetsDir + what + ")";
-}
-
-function soundasset(what) {
-  return C.soundDir + what + "?raw=true";
-}
-
 function loaderOn() {
   $('#loader1').show();
   $('#loader2').show();
@@ -35,7 +26,7 @@ function outputStatsToUi(stats, tier_up, cubeType, itemLevel) {
   var averageCost = mean_cost //results.averageCost
   var medianCost = median_cost //results.medianCost
   var medianCubeCount = median //results.medianCubeCount
-  //var mesoDataForGraph = results.mesoDataForGraph
+
   var costSevenFive = seventy_fifth_cost //results.costSevenFive
   var costEightFive = eighty_fifth_cost //results.costEightFive
   var costNineFive = ninety_fifth_cost //results.costNineFive
@@ -43,9 +34,8 @@ function outputStatsToUi(stats, tier_up, cubeType, itemLevel) {
   var cubeEightFive = eighty_fifth //results.cubeEightFive
   var cubeNineFive = nintey_fifth //results.cubeNineFive
 
-  //document.getElementById("graphhere").style.display = '';
+
   document.getElementById('result').style.display = '';
-  // document.getElementById('error-container').style.display = 'none';
   document.getElementById('result').innerHTML =
       `
     <div class="container secondarycon">
@@ -162,7 +152,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   document.getElementById("itemLevel").addEventListener("change", function () {
-    // Set selected option as variable
     var itemLevel = parseInt($(this).val());
 
     if (itemLevel < 71 || itemLevel > 200) {
@@ -182,5 +171,3 @@ document.addEventListener("DOMContentLoaded", function () {
   // Populate the select options:
   updateDesiredStatsOptions();
 }, false);
-
-Game.init();
