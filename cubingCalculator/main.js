@@ -117,10 +117,6 @@ function runCalculator() {
 
   const probabilityInputObject = translateInputToObject(desiredStat);
   const p = getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
-  console.log(p);
-  const newStats = geoDistrQuantile(p || 1);
-  console.log(newStats);
-
   var tier_up = getTierCosts(currentTier, desiredTier, cubeType, DMT)
   var stats = geoDistrQuantile(p)
 
