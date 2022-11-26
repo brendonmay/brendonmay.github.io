@@ -269,9 +269,16 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
 
     // deduct total rate for each item that is removed from the pool
     let adjusted_total = 100;
+    let adjustedFlag = false; // avoid doing math operations if the rate is not changing (due to floating point issues)
     for (const [cat, val, rate] of currentPool) {
         if (to_be_removed.includes(cat)) {
             adjusted_total -= rate;
+            adjustedFlag = true;
+            console.log(`Line ${current_line}: Removed [${cat}: ${val}] from pool. new adjusted_total for this line is: ${adjusted_total}`);
+        }
+    }
+
+    return adjustedFlag ? current_rate / adjusted_total * 100 : current_rate;
         }
     }
 
