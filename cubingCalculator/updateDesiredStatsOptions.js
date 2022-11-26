@@ -84,8 +84,14 @@ function removeElementIfExists(id) {
 
 // Update an existing option with the given value and text.
 function updateOption($option, value, text) {
-    $option.attr("value", value);
-    $option.text(text);
+    const currentVal = $option.val();
+    const currentText = $option.text();
+    if (currentVal !== value) {
+        $option.text(text);
+    }
+    if (currentText !== text) {
+        $option.attr("value", value);
+    }
 }
 
 // Checks if an option with the given ID exists. If so, updates it with the given value and text. If not, creates it
@@ -131,7 +137,7 @@ function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, op
 }
 
 function addNormalStatOptions(itemLevel, desiredTier, statType) {
-    const primeLineValue = getPrimeLineValue(itemLevel, desiredTier, statType)
+    const primeLineValue = getPrimeLineValue(itemLevel, desiredTier, statType);
     const needSpecialAmounts = statType === "allStat" && desiredTier === 1;
     const optionAmounts = needSpecialAmounts ?
         // Not enough all stat lines to use 3L options lol.
@@ -147,9 +153,7 @@ function addNormalStatOptions(itemLevel, desiredTier, statType) {
 }
 
 function removeNormalStatOptions() {
-    removeElementIfExists("regStatGroup");
-    removeElementIfExists("hpStatGroup");
-    removeElementIfExists("allStatGroup");
+    removeElementIfExists("statGroup");
 }
 
 function addCommonWSEOptions(itemLevel, desiredTier) {
@@ -274,7 +278,7 @@ function addAutoStealOptions(desiredTier, statType, cubeType) {
 
 // Crit damage AND auto steal wow such good much amazing.
 function removeWomboComboOptions() {
-    removeElementIfExists("autoStealGroup");
+    removeElementIfExists("womboComboGroup");
 }
 
 function addWomboComboOptions(desiredTier, statType, cubeType) {
