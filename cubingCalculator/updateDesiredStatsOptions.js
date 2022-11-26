@@ -205,14 +205,67 @@ function addCritDamageOptions(desiredTier, statType) {
     if ($critDamageGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
         $critDamageGroup = $(critDamageSelector);
-        $critDamageGroup.append("<option id='gloves1' value='lineCritDamage+1'>1 Line Crit Dmg%</option>");
-        $critDamageGroup.append("<option id='gloves2' value='lineCritDamage+2'>2 Line Crit Dmg%</option>");
-        $critDamageGroup.append("<option id='gloves3' value='lineCritDamage+3'>3 Line Crit Dmg%</option>");
+        for (let i = 1; i <= 3; i++){
+            $critDamageGroup.append(`<option id='glovesC${i}' value='lineCritDamage+${i}'>${i} Line Crit Dmg%</option>`);
+        }
     }
     // Update these lines in case the user changed stat type.
-    updateOrCreateOption("gloves4", `lineCritDamage+1&line${statValueName}+1`, `1 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
-    updateOrCreateOption("gloves5", `lineCritDamage+1&line${statValueName}+2`, `1 Line Crit Dmg% and 2 line ${displayText}`, $critDamageGroup);
-    updateOrCreateOption("gloves6", `lineCritDamage+2&line${statValueName}+1`, `2 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
+    updateOrCreateOption("glovesC4", `lineCritDamage+1&line${statValueName}+1`, `1 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
+    updateOrCreateOption("glovesC5", `lineCritDamage+1&line${statValueName}+2`, `1 Line Crit Dmg% and 2 line ${displayText}`, $critDamageGroup);
+    updateOrCreateOption("glovesC6", `lineCritDamage+2&line${statValueName}+1`, `2 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
+}
+
+function removeAutoStealOptions() {
+    removeGroupIfExists("autoStealGroup");
+}
+
+function addAutoStealOptions(desiredTier, statType, cubeType) {
+    const validCubeType = cubeType === "master" || cubeType === "meister";
+    if (desiredTier < 2 || !validCubeType) {
+        removeAutoStealOptions();
+        return;
+    }
+    const autoStealSelector = '#autoStealGroup';
+    let $autoStealGroup = $(autoStealSelector);
+    const { statValueName, displayText } = statOptionsMap[statType];
+    if ($autoStealGroup.length === 0) {
+        $('#desiredStats').append(`<optgroup id='autoStealGroup' label='Auto Steal'></optgroup>`);
+        $autoStealGroup = $(autoStealSelector);
+        for (let i = 1; i <= 3; i++){
+            $autoStealGroup.append(`<option id='glovesA${i}' value='lineAutoSteal+${i}'>${i} Line Auto Steal%</option>`);
+        }
+    }
+    // Update these lines in case the user changed stat type.
+    updateOrCreateOption("glovesA4", `lineAutoSteal+1&line${statValueName}+1`, `1 Line Auto Steal% and 1 line ${displayText}`, $autoStealGroup);
+    updateOrCreateOption("glovesA5", `lineAutoSteal+1&line${statValueName}+2`, `1 Line Auto Steal% and 2 line ${displayText}`, $autoStealGroup);
+    updateOrCreateOption("glovesA6", `lineAutoSteal+2&line${statValueName}+1`, `2 Line Auto Steal% and 1 line ${displayText}`, $autoStealGroup);
+}
+
+// Crit damage AND auto steal wow such good much amazing.
+function removeWomboComboOptions() {
+    removeGroupIfExists("autoStealGroup");
+}
+
+function addWomboComboOptions(desiredTier, statType, cubeType) {
+    const validCubeType = cubeType === "meister";
+    if (desiredTier !== 3 || !validCubeType) {
+        removeAutoStealOptions();
+        return;
+    }
+    const womboComboSelector = '#womboComboGroup';
+    let $womboComboGroup = $(womboComboSelector);
+    if ($womboComboGroup.length === 0) {
+        $('#desiredStats').append(`<optgroup id='womboComboGroup' label='Wombo Combo'></optgroup>`);
+        $womboComboGroup = $(womboComboSelector);
+        for (let i = 1; i <= 2; i++){
+            for (let j = 1; j <= 2; j++) {
+                if (i + j > 3) {
+                    continue;
+                }
+                $womboComboGroup.append(`<option id='glovesA${i}C{j}' value='lineAutoSteal+${i}&lineCritDamage+${j}'>${i} Line Auto Steal% and ${j} Line Crit Dmg%</option>`);
+            }
+        }
+    }
 }
 
 function removeDropAndMesoOptions() {
@@ -278,6 +331,7 @@ function updateDesiredStatsOptions() {
     const itemType = document.getElementById('itemType').value;
     const itemLevel = parseInt(document.getElementById('itemLevel').value);
     const desiredTier = parseInt(document.getElementById('desiredTier').value);
+    const cubeType = document.getElementById('cubeType').value;
     const statType = document.getElementById('statType').value;
 
     if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
@@ -296,8 +350,12 @@ function updateDesiredStatsOptions() {
 
     if (itemType === 'gloves') {
         addCritDamageOptions(desiredTier, statType);
+        addAutoStealOptions(desiredTier, statType, cubeType);
+        addWomboComboOptions(desiredTier, statType, cubeType);
     } else {
         removeCritDamageOptions();
+        removeAutoStealOptions();
+        removeWomboComboOptions();
     }
 
     if (itemType === 'accessory') {
