@@ -164,6 +164,8 @@ function removeCommonWSEOptions() {
 
 function removeCommonSEOptions() {
     removeElementIfExists("attackAndBossGroup");
+    removeElementIfExists("attackOrBossGroup");
+    removeElementIfExists("attackOrBossOrIedGroup");
 }
 
 function addCommonSEOptions(itemLevel, desiredTier) {
@@ -179,7 +181,8 @@ function addCommonSEOptions(itemLevel, desiredTier) {
         return;
     }
 
-    $('#desiredStats').append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
+    const $desiredStats = $('#desiredStats');
+    $desiredStats.append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
     const $attackAndBossGroup = $('#attackAndBossGroup');
     $attackAndBossGroup.append("<option id='percAtt+1&percBoss+1' value='lineAtt+1&lineBoss+1'>1 Line Attack% + 1 Line Boss%</option>");
     $attackAndBossGroup.append("<option id='percAtt+1&percBoss+2' value='lineAtt+1&lineBoss+2'>1 Line Attack% + 2 Line Boss%</option>");
@@ -192,6 +195,18 @@ function addCommonSEOptions(itemLevel, desiredTier) {
         $attackAndBossGroup.append(`<option id='$PNATT40BOSS' value='percAtt+${pn}&percBoss+40'>${pn}%+ Attack and 40%+ Boss</option>`);
     }
     $attackAndBossGroup.append(`<option id='$PPATT30BOSS' value='percAtt+${pp}&percBoss+30'>${pp}%+ Attack and 30%+ Boss</option>`);
+
+    $desiredStats.append(`<optgroup id='attackOrBossGroup' label='Attack or Boss Damage'></optgroup>`);
+    const $attackOrBossGroup = $('#attackOrBossGroup');
+    for (let i = 1; i <= 3; i++) {
+        $attackOrBossGroup.append(`<option id='lab${i}' value='lineAttOrBoss+${i}'>${i} Line Attack% or Boss%</option>`);
+    }
+
+    $desiredStats.append(`<optgroup id='attackOrBossOrIedGroup' label='Attack or Boss Damage or IED'></optgroup>`);
+    const $attackOrBossOrIedGroup = $('#attackOrBossOrIedGroup');
+    for (let i = 1; i <= 3; i++) {
+        $attackOrBossOrIedGroup.append(`<option id='labi${i}' value='lineAttOrBossOrIed+${i}'>${i} Line Attack% or Boss% or IED</option>`);
+    }
 }
 
 function removeCritDamageOptions() {
