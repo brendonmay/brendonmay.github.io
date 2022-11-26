@@ -2,6 +2,21 @@
 // configures everything else. It also contains the function that translates between the <select> <option> values and
 // the object that the probability calculator uses.
 
+const STAT_OPTIONS = {
+    normal: {
+        statValueName: "Stat",
+        displayText: "Stat",
+    },
+    hp: {
+        statValueName: "Hp",
+        displayText: "Max HP",
+    },
+    allStat: {
+        statValueName: "AllStat",
+        displayText: "All Stat",
+    }
+}
+
 /**
  * This function translates the string that comes from the select element to the object that the probability calculator
  * uses. To make it simple to add more options to the calculator I'm going with the following system for <select>
@@ -41,7 +56,7 @@ function get3LStatOptionAmounts(prime) {
     const paa = ppp - 12;
     const aaa = ppp - 15;
     const idkman = ppp - 18;
-    // -18 is the lowest we go since in epic tier we're down to 0%.
+    // Only keep non-zero entries since epic tier will get down to 0 with this.
     return [idkman,
         aaa,
         paa,
@@ -61,17 +76,20 @@ function get2LStatOptionAmounts(prime) {
         pp];
 }
 
-function removeGroupIfExists(id) {
+function removeElementIfExists(id) {
     if (document.getElementById(id)) {
         $(`#${id}`).remove();
     }
 }
 
+// Update an existing option with the given value and text.
 function updateOption($option, value, text) {
     $option.attr("value", value);
     $option.text(text);
 }
 
+// Checks if an option with the given ID exists. If so, updates it with the given value and text. If not, creates it
+// under the given optGroup with the given ID, value, and text.
 function updateOrCreateOption(id, value, text, $optGroup) {
     const $existingOp = $(`#${id}`);
     const exists = $existingOp.length > 0;
@@ -83,6 +101,7 @@ function updateOrCreateOption(id, value, text, $optGroup) {
     }
 }
 
+// For adding simple % targets.
 function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, optionAmounts) {
     // If the optgroup already exists, update the values and text in case the user changed the item level or stat.
     if (document.getElementById(`${prefix}Group`)) {
@@ -99,21 +118,6 @@ function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, op
     }
 }
 
-const statOptionsMap = {
-    normal: {
-        statValueName: "Stat",
-        displayText: "Stat",
-    },
-    hp: {
-        statValueName: "Hp",
-        displayText: "Max HP",
-    },
-    allStat: {
-        statValueName: "AllStat",
-        displayText: "All Stat",
-    }
-}
-
 function addNormalStatOptions(itemLevel, desiredTier, statType) {
     const primeLineValue = getPrimeLineValue(itemLevel, desiredTier, statType)
     const needSpecialAmounts = statType === "allStat" && desiredTier === 1;
@@ -122,7 +126,7 @@ function addNormalStatOptions(itemLevel, desiredTier, statType) {
         // Instead, we add some values corresponding to all stat + some regular stat lines.
         [1, 3, 4, 5, 6, 9] :
         get3LStatOptionAmounts(primeLineValue);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     addNormalOptionGroup("stat",
         `perc${statValueName}`,
         displayText,
@@ -131,9 +135,9 @@ function addNormalStatOptions(itemLevel, desiredTier, statType) {
 }
 
 function removeNormalStatOptions() {
-    removeGroupIfExists("regStatGroup");
-    removeGroupIfExists("hpStatGroup");
-    removeGroupIfExists("allStatGroup");
+    removeElementIfExists("regStatGroup");
+    removeElementIfExists("hpStatGroup");
+    removeElementIfExists("allStatGroup");
 }
 
 function addCommonWSEOptions(itemLevel, desiredTier) {
@@ -154,12 +158,12 @@ function addCommonWSEOptions(itemLevel, desiredTier) {
 }
 
 function removeCommonWSEOptions() {
-    removeGroupIfExists("attackGroup");
-    removeGroupIfExists("attackAndIEDGroup");
+    removeElementIfExists("attackGroup");
+    removeElementIfExists("attackAndIEDGroup");
 }
 
 function removeCommonSEOptions() {
-    removeGroupIfExists("attackAndBossGroup");
+    removeElementIfExists("attackAndBossGroup");
 }
 
 function addCommonSEOptions(itemLevel, desiredTier) {
@@ -191,7 +195,7 @@ function addCommonSEOptions(itemLevel, desiredTier) {
 }
 
 function removeCritDamageOptions() {
-    removeGroupIfExists("critDamageGroup");
+    removeElementIfExists("critDamageGroup");
 }
 
 function addCritDamageOptions(desiredTier, statType) {
@@ -201,7 +205,7 @@ function addCritDamageOptions(desiredTier, statType) {
     }
     const critDamageSelector = '#critDamageGroup';
     let $critDamageGroup = $(critDamageSelector);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     if ($critDamageGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
         $critDamageGroup = $(critDamageSelector);
@@ -216,7 +220,7 @@ function addCritDamageOptions(desiredTier, statType) {
 }
 
 function removeAutoStealOptions() {
-    removeGroupIfExists("autoStealGroup");
+    removeElementIfExists("autoStealGroup");
 }
 
 function addAutoStealOptions(desiredTier, statType, cubeType) {
@@ -227,7 +231,7 @@ function addAutoStealOptions(desiredTier, statType, cubeType) {
     }
     const autoStealSelector = '#autoStealGroup';
     let $autoStealGroup = $(autoStealSelector);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     if ($autoStealGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='autoStealGroup' label='Auto Steal'></optgroup>`);
         $autoStealGroup = $(autoStealSelector);
@@ -243,7 +247,7 @@ function addAutoStealOptions(desiredTier, statType, cubeType) {
 
 // Crit damage AND auto steal wow such good much amazing.
 function removeWomboComboOptions() {
-    removeGroupIfExists("autoStealGroup");
+    removeElementIfExists("autoStealGroup");
 }
 
 function addWomboComboOptions(desiredTier, statType, cubeType) {
@@ -269,7 +273,7 @@ function addWomboComboOptions(desiredTier, statType, cubeType) {
 }
 
 function removeDropAndMesoOptions() {
-    removeGroupIfExists("dropMesoGroup");
+    removeElementIfExists("dropMesoGroup");
 }
 
 function addDropAndMesoOptions(desiredTier, statType) {
@@ -279,7 +283,7 @@ function addDropAndMesoOptions(desiredTier, statType) {
     }
     const dropMesoSelector = '#dropMesoGroup';
     let $dropMesoGroup = $(dropMesoSelector);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     if ($dropMesoGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
         $dropMesoGroup = $(dropMesoSelector);
@@ -300,7 +304,7 @@ function addDropAndMesoOptions(desiredTier, statType) {
 }
 
 function removeCDOptions() {
-    removeGroupIfExists("CDGroup");
+    removeElementIfExists("CDGroup");
 }
 
 function addCDOptions(desiredTier, statType) {
@@ -310,7 +314,7 @@ function addCDOptions(desiredTier, statType) {
     }
     const CDSelector = '#CDGroup';
     let $CDGroup = $(CDSelector);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     if ($CDGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
         $CDGroup = $('#CDGroup');
