@@ -47,14 +47,14 @@ const INPUT_CATEGORY_MAP = {
     secCooldown:["Skill Cooldown Reduction"],
 }
 
-// type of calculation can be total number of lines or a value sum (e.g. stat percent, CDR)
+// type of calculation can be total number of lines or a value sum (e.g. stat %, seconds of CDR)
 const CALC_TYPE = {
     LINE: 0,
     VAL: 1,
 }
 
 // mapping between an input requirement and a function for checking if it has been satisfied by the specified "outcome"
-// where "outcome" refers to 3 lines of potential that could be rolled
+// where "outcome" refers to the 3 lines of potential rolled
 const OUTCOME_MATCH_FUNCTION_MAP = {
     percStat: (outcome, requiredVal) => (_calculateTotal(outcome, "STR %", CALC_TYPE.VAL)
         + _calculateTotal(outcome, "All Stats %", CALC_TYPE.VAL)) >= requiredVal,
@@ -109,34 +109,6 @@ function _calculateTotal(outcome, desiredCategory, calcType=CALC_TYPE.LINE) {
     return actualVal;
 }
 
-// category of lines that have a maximum limit on how many can appear on one item
-// TODO(ming) add checking for lines that can impact probability of other lines
-// can only have max of 2 of these lines
-// * IED
-// * chance to ignore % damage
-// * drop rate
-// * boss damage
-// * invincible for a short period of time with a certain probability when attacked
-//
-// can only have 1 of these lines
-// * any decent skill
-// * increased invincibility time after being hit
-//
-// if we reach the maximum number of occurrences for a category, that category is excluded for the next line(s)
-// quoting from Nexon's website:
-// display probability / (100% - the sum of the display probabilities of the excluded options)
-// reference: https://maplestory.nexon.com/Guide/OtherProbability/cube/strange
-const MAX_CATEGORY_COUNT = {
-    "Decent Skill": 1,
-    "Increase invincibility time after being hit": 1,
-    "Ignore Enemy Defense %": 2,
-    "Boss Damage": 2,
-    "Item Drop Rate %": 2,
-    "Chance to ignore % damage when hit": 2,
-    "Chance of being invincible for seconds when hit": 2,
-}
-
-const isSpecialLine = category => (Object.keys(MAX_CATEGORY_COUNT)).includes(category);
 
 // generate a list of relevant categories based on the input
 // this will be used to consolidate entries from the list of rates prior to generating all the possible outcomes to
@@ -158,7 +130,7 @@ function getUsefulCategories(probabilityInput) {
 function getFilteredRates(ratesList, usefulCategories) {
     const filteredRates = [];
     let junk_rate = 0.0;
-    let junk_categories = []
+    let junk_categories = []  // list of categories we lumped into Junk for debugging purposes
 
     for (const item of ratesList) {
         const [category, val, rate] = item;
@@ -167,8 +139,10 @@ function getFilteredRates(ratesList, usefulCategories) {
             filteredRates.push(item);
         }
         else if (category === "Junk") {
+            // using concat here since "Junk" is already a category that exists in the json data.
+            // we're expanding it here with additional "contextual junk" based on the user input, so we want to preserve
+            // the old list of junk categories too
             junk_rate += rate;
-            console.log("junk val", val);
             junk_categories = junk_categories.concat(val);
         }
         else {
@@ -181,7 +155,7 @@ function getFilteredRates(ratesList, usefulCategories) {
     return filteredRates;
 }
 
-// check if an outcome meets our needs
+// check if an outcome meets our requirements (from input)
 function checkRequirements(outcome, requirements) {
     for (const field in requirements) {
         if (requirements[field] > 0) {
@@ -193,77 +167,93 @@ function checkRequirements(outcome, requirements) {
     return true;
 }
 
-// calculate chance for an outcome to occur
-// result of multiplying the rate of the item rolled on the 1st, 2nd, and 3rd line with each other
-// rates of lines 2 and 3 may need to be adjusted if there are "special" lines are rolled prior
-// will return null for outcomes that are impossible to obtain due to the limit on number of times a line can appear
-function calculateRate(outcome, filteredRates) {
-    let adjustedOutcome = [];
-    console.log("original outcome", outcome);
-    console.log(`[${outcome[0][0]}, ${outcome[1][0]}, ${outcome[2][0]}]`);
-    // first line never changes so add it as-is
-    adjustedOutcome.push(outcome[0]);
+// Mapping of "special" categories and the maximum occurrence they can have per item.
+// we can only have max of 2 of these lines:
+// * IED
+// * chance to ignore % damage
+// * drop rate
+// * boss damage
+// * invincible for a short period of time with a certain probability when attacked
+//
+// we can only have 1 of these lines:
+// * any decent skill
+// * increased invincibility time after being hit
+//
+// if we reach the maximum number of occurrences for a category, that category is excluded for the next line(s)
+// quoting from Nexon's website:
+// display probability / (100% - the sum of the display probabilities of the excluded options)
+// reference: https://maplestory.nexon.com/Guide/OtherProbability/cube/strange
+const MAX_CATEGORY_COUNT = {
+    "Decent Skill": 1,
+    "Increase invincibility time after being hit": 1,
+    "Ignore Enemy Defense %": 2,
+    "Boss Damage": 2,
+    "Item Drop Rate %": 2,
+    "Chance to ignore % damage when hit": 2,
+    "Chance of being invincible for seconds when hit": 2,
+}
 
-    // match format of filtered rates to outcome (list of lists) to be able to reference the same line by index
-    const filteredRatesList = [filteredRates.first_line, filteredRates.second_line, filteredRates.third_line];
+const isSpecialLine = category => (Object.keys(MAX_CATEGORY_COUNT)).includes(category);
 
-    // add rates for lines 2 and 3 after any necessary adjustments
+// calculate the adjusted rate for a line in the outcome based on previous special lines, current pool of possibilities
+function getAdjustedRate(currentLine, previousLines, currentPool){
+    const current_rate = currentLine[2];
+
+    // the first line will never have its rates adjusted
+    if (previousLines.length === 0) {
+        return current_rate;
+    }
+
+    // special categories that we've reached the limit on in previous lines, so need to be removed from current pool
+    let to_be_removed = [];
+
+    // populate map of special lines and their count
+    // if any of them exceed the max allowed count, exit early with rate of 0 as this outcome is not possible
     let special_lines_count = {};
-    for (let i=0; i<2; i++){
-        const [cat, val, rate] = outcome[i];
-        console.log("Checking line", i+1);
-        if (cat !== "Junk") {
-            console.log(`category=${cat}, rate=${rate}, val=${val}`);
-        }
-        else {
-            console.log(`category=${cat}, rate=${rate}`);
-        }
-
-        // update count of any special lines we've encountered
+    for (const [cat, val, rate] of [...previousLines, currentLine]) {
         if (isSpecialLine(cat)) {
             if (!((Object.keys(special_lines_count)).includes(cat))) {
                 special_lines_count[cat] = 0;
             }
             special_lines_count[cat] += 1;
-        }
 
-        // adjust the rate of the next element of this outcome if needed
-        // return null if our outcome is not possible due to limits in max count
-        const next_cat = outcome[i+1][0];
-        const next_val = outcome[i+1][1];
-        let next_rate = outcome[i+1][2];  // may be adjusted
-        let adjusted_total = 100;  // sum of all the rates in the pool (will be reduced for each item removed)
-        for (const special_cat of Object.keys(special_lines_count)) {
-            if ((special_lines_count[special_cat] >= MAX_CATEGORY_COUNT[special_cat])) {
-
-                if ((special_lines_count[special_cat] > MAX_CATEGORY_COUNT[special_cat]) || (next_cat === special_cat)){
-                    // not possible as it exceeds the limit
-                    console.log("outcome not possible, existing early")
-                    return null;
-                }
-
-                // if we have reached the limit for any special lines, remove them from the pool of options for the next
-                // line. subtract the rate of any removed options from the total.
-                const next_rates = filteredRatesList[i+1];
-                console.log(`at limit for category=${special_cat}`);
-                console.log(`check current rates for next pool (line ${i+2})`, next_rates);
-                for (const [nc, _, nr] of next_rates) {
-                    if (nc === special_cat) {
-                        console.log(`next pool contains ${special_cat} with rate=${nr}`);
-                        adjusted_total -= nr;
-                        console.log("adjusted total after deducting", adjusted_total);
-                    }
-                }
+            if (special_lines_count[cat] > MAX_CATEGORY_COUNT[cat]) {
+                return 0;
+            }
+            else if (special_lines_count[cat] === MAX_CATEGORY_COUNT[cat]) {
+                to_be_removed.push(cat);
             }
         }
-
-        next_rate = (next_rate/adjusted_total) * 100;
-        adjustedOutcome.push([next_cat, next_val, next_rate]);
     }
+
+    let adjusted_total = 100;
+    for (const [cat, val, rate] of currentPool) {
+        if (to_be_removed.includes(cat)) {
+            adjusted_total -= rate;
+        }
+    }
+
+    return current_rate/adjusted_total * 100;
+}
+
+// calculate chance for an outcome to occur (the set of potential lines resulting from a cube roll)
+// obtained by multiplying of the rates of the item rolled on the 1st, 2nd, and 3rd line with each other
+// Note(ming) rates of lines 2 and 3 may need to be adjusted if there are "special" lines are rolled prior
+function calculateRate(outcome, filteredRates) {
+    console.log("original outcome", outcome);
+    console.log(`[${outcome[0][0]}, ${outcome[1][0]}, ${outcome[2][0]}]`);
+
+    // a version of outcome with rates adjusted for lines 2 and 3 if applicable
+    const adjustedOutcome = [
+        getAdjustedRate(outcome[0], [], filteredRates.first_line),
+        getAdjustedRate(outcome[1], [outcome[0]], filteredRates.second_line),
+        getAdjustedRate(outcome[2], [outcome[0], outcome[1]], filteredRates.third_line),
+    ]
+
     console.log("final adjustedOutcome", adjustedOutcome);
 
     let chance = 100;
-    for (const [cat, val, rate] of adjustedOutcome) {
+    for (const rate of adjustedOutcome) {
         chance = chance * (rate / 100);
     }
 
@@ -271,6 +261,9 @@ function calculateRate(outcome, filteredRates) {
     return chance;
 }
 
+
+
+// functions to convert UI input to corresponding labels used in the json data for easier reference
 const tierNumberToText = {
     3: "legendary",
     2: "unique",
@@ -293,6 +286,7 @@ function convertItemType(itemType) {
     }
 }
 
+// calculates the probability of achieving the set of desired criteria specified by user input
 function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
     console.log(`tier=${desiredTier}, item=${itemType}, cube=${cubeType}`);
     console.log("probability input", probabilityInput);
@@ -333,12 +327,13 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
                     // calculate chance of this outcome occurring
                     console.log("=== Outcome ", total_count, "===")
                     const result = calculateRate(outcome, filteredCubeData);
-                    if (result !== null) {
-                        total_chance += result;
-                        count_useful++;
+                    total_chance += result;
+
+                    if (result === 0) {
+                        count_invalid++;
                     }
                     else {
-                        count_invalid++;
+                        count_useful++;
                     }
                 }
                 total_count++;
