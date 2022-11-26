@@ -24,33 +24,59 @@ const emptyInputObject = {
     lineAttOrBossOrIed: 0,
 }
 
-// map desired criteria from input to categories in json data that contribute to a match
+// labels for categories used in json data reference and calculations
+const CATEGORY = {
+    STR_PERC: "STR %",
+    DEX_PERC: "DEX %",
+    INT_PERC: "INT %",
+    LUK_PERC: "LUK %",
+    MAXHP_PERC: "Max HP %",
+    MAXMP_PERC: "Max MP %",
+    ALLSTATS_PERC: "All Stats %",
+    ATT_PERC: "ATT %",
+    MATT_PERC: "MATT %",
+    BOSSDMG_PERC: "Boss Damage",
+    IED_PERC: "Ignore Enemy Defense %",
+    MESO_PERC: "Meso Amount %",
+    DROP_PERC: "Item Drop Rate %",
+    AUTOSTEAL_PERC: "Chance to auto steal %",
+    CRITDMG_PERC: "Critical Damage %",
+    CDR_TIME: "Skill Cooldown Reduction",
+    JUNK: "Junk",
+
+    // only used for special line probability adjustment calculations
+    DECENT_SKILL: "Decent Skill",
+    INVINCIBLE_PERC: "Chance of being invincible for seconds when hit",
+    INVINCIBLE_TIME: "Increase invincibility time after being hit",
+    IGNOREDMG_PERC: "Chance to ignore % damage when hit",
+}
+
+// map inputs to categories in json data that could contribute to a match
 // using STR % to represent stat % for STR, LUK, INT, DEX since they all have the same rates
 // using ATT % to represent both ATT and MATT % for the same reason
 // Assumptions used in calculations:
 // - All Stats % counts as 1 line of stat %
 // - STR, DEX or LUK % each count as 1/3 All Stats %
 const INPUT_CATEGORY_MAP = {
-    percStat:["STR %", "All Stats %"],
-    lineStat:["STR %", "All Stats %"],
-    percAllStat:["All Stats %", "STR %", "DEX %", "LUK %"],
-    lineAllStat:["All Stats %"],
-    percHp:["Max HP %"],
-    lineHp:["Max HP %"],
-    percAtt:["ATT %"],
-    lineAtt:["ATT %"],
-    percBoss:["Boss Damage"],
-    lineBoss:["Boss Damage"],
-    lineIed:["Ignore Enemy Defense %"],
-    lineCritDamage:["Critical Damage %"],
-    lineMeso:["Meso Amount %"],
-    lineDrop:["Item Drop Rate %"],
-    lineMesoOrDrop:["Item Drop Rate %", "Meso Amount %"],
-    secCooldown:["Skill Cooldown Reduction"],
-    lineAutoSteal: ["Chance to auto steal %"],
-    lineAttOrBoss: ["ATT %", "Boss Damage"],
-    lineAttOrBossOrIed: ["ATT %", "Boss Damage", "Ignore Enemy Defense %"],
-
+    percStat:[CATEGORY.STR_PERC, CATEGORY.ALLSTATS_PERC],
+    lineStat:[CATEGORY.STR_PERC, CATEGORY.ALLSTATS_PERC],
+    percAllStat:[CATEGORY.ALLSTATS_PERC, CATEGORY.STR_PERC, CATEGORY.DEX_PERC, CATEGORY.LUK_PERC],
+    lineAllStat:[CATEGORY.ALLSTATS_PERC],
+    percHp:[CATEGORY.MAXHP_PERC],
+    lineHp:[CATEGORY.MAXHP_PERC],
+    percAtt:[CATEGORY.ATT_PERC],
+    lineAtt:[CATEGORY.ATT_PERC],
+    percBoss:[CATEGORY.BOSSDMG_PERC],
+    lineBoss:[CATEGORY.BOSSDMG_PERC],
+    lineIed:[CATEGORY.IED_PERC],
+    lineCritDamage:[CATEGORY.CRITDMG_PERC],
+    lineMeso:[CATEGORY.MESO_PERC],
+    lineDrop:[CATEGORY.DROP_PERC],
+    lineMesoOrDrop:[CATEGORY.DROP_PERC, CATEGORY.MESO_PERC],
+    secCooldown:[CATEGORY.CDR_TIME],
+    lineAutoSteal: [CATEGORY.AUTOSTEAL_PERC],
+    lineAttOrBoss: [CATEGORY.ATT_PERC, CATEGORY.BOSSDMG_PERC],
+    lineAttOrBossOrIed: [CATEGORY.ATT_PERC, CATEGORY.BOSSDMG_PERC, CATEGORY.IED_PERC],
 }
 
 // type of calculation can be total number of lines or a value sum (e.g. stat %, seconds of CDR)
@@ -62,31 +88,31 @@ const CALC_TYPE = {
 // mapping between an input field and a function for checking if it has been satisfied by the specified "outcome"
 // where "outcome" refers to the set of potential lines that were rolled
 const OUTCOME_MATCH_FUNCTION_MAP = {
-    percStat: (outcome, requiredVal) => (_calculateTotal(outcome, "STR %", CALC_TYPE.VAL)
-        + _calculateTotal(outcome, "All Stats %", CALC_TYPE.VAL)) >= requiredVal,
-    lineStat: (outcome, requiredVal) => (_calculateTotal(outcome, "STR %")
-        + _calculateTotal(outcome, "All Stats %")) >= requiredVal,
+    percStat: (outcome, requiredVal) => (_calculateTotal(outcome, CATEGORY.STR_PERC, CALC_TYPE.VAL)
+        + _calculateTotal(outcome, CATEGORY.ALLSTATS_PERC, CALC_TYPE.VAL)) >= requiredVal,
+    lineStat: (outcome, requiredVal) => (_calculateTotal(outcome, CATEGORY.STR_PERC)
+        + _calculateTotal(outcome, CATEGORY.ALLSTATS_PERC)) >= requiredVal,
     percAllStat: checkPercAllStat,
-    lineAllStat: (outcome, requiredVal) => _calculateTotal(outcome, "All Stats %") >= requiredVal,
-    percHp: (outcome, requiredVal) => _calculateTotal(outcome, "Max HP %", CALC_TYPE.VAL) >= requiredVal,
-    lineHp: (outcome, requiredVal) => _calculateTotal(outcome, "Max HP %") >= requiredVal,
-    percAtt: (outcome, requiredVal) => _calculateTotal(outcome, "ATT %", CALC_TYPE.VAL) >= requiredVal,
-    lineAtt: (outcome, requiredVal) => _calculateTotal(outcome, "ATT %") >= requiredVal,
-    percBoss: (outcome, requiredVal) => _calculateTotal(outcome, "Boss Damage", CALC_TYPE.VAL) >= requiredVal,
-    lineBoss: (outcome, requiredVal) => _calculateTotal(outcome, "Boss Damage") >= requiredVal,
-    lineIed: (outcome, requiredVal) => _calculateTotal(outcome, "Ignore Enemy Defense %") >= requiredVal,
-    lineCritDamage: (outcome, requiredVal) => _calculateTotal(outcome, "Critical Damage %") >= requiredVal,
-    lineMeso: (outcome, requiredVal) => _calculateTotal(outcome, "Meso Amount %") >= requiredVal,
-    lineDrop: (outcome, requiredVal) => _calculateTotal(outcome, "Item Drop Rate %") >= requiredVal,
-    lineMesoOrDrop: (outcome, requiredVal) => _calculateTotal(outcome, "Meso Amount %")
-        + _calculateTotal(outcome, "Item Drop Rate %") >= requiredVal,
-    secCooldown: (outcome, requiredVal) => _calculateTotal(outcome, "Skill Cooldown Reduction", CALC_TYPE.VAL) >= requiredVal,
-    lineAutoSteal: (outcome, requiredVal) => _calculateTotal(outcome, "Chance to auto steal %") >= requiredVal,
-    lineAttOrBoss: (outcome, requiredVal) => (_calculateTotal(outcome, "ATT %")
-        + _calculateTotal(outcome, "Boss Damage")) >= requiredVal,
-    lineAttOrBossOrIed: (outcome, requiredVal) => (_calculateTotal(outcome, "ATT %")
-        + _calculateTotal(outcome, "Boss Damage")
-        + _calculateTotal(outcome, "Ignore Enemy Defense %")) >= requiredVal
+    lineAllStat: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.ALLSTATS_PERC) >= requiredVal,
+    percHp: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.MAXHP_PERC, CALC_TYPE.VAL) >= requiredVal,
+    lineHp: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.MAXHP_PERC) >= requiredVal,
+    percAtt: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.ATT_PERC, CALC_TYPE.VAL) >= requiredVal,
+    lineAtt: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.ATT_PERC) >= requiredVal,
+    percBoss: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.BOSSDMG_PERC, CALC_TYPE.VAL) >= requiredVal,
+    lineBoss: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.BOSSDMG_PERC) >= requiredVal,
+    lineIed: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.IED_PERC) >= requiredVal,
+    lineCritDamage: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.CRITDMG_PERC) >= requiredVal,
+    lineMeso: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.MESO_PERC) >= requiredVal,
+    lineDrop: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.DROP_PERC) >= requiredVal,
+    lineMesoOrDrop: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.MESO_PERC)
+        + _calculateTotal(outcome, CATEGORY.DROP_PERC) >= requiredVal,
+    secCooldown: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.CDR_TIME, CALC_TYPE.VAL) >= requiredVal,
+    lineAutoSteal: (outcome, requiredVal) => _calculateTotal(outcome, CATEGORY.AUTOSTEAL_PERC) >= requiredVal,
+    lineAttOrBoss: (outcome, requiredVal) => (_calculateTotal(outcome, CATEGORY.ATT_PERC)
+        + _calculateTotal(outcome, CATEGORY.BOSSDMG_PERC)) >= requiredVal,
+    lineAttOrBossOrIed: (outcome, requiredVal) => (_calculateTotal(outcome, CATEGORY.ATT_PERC)
+        + _calculateTotal(outcome, CATEGORY.BOSSDMG_PERC)
+        + _calculateTotal(outcome, CATEGORY.IED_PERC)) >= requiredVal
 }
 
 // calculate "effective" All Stats %
@@ -94,10 +120,10 @@ const OUTCOME_MATCH_FUNCTION_MAP = {
 function checkPercAllStat(outcome, requiredVal) {
     let actualVal = 0;
     for (const [category, val, _] of outcome) {
-        if (category === "All Stats %") {
+        if (category === CATEGORY.ALLSTATS_PERC) {
             actualVal += val;
         }
-        else if (["STR %", "DEX %", "LUK %"].includes(category)) {
+        else if ([CATEGORY.STR_PERC, CATEGORY.DEX_PERC, CATEGORY.LUK_PERC].includes(category)) {
             actualVal += val / 3;
         }
     }
@@ -150,7 +176,7 @@ function getConsolidatedRates(ratesList, usefulCategories) {
         if (usefulCategories.includes(category) || isSpecialLine(category)) {
             consolidatedRates.push(item);
         }
-        else if (category === "Junk") {
+        else if (category === CATEGORY.JUNK) {
             // using concat here since "Junk" is already a category that exists in the json data.
             // we're expanding it here with additional "contextual junk" based on the user input, so we want to preserve
             // the old list of junk categories too
@@ -163,7 +189,7 @@ function getConsolidatedRates(ratesList, usefulCategories) {
         }
     }
 
-    consolidatedRates.push(["Junk", junk_categories, junk_rate]);
+    consolidatedRates.push([CATEGORY.JUNK, junk_categories, junk_rate]);
     return consolidatedRates;
 }
 
@@ -193,13 +219,13 @@ function satisfiesInput(outcome, probabilityInput) {
 //
 // if we reach the maximum number of occurrences for a category, that category is excluded for the next line(s)
 const MAX_CATEGORY_COUNT = {
-    "Decent Skill": 1,
-    "Increase invincibility time after being hit": 1,
-    "Ignore Enemy Defense %": 2,
-    "Boss Damage": 2,
-    "Item Drop Rate %": 2,
-    "Chance to ignore % damage when hit": 2,
-    "Chance of being invincible for seconds when hit": 2,
+    [CATEGORY.DECENT_SKILL]: 1,
+    [CATEGORY.INVINCIBLE_TIME]: 1,
+    [CATEGORY.IED_PERC]: 2,
+    [CATEGORY.BOSSDMG_PERC]: 2,
+    [CATEGORY.DROP_PERC]: 2,
+    [CATEGORY.IGNOREDMG_PERC]: 2,
+    [CATEGORY.INVINCIBLE_PERC]: 2,
 }
 
 const isSpecialLine = category => (Object.keys(MAX_CATEGORY_COUNT)).includes(category);
@@ -311,7 +337,8 @@ function convertCubeDataForLevel(cubeData, itemLevel) {
     }
 
     let adjustedCubeData = {};
-    const affected_categories = ["STR %", "LUK %", "DEX %", "INT %", "All Stats %", "ATT %", "MATT %"];
+    const affected_categories = [CATEGORY.STR_PERC, CATEGORY.LUK_PERC, CATEGORY.DEX_PERC, CATEGORY.INT_PERC,
+        CATEGORY.ALLSTATS_PERC, CATEGORY.ATT_PERC, CATEGORY.MATT_PERC];
 
     console.groupCollapsed("Adjusted stats for lvl >160")
     for (const line in cubeData) {
