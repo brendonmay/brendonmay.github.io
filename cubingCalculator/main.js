@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var desiredTier = document.getElementById('desiredTier').value
     if (desiredTier !== 0) {
       updateDesiredStats();
-      document.getElementById("desiredStats").selectedIndex = 0; //Option 10
     }
   });
 
