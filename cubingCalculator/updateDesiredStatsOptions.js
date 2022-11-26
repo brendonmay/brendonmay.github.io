@@ -104,16 +104,28 @@ function updateOrCreateOption(id, value, text, $optGroup) {
 // For adding simple % targets.
 function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, optionAmounts) {
     // If the optgroup already exists, update the values and text in case the user changed the item level or stat.
-    if (document.getElementById(`${prefix}Group`)) {
-        optionAmounts.forEach((val, i) => {
-            const $option = $(`#${prefix}${i}`);
-            updateOption($option, `${statValueName}+${val}`, `${val}%+ ${displayText}`);
+    const optGroupSelector = `#${prefix}Group`
+    let $optGroup = $(optGroupSelector);
+    if ($optGroup.length !== 0) {
+        const $options = $optGroup.find("option");
+        $options.each((i, option) => {
+            // Grab each option and update it.
+            // Remove it from the array so we can delete the extras. They can appear when switching down to epic.
+            const $option = $(option);
+            if (i === optionAmounts.length) {
+                // Remove any extra options (can happen when switching to epic since it has less stat options).
+                $option.remove();
+            }
+            else {
+                const val = optionAmounts[i];
+                updateOption($option, `${statValueName}+${val}`, `${val}%+ ${displayText}`);
+            }
         });
     } else {
         // Create the optgroup and options.
         $('#desiredStats').append(`<optgroup id='${prefix}Group' label='${groupLabel}'></optgroup>`);
-        const $statGroup = $(`#${prefix}Group`);
-        optionAmounts.forEach((val, i) => $statGroup.append(
+        $optGroup= $(optGroupSelector);
+        optionAmounts.forEach((val, i) => $optGroup.append(
             `<option id='${prefix}${i}' value='${statValueName}+${val}'>${val}%+ ${displayText}</option>`));
     }
 }
