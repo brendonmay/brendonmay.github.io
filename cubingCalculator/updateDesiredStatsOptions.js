@@ -66,13 +66,28 @@ function removeGroupIfExists(id) {
     }
 }
 
+function updateOption($option, value, text) {
+    $option.attr("value", value);
+    $option.text(text);
+}
+
+function updateOrCreateOption(id, value, text, $optGroup) {
+    const $existingOp = $(`#${id}`);
+    const exists = $existingOp.length > 0;
+    if (exists) {
+        updateOption($existingOp, value, text);
+    }
+    else {
+        $optGroup.append(`<option id='${id}' value='${value}'>${text}</option>`);
+    }
+}
+
 function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, optionAmounts) {
-    // If the optgroup already exists, update the values and text in case the user changed the item level.
+    // If the optgroup already exists, update the values and text in case the user changed the item level or stat.
     if (document.getElementById(`${prefix}Group`)) {
         optionAmounts.forEach((val, i) => {
             const $option = $(`#${prefix}${i}`);
-            $option.attr("value", `${statValueName}+${val}`);
-            $option.text(`${val}%+ ${displayText}`);
+            updateOption($option, `${statValueName}+${val}`, `${val}%+ ${displayText}`);
         });
     } else {
         // Create the optgroup and options.
@@ -85,22 +100,16 @@ function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, op
 
 const statOptionsMap = {
     normal: {
-        prefix: "regStat",
         statValueName: "Stat",
         displayText: "Stat",
-        groupLabel: "Regular Stat",
     },
     hp: {
-        prefix: "hpStat",
         statValueName: "Hp",
         displayText: "Max HP",
-        groupLabel: "Max HP (Demon Avenger)",
     },
     allStat: {
-        prefix: "allStat",
         statValueName: "AllStat",
         displayText: "All Stat",
-        groupLabel: "All Stat (For Xenon)",
     }
 }
 
@@ -112,11 +121,11 @@ function addNormalStatOptions(itemLevel, desiredTier, statType) {
         // Instead, we add some values corresponding to all stat + some regular stat lines.
         [1, 3, 4, 5, 6, 9] :
         get3LStatOptionAmounts(primeLineValue);
-    const { prefix, statValueName, displayText, groupLabel } = statOptionsMap[statType];
-    addNormalOptionGroup(prefix,
+    const { statValueName, displayText } = statOptionsMap[statType];
+    addNormalOptionGroup("stat",
         `perc${statValueName}`,
         displayText,
-        groupLabel,
+        "Stat",
         optionAmounts);
 }
 
@@ -189,17 +198,20 @@ function addCritDamageOptions(desiredTier, statType) {
         removeCritDamageOptions();
         return;
     }
+    const critDamageSelector = '#critDamageGroup';
+    let $critDamageGroup = $(critDamageSelector);
     const { statValueName, displayText } = statOptionsMap[statType];
-    if (!document.getElementById(`critDamageGroup`)) {
+    if ($critDamageGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
-        const $critDamageGroup = $('#critDamageGroup');
-        $critDamageGroup.append("<option id='gloves' value='lineCritDamage+1'>1 Line Crit Dmg%</option>");
-        $critDamageGroup.append(`<option id='gloves1' value='lineCritDamage+1&line${statValueName}+1'>1 Line Crit Dmg% and 1 line ${displayText}</option>`);
-        $critDamageGroup.append(`<option id='gloves8' value='lineCritDamage+1&line${statValueName}+2'>1 Line Crit Dmg% and 2 line ${displayText}</option>`);
-        $critDamageGroup.append("<option id='gloves4' value='lineCritDamage+2'>2 Line Crit Dmg%</option>");
-        $critDamageGroup.append(`<option id='gloves5' value='lineCritDamage+2&${statValueName}+1'>2 Line Crit Dmg% and 1 line ${displayText}</option>`);
-        $critDamageGroup.append("<option id='gloves8' value='lineCritDamage+3'>3 Line Crit Dmg%</option>");
+        $critDamageGroup = $(critDamageSelector);
+        $critDamageGroup.append("<option id='gloves1' value='lineCritDamage+1'>1 Line Crit Dmg%</option>");
+        $critDamageGroup.append("<option id='gloves2' value='lineCritDamage+2'>2 Line Crit Dmg%</option>");
+        $critDamageGroup.append("<option id='gloves3' value='lineCritDamage+3'>3 Line Crit Dmg%</option>");
     }
+    // Update these lines in case the user changed stat type.
+    updateOrCreateOption("gloves4", `lineCritDamage+1&line${statValueName}+1`, `1 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
+    updateOrCreateOption("gloves5", `lineCritDamage+1&line${statValueName}+2`, `1 Line Crit Dmg% and 2 line ${displayText}`, $critDamageGroup);
+    updateOrCreateOption("gloves6", `lineCritDamage+2&line${statValueName}+1`, `2 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
 }
 
 function removeDropAndMesoOptions() {
@@ -211,24 +223,26 @@ function addDropAndMesoOptions(desiredTier, statType) {
         removeDropAndMesoOptions();
         return;
     }
+    const dropMesoSelector = '#dropMesoGroup';
+    let $dropMesoGroup = $(dropMesoSelector);
     const { statValueName, displayText } = statOptionsMap[statType];
-    if (!document.getElementById(`dropMesoGroup`)) {
+    if ($dropMesoGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
-        const $dropMesoGroup = $('#dropMesoGroup');
-        $dropMesoGroup.append("<option id='accessory3' value='lineMeso+1'>1 Line Mesos Obtained%</option>");
-        $dropMesoGroup.append("<option id='accessory4' value='lineDrop+1'>1 Line Item Drop%</option>");
-        $dropMesoGroup.append("<option id='accessory5' value='lineMesoOrDrop+1'>1 Line of Item Drop% or Mesos Obtained%</option>");
+        $dropMesoGroup = $(dropMesoSelector);
+        $dropMesoGroup.append("<option id='accessory1' value='lineMeso+1'>1 Line Mesos Obtained%</option>");
+        $dropMesoGroup.append("<option id='accessory2' value='lineDrop+1'>1 Line Item Drop%</option>");
+        $dropMesoGroup.append("<option id='accessory3' value='lineMesoOrDrop+1'>1 Line of Item Drop% or Mesos Obtained%</option>");
 
-        $dropMesoGroup.append(`<option id='accessory6' value='lineMeso+1&line${statValueName}+1'>1 Line Mesos Obtained% and 1 line ${displayText}</option>`);
-        $dropMesoGroup.append(`<option id='accessory9' value='lineDrop+1&line${statValueName}+1'>1 Line Item Drop% and 1 line ${displayText}</option>`);
-        $dropMesoGroup.append(`<option id='accessory12' value='lineMesoOrDrop+1&line${statValueName}+1'>1 Line of (Item Drop% or Mesos Obtained%) with 1 line ${displayText}</option>`);
+        $dropMesoGroup.append("<option id='accessory4' value='lineMeso+2'>2 Line Mesos Obtained%</option>");
+        $dropMesoGroup.append("<option id='accessory5' value='lineDrop+2'>2 Line Item Drop%</option>");
+        $dropMesoGroup.append("<option id='accessory6' value='lineMesoOrDrop+2'>2 Lines Involving Item Drop% or Mesos Obtained%</option>");
 
-        $dropMesoGroup.append("<option id='accessory' value='lineMeso+2'>2 Line Mesos Obtained%</option>");
-        $dropMesoGroup.append("<option id='accessory1' value='lineDrop+2'>2 Line Item Drop%</option>");
-        $dropMesoGroup.append("<option id='accessory2' value='lineMesoOrDrop+2'>2 Lines Involving Item Drop% or Mesos Obtained%</option>");
-
-        $dropMesoGroup.append("<option id='accessory' value='lineMeso+3'>3 Line Mesos Obtained%</option>");
+        $dropMesoGroup.append("<option id='accessory7' value='lineMeso+3'>3 Line Mesos Obtained%</option>");
     }
+    // Update these lines in case the user changed stat type.
+    updateOrCreateOption("accessory8", `lineMeso+1&line${statValueName}+1`, `1 Line Mesos Obtained% and 1 line ${displayText}`, $dropMesoGroup);
+    updateOrCreateOption("accessory9", `lineDrop+1&line${statValueName}+1`, `1 Line Item Drop% and 1 line ${displayText}`, $dropMesoGroup);
+    updateOrCreateOption("accessory10", `lineMesoOrDrop+1&line${statValueName}+1`, `1 Line of (Item Drop% or Mesos Obtained%) with 1 line ${displayText}`, $dropMesoGroup);
 }
 
 function removeCDOptions() {
@@ -240,21 +254,23 @@ function addCDOptions(desiredTier, statType) {
         removeCDOptions();
         return;
     }
+    const CDSelector = '#CDGroup';
+    let $CDGroup = $(CDSelector);
     const { statValueName, displayText } = statOptionsMap[statType];
-    if (!document.getElementById(`CDGroup`)) {
+    if ($CDGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
-        const $CDGroup = $('#CDGroup');
-        $CDGroup.append("<option id='hat' value='secCooldown+2'>-2sec+ CD Reduction</option>");
-        $CDGroup.append("<option id='hat1' value='secCooldown+3'>-3sec+ CD Reduction</option>");
-        $CDGroup.append("<option id='hat2' value='secCooldown+4'>-4sec+ CD Reduction</option>");
-        $CDGroup.append("<option id='hat15' value='secCooldown+5'>-5sec+ CD Reduction</option>");
-        $CDGroup.append("<option id='hat16' value='secCooldown+6'>-6sec+ CD Reduction</option>");
-
-        $CDGroup.append(`<option id='hat3' value='secCooldown+2&line${statValueName}+1'>-2sec+ CD Reduction and 1 Line ${displayText}</option>`);
-        $CDGroup.append(`<option id='hat6' value='secCooldown+2&line${statValueName}+2'>-2sec+ CD Reduction and 2 Line ${displayText}</option>`);
-        $CDGroup.append(`<option id='hat9' value='secCooldown+3&line${statValueName}+1'>-3sec+ CD Reduction and 1 Line ${displayText}</option>`);
-        $CDGroup.append(`<option id='hat12' value='secCooldown+4&line${statValueName}+1'>-4sec+ CD Reduction and 1 Line ${displayText}</option>`);
+        $CDGroup = $('#CDGroup');
+        $CDGroup.append("<option id='hat1' value='secCooldown+2'>-2sec+ CD Reduction</option>");
+        $CDGroup.append("<option id='hat2' value='secCooldown+3'>-3sec+ CD Reduction</option>");
+        $CDGroup.append("<option id='hat3' value='secCooldown+4'>-4sec+ CD Reduction</option>");
+        $CDGroup.append("<option id='hat4' value='secCooldown+5'>-5sec+ CD Reduction</option>");
+        $CDGroup.append("<option id='hat5' value='secCooldown+6'>-6sec+ CD Reduction</option>");
     }
+    // Update these lines in case the user changed stat type.
+    updateOrCreateOption("hat6", `secCooldown+2&line${statValueName}+1`, `-2sec+ CD Reduction and 1 Line ${displayText}`, $CDGroup);
+    updateOrCreateOption("hat7", `secCooldown+2&line${statValueName}+2`, `-2sec+ CD Reduction and 2 Line ${displayText}`, $CDGroup);
+    updateOrCreateOption("hat8", `secCooldown+3&line${statValueName}+1`, `-3sec+ CD Reduction and 1 Line ${displayText}`, $CDGroup);
+    updateOrCreateOption("hat9", `secCooldown+4&line${statValueName}+1`, `-4sec+ CD Reduction and 1 Line ${displayText}`, $CDGroup);
 }
 
 function updateDesiredStatsOptions() {
@@ -262,6 +278,20 @@ function updateDesiredStatsOptions() {
     const itemLevel = parseInt(document.getElementById('itemLevel').value);
     const desiredTier = parseInt(document.getElementById('desiredTier').value);
     const statType = document.getElementById('statType').value;
+
+    if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
+        addCommonWSEOptions(itemLevel, desiredTier);
+        removeNormalStatOptions();
+        if (itemType !== 'emblem') {
+            addCommonSEOptions(itemLevel, desiredTier);
+        } else {
+            removeCommonSEOptions()
+        }
+    } else {
+        addNormalStatOptions(itemLevel, desiredTier, statType);
+        removeCommonWSEOptions();
+        removeCommonSEOptions();
+    }
 
     if (itemType === 'gloves') {
         addCritDamageOptions(desiredTier, statType);
@@ -279,22 +309,5 @@ function updateDesiredStatsOptions() {
         addCDOptions(desiredTier, statType);
     } else {
         removeCDOptions();
-    }
-
-    // Do this part last because changing stat type causes the new stat options to go to the bottom.
-    // That looks weird if they were at the top to start with so this makes sure they're always at the bottom.
-    removeNormalStatOptions();
-    if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
-        addCommonWSEOptions(itemLevel, desiredTier);
-
-        if (itemType !== 'emblem') {
-            addCommonSEOptions(itemLevel, desiredTier);
-        } else {
-            removeCommonSEOptions()
-        }
-    } else {
-        addNormalStatOptions(itemLevel, desiredTier, statType);
-        removeCommonWSEOptions();
-        removeCommonSEOptions();
     }
 }
