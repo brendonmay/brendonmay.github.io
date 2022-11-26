@@ -277,7 +277,7 @@ function removeWomboComboOptions() {
 function addWomboComboOptions(desiredTier, statType, cubeType) {
     const validCubeType = cubeType === "meister";
     if (desiredTier !== 3 || !validCubeType) {
-        removeAutoStealOptions();
+        removeWomboComboOptions();
         return;
     }
     const womboComboSelector = '#womboComboGroup';
