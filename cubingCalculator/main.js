@@ -110,22 +110,18 @@ function runCalculator() {
   var itemType = document.getElementById('itemType').value;
   var cubeType = document.getElementById('cubeType').value;
   var currentTier = parseInt(document.getElementById('currentTier').value);
-  //var totalTrials = parseInt(document.getElementById('totalTrials').value);
   var itemLevel = parseInt(document.getElementById('itemLevel').value);
   var desiredTier = parseInt(document.getElementById('desiredTier').value);
   var DMT = document.getElementById('DMT').checked
 
-  //Todo: meso/drop/CDhat/
   var desiredStat = document.getElementById('desiredStats').value;
 
   const probabilityInputObject = translateInputToObject(desiredStat);
-  const prob = getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
-  console.log(prob);
-  const newStats = geoDistrQuantile(prob || 1);
+  const p = getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
+  console.log(p);
+  const newStats = geoDistrQuantile(p || 1);
   console.log(newStats);
 
-  //insert logic here
-  var p = prob;
   var tier_up = getTierCosts(currentTier, desiredTier, cubeType, DMT)
   var stats = geoDistrQuantile(p)
 
