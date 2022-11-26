@@ -184,30 +184,20 @@ function removeCritDamageOptions() {
     removeGroupIfExists("critDamageGroup");
 }
 
-function addCritDamageOptions(desiredTier) {
+function addCritDamageOptions(desiredTier, statType) {
     if (desiredTier !== 3) {
         removeCritDamageOptions();
         return;
     }
+    const { statValueName, displayText } = statOptionsMap[statType];
     if (!document.getElementById(`critDamageGroup`)) {
         $('#desiredStats').append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
         const $critDamageGroup = $('#critDamageGroup');
         $critDamageGroup.append("<option id='gloves' value='lineCritDamage+1'>1 Line Crit Dmg%</option>");
-
-        $critDamageGroup.append("<option id='gloves1' value='lineCritDamage+1&lineStat+1'>1 Line Crit Dmg% and Stat%</option>");
-        $critDamageGroup.append("<option id='gloves2' value='lineCritDamage+1&lineAllStat+1'>1 Line Crit Dmg% and All Stat%</option>");
-        $critDamageGroup.append("<option id='gloves3' value='lineCritDamage+1&lineHp+1'>1 Line Crit Dmg% and MaxHP%</option>");
-
-        $critDamageGroup.append("<option id='gloves8' value='lineCritDamage+1&lineStat+2'>1 Line Crit Dmg% and 2L Stat%</option>");
-        $critDamageGroup.append("<option id='gloves9' value='lineCritDamage+1&lineAllStat+2'>1 Line Crit Dmg% and 2L All Stat%</option>");
-        $critDamageGroup.append("<option id='gloves10' value='lineCritDamage+1&lineHp+2'>1 Line Crit Dmg% and 2L MaxHP%</option>");
-
+        $critDamageGroup.append(`<option id='gloves1' value='lineCritDamage+1&line${statValueName}+1'>1 Line Crit Dmg% and 1 line ${displayText}</option>`);
+        $critDamageGroup.append(`<option id='gloves8' value='lineCritDamage+1&line${statValueName}+2'>1 Line Crit Dmg% and 2 line ${displayText}</option>`);
         $critDamageGroup.append("<option id='gloves4' value='lineCritDamage+2'>2 Line Crit Dmg%</option>");
-
-        $critDamageGroup.append("<option id='gloves5' value='lineCritDamage+2&lineStat+1'>2 Line Crit Dmg% and Stat%</option>");
-        $critDamageGroup.append("<option id='gloves6' value='lineCritDamage+2&lineAllStat+1'>2 Line Crit Dmg% and All Stat%</option>");
-        $critDamageGroup.append("<option id='gloves7' value='lineCritDamage+2&lineHp+1'>2 Line Crit Dmg% and MaxHP%</option>");
-
+        $critDamageGroup.append(`<option id='gloves5' value='lineCritDamage+2&${statValueName}+1'>2 Line Crit Dmg% and 1 line ${displayText}</option>`);
         $critDamageGroup.append("<option id='gloves8' value='lineCritDamage+3'>3 Line Crit Dmg%</option>");
     }
 }
@@ -216,11 +206,12 @@ function removeDropAndMesoOptions() {
     removeGroupIfExists("dropMesoGroup");
 }
 
-function addDropAndMesoOptions(desiredTier) {
+function addDropAndMesoOptions(desiredTier, statType) {
     if (desiredTier !== 3) {
         removeDropAndMesoOptions();
         return;
     }
+    const { statValueName, displayText } = statOptionsMap[statType];
     if (!document.getElementById(`dropMesoGroup`)) {
         $('#desiredStats').append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
         const $dropMesoGroup = $('#dropMesoGroup');
@@ -228,17 +219,9 @@ function addDropAndMesoOptions(desiredTier) {
         $dropMesoGroup.append("<option id='accessory4' value='lineDrop+1'>1 Line Item Drop%</option>");
         $dropMesoGroup.append("<option id='accessory5' value='lineMesoOrDrop+1'>1 Line of Item Drop% or Mesos Obtained%</option>");
 
-        $dropMesoGroup.append("<option id='accessory6' value='lineMeso+1&lineStat+1'>1 Line Mesos Obtained% and Stat%</option>");
-        $dropMesoGroup.append("<option id='accessory7' value='lineMeso+1&lineAllStat+1'>1 Line Mesos Obtained% and All Stat%</option>");
-        $dropMesoGroup.append("<option id='accessory8' value='lineMeso+1&lineHp+1'>1 Line Mesos Obtained% and MaxHP%</option>");
-
-        $dropMesoGroup.append("<option id='accessory9' value='lineDrop+1&lineStat+1'>1 Line Item Drop% and Stat%</option>");
-        $dropMesoGroup.append("<option id='accessory10' value='lineDrop+1&lineAllStat+1'>1 Line Item Drop% and All Stat%</option>");
-        $dropMesoGroup.append("<option id='accessory11' value='lineDrop+1&lineHp+1'>1 Line Item Drop% and MaxHP%</option>");
-
-        $dropMesoGroup.append("<option id='accessory12' value='lineMesoOrDrop+1&lineStat+1'>1 Line of (Item Drop% or Mesos Obtained%) with Stat%</option>");
-        $dropMesoGroup.append("<option id='accessory13' value='lineMesoOrDrop+1&lineAllStat+1'>1 Line of (Item Drop% or Mesos Obtained%) with All Stat%</option>");
-        $dropMesoGroup.append("<option id='accessory14' value='lineMesoOrDrop+1&lineHp+1'>1 Line of (Item Drop% or Mesos Obtained%) with MaxHP%</option>");
+        $dropMesoGroup.append(`<option id='accessory6' value='lineMeso+1&line${statValueName}+1'>1 Line Mesos Obtained% and 1 line ${displayText}</option>`);
+        $dropMesoGroup.append(`<option id='accessory9' value='lineDrop+1&line${statValueName}+1'>1 Line Item Drop% and 1 line ${displayText}</option>`);
+        $dropMesoGroup.append(`<option id='accessory12' value='lineMesoOrDrop+1&line${statValueName}+1'>1 Line of (Item Drop% or Mesos Obtained%) with 1 line ${displayText}</option>`);
 
         $dropMesoGroup.append("<option id='accessory' value='lineMeso+2'>2 Line Mesos Obtained%</option>");
         $dropMesoGroup.append("<option id='accessory1' value='lineDrop+2'>2 Line Item Drop%</option>");
@@ -267,10 +250,10 @@ function addCDOptions(desiredTier, statType) {
         $CDGroup.append("<option id='hat15' value='secCooldown+5'>-5sec+ CD Reduction</option>");
         $CDGroup.append("<option id='hat16' value='secCooldown+6'>-6sec+ CD Reduction</option>");
 
-        $CDGroup.append(`<option id='hat3' value='secCooldown+2&line${statValueName}+1'>-2sec+ CD Reduction and 1 Line %${displayText}</option>`);
-        $CDGroup.append(`<option id='hat6' value='secCooldown+2&line${statValueName}+2'>-2sec+ CD Reduction and 2 Line %${displayText}</option>`);
-        $CDGroup.append(`<option id='hat9' value='secCooldown+3&line${statValueName}+1'>-3sec+ CD Reduction and 1 Line %${displayText}</option>`);
-        $CDGroup.append(`<option id='hat12' value='secCooldown+4&line${statValueName}+1'>-4sec+ CD Reduction and 1 Line %${displayText}</option>`);
+        $CDGroup.append(`<option id='hat3' value='secCooldown+2&line${statValueName}+1'>-2sec+ CD Reduction and 1 Line ${displayText}</option>`);
+        $CDGroup.append(`<option id='hat6' value='secCooldown+2&line${statValueName}+2'>-2sec+ CD Reduction and 2 Line ${displayText}</option>`);
+        $CDGroup.append(`<option id='hat9' value='secCooldown+3&line${statValueName}+1'>-3sec+ CD Reduction and 1 Line ${displayText}</option>`);
+        $CDGroup.append(`<option id='hat12' value='secCooldown+4&line${statValueName}+1'>-4sec+ CD Reduction and 1 Line ${displayText}</option>`);
     }
 }
 
@@ -281,13 +264,13 @@ function updateDesiredStatsOptions() {
     const statType = document.getElementById('statType').value;
 
     if (itemType === 'gloves') {
-        addCritDamageOptions(desiredTier);
+        addCritDamageOptions(desiredTier, statType);
     } else {
         removeCritDamageOptions();
     }
 
     if (itemType === 'accessory') {
-        addDropAndMesoOptions(desiredTier);
+        addDropAndMesoOptions(desiredTier, statType);
     } else {
         removeDropAndMesoOptions();
     }
