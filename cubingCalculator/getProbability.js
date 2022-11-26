@@ -242,26 +242,28 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
         return current_rate;
     }
 
-    // special categories that we've reached the limit on in previous lines which need to be removed from current pool
+    // determine special categories that we've reached the limit on in previous lines which need to be removed from
+    // the current pool
     let to_be_removed = [];
-
-    // count occurrences of each special line
-    // populate the list of special lines to be removed from the current pool
-    // if any of them exceed the max allowed count, exit early with rate of 0 since this outcome is not possible
-    let special_lines_count = {};
-    for (const [cat, val, rate] of [...previousLines, currentLine]) {
+    let prev_special_lines_count = {};
+    for (const [cat, val, rate] of previousLines) {
         if (isSpecialLine(cat)) {
-            if (!((Object.keys(special_lines_count)).includes(cat))) {
-                special_lines_count[cat] = 0;
+            if (!((Object.keys(prev_special_lines_count)).includes(cat))) {
+                prev_special_lines_count[cat] = 0;
             }
-            special_lines_count[cat] += 1;
+            prev_special_lines_count[cat] += 1;
+        }
+    }
 
-            if (special_lines_count[cat] > MAX_CATEGORY_COUNT[cat]) {
-                return 0;
-            }
-            else if (special_lines_count[cat] === MAX_CATEGORY_COUNT[cat]) {
-                to_be_removed.push(cat);
-            }
+    // populate the list of special lines to be removed from the current pool
+    // exit early with rate of 0 if this set of lines is not valid (exceeds max category count)
+    for (const [sp_cat, count] of Object.entries(prev_special_lines_count)) {
+        if ((count > MAX_CATEGORY_COUNT[sp_cat])
+            || ((sp_cat === current_category) && ((count + 1) > MAX_CATEGORY_COUNT[sp_cat]))) {
+            console.log(`%cOutcome is invalid. Exceeded count for ${sp_cat}.`, "color: red");
+            return 0;
+        } else if (count === MAX_CATEGORY_COUNT[sp_cat]) {
+            to_be_removed.push(sp_cat);
         }
     }
 
