@@ -24,7 +24,7 @@ const emptyInputObject = {
     lineAttOrBossOrIed: 0,
 }
 
-// mapping for desired lines from submission form to categories in json data that contribute to a match
+// map desired criteria from input to categories in json data that contribute to a match
 // using STR % to represent stat % for STR, LUK, INT, DEX since they all have the same rates
 // using ATT % to represent both ATT and MATT % for the same reason
 // Assumptions used in calculations:
@@ -59,8 +59,8 @@ const CALC_TYPE = {
     VAL: 1,
 }
 
-// mapping between an input requirement and a function for checking if it has been satisfied by the specified "outcome"
-// where "outcome" refers to the 3 lines of potential rolled
+// mapping between an input field and a function for checking if it has been satisfied by the specified "outcome"
+// where "outcome" refers to the set of potential lines that were rolled
 const OUTCOME_MATCH_FUNCTION_MAP = {
     percStat: (outcome, requiredVal) => (_calculateTotal(outcome, "STR %", CALC_TYPE.VAL)
         + _calculateTotal(outcome, "All Stats %", CALC_TYPE.VAL)) >= requiredVal,
@@ -81,7 +81,7 @@ const OUTCOME_MATCH_FUNCTION_MAP = {
     lineMesoOrDrop: (outcome, requiredVal) => _calculateTotal(outcome, "Meso Amount %")
         + _calculateTotal(outcome, "Item Drop Rate %") >= requiredVal,
     secCooldown: (outcome, requiredVal) => _calculateTotal(outcome, "Skill Cooldown Reduction", CALC_TYPE.VAL) >= requiredVal,
-    lineAutoSteal: (outcome, requiredVal) => (_calculateTotal(outcome, "Chance to auto steal %") >= requiredVal),
+    lineAutoSteal: (outcome, requiredVal) => _calculateTotal(outcome, "Chance to auto steal %") >= requiredVal,
     lineAttOrBoss: (outcome, requiredVal) => (_calculateTotal(outcome, "ATT %")
         + _calculateTotal(outcome, "Boss Damage")) >= requiredVal,
     lineAttOrBossOrIed: (outcome, requiredVal) => (_calculateTotal(outcome, "ATT %")
@@ -89,7 +89,7 @@ const OUTCOME_MATCH_FUNCTION_MAP = {
         + _calculateTotal(outcome, "Ignore Enemy Defense %")) >= requiredVal
 }
 
-// calculate total All Stats %
+// calculate "effective" All Stats %
 // where STR, DEX or LUK % each count as 1/3 All Stats %
 function checkPercAllStat(outcome, requiredVal) {
     let actualVal = 0;
@@ -137,10 +137,10 @@ function getUsefulCategories(probabilityInput) {
 
 // consolidate number of entries in the rates list to only the lines we care about
 // all other categories we don't care about get lumped into a single entry for junk lines
-// Note(ming) need to still keep around "special" lines which can impact the probability of 2nd or 3rd lines even
+// Note(ming) we still keep around "special" lines which can impact the probability of 2nd or 3rd lines even
 // if we don't want them
-function getFilteredRates(ratesList, usefulCategories) {
-    const filteredRates = [];
+function getConsolidatedRates(ratesList, usefulCategories) {
+    const consolidatedRates = [];
     let junk_rate = 0.0;
     let junk_categories = []  // list of categories we lumped into Junk for debugging purposes
 
@@ -148,7 +148,7 @@ function getFilteredRates(ratesList, usefulCategories) {
         const [category, val, rate] = item;
 
         if (usefulCategories.includes(category) || isSpecialLine(category)) {
-            filteredRates.push(item);
+            consolidatedRates.push(item);
         }
         else if (category === "Junk") {
             // using concat here since "Junk" is already a category that exists in the json data.
@@ -163,15 +163,15 @@ function getFilteredRates(ratesList, usefulCategories) {
         }
     }
 
-    filteredRates.push(["Junk", junk_categories, junk_rate]);
-    return filteredRates;
+    consolidatedRates.push(["Junk", junk_categories, junk_rate]);
+    return consolidatedRates;
 }
 
-// check if an outcome meets our requirements (from input)
-function checkRequirements(outcome, requirements) {
-    for (const field in requirements) {
-        if (requirements[field] > 0) {
-            if (!OUTCOME_MATCH_FUNCTION_MAP[field](outcome, requirements[field])) {
+// check if an outcome meets our the input requirements
+function satisfiesInput(outcome, probabilityInput) {
+    for (const field in probabilityInput) {
+        if (probabilityInput[field] > 0) {
+            if (!OUTCOME_MATCH_FUNCTION_MAP[field](outcome, probabilityInput[field])) {
                 return false;
             }
         }
@@ -192,9 +192,6 @@ function checkRequirements(outcome, requirements) {
 // * increased invincibility time after being hit
 //
 // if we reach the maximum number of occurrences for a category, that category is excluded for the next line(s)
-// quoting from Nexon's website:
-// display probability / (100% - the sum of the display probabilities of the excluded options)
-// reference: https://maplestory.nexon.com/Guide/OtherProbability/cube/strange
 const MAX_CATEGORY_COUNT = {
     "Decent Skill": 1,
     "Increase invincibility time after being hit": 1,
@@ -208,6 +205,9 @@ const MAX_CATEGORY_COUNT = {
 const isSpecialLine = category => (Object.keys(MAX_CATEGORY_COUNT)).includes(category);
 
 // calculate the adjusted rate for a line in the outcome based on previous special lines, current pool of possibilities
+// calculation method (from Nexon's website):
+// display probability / (100% - the sum of the display probabilities of the excluded options)
+// reference: https://maplestory.nexon.com/Guide/OtherProbability/cube/strange
 function getAdjustedRate(currentLine, previousLines, currentPool){
     const current_rate = currentLine[2];
 
@@ -219,8 +219,9 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
     // special categories that we've reached the limit on in previous lines, so need to be removed from current pool
     let to_be_removed = [];
 
-    // populate map of special lines and their count
-    // if any of them exceed the max allowed count, exit early with rate of 0 as this outcome is not possible
+    // count occurrences of each special line
+    // populate the list of special lines to be removed from the current pool
+    // if any of them exceed the max allowed count, exit early with rate of 0 since this outcome is not possible
     let special_lines_count = {};
     for (const [cat, val, rate] of [...previousLines, currentLine]) {
         if (isSpecialLine(cat)) {
@@ -238,6 +239,7 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
         }
     }
 
+    // deduct total rate for each item to be removed from the pool
     let adjusted_total = 100;
     for (const [cat, val, rate] of currentPool) {
         if (to_be_removed.includes(cat)) {
@@ -250,7 +252,7 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
 
 // calculate chance for an outcome to occur (the set of potential lines resulting from a cube roll)
 // obtained by multiplying of the rates of the item rolled on the 1st, 2nd, and 3rd line with each other
-// Note(ming) rates of lines 2 and 3 may need to be adjusted if there are "special" lines are rolled prior
+// rates of lines 2 and/or 3 are adjusted if there are "special" lines rolled prior
 function calculateRate(outcome, filteredRates) {
     console.log("original outcome", outcome);
     console.log(`[${outcome[0][0]}, ${outcome[1][0]}, ${outcome[2][0]}]`);
@@ -299,8 +301,8 @@ function convertItemType(itemType) {
 }
 
 // modify cube data based on item level if needed (for items over lvl 160)
-// HACK KMS does not have adjusted Stat % based on item level so we are making the assumption that
-// for lvl 160+ items, Stat % increases by 1% (e.g. 12% STR becomes 13% STR)
+// HACK(ming): KMS does not have adjusted Stat % based on item level, so we are making the assumption that
+// for lvl 160+ items, value of stat percentage categories are increased by 1% (e.g. 12% STR becomes 13% STR)
 function convertCubeDataForLevel(cubeData, itemLevel) {
 
     // don't need to make adjustments to items lvl <160
@@ -309,7 +311,7 @@ function convertCubeDataForLevel(cubeData, itemLevel) {
     }
 
     let adjustedCubeData = {};
-    const affected_categories = ["STR %", "LUK %", "DEX %", "INT %", "All Stats %"];
+    const affected_categories = ["STR %", "LUK %", "DEX %", "INT %", "All Stats %", "ATT %", "MATT %"];
 
     console.groupCollapsed("Adjusted stats for lvl >160")
     for (const line in cubeData) {
@@ -343,7 +345,7 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemL
     const tier = tierNumberToText[desiredTier];
     const itemLabel = convertItemType(itemType);
 
-    // get the cubing data for this input criteria from cubeRates
+    // get the cubing data for this input criteria from cubeRates (which is based on json data)
     const raw_cubeData = {
         first_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].first_line,
         second_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].second_line,
@@ -353,30 +355,31 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemL
     const cubeData = convertCubeDataForLevel(raw_cubeData, itemLevel);
     console.log("cubeData", cubeData);
 
-    // generate filtered version of cubing data that only contains lines relevant for our calculation
+    // generate consolidated version of cubing data that group any lines not relevant to the calculation into a single
+    // Junk entry
     const usefulCategories = getUsefulCategories(probabilityInput);
     console.log("usefulCategories", usefulCategories);
-    const filteredCubeData = {
-        first_line: getFilteredRates(cubeData.first_line, usefulCategories),
-        second_line: getFilteredRates(cubeData.second_line, usefulCategories),
-        third_line: getFilteredRates(cubeData.third_line, usefulCategories),
+    const consolidatedCubeData = {
+        first_line: getConsolidatedRates(cubeData.first_line, usefulCategories),
+        second_line: getConsolidatedRates(cubeData.second_line, usefulCategories),
+        third_line: getConsolidatedRates(cubeData.third_line, usefulCategories),
     };
-    console.log("filteredCubeData", filteredCubeData);
+    console.log("consolidatedCubeData", consolidatedCubeData);
 
     // loop through all possible outcomes and sum up the rate of outcomes that match the input
     let total_chance = 0;
     let total_count = 0;
     let count_useful = 0;
     let count_invalid = 0;
-    for (const line1 of filteredCubeData.first_line) {
-        for (const line2 of filteredCubeData.second_line) {
-            for (const line3 of filteredCubeData.third_line) {
+    for (const line1 of consolidatedCubeData.first_line) {
+        for (const line2 of consolidatedCubeData.second_line) {
+            for (const line3 of consolidatedCubeData.third_line) {
                 // check if this outcome meets our needs
                 const outcome = [line1, line2, line3];
-                if (checkRequirements(outcome, probabilityInput)) {
+                if (satisfiesInput(outcome, probabilityInput)) {
                     // calculate chance of this outcome occurring
                     console.log("=== Outcome ", total_count, "===")
-                    const result = calculateRate(outcome, filteredCubeData);
+                    const result = calculateRate(outcome, consolidatedCubeData);
                     total_chance += result;
 
                     if (result === 0) {
