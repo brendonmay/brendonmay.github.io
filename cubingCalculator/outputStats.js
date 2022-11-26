@@ -1,4 +1,4 @@
-export function outputStatsToUi(stats, tier_up, cubeType, itemLevel) {
+function outputStatsToUi(stats, tier_up, cubeType, itemLevel) {
     var mean = Math.round(stats.mean) + tier_up.mean
     var median = Math.round(stats.median) + tier_up.median
     var seventy_fifth = Math.round(stats.seventy_fifth) + tier_up.seventy_fifth
