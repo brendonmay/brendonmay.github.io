@@ -47,6 +47,10 @@ const INPUT_CATEGORY_MAP = {
     lineDrop:["Item Drop Rate %"],
     lineMesoOrDrop:["Item Drop Rate %", "Meso Amount %"],
     secCooldown:["Skill Cooldown Reduction"],
+    lineAutoSteal: ["Chance to auto steal %"],
+    lineAttOrBoss: ["ATT %", "Boss Damage"],
+    lineAttOrBossOrIed: ["ATT %", "Boss Damage", "Ignore Enemy Defense %"],
+
 }
 
 // type of calculation can be total number of lines or a value sum (e.g. stat %, seconds of CDR)
@@ -77,6 +81,12 @@ const OUTCOME_MATCH_FUNCTION_MAP = {
     lineMesoOrDrop: (outcome, requiredVal) => _calculateTotal(outcome, "Meso Amount %")
         + _calculateTotal(outcome, "Item Drop Rate %") >= requiredVal,
     secCooldown: (outcome, requiredVal) => _calculateTotal(outcome, "Skill Cooldown Reduction", CALC_TYPE.VAL) >= requiredVal,
+    lineAutoSteal: (outcome, requiredVal) => (_calculateTotal(outcome, "Chance to auto steal %") >= requiredVal),
+    lineAttOrBoss: (outcome, requiredVal) => (_calculateTotal(outcome, "ATT %")
+        + _calculateTotal(outcome, "Boss Damage")) >= requiredVal,
+    lineAttOrBossOrIed: (outcome, requiredVal) => (_calculateTotal(outcome, "ATT %")
+        + _calculateTotal(outcome, "Boss Damage")
+        + _calculateTotal(outcome, "Ignore Enemy Defense %")) >= requiredVal
 }
 
 // calculate total All Stats %
