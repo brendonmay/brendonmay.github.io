@@ -40,14 +40,15 @@ function get3LStatOptionAmounts(prime) {
     const pna = ppp - 9; // This doesn't work for max HP legendary, but it's not worth a special case.
     const paa = ppp - 12;
     const aaa = ppp - 15;
-    // -15 is the lowest we go since in epic tier we're down to 3%.
-    // Most people don't care for lower values in unique/legendary anyway.
-    return [aaa,
+    const idkman = ppp - 18;
+    // -18 is the lowest we go since in epic tier we're down to 0%.
+    return [idkman,
+        aaa,
         paa,
         pna,
         pnn,
         ppn,
-        ppp];
+        ppp].filter((x) => x > 0);
 }
 
 function get2LStatOptionAmounts(prime) {
