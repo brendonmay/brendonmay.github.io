@@ -85,7 +85,7 @@ const CALC_TYPE = {
     VAL: 1,
 }
 
-// mapping between an input field and a function for checking if it has been satisfied by the specified "outcome"
+// map each input to a function that checks if it has been satisfied
 // where "outcome" refers to the set of potential lines that were rolled
 const OUTCOME_MATCH_FUNCTION_MAP = {
     percStat: (outcome, requiredVal) => (_calculateTotal(outcome, CATEGORY.STR_PERC, CALC_TYPE.VAL)
@@ -242,7 +242,7 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
         return current_rate;
     }
 
-    // special categories that we've reached the limit on in previous lines, so need to be removed from current pool
+    // special categories that we've reached the limit on in previous lines which need to be removed from current pool
     let to_be_removed = [];
 
     // count occurrences of each special line
@@ -265,7 +265,7 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
         }
     }
 
-    // deduct total rate for each item to be removed from the pool
+    // deduct total rate for each item that is removed from the pool
     let adjusted_total = 100;
     for (const [cat, val, rate] of currentPool) {
         if (to_be_removed.includes(cat)) {
@@ -276,28 +276,33 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
     return current_rate/adjusted_total * 100;
 }
 
-// calculate chance for an outcome to occur (the set of potential lines resulting from a cube roll)
+// calculate chance for an outcome to occur
 // obtained by multiplying of the rates of the item rolled on the 1st, 2nd, and 3rd line with each other
-// rates of lines 2 and/or 3 are adjusted if there are "special" lines rolled prior
+// rates of lines 2 and/or 3 get adjusted if there are "special" lines rolled prior that affect their probability
 function calculateRate(outcome, filteredRates) {
-    console.log("original outcome", outcome);
-    console.log(`[${outcome[0][0]}, ${outcome[1][0]}, ${outcome[2][0]}]`);
+    console.groupCollapsed("outcome rates before and after adjustments")
+    // console.log("original outcome and rates", outcome);
+    console.log("Outcome and rates before adjustments (rates in the last column)");
+    console.table(outcome);
 
-    // a version of outcome with rates adjusted for lines 2 and 3 if applicable
-    const adjustedOutcome = [
+    // calculate rate for each line
+    const adjustedRates = [
         getAdjustedRate(outcome[0], [], filteredRates.first_line),
         getAdjustedRate(outcome[1], [outcome[0]], filteredRates.second_line),
         getAdjustedRate(outcome[2], [outcome[0], outcome[1]], filteredRates.third_line),
     ]
 
-    console.log("final adjustedOutcome", adjustedOutcome);
+    console.log("Rates after adjustments");
+    console.table(adjustedRates);
 
+    // calculate probability for this specific set of lines to occur
     let chance = 100;
-    for (const rate of adjustedOutcome) {
+    for (const rate of adjustedRates) {
         chance = chance * (rate / 100);
     }
 
-    console.log("chance =", chance);
+    console.groupEnd();
+    console.log("chance for this outcome to occur", chance);
     return chance;
 }
 
@@ -340,7 +345,7 @@ function convertCubeDataForLevel(cubeData, itemLevel) {
     const affected_categories = [CATEGORY.STR_PERC, CATEGORY.LUK_PERC, CATEGORY.DEX_PERC, CATEGORY.INT_PERC,
         CATEGORY.ALLSTATS_PERC, CATEGORY.ATT_PERC, CATEGORY.MATT_PERC];
 
-    console.groupCollapsed("Adjusted stats for lvl >160")
+    console.groupCollapsed("Adjusted stats for lvl >=160")
     for (const line in cubeData) {
         adjustedCubeData[line] = [];
         for (const [cat, val, rate] of cubeData[line]) {
@@ -363,6 +368,12 @@ function convertCubeDataForLevel(cubeData, itemLevel) {
     return adjustedCubeData;
 }
 
+
+// utility functions for debugging
+// rounding: http://www.jacklmoore.com/notes/rounding-in-javascript/
+const _roundNPlaces = (value, n) => Number(Math.round(parseFloat(value + 'e' + n)) + 'e-' + n).toFixed(n);
+
+
 // calculates the probability of achieving the set of desired criteria specified by user input
 function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemLevel) {
     console.log(`tier=${desiredTier}, item=${itemType}, cube=${cubeType}`);
@@ -378,9 +389,9 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemL
         second_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].second_line,
         third_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].third_line,
     };
-    console.log("raw_cubeData", raw_cubeData);
+
+    // make adjustments to stat values if needed (for items lvl 160 or above)
     const cubeData = convertCubeDataForLevel(raw_cubeData, itemLevel);
-    console.log("cubeData", cubeData);
 
     // generate consolidated version of cubing data that group any lines not relevant to the calculation into a single
     // Junk entry
@@ -391,13 +402,27 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemL
         second_line: getConsolidatedRates(cubeData.second_line, usefulCategories),
         third_line: getConsolidatedRates(cubeData.third_line, usefulCategories),
     };
-    console.log("consolidatedCubeData", consolidatedCubeData);
 
-    // loop through all possible outcomes and sum up the rate of outcomes that match the input
+    console.groupCollapsed("Cube data before and after consolidating");
+    for (const line of ["first_line", "second_line", "third_line"]) {
+        console.groupCollapsed(line);
+        console.log("Raw cube data")
+        console.table(raw_cubeData[line]);
+        console.log("Level adjusted cube data (if >= lvl160)")
+        console.table(cubeData[line]);
+        console.log("Consolidated cube data (lump contextual junk to single category)")
+        console.table(consolidatedCubeData[line]);
+        console.groupEnd();
+    }
+    console.groupEnd();
+
+    // loop through all possible outcomes for 1st, 2nd, and 3rd line using consolidated cube data
+    // sum up the rate of outcomes that satisfied the input to determine final probability
     let total_chance = 0;
     let total_count = 0;
     let count_useful = 0;
     let count_invalid = 0;
+    console.log(`=== Generating all possible outcomes ===`);
     for (const line1 of consolidatedCubeData.first_line) {
         for (const line2 of consolidatedCubeData.second_line) {
             for (const line3 of consolidatedCubeData.third_line) {
@@ -405,7 +430,9 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemL
                 const outcome = [line1, line2, line3];
                 if (satisfiesInput(outcome, probabilityInput)) {
                     // calculate chance of this outcome occurring
-                    console.log("=== Outcome ", total_count, "===")
+                    console.log(`--- outcome #${total_count + 1} matches input ---`);
+                    console.table(outcome);
+                    // console.log(`[${outcome[0][0]}: ${outcome[0][1]}] [${outcome[1][0]}: ${outcome[1][1]}] [${outcome[2][0]}: ${outcome[2][1]}]`);
                     const result = calculateRate(outcome, consolidatedCubeData);
                     total_chance += result;
 
@@ -420,10 +447,13 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemL
             }
         }
     }
+    console.log(`=== RESULTS ===`);
+    console.log("Total chance: " + `%c${_roundNPlaces(total_chance, 4)}%%%c (without rounding: ${total_chance})`,
+        "color: black; font-weight: bold; background-color: yellow;", "");
 
-    console.log("total chance: ", total_chance);
-    console.log("valid matching outcomes", count_useful);
-    console.log("invalid matching outcomes", count_invalid);
-    console.log("total outcomes", total_count);
+    console.groupCollapsed("Results table");
+    console.table({"Total chance": `${_roundNPlaces(total_chance, 4)}%`, "Total chance (no rounding)": total_chance,
+        "valid outcomes:": count_useful, "invalid outcomes:": count_invalid, "outcomes checked:": total_count});
+    console.groupEnd();
     return total_chance / 100;
 }
