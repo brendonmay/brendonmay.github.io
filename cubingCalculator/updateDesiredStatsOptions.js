@@ -278,7 +278,7 @@ function addAutoStealOptions(desiredTier, statType, cubeType) {
 
 // Crit damage AND auto steal wow such good much amazing.
 function removeWomboComboOptions() {
-    removeElementIfExists("autoStealGroup");
+    removeElementIfExists("womboComboGroup");
 }
 
 function addWomboComboOptions(desiredTier, statType, cubeType) {
