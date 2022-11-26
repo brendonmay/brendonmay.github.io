@@ -1,5 +1,3 @@
-import {outputStatsToUi} from "./outputStats";
-
 function loaderOn() {
   $('#loader1').show();
   $('#loader2').show();
@@ -21,12 +19,13 @@ function runCalculator() {
 
   var desiredStat = document.getElementById('desiredStats').value;
 
+  const anyStats = desiredStat === "any";
   const probabilityInputObject = translateInputToObject(desiredStat);
-  const p = getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
+  const p = anyStats ? 1 : getProbability(desiredTier, probabilityInputObject, itemType, cubeType);
   var tier_up = getTierCosts(currentTier, desiredTier, cubeType, DMT)
   var stats = geoDistrQuantile(p)
 
-  if (desiredStat === "any") {
+  if (anyStats) {
     stats.mean = 0
     stats.median = 0
     stats.seventy_fifth = 0
