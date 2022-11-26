@@ -1,6 +1,4 @@
 //function l(what) {return document.getElementById(what);}
-const debug = false;
-
 function asset(what) {
   return "url(" + C.assetsDir + what + ")";
 }
