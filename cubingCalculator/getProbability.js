@@ -109,39 +109,34 @@ function _calculateTotal(outcome, desiredCategory, calcType=CALC_TYPE.LINE) {
     return actualVal;
 }
 
-
-const SPECIAL_CATEGORY_MAX_1 = [
-    "Decent Skill",
-    "Increase invincibility time after being hit",
-]
-
-const SPECIAL_CATEGORY_MAX_2 = [
-    "Ignore Enemy Defense %",
-    "Boss Damage",
-    "Item Drop Rate %",
-    "Chance to ignore % damage when hit",
-    "Chance of being invincible for seconds when hit",
-]
-
+// category of lines that have a maximum limit on how many can appear on one item
 // TODO(ming) add checking for lines that can impact probability of other lines
-function isSpecialLine(category) {
-    // can only have max of 2 of these lines
-    // * IED
-    // * chance to ignore % damage
-    // * drop rate
-    // * boss damage
-    // * invincible for a short period of time with a certain probability when attacked
-    //
-    // can only have 1 of these lines
-    // * any decent skill
-    // * increased invincibility time after being hit
-
-    // some of the category labels:
-    // "Increase invincibility time after being hit"
-    // "Chance of being invincible for seconds when hit"
-    // "Chance to ignore % damage when hit"
-    return SPECIAL_CATEGORY_MAX_2.concat(SPECIAL_CATEGORY_MAX_1).includes(category);
+// can only have max of 2 of these lines
+// * IED
+// * chance to ignore % damage
+// * drop rate
+// * boss damage
+// * invincible for a short period of time with a certain probability when attacked
+//
+// can only have 1 of these lines
+// * any decent skill
+// * increased invincibility time after being hit
+//
+// if we reach the maximum number of occurrences for a category, that category is excluded for the next line(s)
+// quoting from Nexon's website:
+// display probability / (100% - the sum of the display probabilities of the excluded options)
+// reference: https://maplestory.nexon.com/Guide/OtherProbability/cube/strange
+const MAX_CATEGORY_COUNT = {
+    "Decent Skill": 1,
+    "Increase invincibility time after being hit": 1,
+    "Ignore Enemy Defense %": 2,
+    "Boss Damage": 2,
+    "Item Drop Rate %": 2,
+    "Chance to ignore % damage when hit": 2,
+    "Chance of being invincible for seconds when hit": 2,
 }
+
+const isSpecialLine = category => (Object.keys(MAX_CATEGORY_COUNT)).includes(category);
 
 // generate a list of relevant categories based on the input
 // this will be used to consolidate entries from the list of rates prior to generating all the possible outcomes to
@@ -199,15 +194,79 @@ function checkRequirements(outcome, requirements) {
 }
 
 // calculate chance for an outcome to occur
-// TODO(ming) account for special categories and their impact on rates for subsequent lines
+// result of multiplying the rate of the item rolled on the 1st, 2nd, and 3rd line with each other
+// rates of lines 2 and 3 may need to be adjusted if there are "special" lines are rolled prior
+// will return null for outcomes that are impossible to obtain due to the limit on number of times a line can appear
 function calculateRate(outcome, filteredRates) {
-    const l1 = outcome[0][2];
-    const l2 = outcome[1][2];
-    const l3 = outcome[2][2];
-    console.log("l1: ", outcome[0][0], "val=", outcome[0][1], "rate=", l1);
-    console.log("l2: ", outcome[1][0], "val=", outcome[1][1], "rate=", l2);
-    console.log("l3: ", outcome[2][0], "val=", outcome[2][1], "rate=", l3);
-    const chance = outcome[0][2] / 100 * outcome[1][2] / 100 * outcome [2][2] / 100 *100;
+    let adjustedOutcome = [];
+    console.log("original outcome", outcome);
+    console.log(`[${outcome[0][0]}, ${outcome[1][0]}, ${outcome[2][0]}]`);
+    // first line never changes so add it as-is
+    adjustedOutcome.push(outcome[0]);
+
+    // match format of filtered rates to outcome (list of lists) to be able to reference the same line by index
+    const filteredRatesList = [filteredRates.first_line, filteredRates.second_line, filteredRates.third_line];
+
+    // add rates for lines 2 and 3 after any necessary adjustments
+    let special_lines_count = {};
+    for (let i=0; i<2; i++){
+        const [cat, val, rate] = outcome[i];
+        console.log("Checking line", i+1);
+        if (cat !== "Junk") {
+            console.log(`category=${cat}, rate=${rate}, val=${val}`);
+        }
+        else {
+            console.log(`category=${cat}, rate=${rate}`);
+        }
+
+        // update count of any special lines we've encountered
+        if (isSpecialLine(cat)) {
+            if (!((Object.keys(special_lines_count)).includes(cat))) {
+                special_lines_count[cat] = 0;
+            }
+            special_lines_count[cat] += 1;
+        }
+
+        // adjust the rate of the next element of this outcome if needed
+        // return null if our outcome is not possible due to limits in max count
+        const next_cat = outcome[i+1][0];
+        const next_val = outcome[i+1][1];
+        let next_rate = outcome[i+1][2];  // may be adjusted
+        let adjusted_total = 100;  // sum of all the rates in the pool (will be reduced for each item removed)
+        for (const special_cat of Object.keys(special_lines_count)) {
+            if ((special_lines_count[special_cat] >= MAX_CATEGORY_COUNT[special_cat])) {
+
+                if ((special_lines_count[special_cat] > MAX_CATEGORY_COUNT[special_cat]) || (next_cat === special_cat)){
+                    // not possible as it exceeds the limit
+                    console.log("outcome not possible, existing early")
+                    return null;
+                }
+
+                // if we have reached the limit for any special lines, remove them from the pool of options for the next
+                // line. subtract the rate of any removed options from the total.
+                const next_rates = filteredRatesList[i+1];
+                console.log(`at limit for category=${special_cat}`);
+                console.log(`check current rates for next pool (line ${i+2})`, next_rates);
+                for (const [nc, _, nr] of next_rates) {
+                    if (nc === special_cat) {
+                        console.log(`next pool contains ${special_cat} with rate=${nr}`);
+                        adjusted_total -= nr;
+                        console.log("adjusted total after deducting", adjusted_total);
+                    }
+                }
+            }
+        }
+
+        next_rate = (next_rate/adjusted_total) * 100;
+        adjustedOutcome.push([next_cat, next_val, next_rate]);
+    }
+    console.log("final adjustedOutcome", adjustedOutcome);
+
+    let chance = 100;
+    for (const [cat, val, rate] of adjustedOutcome) {
+        chance = chance * (rate / 100);
+    }
+
     console.log("chance =", chance);
     return chance;
 }
@@ -264,6 +323,7 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
     let total_chance = 0;
     let total_count = 0;
     let count_useful = 0;
+    let count_invalid = 0;
     for (const line1 of filteredCubeData.first_line) {
         for (const line2 of filteredCubeData.second_line) {
             for (const line3 of filteredCubeData.third_line) {
@@ -272,8 +332,14 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
                 if (checkRequirements(outcome, probabilityInput)) {
                     // calculate chance of this outcome occurring
                     console.log("=== Outcome ", total_count, "===")
-                    total_chance += calculateRate(outcome, filteredCubeData);
-                    count_useful++;
+                    const result = calculateRate(outcome, filteredCubeData);
+                    if (result !== null) {
+                        total_chance += result;
+                        count_useful++;
+                    }
+                    else {
+                        count_invalid++;
+                    }
                 }
                 total_count++;
             }
@@ -281,6 +347,8 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
     }
 
     console.log("total chance: ", total_chance);
-    console.log("outcomes matching requirements:", count_useful, "out of", total_count);
+    console.log("valid matching outcomes", count_useful);
+    console.log("invalid matching outcomes", count_invalid);
+    console.log("total outcomes", total_count);
     return total_chance / 100;
 }
