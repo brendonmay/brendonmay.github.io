@@ -234,8 +234,15 @@ const isSpecialLine = category => (Object.keys(MAX_CATEGORY_COUNT)).includes(cat
 // calculation method (from Nexon's website):
 // display probability / (100% - the sum of the display probabilities of the excluded options)
 // reference: https://maplestory.nexon.com/Guide/OtherProbability/cube/strange
-function getAdjustedRate(currentLine, previousLines, currentPool){
+function getAdjustedRate(currentLine, previousLines, currentPool) {
+    const current_category = currentLine[0];
+    const current_val = (current_category === CATEGORY.JUNK) ? `${currentLine[1].length} categories` : currentLine[1];
     const current_rate = currentLine[2];
+    const current_line = previousLines.length + 1;
+
+    console.groupCollapsed(`Line ${current_line} [${current_category}: ${current_val}]: original pool...`);
+    console.table(currentPool);
+    console.groupEnd();
 
     // the first line will never have its rates adjusted
     if (previousLines.length === 0) {
@@ -279,21 +286,12 @@ function getAdjustedRate(currentLine, previousLines, currentPool){
     }
 
     return adjustedFlag ? current_rate / adjusted_total * 100 : current_rate;
-        }
-    }
-
-    return current_rate/adjusted_total * 100;
 }
 
 // calculate chance for an outcome to occur
 // obtained by multiplying of the rates of the item rolled on the 1st, 2nd, and 3rd line with each other
 // rates of lines 2 and/or 3 get adjusted if there are "special" lines rolled prior that affect their probability
 function calculateRate(outcome, filteredRates) {
-    console.groupCollapsed("outcome rates before and after adjustments")
-    // console.log("original outcome and rates", outcome);
-    console.log("Outcome and rates before adjustments (rates in the last column)");
-    console.table(outcome);
-
     // calculate rate for each line
     const adjustedRates = [
         getAdjustedRate(outcome[0], [], filteredRates.first_line),
@@ -301,8 +299,7 @@ function calculateRate(outcome, filteredRates) {
         getAdjustedRate(outcome[2], [outcome[0], outcome[1]], filteredRates.third_line),
     ]
 
-    console.log("Rates after adjustments");
-    console.table(adjustedRates);
+    _debuglog_rates(outcome, adjustedRates);
 
     // calculate probability for this specific set of lines to occur
     let chance = 100;
@@ -310,11 +307,9 @@ function calculateRate(outcome, filteredRates) {
         chance = chance * (rate / 100);
     }
 
-    console.groupEnd();
     console.log("chance for this outcome to occur", chance);
     return chance;
 }
-
 
 
 // functions to convert UI input to corresponding labels used in the json data for easier reference
@@ -378,9 +373,30 @@ function convertCubeDataForLevel(cubeData, itemLevel) {
 }
 
 
-// utility functions for debugging
+// utility functions for clearer console logging for debugging
 // rounding: http://www.jacklmoore.com/notes/rounding-in-javascript/
 const _roundNPlaces = (value, n) => Number(Math.round(parseFloat(value + 'e' + n)) + 'e-' + n).toFixed(n);
+
+function _debuglog_rates(outcome, adjustedRates) {
+    const log_table = []
+    for (const [index, line] of outcome.entries()) {
+        let line_data = {}
+        line_data.category = line[0];
+        line_data.value = line[1];
+        line_data.original_rate = line[2];
+
+        // HACK(ming) make adjusted rates stand out in table by formatting them as a string which uses a different
+        // colour. console.table() API does not support styling options.
+        if (line_data.original_rate !== adjustedRates[index]) {
+            line_data.new_rate = `${adjustedRates[index]}`;
+        }
+        else {
+            line_data.new_rate = adjustedRates[index];
+        }
+        log_table.push(line_data);
+    }
+    console.table(log_table);
+}
 
 
 // calculates the probability of achieving the set of desired criteria specified by user input
@@ -439,16 +455,13 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemL
                 const outcome = [line1, line2, line3];
                 if (satisfiesInput(outcome, probabilityInput)) {
                     // calculate chance of this outcome occurring
-                    console.log(`--- outcome #${total_count + 1} matches input ---`);
-                    console.table(outcome);
-                    // console.log(`[${outcome[0][0]}: ${outcome[0][1]}] [${outcome[1][0]}: ${outcome[1][1]}] [${outcome[2][0]}: ${outcome[2][1]}]`);
+                    console.log(`%cOutcome #${total_count + 1} matches input`, "font-weight:bold");
                     const result = calculateRate(outcome, consolidatedCubeData);
                     total_chance += result;
 
                     if (result === 0) {
                         count_invalid++;
-                    }
-                    else {
+                    } else {
                         count_useful++;
                     }
                 }
@@ -461,8 +474,10 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemL
         "color: black; font-weight: bold; background-color: yellow;", "");
 
     console.groupCollapsed("Results table");
-    console.table({"Total chance": `${_roundNPlaces(total_chance, 4)}%`, "Total chance (no rounding)": total_chance,
-        "valid outcomes:": count_useful, "invalid outcomes:": count_invalid, "outcomes checked:": total_count});
+    console.table({
+        "Total chance": `${_roundNPlaces(total_chance, 4)}%`, "Total chance (no rounding)": total_chance,
+        "valid matching outcomes:": count_useful, "invalid outcomes:": count_invalid, "outcomes checked:": total_count
+    });
     console.groupEnd();
     return total_chance / 100;
 }
