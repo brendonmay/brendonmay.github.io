@@ -47,6 +47,10 @@ const INPUT_CATEGORY_MAP = {
     lineDrop:["Item Drop Rate %"],
     lineMesoOrDrop:["Item Drop Rate %", "Meso Amount %"],
     secCooldown:["Skill Cooldown Reduction"],
+    lineAutoSteal: ["Chance to auto steal %"],
+    lineAttOrBoss: ["ATT %", "Boss Damage"],
+    lineAttOrBossOrIed: ["ATT %", "Boss Damage", "Ignore Enemy Defense %"],
+
 }
 
 // type of calculation can be total number of lines or a value sum (e.g. stat %, seconds of CDR)
@@ -77,6 +81,12 @@ const OUTCOME_MATCH_FUNCTION_MAP = {
     lineMesoOrDrop: (outcome, requiredVal) => _calculateTotal(outcome, "Meso Amount %")
         + _calculateTotal(outcome, "Item Drop Rate %") >= requiredVal,
     secCooldown: (outcome, requiredVal) => _calculateTotal(outcome, "Skill Cooldown Reduction", CALC_TYPE.VAL) >= requiredVal,
+    lineAutoSteal: (outcome, requiredVal) => (_calculateTotal(outcome, "Chance to auto steal %") >= requiredVal),
+    lineAttOrBoss: (outcome, requiredVal) => (_calculateTotal(outcome, "ATT %")
+        + _calculateTotal(outcome, "Boss Damage")) >= requiredVal,
+    lineAttOrBossOrIed: (outcome, requiredVal) => (_calculateTotal(outcome, "ATT %")
+        + _calculateTotal(outcome, "Boss Damage")
+        + _calculateTotal(outcome, "Ignore Enemy Defense %")) >= requiredVal
 }
 
 // calculate total All Stats %
@@ -288,8 +298,44 @@ function convertItemType(itemType) {
     }
 }
 
+// modify cube data based on item level if needed (for items over lvl 160)
+// HACK KMS does not have adjusted Stat % based on item level so we are making the assumption that
+// for lvl 160+ items, Stat % increases by 1% (e.g. 12% STR becomes 13% STR)
+function convertCubeDataForLevel(cubeData, itemLevel) {
+
+    // don't need to make adjustments to items lvl <160
+    if (itemLevel < 160) {
+        return cubeData
+    }
+
+    let adjustedCubeData = {};
+    const affected_categories = ["STR %", "LUK %", "DEX %", "INT %", "All Stats %"];
+
+    console.groupCollapsed("Adjusted stats for lvl >160")
+    for (const line in cubeData) {
+        adjustedCubeData[line] = [];
+        for (const [cat, val, rate] of cubeData[line]) {
+            let adjustedVal = val;
+
+            // adjust the value if this is an affected category
+            for (const affected_category of affected_categories) {
+                if (affected_category === cat) {
+                    adjustedVal += 1;
+                    console.log(`Found affected category ${cat}: ${val} -> ${adjustedVal}`);
+                    break;
+                }
+            }
+
+            adjustedCubeData[line].push([cat, adjustedVal, rate]);
+        }
+    }
+    console.groupEnd();
+    console.log("adjustedCubeData", adjustedCubeData);
+    return adjustedCubeData;
+}
+
 // calculates the probability of achieving the set of desired criteria specified by user input
-function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
+function getProbability(desiredTier, probabilityInput, itemType, cubeType, itemLevel) {
     console.log(`tier=${desiredTier}, item=${itemType}, cube=${cubeType}`);
     console.log("probability input", probabilityInput);
 
@@ -298,11 +344,13 @@ function getProbability(desiredTier, probabilityInput, itemType, cubeType) {
     const itemLabel = convertItemType(itemType);
 
     // get the cubing data for this input criteria from cubeRates
-    const cubeData = {
+    const raw_cubeData = {
         first_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].first_line,
         second_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].second_line,
         third_line: cubeRates.lvl120to200[itemLabel][cubeType][tier].third_line,
     };
+    console.log("raw_cubeData", raw_cubeData);
+    const cubeData = convertCubeDataForLevel(raw_cubeData, itemLevel);
     console.log("cubeData", cubeData);
 
     // generate filtered version of cubing data that only contains lines relevant for our calculation
