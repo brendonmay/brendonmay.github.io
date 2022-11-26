@@ -40,13 +40,8 @@ function translateInputToObject(webInput) {
     return output;
 }
 
-// GMS gives an extra 1% stat over level 160 but not HP OMEGALUL
-function getGmsStatBonus(itemLevel, type) {
-    return itemLevel >= 160 && !(type === "hp") ? 1 : 0;
-}
-
 function getPrimeLineValue(itemLevel, desiredTier, type) {
-    const levelBonus = getGmsStatBonus(itemLevel, type);
+    const levelBonus = itemLevel >= 160 && !(type === "hp") ? 1 : 0;
     const base = type === "allStat" ? 0 : 3;
 
     return base + (3 * desiredTier) + levelBonus;
@@ -107,27 +102,24 @@ function updateOrCreateOption(id, value, text, $optGroup) {
 }
 
 // For adding simple % targets.
-// Value adjustment will subtract that much from the value of the options but leave the display text unchanged.
-// This is used for level 160+ stat options since they are 1% higher in GMS which throws off the calculations.
-function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, optionAmounts, valueAdjustment = 0) {
+function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, optionAmounts) {
     // If the optgroup already exists, update the values and text in case the user changed the item level or stat.
     if (document.getElementById(`${prefix}Group`)) {
         optionAmounts.forEach((val, i) => {
             const $option = $(`#${prefix}${i}`);
-            updateOption($option, `${statValueName}+${val - valueAdjustment}`, `${val}%+ ${displayText}`);
+            updateOption($option, `${statValueName}+${val}`, `${val}%+ ${displayText}`);
         });
     } else {
         // Create the optgroup and options.
         $('#desiredStats').append(`<optgroup id='${prefix}Group' label='${groupLabel}'></optgroup>`);
         const $statGroup = $(`#${prefix}Group`);
         optionAmounts.forEach((val, i) => $statGroup.append(
-            `<option id='${prefix}${i}' value='${statValueName}+${val - valueAdjustment}'>${val}%+ ${displayText}</option>`));
+            `<option id='${prefix}${i}' value='${statValueName}+${val}'>${val}%+ ${displayText}</option>`));
     }
 }
 
 function addNormalStatOptions(itemLevel, desiredTier, statType) {
-    const primeLineValue = getPrimeLineValue(itemLevel, desiredTier, statType);
-    const gmsStatAmount = getGmsStatBonus(itemLevel, statType) * 3;
+    const primeLineValue = getPrimeLineValue(itemLevel, desiredTier, statType)
     const needSpecialAmounts = statType === "allStat" && desiredTier === 1;
     const optionAmounts = needSpecialAmounts ?
         // Not enough all stat lines to use 3L options lol.
@@ -139,8 +131,7 @@ function addNormalStatOptions(itemLevel, desiredTier, statType) {
         `perc${statValueName}`,
         displayText,
         "Stat",
-        optionAmounts,
-        gmsStatAmount);
+        optionAmounts);
 }
 
 function removeNormalStatOptions() {
