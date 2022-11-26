@@ -18,27 +18,6 @@ function loaderOff() {
   $('#loader2').hide()
 }
 
-function getTierCosts(currentTier, desiredTier, cubeType, DMT) {
-  const tier_up_rates = (DMT) ? tier_rates_DMT: tier_rates;
-  let mean = 0, median = 0, seventy_fifth = 0, eighty_fifth = 0, nintey_fifth = 0;
-  for (let i = currentTier; i < desiredTier; i++) {
-    const p = tier_up_rates[cubeType][currentTier];
-    const stats = geoDistrQuantile(p);
-    mean += Math.round(stats.mean);
-    median += Math.round(stats.median);
-    seventy_fifth += Math.round(stats.seventy_fifth);
-    eighty_fifth += Math.round(stats.eighty_fifth);
-    nintey_fifth += Math.round(stats.nintey_fifth);
-  }
-  return {
-    mean,
-    median,
-    seventy_fifth,
-    eighty_fifth,
-    nintey_fifth
-  };
-}
-
 function outputStatsToUi(stats, tier_up, cubeType, itemLevel) {
   var mean = Math.round(stats.mean) + tier_up.mean
   var median = Math.round(stats.median) + tier_up.median

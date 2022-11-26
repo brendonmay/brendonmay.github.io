@@ -27,6 +27,27 @@ function cubingCost(cubeType, itemLevel, totalCubeCount) {
     return cubeCost * totalCubeCount + totalCubeCount * revealPotentialCost
 }
 
+function getTierCosts(currentTier, desiredTier, cubeType, DMT) {
+    const tier_up_rates = (DMT) ? tier_rates_DMT: tier_rates;
+    let mean = 0, median = 0, seventy_fifth = 0, eighty_fifth = 0, nintey_fifth = 0;
+    for (let i = currentTier; i < desiredTier; i++) {
+        const p = tier_up_rates[cubeType][currentTier];
+        const stats = geoDistrQuantile(p);
+        mean += Math.round(stats.mean);
+        median += Math.round(stats.median);
+        seventy_fifth += Math.round(stats.seventy_fifth);
+        eighty_fifth += Math.round(stats.eighty_fifth);
+        nintey_fifth += Math.round(stats.nintey_fifth);
+    }
+    return {
+        mean,
+        median,
+        seventy_fifth,
+        eighty_fifth,
+        nintey_fifth
+    };
+}
+
 // Nexon rates: https://maplestory.nexon.com/Guide/OtherProbability/cube/strange
 // GMS community calculated rates: https://docs.google.com/spreadsheets/d/1od_hep5Y6x2ljfrh4M8zj5RwlpgYDRn5uTymx4iLPyw/pubhtml#
 // Nexon rates used when they match close enough to ours.
