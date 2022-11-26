@@ -311,7 +311,7 @@ function convertCubeDataForLevel(cubeData, itemLevel) {
     }
 
     let adjustedCubeData = {};
-    const affected_categories = ["STR %", "LUK %", "DEX %", "INT %", "All Stats %"];
+    const affected_categories = ["STR %", "LUK %", "DEX %", "INT %", "All Stats %", "ATT %", "MATT %"];
 
     console.groupCollapsed("Adjusted stats for lvl >160")
     for (const line in cubeData) {
