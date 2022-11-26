@@ -20,6 +20,8 @@ const emptyInputObject = {
     lineMesoOrDrop: 0, // At least this many lines of meso OR drop.
     secCooldown: 0, // At least this many seconds of cooldown reduction.
     lineAutoSteal: 0,
+    lineAttOrBoss: 0,
+    lineAttOrBossOrIed: 0,
 }
 
 // mapping for desired lines from submission form to categories in json data that contribute to a match

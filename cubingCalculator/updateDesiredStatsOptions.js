@@ -2,6 +2,21 @@
 // configures everything else. It also contains the function that translates between the <select> <option> values and
 // the object that the probability calculator uses.
 
+const STAT_OPTIONS = {
+    normal: {
+        statValueName: "Stat",
+        displayText: "Stat",
+    },
+    hp: {
+        statValueName: "Hp",
+        displayText: "Max HP",
+    },
+    allStat: {
+        statValueName: "AllStat",
+        displayText: "All Stat",
+    }
+}
+
 /**
  * This function translates the string that comes from the select element to the object that the probability calculator
  * uses. To make it simple to add more options to the calculator I'm going with the following system for <select>
@@ -41,7 +56,7 @@ function get3LStatOptionAmounts(prime) {
     const paa = ppp - 12;
     const aaa = ppp - 15;
     const idkman = ppp - 18;
-    // -18 is the lowest we go since in epic tier we're down to 0%.
+    // Only keep non-zero entries since epic tier will get down to 0 with this.
     return [idkman,
         aaa,
         paa,
@@ -61,17 +76,20 @@ function get2LStatOptionAmounts(prime) {
         pp];
 }
 
-function removeGroupIfExists(id) {
+function removeElementIfExists(id) {
     if (document.getElementById(id)) {
         $(`#${id}`).remove();
     }
 }
 
+// Update an existing option with the given value and text.
 function updateOption($option, value, text) {
     $option.attr("value", value);
     $option.text(text);
 }
 
+// Checks if an option with the given ID exists. If so, updates it with the given value and text. If not, creates it
+// under the given optGroup with the given ID, value, and text.
 function updateOrCreateOption(id, value, text, $optGroup) {
     const $existingOp = $(`#${id}`);
     const exists = $existingOp.length > 0;
@@ -83,6 +101,7 @@ function updateOrCreateOption(id, value, text, $optGroup) {
     }
 }
 
+// For adding simple % targets.
 function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, optionAmounts) {
     // If the optgroup already exists, update the values and text in case the user changed the item level or stat.
     if (document.getElementById(`${prefix}Group`)) {
@@ -99,21 +118,6 @@ function addNormalOptionGroup(prefix, statValueName, displayText, groupLabel, op
     }
 }
 
-const statOptionsMap = {
-    normal: {
-        statValueName: "Stat",
-        displayText: "Stat",
-    },
-    hp: {
-        statValueName: "Hp",
-        displayText: "Max HP",
-    },
-    allStat: {
-        statValueName: "AllStat",
-        displayText: "All Stat",
-    }
-}
-
 function addNormalStatOptions(itemLevel, desiredTier, statType) {
     const primeLineValue = getPrimeLineValue(itemLevel, desiredTier, statType)
     const needSpecialAmounts = statType === "allStat" && desiredTier === 1;
@@ -122,7 +126,7 @@ function addNormalStatOptions(itemLevel, desiredTier, statType) {
         // Instead, we add some values corresponding to all stat + some regular stat lines.
         [1, 3, 4, 5, 6, 9] :
         get3LStatOptionAmounts(primeLineValue);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     addNormalOptionGroup("stat",
         `perc${statValueName}`,
         displayText,
@@ -131,9 +135,9 @@ function addNormalStatOptions(itemLevel, desiredTier, statType) {
 }
 
 function removeNormalStatOptions() {
-    removeGroupIfExists("regStatGroup");
-    removeGroupIfExists("hpStatGroup");
-    removeGroupIfExists("allStatGroup");
+    removeElementIfExists("regStatGroup");
+    removeElementIfExists("hpStatGroup");
+    removeElementIfExists("allStatGroup");
 }
 
 function addCommonWSEOptions(itemLevel, desiredTier) {
@@ -154,12 +158,14 @@ function addCommonWSEOptions(itemLevel, desiredTier) {
 }
 
 function removeCommonWSEOptions() {
-    removeGroupIfExists("attackGroup");
-    removeGroupIfExists("attackAndIEDGroup");
+    removeElementIfExists("attackGroup");
+    removeElementIfExists("attackAndIEDGroup");
 }
 
 function removeCommonSEOptions() {
-    removeGroupIfExists("attackAndBossGroup");
+    removeElementIfExists("attackAndBossGroup");
+    removeElementIfExists("attackOrBossGroup");
+    removeElementIfExists("attackOrBossOrIedGroup");
 }
 
 function addCommonSEOptions(itemLevel, desiredTier) {
@@ -175,7 +181,8 @@ function addCommonSEOptions(itemLevel, desiredTier) {
         return;
     }
 
-    $('#desiredStats').append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
+    const $desiredStats = $('#desiredStats');
+    $desiredStats.append(`<optgroup id='attackAndBossGroup' label='Attack and Boss Damage'></optgroup>`);
     const $attackAndBossGroup = $('#attackAndBossGroup');
     $attackAndBossGroup.append("<option id='percAtt+1&percBoss+1' value='lineAtt+1&lineBoss+1'>1 Line Attack% + 1 Line Boss%</option>");
     $attackAndBossGroup.append("<option id='percAtt+1&percBoss+2' value='lineAtt+1&lineBoss+2'>1 Line Attack% + 2 Line Boss%</option>");
@@ -188,10 +195,22 @@ function addCommonSEOptions(itemLevel, desiredTier) {
         $attackAndBossGroup.append(`<option id='$PNATT40BOSS' value='percAtt+${pn}&percBoss+40'>${pn}%+ Attack and 40%+ Boss</option>`);
     }
     $attackAndBossGroup.append(`<option id='$PPATT30BOSS' value='percAtt+${pp}&percBoss+30'>${pp}%+ Attack and 30%+ Boss</option>`);
+
+    $desiredStats.append(`<optgroup id='attackOrBossGroup' label='Attack or Boss Damage'></optgroup>`);
+    const $attackOrBossGroup = $('#attackOrBossGroup');
+    for (let i = 1; i <= 3; i++) {
+        $attackOrBossGroup.append(`<option id='lab${i}' value='lineAttOrBoss+${i}'>${i} Line Attack% or Boss%</option>`);
+    }
+
+    $desiredStats.append(`<optgroup id='attackOrBossOrIedGroup' label='Attack or Boss Damage or IED'></optgroup>`);
+    const $attackOrBossOrIedGroup = $('#attackOrBossOrIedGroup');
+    for (let i = 1; i <= 3; i++) {
+        $attackOrBossOrIedGroup.append(`<option id='labi${i}' value='lineAttOrBossOrIed+${i}'>${i} Line Attack% or Boss% or IED</option>`);
+    }
 }
 
 function removeCritDamageOptions() {
-    removeGroupIfExists("critDamageGroup");
+    removeElementIfExists("critDamageGroup");
 }
 
 function addCritDamageOptions(desiredTier, statType) {
@@ -201,22 +220,75 @@ function addCritDamageOptions(desiredTier, statType) {
     }
     const critDamageSelector = '#critDamageGroup';
     let $critDamageGroup = $(critDamageSelector);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     if ($critDamageGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='critDamageGroup' label='Crit Damage'></optgroup>`);
         $critDamageGroup = $(critDamageSelector);
-        $critDamageGroup.append("<option id='gloves1' value='lineCritDamage+1'>1 Line Crit Dmg%</option>");
-        $critDamageGroup.append("<option id='gloves2' value='lineCritDamage+2'>2 Line Crit Dmg%</option>");
-        $critDamageGroup.append("<option id='gloves3' value='lineCritDamage+3'>3 Line Crit Dmg%</option>");
+        for (let i = 1; i <= 3; i++){
+            $critDamageGroup.append(`<option id='glovesC${i}' value='lineCritDamage+${i}'>${i} Line Crit Dmg%</option>`);
+        }
     }
     // Update these lines in case the user changed stat type.
-    updateOrCreateOption("gloves4", `lineCritDamage+1&line${statValueName}+1`, `1 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
-    updateOrCreateOption("gloves5", `lineCritDamage+1&line${statValueName}+2`, `1 Line Crit Dmg% and 2 line ${displayText}`, $critDamageGroup);
-    updateOrCreateOption("gloves6", `lineCritDamage+2&line${statValueName}+1`, `2 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
+    updateOrCreateOption("glovesC4", `lineCritDamage+1&line${statValueName}+1`, `1 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
+    updateOrCreateOption("glovesC5", `lineCritDamage+1&line${statValueName}+2`, `1 Line Crit Dmg% and 2 line ${displayText}`, $critDamageGroup);
+    updateOrCreateOption("glovesC6", `lineCritDamage+2&line${statValueName}+1`, `2 Line Crit Dmg% and 1 line ${displayText}`, $critDamageGroup);
+}
+
+function removeAutoStealOptions() {
+    removeElementIfExists("autoStealGroup");
+}
+
+function addAutoStealOptions(desiredTier, statType, cubeType) {
+    const validCubeType = cubeType === "master" || cubeType === "meister";
+    if (desiredTier < 2 || !validCubeType) {
+        removeAutoStealOptions();
+        return;
+    }
+    const autoStealSelector = '#autoStealGroup';
+    let $autoStealGroup = $(autoStealSelector);
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
+    if ($autoStealGroup.length === 0) {
+        $('#desiredStats').append(`<optgroup id='autoStealGroup' label='Auto Steal'></optgroup>`);
+        $autoStealGroup = $(autoStealSelector);
+        for (let i = 1; i <= 3; i++){
+            $autoStealGroup.append(`<option id='glovesA${i}' value='lineAutoSteal+${i}'>${i} Line Auto Steal%</option>`);
+        }
+    }
+    // Update these lines in case the user changed stat type.
+    updateOrCreateOption("glovesA4", `lineAutoSteal+1&line${statValueName}+1`, `1 Line Auto Steal% and 1 line ${displayText}`, $autoStealGroup);
+    updateOrCreateOption("glovesA5", `lineAutoSteal+1&line${statValueName}+2`, `1 Line Auto Steal% and 2 line ${displayText}`, $autoStealGroup);
+    updateOrCreateOption("glovesA6", `lineAutoSteal+2&line${statValueName}+1`, `2 Line Auto Steal% and 1 line ${displayText}`, $autoStealGroup);
+}
+
+// Crit damage AND auto steal wow such good much amazing.
+function removeWomboComboOptions() {
+    removeElementIfExists("autoStealGroup");
+}
+
+function addWomboComboOptions(desiredTier, statType, cubeType) {
+    const validCubeType = cubeType === "meister";
+    if (desiredTier !== 3 || !validCubeType) {
+        removeAutoStealOptions();
+        return;
+    }
+    const womboComboSelector = '#womboComboGroup';
+    let $womboComboGroup = $(womboComboSelector);
+    if ($womboComboGroup.length === 0) {
+        $('#desiredStats').append(`<optgroup id='womboComboGroup' label='Wombo Combo'></optgroup>`);
+        $womboComboGroup = $(womboComboSelector);
+        for (let i = 1; i <= 2; i++){
+            for (let j = 1; j <= 2; j++) {
+                if (i + j > 3) {
+                    continue;
+                }
+                $womboComboGroup.append(`<option id='glovesA${i}C{j}' value='lineAutoSteal+${i}&lineCritDamage+${j}'>${i} Line Auto Steal% and ${j} Line Crit Dmg%</option>`);
+            }
+        }
+    }
 }
 
 function removeDropAndMesoOptions() {
-    removeGroupIfExists("dropMesoGroup");
+    removeElementIfExists("dropMesoGroup");
 }
 
 function addDropAndMesoOptions(desiredTier, statType) {
@@ -226,7 +298,7 @@ function addDropAndMesoOptions(desiredTier, statType) {
     }
     const dropMesoSelector = '#dropMesoGroup';
     let $dropMesoGroup = $(dropMesoSelector);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     if ($dropMesoGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='dropMesoGroup' label='Drop/Meso'></optgroup>`);
         $dropMesoGroup = $(dropMesoSelector);
@@ -247,7 +319,7 @@ function addDropAndMesoOptions(desiredTier, statType) {
 }
 
 function removeCDOptions() {
-    removeGroupIfExists("CDGroup");
+    removeElementIfExists("CDGroup");
 }
 
 function addCDOptions(desiredTier, statType) {
@@ -257,7 +329,7 @@ function addCDOptions(desiredTier, statType) {
     }
     const CDSelector = '#CDGroup';
     let $CDGroup = $(CDSelector);
-    const { statValueName, displayText } = statOptionsMap[statType];
+    const { statValueName, displayText } = STAT_OPTIONS[statType];
     if ($CDGroup.length === 0) {
         $('#desiredStats').append(`<optgroup id='CDGroup' label='Cooldown'></optgroup>`);
         $CDGroup = $('#CDGroup');
@@ -278,6 +350,7 @@ function updateDesiredStatsOptions() {
     const itemType = document.getElementById('itemType').value;
     const itemLevel = parseInt(document.getElementById('itemLevel').value);
     const desiredTier = parseInt(document.getElementById('desiredTier').value);
+    const cubeType = document.getElementById('cubeType').value;
     const statType = document.getElementById('statType').value;
 
     if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
@@ -296,8 +369,12 @@ function updateDesiredStatsOptions() {
 
     if (itemType === 'gloves') {
         addCritDamageOptions(desiredTier, statType);
+        addAutoStealOptions(desiredTier, statType, cubeType);
+        addWomboComboOptions(desiredTier, statType, cubeType);
     } else {
         removeCritDamageOptions();
+        removeAutoStealOptions();
+        removeWomboComboOptions();
     }
 
     if (itemType === 'accessory') {
