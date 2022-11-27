@@ -16,8 +16,12 @@ To run with the default configuration:
 ```
 The formatted data will be written to a single file named: `formatted_data.json`
 
-> For reference, this default configuration will issue requests for items types, cubes, and tiers that are currently supported by the calculator.
+> Notes:
+>
+> 1. This default configuration will issue requests for items types, cubes, and tiers that are currently supported by the calculator.
 At the time of writing, this will make 140 requests and save each into a separate html file so it can take several minutes.
+>
+> 2. For now we are just manually copying and pasting the contents from `formatted_data.json` into the file: `cubingRates.js` (for various reasons 😑). Might add a small script to do it later.
 
 ---
 
