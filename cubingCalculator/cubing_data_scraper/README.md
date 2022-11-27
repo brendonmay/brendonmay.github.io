@@ -26,8 +26,11 @@ The KMS cubing data page is here: https://maplestory.nexon.com/Guide/OtherProbab
 
 You can switch to a different cube type from the sidebar on the right.
 To view the rates for a specific equipment configuration, select options from the "probability search" form and submit (see screenshot below):
+
 ![kms_website.png](docs/kms_website.png)
+
 The scraper basically automates the process of going through all the selection options we care about and saves the data form the tables to be used in our calculations.
+
 ---
 ### Running with custom options
 
