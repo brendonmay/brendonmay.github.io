@@ -14,7 +14,7 @@ To run with the default configuration:
 ```
 ./cubing_data_scrapyer.py
 ```
-The formatted data will be written to a single file named: `formatted_data.json`
+The output file with the formatted data is located at: `data/formatted_data.json`
 
 > Notes:
 >
