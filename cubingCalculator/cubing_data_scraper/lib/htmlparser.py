@@ -153,13 +153,14 @@ def parse_html_files(html_files, output_dir):
     raw_dump = json.dumps(parser.dump_data(), ensure_ascii=False, indent=4)
     with open(raw_json_path, 'w') as f:
         f.write(raw_dump)
+    print("Finished writing raw json file (korean): {}".format(raw_json_path))
 
     english_json_path = os.path.join(output_dir, "raw_data_english.json")
     english_str_dump = translate_text(raw_dump)
     with open(english_json_path, 'w') as f:
         f.write(english_str_dump)
 
-    print("raw json file saved to: {}".format(english_json_path))
+    print("Finished writing raw json file (english): {}".format(english_json_path))
     return english_json_path
 
 

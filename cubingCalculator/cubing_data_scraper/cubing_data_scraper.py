@@ -10,7 +10,6 @@ import glob
 # internal modules
 from lib import requester, htmlparser, dataformatter
 
-
 PARENT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DATA_PATH = os.path.join(PARENT_DIR, "data")
 
@@ -48,10 +47,12 @@ def main(output_dir, use_cached):
         html_files = requester.download_html_files(html_files_dir)
 
     # parse html files and extract all data into a single json file
+    print("Parsing html files to generate raw json. Convert strings from korean to english...")
     raw_json_file = htmlparser.parse_html_files(html_files, data_source_dir)
 
     # extract pieces of interest from full dataset
     # process and format data into useful structure
+    print("Generate formatted json file for calculator scripts...")
     dataformatter.format_cubing_data(raw_json_file, data_source_dir)
 
 

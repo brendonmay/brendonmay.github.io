@@ -188,13 +188,13 @@ def download_html_files(output_dir, url=REQUEST_URL, header=None, options_list=N
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    print("Total requests to make: {}".format(len(options_list)))
-    print("Output directory: {}".format(output_dir))
-    print("Displaying up to first 5 requests:")
+    print("html files will be saved to: {}".format(output_dir))
+    print("Total number of requests (each will be stored in a separate html file): {}".format(len(options_list)))
+    print("Displaying payload for (up to) the first 5 requests for reference:")
     for (index, options) in enumerate(options_list[:5], start=1):
         print("Request {}/{}: {}".format(index, len(options_list), options))
-    print()
-    input("Press any key to continue, Ctrl-C to abort\n")
+    print("\nNote: This can take a while if there are a large number of requests. Any files with the same name at this location will be overwritten.")
+    input("Press any key to continue or Ctrl-C to abort\n")
 
     html_files = []
     for (index, options) in enumerate(options_list, start=1):

@@ -163,7 +163,8 @@ def format_cubing_data(raw_json_file, output_dir):
                         full_error_list += error_list
 
     if len(full_error_list) > 0:
-        print("Failed to match lines for:")
+        print("(For debugging only) The following strings were left un-translated. Add them to translation table if "
+              "needed:")
         print(full_error_list)
 
     # save full formatted data dictionary as a single jsonf ile
@@ -172,7 +173,7 @@ def format_cubing_data(raw_json_file, output_dir):
     with open(full_formatted_data_file, 'w') as f:
         f.write(full_dump)
 
-    print("formatted json file saved to: {}".format(full_formatted_data_file))
+    print("Finished writing formatted json file: {}".format(full_formatted_data_file))
 
 
 if __name__ == "__main__":
