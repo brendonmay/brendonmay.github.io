@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Scrape cubing probability data from the KMS website."""
 
 import os
