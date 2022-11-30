@@ -11,7 +11,13 @@
 <script src="jquery-3.4.1.slim.js"></script>
 <script src="popper.js"></script>
 <script src="bootstrap.js"></script>
-<script src="P.js"></script>
+<script src="cubeRates.js"></script>
+<script src="getProbability.js"></script>
+<script src="statistics.js"></script>
+<script src="updateOtherElements.js"></script>
+<script src="updateDesiredStatsOptions.js"></script>
+<script src="cubes.js"></script>
+<script src="outputStats.js"></script>
 <script src="main.js"></script>
 
 <link rel="stylesheet" href="bootstrap.css">
@@ -99,7 +105,6 @@
                     <option value='overall'>Overall</option>
                     <option value='top'>Top</option>
                     <option value='secondary'>Secondary</option>
-                    <!-- <option value='shield'>Shield</option> -->
                     <option value='shoes' selected>Shoes</option>
                     <option value='shoulder'>Shoulder</option>
                     <option value='weapon'>Weapon</option>
@@ -109,6 +114,9 @@
             <div class='form-group col'>
                 <label for="cubeType">Cube Type</label>
                 <select id="cubeType" class="form-control">
+                    <option value='occult'>Occult</option>
+                    <option value='master'>Master</option>
+                    <option value='meister'>Meister</option>
                     <option value='red' selected>Red</option>
                     <option value='black'>Black</option>
                 </select>
@@ -116,7 +124,7 @@
             <div class='form-group col'>
                 <label for="currentTier">Current Tier</label>
                 <select id="currentTier" class="form-control">
-                    <option value=0>Rare</option> <!-- this should be selected by defualt -->
+                    <option value=0>Rare</option>
                     <option value=1>Epic</option>
                     <option value=2>Unique</option>
                     <option value=3 selected>Legendary</option>
@@ -135,35 +143,28 @@
             </div>
         </div>
         <div class='form-row'>
-            <div class='form-group col-3'>
+            <div class='form-group col-2'>
                 <label for="desiredTier">Desired Tier</label>
-                <select id="desiredTier" class="form-control" disabled>
+                <select id="desiredTier" class="form-control">
+                    <option value=0>Rare</option>
                     <option value=1>Epic</option>
                     <option value=2>Unique</option>
                     <option value=3 selected>Legendary</option>
                 </select>
             </div>
-            <div class='form-group col-9'>
+            <div class='form-group col-2'>
+                <label for="statType">Stat Type</label>
+                <select id="statType" class="form-control">
+                    <option value="normal" selected>Normal</option>
+                    <option value="hp">Max HP (Demon Avenger)</option>
+                    <option value="allStat">All Stat (including 1/3rd of STR, LUK, and DEX for Xenon)</option>
+                </select>
+            </div>
+            <div class='form-group col-8'>
                 <label for="desiredStats">Desired Stat</label>
                 <select id="desiredStats" class="form-control">
                     <!-- ALL -->
                     <option id='any' value='any'>Any</option>
-                    <!-- LVL 71-151 -->
-                    <option id='any1' value='21PercLUK'>21%+ Stat</option>
-                    <option id='any2' value='24PercLUK'>24%+ Stat</option>
-                    <option id='any3' value='27PercLUK'>27%+ Stat</option>
-                    <option id='any4' value='30PercLUK'>30%+ Stat</option>
-                    <option id='any22' value='33PercLUK'>33%+ Stat</option>
-                    <option id='any16' value='21PercHP'>21%+ Max HP</option>
-                    <option id='any17' value='24PercHP'>24%+ Max HP</option>
-                    <option id='any18' value='30PercHP'>30%+ Max HP</option>
-                    <option id='any23' value='33PercHP'>33%+ Max HP</option>
-                    <option id='any5' value='15PercALL'>15%+ All Stat (For Xenon)</option>
-                    <option id='any6' value='18PercALL'>18%+ All Stat (For Xenon)</option>
-                    <option id='any7' value='21PercALL'>21%+ All Stat (For Xenon)</option>
-                    <option id='any24' value='24PercALL'>24%+ All Stat (For Xenon)</option>
-                    <!-- Hat Options -->
-
                 </select>
             </div>
             <!-- <div class='form-group col-3'>
