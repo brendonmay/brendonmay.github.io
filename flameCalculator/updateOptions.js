@@ -1,3 +1,6 @@
+const DA_ATTACK_TIER_SELECTOR = '#da_attack_tier';
+const HP_TIER_SELECTOR = '#hp_tier';
+const ITEM_LEVEL_SELECTOR = '#item_level';
 function updateAttackTierOptions(flame_type, flame_advantage) {
     // Tier 1 and 2 are skipped, so index 1 is tier 3.
     let maxTierIndex = 2;
@@ -14,8 +17,36 @@ function updateAttackTierOptions(flame_type, flame_advantage) {
     }
 }
 
-const DA_ATTACK_TIER_SELECTOR = '#da_attack_tier';
-const HP_TIER_SELECTOR = '#hp_tier';
+function updateItemLevels(maple_class) {
+    const $itemLevel = $(ITEM_LEVEL_SELECTOR);
+    const isArmor = document.getElementById("item_type").value === "armor";
+    const isDA = maple_class === "da";
+    document.getElementById("item_level_div").hidden = isArmor && isDA;
+    $itemLevel.empty()
+    if (maple_class === "kanna") {
+        $itemLevel.append("<option value='140-149'>140-149</option>")
+        $itemLevel.append("<option value='150-159'>150-159</option>")
+        $itemLevel.append("<option value='160-169'>160-169</option>")
+        $itemLevel.append("<option value='170-179'>170-179</option>")
+        $itemLevel.append("<option value='180-189'>180-189</option>")
+        $itemLevel.append("<option value='190-199'>190-199</option>")
+        $itemLevel.append("<option value='200-209'>200-209</option>")
+        $itemLevel.append("<option value='210-219'>210-219</option>")
+        $itemLevel.append("<option value='220-229'>220-229</option>")
+        $itemLevel.append("<option value='230-239'>230-239</option>")
+        $itemLevel.append("<option value='240-249'>240-249</option>")
+        $itemLevel.append("<option value='250-259'>250-259</option>")
+    }
+    else {
+        $itemLevel.append("<option value='140-159'>140-159</option>")
+        $itemLevel.append("<option value='160-179'>160-179</option>")
+        $itemLevel.append("<option value='180-199'>180-199</option>")
+        $itemLevel.append("<option value='200-219'>200-219</option>")
+        $itemLevel.append("<option value='220-229'>220-229</option>")
+        $itemLevel.append("<option value='230-249'>230-249</option>")
+        $itemLevel.append("<option value='250-259'>250-259</option>")
+    }
+}
 function updateDAOptions(flame_type, flame_advantage) {
     const $attackTier = $(DA_ATTACK_TIER_SELECTOR);
     const $hpTier = $(HP_TIER_SELECTOR);

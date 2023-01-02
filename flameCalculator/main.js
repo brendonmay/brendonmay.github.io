@@ -1040,38 +1040,6 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
     // return probability
 }
 
-function updateItemLevels(maple_class) {
-    if (maple_class == "kanna") {
-        if (document.getElementById("item_type").value == "armor") {
-            document.getElementById("item_level_div").hidden = false
-        }
-        $('#item_level').empty()
-        $('#item_level').append("<option value='140-149'>140-149</option>")
-        $('#item_level').append("<option value='150-159'>150-159</option>")
-        $('#item_level').append("<option value='160-169'>160-169</option>")
-        $('#item_level').append("<option value='170-179'>170-179</option>")
-        $('#item_level').append("<option value='180-189'>180-189</option>")
-        $('#item_level').append("<option value='190-199'>190-199</option>")
-        $('#item_level').append("<option value='200-209'>200-209</option>")
-        $('#item_level').append("<option value='210-219'>210-219</option>")
-    }
-    else if (maple_class == "da") {
-        if (document.getElementById("item_type").value == "armor") {
-            document.getElementById("item_level_div").hidden = true
-        }
-    }
-    else {
-        if (document.getElementById("item_type").value == "armor") {
-            document.getElementById("item_level_div").hidden = false
-        }
-        $('#item_level').empty()
-        $('#item_level').append("<option value='140-159'>140-159</option>")
-        $('#item_level').append("<option value='160-179'>160-179</option>")
-        $('#item_level').append("<option value='180-199'>180-199</option>")
-        $('#item_level').append("<option value='200-219'>200-219</option>")
-    }
-}
-
 function geoDistrQuantile(p) {
     var mean = 1 / p
 
