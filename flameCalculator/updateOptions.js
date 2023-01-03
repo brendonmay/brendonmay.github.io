@@ -35,16 +35,15 @@ function updateItemLevels(maple_class) {
         $itemLevel.append("<option value='220-229'>220-229</option>")
         $itemLevel.append("<option value='230-239'>230-239</option>")
         $itemLevel.append("<option value='240-249'>240-249</option>")
-        $itemLevel.append("<option value='250-259'>250-259</option>")
+        $itemLevel.append("<option value='250+'>250+</option>")
     }
     else {
         $itemLevel.append("<option value='140-159'>140-159</option>")
         $itemLevel.append("<option value='160-179'>160-179</option>")
         $itemLevel.append("<option value='180-199'>180-199</option>")
-        $itemLevel.append("<option value='200-219'>200-219</option>")
-        $itemLevel.append("<option value='220-229'>220-229</option>")
+        $itemLevel.append("<option value='200-229'>200-229</option>")
         $itemLevel.append("<option value='230-249'>230-249</option>")
-        $itemLevel.append("<option value='250-259'>250-259</option>")
+        $itemLevel.append("<option value='250+'>250+</option>")
     }
 }
 function updateDAOptions(flame_type, flame_advantage) {

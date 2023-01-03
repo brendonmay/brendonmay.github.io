@@ -11,11 +11,38 @@ let eternal_tier_probabilities = { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 }
 let powerful_tier_probabilities_non_adv = { 1: 0.2, 2: 0.3, 3: 0.36, 4: 0.14, 5: 0 }
 let eternal_tier_probabilities_non_adv = { 1: 0, 2: 0.29, 3: 0.45, 4: 0.25, 5: 0.01 }
 
-var stat_per_tier = { "140-159": 8, "160-179": 9, "180-199": 10, "200-219": 11 }
-let combo_stat_per_tier = { "140-159": 4, "160-179": 5, "180-199": 5, "200-219": 6 }
+var stat_per_tier = {
+    "140-159": 8,
+    "160-179": 9,
+    "180-199": 10,
+    "200-229": 11,
+    "230-249": 12,
+    "250+": 12,
+}
+let combo_stat_per_tier = {
+    "140-159": 4,
+    "160-179": 5,
+    "180-199": 5,
+    "200-229": 6,
+    "230-249": 6,
+    "250+": 7,
+}
 var stat_equivalences = { "all_stat": 8, "secondary_stat": 0.1, "attack": 3 }
 
-let hp_stat_per_tier = { "140-149": 420, "150-159": 450, "160-169": 480, "170-179": 510, "180-189": 540, "190-199": 570, "200-209": 600, "210-219": 630 }
+let hp_stat_per_tier = {
+    "140-149": 420,
+    "150-159": 450,
+    "160-169": 480,
+    "170-179": 510,
+    "180-189": 540,
+    "190-199": 570,
+    "200-209": 600,
+    "210-219": 620,
+    "220-229": 640,
+    "230-239": 660,
+    "240-249": 680,
+    "250+": 700,
+}
 
 function factorial(number) {
     var value = number;
@@ -422,7 +449,8 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
             if (item_level == "140-149" || item_level == "150-159") item_level_adjusted = '140-159'
             if (item_level == "160-169" || item_level == "170-179") item_level_adjusted = '160-179'
             if (item_level == "180-189" || item_level == "190-199") item_level_adjusted = '180-199'
-            if (item_level == "200-209" || item_level == "210-219") item_level_adjusted = '200-219'
+            if (item_level == "200-209" || item_level == "210-219" || item_level === "220-229") item_level_adjusted = '200-229'
+            if (item_level == "230-239" || item_level == "240-249") item_level_adjusted = '230-249'
 
             var main_tier = 0
             while (main_tier < upper_limit) {
