@@ -1,6 +1,7 @@
 //to do: xenon, DA, Kanna, double sec stat classes, other weird classes check formulas
 
 //non-flame-advantaged item line probabilities
+
 let non_advantaged = { 1: 0.45, 2: 0.35, 3: 0.15, 4: 0.05 }
 
 let powerful_tier_probabilities = { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 }
@@ -10,11 +11,38 @@ let eternal_tier_probabilities = { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 }
 let powerful_tier_probabilities_non_adv = { 1: 0.2, 2: 0.3, 3: 0.36, 4: 0.14, 5: 0 }
 let eternal_tier_probabilities_non_adv = { 1: 0, 2: 0.29, 3: 0.45, 4: 0.25, 5: 0.01 }
 
-var stat_per_tier = { "140-159": 8, "160-179": 9, "180-199": 10, "200-219": 11 }
-let combo_stat_per_tier = { "140-159": 4, "160-179": 5, "180-199": 5, "200-219": 6 }
+var stat_per_tier = {
+    "140-159": 8,
+    "160-179": 9,
+    "180-199": 10,
+    "200-229": 11,
+    "230-249": 12,
+    "250+": 12,
+}
+let combo_stat_per_tier = {
+    "140-159": 4,
+    "160-179": 5,
+    "180-199": 5,
+    "200-229": 6,
+    "230-249": 6,
+    "250+": 7,
+}
 var stat_equivalences = { "all_stat": 8, "secondary_stat": 0.1, "attack": 3 }
 
-let hp_stat_per_tier = { "140-149": 420, "150-159": 450, "160-169": 480, "170-179": 510, "180-189": 540, "190-199": 570, "200-209": 600, "210-219": 630 }
+let hp_stat_per_tier = {
+    "140-149": 420,
+    "150-159": 450,
+    "160-169": 480,
+    "170-179": 510,
+    "180-189": 540,
+    "190-199": 570,
+    "200-209": 600,
+    "210-219": 620,
+    "220-229": 640,
+    "230-239": 660,
+    "240-249": 680,
+    "250+": 700,
+}
 
 function factorial(number) {
     var value = number;
@@ -421,7 +449,8 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
             if (item_level == "140-149" || item_level == "150-159") item_level_adjusted = '140-159'
             if (item_level == "160-169" || item_level == "170-179") item_level_adjusted = '160-179'
             if (item_level == "180-189" || item_level == "190-199") item_level_adjusted = '180-199'
-            if (item_level == "200-209" || item_level == "210-219") item_level_adjusted = '200-219'
+            if (item_level == "200-209" || item_level == "210-219" || item_level === "220-229") item_level_adjusted = '200-229'
+            if (item_level == "230-239" || item_level == "240-249") item_level_adjusted = '230-249'
 
             var main_tier = 0
             while (main_tier < upper_limit) {
@@ -1039,38 +1068,6 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
     // return probability
 }
 
-function updateItemLevels(maple_class) {
-    if (maple_class == "kanna") {
-        if (document.getElementById("item_type").value == "armor") {
-            document.getElementById("item_level_div").hidden = false
-        }
-        $('#item_level').empty()
-        $('#item_level').append("<option value='140-149'>140-149</option>")
-        $('#item_level').append("<option value='150-159'>150-159</option>")
-        $('#item_level').append("<option value='160-169'>160-169</option>")
-        $('#item_level').append("<option value='170-179'>170-179</option>")
-        $('#item_level').append("<option value='180-189'>180-189</option>")
-        $('#item_level').append("<option value='190-199'>190-199</option>")
-        $('#item_level').append("<option value='200-209'>200-209</option>")
-        $('#item_level').append("<option value='210-219'>210-219</option>")
-    }
-    else if (maple_class == "da") {
-        if (document.getElementById("item_type").value == "armor") {
-            document.getElementById("item_level_div").hidden = true
-        }
-    }
-    else {
-        if (document.getElementById("item_type").value == "armor") {
-            document.getElementById("item_level_div").hidden = false
-        }
-        $('#item_level').empty()
-        $('#item_level').append("<option value='140-159'>140-159</option>")
-        $('#item_level').append("<option value='160-179'>160-179</option>")
-        $('#item_level').append("<option value='180-199'>180-199</option>")
-        $('#item_level').append("<option value='200-219'>200-219</option>")
-    }
-}
-
 function geoDistrQuantile(p) {
     var mean = 1 / p
 
@@ -1082,542 +1079,15 @@ function geoDistrQuantile(p) {
     return { mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth }
 }
 
-function updateAttackTierOptions(flame_type, flame_advantage) {
-    // Tier 1 and 2 are skipped, so index 1 is tier 3.
-    let maxTierIndex = 2;
-    if (flame_type == 'eternal') {
-        maxTierIndex += 1;
-    }
-    if (flame_advantage) {
-        maxTierIndex += 2;
-    }
-    // No need to disable tier 4+ and under, they're always valid.
-    const attackTierSelect = document.getElementById('attack_tier');
-    for (let i = 3; i <= 5; i++) {
-        attackTierSelect.options[i].disabled = i > maxTierIndex;
-    }
-}
-
 //test
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
         $("#toast").toast('show')
     }, 1000)
-    document.getElementById("item_type").addEventListener("change", function () {
-        var maple_class = document.getElementById("maple_class").value
-        var item_type = document.getElementById('item_type').value
-        var flame_type = document.getElementById('flame_type').value
-        var flame_advantage = document.getElementById('flame-advantaged').checked
-        if (item_type == 'armor') {
-            if (maple_class == "da") {
-                document.getElementById("armor_desired_stats").hidden = true
-
-                document.getElementById("da_desired_stats").hidden = false
-
-                if (flame_type == "powerful") {
-                    $('#da_attack_tier').empty()
-                    $('#hp_tier').empty()
-
-                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                    $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
-                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-
-                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                    $('#hp_tier').append("<option value=1>Tier 1+</option>")
-                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                }
-                else {
-                    $('#da_attack_tier').empty()
-                    $('#hp_tier').empty()
-
-                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                    $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-
-                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                    $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                }
-            }
-            else {
-                document.getElementById("armor_desired_stats").hidden = false
-
-                document.getElementById("da_desired_stats").hidden = true
-            }
-            document.getElementById('weapon_desired_stats').hidden = true;
-            document.getElementById('statequivalences_title').hidden = false;
-            document.getElementById('statequivalences').hidden = false;
-            document.getElementById('item_level_div').hidden = false;
-        }
-        else {
-            document.getElementById('weapon_desired_stats').hidden = false;
-            document.getElementById('armor_desired_stats').hidden = true;
-            document.getElementById('statequivalences').hidden = true;
-            document.getElementById('statequivalences_title').hidden = true;
-            document.getElementById('item_level_div').hidden = true;
-
-            updateAttackTierOptions(flame_type, flame_advantage);
-        }
-        if (document.getElementById("item_type").value == "armor") {
-            updateItemLevels(maple_class);
-            if (maple_class == "kanna") {
-                document.getElementById('hp_stat_div').hidden = false
-                document.getElementById('luk_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-
-                document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
-
-            }
-            else if (maple_class == "xenon") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById("desired_stat_armor").value = 200
-                document.getElementById("all_stat").value = 19
-                document.getElementById("attack").value = 8
-            }
-            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-
-                document.getElementById('str_stat_div').hidden = false
-                document.getElementById('dex_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
-            }
-            else if (maple_class == "other") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-
-                document.getElementById('secondary_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
-            }
-            else if (maple_class == "da") {
-                document.getElementById("statequivalences").hidden = true
-                document.getElementById("statequivalences_title").hidden = true
-
-                document.getElementById("da_desired_stats").hidden = false
-
-                if (flame_type == 'powerful') {
-                    if (flame_advantage) {
-                        $('#da_attack_tier').empty()
-                        $('#hp_tier').empty()
-
-                        $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                        $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                        $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                        $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                        $('#da_attack_tier').append("<option value=6>Tier 6</option>")
-
-                        $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                        $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                        $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                        $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                        $('#hp_tier').append("<option value=6>Tier 6</option>")
-                    }
-                    else {
-                        $('#da_attack_tier').empty()
-                        $('#hp_tier').empty()
-
-                        $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                        $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
-                        $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                        $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                        $('#da_attack_tier').append("<option value=4>Tier 4</option>")
-
-                        $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                        $('#hp_tier').append("<option value=1>Tier 1+</option>")
-                        $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                        $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                        $('#hp_tier').append("<option value=4>Tier 4</option>")
-                    }
-                }
-                if (flame_type == 'eternal') {
-                    if (maple_class == 'da') {
-                        if (flame_advantage) {
-                            $('#da_attack_tier').empty()
-                            $('#hp_tier').empty()
-
-                            $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                            $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                            $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                            $('#da_attack_tier').append("<option value=6>Tier 6+</option>")
-                            $('#da_attack_tier').append("<option value=7>Tier 7</option>")
-
-                            $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                            $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                            $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                            $('#hp_tier').append("<option value=6>Tier 6+</option>")
-                            $('#hp_tier').append("<option value=7>Tier 7</option>")
-                        }
-                        else {
-                            $('#da_attack_tier').empty()
-                            $('#hp_tier').empty()
-
-                            $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                            $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                            $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                            $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                            $('#da_attack_tier').append("<option value=5>Tier 5</option>")
-
-                            $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                            $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                            $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                            $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                            $('#hp_tier').append("<option value=5>Tier 5</option>")
-                        }
-
-                    }
-                }
-
-            }
-        }
-        else {
-            document.getElementById("da_desired_stats").hidden = true
-        }
-    })
-    document.getElementById("maple_class").addEventListener("change", function () {
-        var maple_class = document.getElementById("maple_class").value
-        var flame_type = document.getElementById("flame_type").value
-        var flame_advantage = document.getElementById('flame-advantaged')
-
-        if (document.getElementById("item_type").value == "armor") {
-            updateItemLevels(maple_class);
-            if (maple_class == "da") {
-                document.getElementById("armor_desired_stats").hidden = true
-
-                document.getElementById("da_desired_stats").hidden = false
-                if (flame_type == 'powerful') {
-                    if (flame_advantage) {
-                        $('#da_attack_tier').empty()
-                        $('#hp_tier').empty()
-
-                        $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                        $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                        $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                        $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                        $('#da_attack_tier').append("<option value=6>Tier 6</option>")
-
-                        $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                        $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                        $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                        $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                        $('#hp_tier').append("<option value=6>Tier 6</option>")
-                    }
-                    else {
-                        $('#da_attack_tier').empty()
-                        $('#hp_tier').empty()
-
-                        $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                        $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
-                        $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                        $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                        $('#da_attack_tier').append("<option value=4>Tier 4</option>")
-
-                        $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                        $('#hp_tier').append("<option value=1>Tier 1+</option>")
-                        $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                        $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                        $('#hp_tier').append("<option value=4>Tier 4</option>")
-                    }
-                }
-                if (flame_type == 'eternal') {
-                    if (maple_class == 'da') {
-                        if (flame_advantage) {
-                            $('#da_attack_tier').empty()
-                            $('#hp_tier').empty()
-
-                            $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                            $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                            $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                            $('#da_attack_tier').append("<option value=6>Tier 6+</option>")
-                            $('#da_attack_tier').append("<option value=7>Tier 7</option>")
-
-                            $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                            $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                            $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                            $('#hp_tier').append("<option value=6>Tier 6+</option>")
-                            $('#hp_tier').append("<option value=7>Tier 7</option>")
-                        }
-                        else {
-                            $('#da_attack_tier').empty()
-                            $('#hp_tier').empty()
-
-                            $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                            $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                            $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                            $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                            $('#da_attack_tier').append("<option value=5>Tier 5</option>")
-
-                            $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                            $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                            $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                            $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                            $('#hp_tier').append("<option value=5>Tier 5</option>")
-                        }
-
-                    }
-                }
-            }
-            else {
-                document.getElementById("armor_desired_stats").hidden = false
-
-                document.getElementById("da_desired_stats").hidden = true
-            }
-            if (maple_class == "kanna") {
-                document.getElementById('hp_stat_div').hidden = false
-                document.getElementById('luk_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-
-                document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
-
-            }
-            else if (maple_class == "xenon") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-
-                document.getElementById("desired_stat_armor").value = 200
-                document.getElementById("all_stat").value = 19
-                document.getElementById("attack").value = 8
-            }
-            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('secondary_stat_div').hidden = true
-
-                document.getElementById('str_stat_div').hidden = false
-                document.getElementById('dex_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-                document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
-            }
-            else if (maple_class == "other") {
-                document.getElementById('hp_stat_div').hidden = true
-                document.getElementById('luk_stat_div').hidden = true
-                document.getElementById('str_stat_div').hidden = true
-                document.getElementById('dex_stat_div').hidden = true
-
-                document.getElementById('secondary_stat_div').hidden = false
-                document.getElementById("statequivalences").hidden = false
-                document.getElementById("statequivalences_title").hidden = false
-                document.getElementById("all_stat").value = 8
-                document.getElementById("attack").value = 3
-            }
-            else if (maple_class == "da") {
-                document.getElementById("statequivalences").hidden = true
-                document.getElementById("statequivalences_title").hidden = true
-                document.getElementById("armor_desired_stats").hidden = true
-
-                document.getElementById("da_desired_stats").hidden = false
-            }
-        }
-    })
-    document.getElementById("flame-advantaged").addEventListener("change", function () {
-        var flame_type = document.getElementById('flame_type').value
-        var item_type = document.getElementById('item_type').value
-        var maple_class = document.getElementById('maple_class').value
-        var flame_advantage = document.getElementById('flame-advantaged').checked
-        if (item_type == 'weapon') {
-            updateAttackTierOptions(flame_type, flame_advantage);
-        }
-        if (flame_type == 'powerful' && maple_class == "da" && item_type == 'armor') {
-            if (flame_advantage) {
-                $('#da_attack_tier').empty()
-                $('#hp_tier').empty()
-
-                $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                $('#da_attack_tier').append("<option value=6>Tier 6</option>")
-
-                $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                $('#hp_tier').append("<option value=6>Tier 6</option>")
-            }
-            else {
-                $('#da_attack_tier').empty()
-                $('#hp_tier').empty()
-
-                $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
-                $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                $('#da_attack_tier').append("<option value=4>Tier 4</option>")
-
-                $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                $('#hp_tier').append("<option value=1>Tier 1+</option>")
-                $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                $('#hp_tier').append("<option value=4>Tier 4</option>")
-            }
-        }
-        if (flame_type == 'eternal' && maple_class == "da" && item_type == 'armor') {
-            if (maple_class == 'da') {
-                if (flame_advantage) {
-                    $('#da_attack_tier').empty()
-                    $('#hp_tier').empty()
-
-                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                    $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                    $('#da_attack_tier').append("<option value=6>Tier 6+</option>")
-                    $('#da_attack_tier').append("<option value=7>Tier 7</option>")
-
-                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                    $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                    $('#hp_tier').append("<option value=6>Tier 6+</option>")
-                    $('#hp_tier').append("<option value=7>Tier 7</option>")
-                }
-                else {
-                    $('#da_attack_tier').empty()
-                    $('#hp_tier').empty()
-
-                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                    $('#da_attack_tier').append("<option value=5>Tier 5</option>")
-
-                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                    $('#hp_tier').append("<option value=5>Tier 5</option>")
-                }
-
-            }
-        }
-    })
-    document.getElementById("flame_type").addEventListener("change", function () {
-        var flame_type = document.getElementById('flame_type').value
-        var item_type = document.getElementById('item_type').value
-        var maple_class = document.getElementById('maple_class').value
-        var flame_advantage = document.getElementById('flame-advantaged').checked
-        if (item_type == 'weapon') {
-            updateAttackTierOptions(flame_type, flame_advantage);
-        }
-        if (flame_type == 'powerful') {
-            if (maple_class == 'da') {
-                if (flame_advantage) {
-                    $('#da_attack_tier').empty()
-                    $('#hp_tier').empty()
-
-                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                    $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                    $('#da_attack_tier').append("<option value=6>Tier 6</option>")
-
-                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                    $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                    $('#hp_tier').append("<option value=6>Tier 6</option>")
-                }
-                else {
-                    $('#da_attack_tier').empty()
-                    $('#hp_tier').empty()
-
-                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                    $('#da_attack_tier').append("<option value=1>Tier 1+</option>")
-                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                    $('#da_attack_tier').append("<option value=4>Tier 4</option>")
-
-                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                    $('#hp_tier').append("<option value=1>Tier 1+</option>")
-                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                    $('#hp_tier').append("<option value=4>Tier 4</option>")
-                }
-
-            }
-        }
-        else {
-            if (maple_class == 'da') {
-                if (flame_advantage) {
-                    $('#da_attack_tier').empty()
-                    $('#hp_tier').empty()
-
-                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                    $('#da_attack_tier').append("<option value=5>Tier 5+</option>")
-                    $('#da_attack_tier').append("<option value=6>Tier 6+</option>")
-                    $('#da_attack_tier').append("<option value=7>Tier 7</option>")
-
-                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                    $('#hp_tier').append("<option value=5>Tier 5+</option>")
-                    $('#hp_tier').append("<option value=6>Tier 6+</option>")
-                    $('#hp_tier').append("<option value=7>Tier 7</option>")
-                }
-                else {
-                    $('#da_attack_tier').empty()
-                    $('#hp_tier').empty()
-
-                    $('#da_attack_tier').append("<option value=0>Tier 0+</option>")
-                    $('#da_attack_tier').append("<option value=2>Tier 2+</option>")
-                    $('#da_attack_tier').append("<option value=3>Tier 3+</option>")
-                    $('#da_attack_tier').append("<option value=4>Tier 4+</option>")
-                    $('#da_attack_tier').append("<option value=5>Tier 5</option>")
-
-                    $('#hp_tier').append("<option value=0>Tier 0+</option>")
-                    $('#hp_tier').append("<option value=2>Tier 2+</option>")
-                    $('#hp_tier').append("<option value=3>Tier 3+</option>")
-                    $('#hp_tier').append("<option value=4>Tier 4+</option>")
-                    $('#hp_tier').append("<option value=5>Tier 5</option>")
-                }
-
-            }
-        }
-    })
+    document.getElementById("item_type").addEventListener("change", onItemTypeChange)
+    document.getElementById("maple_class").addEventListener("change", onClassChange)
+    document.getElementById("flame-advantaged").addEventListener("change", onFlameAdvantagedChange)
+    document.getElementById("flame_type").addEventListener("change", onFlameTypeChange)
     document.getElementById("calculateButton").addEventListener("click", function () {
         function loaderOn() {
             $('#loader1').show();
