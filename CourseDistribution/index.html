@@ -3,48 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Course Assignment Tool</title>
-  <style>
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    h1 {
-      margin-top: 40px;
-    }
-    form {
-      margin-top: 40px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .teacher {
-      width: 200px;
-      margin: 20px;
-      text-align: left;
-    }
-    label {
-      display: block;
-      margin-bottom: 10px;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      box-sizing: border-box;
-    }
-    input[type="submit"] {
-      padding: 10px 20px;
-      background-color: lightblue;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    input[type="submit"]:hover {
-      background-color: blue;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
   <div class="container">
@@ -56,3 +15,15 @@
         <label for="teacher1-courses">Preferred Courses:</label>
         <input type="text" id="teacher1-courses" name="teacher1-courses" required>
       </div>
+      <div class="teacher">
+        <label for="teacher2">Teacher 2:</label>
+        <input type="text" id="teacher2" name="teacher2" required>
+        <label for="teacher2-courses">Preferred Courses:</label>
+        <input type="text" id="teacher2-courses" name="teacher2-courses" required>
+      </div>
+      <!-- Add additional fields for more teachers as needed -->
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+</body>
+</html>
