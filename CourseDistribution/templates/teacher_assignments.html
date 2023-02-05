@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Teacher Assignments</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+      
+      h1 {
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 30px;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <h1>Teacher Assignments</h1>
+    <table>
+      <tr>
+        <th>Teacher</th>
+        <th>Course 1</th>
+        <th>Course 2</th>
+        <th>Course 3</th>
+      </tr>
+      {% for teacher, courses in solution.items() %}
+      <tr>
+        <td>{{teacher}}</td>
+        <td>{{courses[0]}}</td>
+        <td>{{courses[1]}}</td>
+        <td>{{courses[2]}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>
