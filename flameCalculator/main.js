@@ -369,19 +369,39 @@ function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier
 function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier, non_advantaged_item, main2_tier, main3_tier, combo_six_tier) {
     var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier, combo_six_tier]
     var index = 0
-    var probability = 0
+    var probability = 1
     var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
     while (index < list.length) {
         var tier = list[index];
         if (tier > 0) {
-            if (probability == 0) probability = tier_probabilities[tier]
-            else {
-                probability = probability * tier_probabilities[tier]
-            }
+            probability = probability * tier_probabilities[tier]
         }
         index++
     }
     return probability
+}
+
+// Get the lowest possible tier this flame can roll on this item.
+function getLowerTierLimit(flame_type, non_advantaged_item) {
+    const flameAdvantageAdjustment = non_advantaged_item ? 2 : 0;
+    for (let i = 3; i <= 8; i++) {
+        if (TIER_PROBABILITIES[flame_type][i] > 0) {
+            return i - flameAdvantageAdjustment;
+        }
+    }
+    return 3;
+}
+
+// Get the lowest possible tier this flame can roll on this item.
+function getUpperTierLimit(flame_type, non_advantaged_item) {
+    const flameAdvantageAdjustment = non_advantaged_item ? 2 : 0;
+    for (let i = 8; i >= 3; i--) {
+        if (TIER_PROBABILITIES[flame_type][i] > 0) {
+            // +1 because the loop uses < and not <=
+            return i - flameAdvantageAdjustment + 1;
+        }
+    }
+    return 8;
 }
 
 function getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class) {
@@ -398,45 +418,14 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
     //attack_tier
 
     var solutions = []
-    var upper_limit = 7
-    var sec_upper_limit = 7
-    var combo_four_upper_limit = 7
-    var combo_five_upper_limit = 7
-    var att_upper_limit = 7
-    var all_stat_upper_limit = 7
+    var upper_limit = getUpperTierLimit(flame_type, non_advantaged_item);
+    var lower_limit = getLowerTierLimit(flame_type, non_advantaged_item);
 
-    var lower_limit = 3
-
-    if (non_advantaged_item) {
-        lower_limit = 1
-        upper_limit = 5
-        sec_upper_limit = 5
-        combo_four_upper_limit = 5
-        combo_five_upper_limit = 5
-        att_upper_limit = 5
-        all_stat_upper_limit = 5
-    }
-
-    if (flame_type == "eternal") {
-        upper_limit = 8
-        sec_upper_limit = 8
-        combo_four_upper_limit = 8
-        combo_five_upper_limit = 8
-        att_upper_limit = 8
-        all_stat_upper_limit = 8
-
-        lower_limit = 4
-
-        if (non_advantaged_item) {
-            lower_limit = 2
-            upper_limit = 6
-            sec_upper_limit = 6
-            combo_four_upper_limit = 6
-            combo_five_upper_limit = 6
-            att_upper_limit = 6
-            all_stat_upper_limit = 6
-        }
-    }
+    var sec_upper_limit = upper_limit
+    var combo_four_upper_limit = upper_limit
+    var combo_five_upper_limit = upper_limit
+    var att_upper_limit = upper_limit
+    var all_stat_upper_limit = upper_limit
 
     if (item_type == "armor") {
         if (desired_stat == 0) return 1
