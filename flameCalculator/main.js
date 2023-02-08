@@ -371,7 +371,6 @@ function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two
     var index = 0
     var probability = 0
     var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
-    debugger;
     while (index < list.length) {
         var tier = list[index];
         if (tier > 0) {
