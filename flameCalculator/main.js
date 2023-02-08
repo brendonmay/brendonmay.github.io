@@ -1,17 +1,20 @@
 //to do: xenon, DA, Kanna, double sec stat classes, other weird classes check formulas
 
-//non-flame-advantaged item line probabilities
+// Data from https://strategywiki.org/wiki/MapleStory/Bonus_Stats#Flame_Advantage
+// Number of lines on non-advantaged gear
+const non_advantaged = { 1: 0.40, 2: 0.40, 3: 0.15, 4: 0.05 }
 
-let non_advantaged = { 1: 0.45, 2: 0.35, 3: 0.15, 4: 0.05 }
-
-let powerful_tier_probabilities = { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 }
-let eternal_tier_probabilities = { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 }
-
-//update this
-let powerful_tier_probabilities_non_adv = { 1: 0.2, 2: 0.3, 3: 0.36, 4: 0.14, 5: 0 }
-let eternal_tier_probabilities_non_adv = { 1: 0, 2: 0.29, 3: 0.45, 4: 0.25, 5: 0.01 }
+const TIER_PROBABILITIES = {
+    drop: { 3: 0.25, 4: 0.3, 5: 0.3, 6: 0.14, 7: 0.01 },
+    powerful: { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 },
+    eternal: { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 },
+    fusion: { 3: 0.5, 4: 0.4, 5: 0.1, 6: 0, 7: 0 },
+    masterFusion: { 3: 0.25, 4: 0.35, 5: 0.3, 6: 0.1, 7: 0 },
+    meisterFusion: { 3: 0, 4: 0.4, 5: 0.45, 6: 0.14, 7: 0.01 },
+};
 
 var stat_per_tier = {
+    "120-139": 7,
     "140-159": 8,
     "160-179": 9,
     "180-199": 10,
@@ -20,6 +23,7 @@ var stat_per_tier = {
     "250+": 12,
 }
 let combo_stat_per_tier = {
+    "120-139": 4,
     "140-159": 4,
     "160-179": 5,
     "180-199": 5,
@@ -30,6 +34,8 @@ let combo_stat_per_tier = {
 var stat_equivalences = { "all_stat": 8, "secondary_stat": 0.1, "attack": 3 }
 
 let hp_stat_per_tier = {
+    "120-129": 360,
+    "130-139": 390,
     "140-149": 420,
     "150-159": 450,
     "160-169": 480,
@@ -57,23 +63,23 @@ function combination(n, r) {
     return factorial(n) / (factorial(r) * factorial(n - r));
 };
 
+// Change the probabilities to their non-advantaged version by lowering
+// all the tiers by 2. This is kinda scuffed but makes it fit in the
+// existing code without a hassle.
+function makeNonAdvantaged(probabilities) {
+    const updated = {};
+    for (const [tier, probability] of Object.entries(probabilities)) {
+        updated[tier - 2] = probability;
+    }
+    return updated;
+}
+
 function getTierProbabilities(flame_type, non_advantaged_item) {
-    if (flame_type == "powerful") {
-        if (non_advantaged_item) {
-            return powerful_tier_probabilities_non_adv;
-        }
-        else {
-            return powerful_tier_probabilities;
-        }
+    const advantagedProbabilities = TIER_PROBABILITIES[flame_type];
+    if (non_advantaged_item) {
+        return makeNonAdvantaged(advantagedProbabilities);
     }
-    else {
-        if (non_advantaged_item) {
-            return eternal_tier_probabilities_non_adv;
-        }
-        else {
-            return eternal_tier_probabilities;
-        }
-    }
+    return advantagedProbabilities;
 }
 
 function getLineProbability(choose_from, number_of_lines, non_advantaged_item) {
@@ -365,6 +371,7 @@ function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two
     var index = 0
     var probability = 0
     var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
+    debugger;
     while (index < list.length) {
         var tier = list[index];
         if (tier > 0) {
@@ -446,6 +453,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
         }
         if (maple_class == "kanna") {
             var item_level_adjusted
+            if (item_level == "120-129" || item_level == "130-139") item_level_adjusted = '120-139'
             if (item_level == "140-149" || item_level == "150-159") item_level_adjusted = '140-159'
             if (item_level == "160-169" || item_level == "170-179") item_level_adjusted = '160-179'
             if (item_level == "180-189" || item_level == "190-199") item_level_adjusted = '180-199'

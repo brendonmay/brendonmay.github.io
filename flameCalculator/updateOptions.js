@@ -24,6 +24,8 @@ function updateItemLevels(maple_class) {
     document.getElementById("item_level_div").hidden = isArmor && isDA;
     $itemLevel.empty()
     if (maple_class === "kanna") {
+        $itemLevel.append("<option value='120-129'>120-129</option>")
+        $itemLevel.append("<option value='130-139'>130-139</option>")
         $itemLevel.append("<option value='140-149'>140-149</option>")
         $itemLevel.append("<option value='150-159'>150-159</option>")
         $itemLevel.append("<option value='160-169'>160-169</option>")
@@ -38,6 +40,7 @@ function updateItemLevels(maple_class) {
         $itemLevel.append("<option value='250+'>250+</option>")
     }
     else {
+        $itemLevel.append("<option value='120-139'>140-159</option>")
         $itemLevel.append("<option value='140-159'>140-159</option>")
         $itemLevel.append("<option value='160-179'>160-179</option>")
         $itemLevel.append("<option value='180-199'>180-199</option>")
