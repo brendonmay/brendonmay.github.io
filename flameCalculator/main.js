@@ -1075,6 +1075,17 @@ function geoDistrQuantile(p) {
     return { mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth }
 }
 
+// Translate the flame type into appropriate text to show for the averages.
+function getFlameTypeText(flameType) {
+    if (flameType === "drop") {
+        return "drops";
+    }
+    if (["fusion", "masterFusion", "meisterFusion"].includes(flameType)) {
+        return "fuses";
+    }
+    return `${flameType} flames`;
+}
+
 //test
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
@@ -1167,6 +1178,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
+            const flameTypeText = getFlameTypeText(flame_type);
+
             document.getElementById('result').style.display = '';
             document.getElementById('error-container').style.display = 'none';
             document.getElementById('result').innerHTML =
@@ -1191,16 +1204,16 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class=" statBox statBox3" style="background-color:#aaa;">
         <h2 style="text-align:center;"">Flame Stats</h2>
             <p style="text-align:center;"">
-                Average flames: ${mean.toLocaleString()} ${flame_type} flames<br />
-                Median flames: ${median.toLocaleString()} ${flame_type} flames<br />
+                Average: ${mean.toLocaleString()} ${flameTypeText}<br />
+                Median: ${median.toLocaleString()} ${flameTypeText}<br />
             </p>
       </div>
       <div class=" statBox statBox4" style="background-color:#bbb;">
         <h2 style="text-align:center;">Flame Percentiles</h2>
         <p style="text-align:center;"">
-            75% chance within ${seventy_fifth.toLocaleString()} ${flame_type} flames<br />
-            85% chance within ${eighty_fifth.toLocaleString()} ${flame_type} flames<br />
-            95% chance within ${nintey_fifth.toLocaleString()} ${flame_type} flames<br />
+            75% chance within ${seventy_fifth.toLocaleString()} ${flameTypeText}<br />
+            85% chance within ${eighty_fifth.toLocaleString()} ${flameTypeText}<br />
+            95% chance within ${nintey_fifth.toLocaleString()} ${flameTypeText}<br />
         </p>
       </div>
     </div>
