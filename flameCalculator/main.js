@@ -1,17 +1,20 @@
 //to do: xenon, DA, Kanna, double sec stat classes, other weird classes check formulas
 
-//non-flame-advantaged item line probabilities
+// Data from https://strategywiki.org/wiki/MapleStory/Bonus_Stats#Flame_Advantage
+// Number of lines on non-advantaged gear
+const non_advantaged = { 1: 0.40, 2: 0.40, 3: 0.15, 4: 0.05 }
 
-let non_advantaged = { 1: 0.45, 2: 0.35, 3: 0.15, 4: 0.05 }
-
-let powerful_tier_probabilities = { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 }
-let eternal_tier_probabilities = { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 }
-
-//update this
-let powerful_tier_probabilities_non_adv = { 1: 0.2, 2: 0.3, 3: 0.36, 4: 0.14, 5: 0 }
-let eternal_tier_probabilities_non_adv = { 1: 0, 2: 0.29, 3: 0.45, 4: 0.25, 5: 0.01 }
+const TIER_PROBABILITIES = {
+    drop: { 3: 0.25, 4: 0.3, 5: 0.3, 6: 0.14, 7: 0.01 },
+    powerful: { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 },
+    eternal: { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 },
+    fusion: { 3: 0.5, 4: 0.4, 5: 0.1, 6: 0, 7: 0 },
+    masterFusion: { 3: 0.25, 4: 0.35, 5: 0.3, 6: 0.1, 7: 0 },
+    meisterFusion: { 3: 0, 4: 0.4, 5: 0.45, 6: 0.14, 7: 0.01 },
+};
 
 var stat_per_tier = {
+    "120-139": 7,
     "140-159": 8,
     "160-179": 9,
     "180-199": 10,
@@ -20,6 +23,7 @@ var stat_per_tier = {
     "250+": 12,
 }
 let combo_stat_per_tier = {
+    "120-139": 4,
     "140-159": 4,
     "160-179": 5,
     "180-199": 5,
@@ -30,6 +34,8 @@ let combo_stat_per_tier = {
 var stat_equivalences = { "all_stat": 8, "secondary_stat": 0.1, "attack": 3 }
 
 let hp_stat_per_tier = {
+    "120-129": 360,
+    "130-139": 390,
     "140-149": 420,
     "150-159": 450,
     "160-169": 480,
@@ -57,23 +63,23 @@ function combination(n, r) {
     return factorial(n) / (factorial(r) * factorial(n - r));
 };
 
+// Change the probabilities to their non-advantaged version by lowering
+// all the tiers by 2. This is kinda scuffed but makes it fit in the
+// existing code without a hassle.
+function makeNonAdvantaged(probabilities) {
+    const updated = {};
+    for (const [tier, probability] of Object.entries(probabilities)) {
+        updated[tier - 2] = probability;
+    }
+    return updated;
+}
+
 function getTierProbabilities(flame_type, non_advantaged_item) {
-    if (flame_type == "powerful") {
-        if (non_advantaged_item) {
-            return powerful_tier_probabilities_non_adv;
-        }
-        else {
-            return powerful_tier_probabilities;
-        }
+    const advantagedProbabilities = TIER_PROBABILITIES[flame_type];
+    if (non_advantaged_item) {
+        return makeNonAdvantaged(advantagedProbabilities);
     }
-    else {
-        if (non_advantaged_item) {
-            return eternal_tier_probabilities_non_adv;
-        }
-        else {
-            return eternal_tier_probabilities;
-        }
-    }
+    return advantagedProbabilities;
 }
 
 function getLineProbability(choose_from, number_of_lines, non_advantaged_item) {
@@ -363,19 +369,39 @@ function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier
 function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier, non_advantaged_item, main2_tier, main3_tier, combo_six_tier) {
     var list = [main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier, combo_six_tier]
     var index = 0
-    var probability = 0
+    var probability = 1
     var tier_probabilities = getTierProbabilities(flame_type, non_advantaged_item);
     while (index < list.length) {
         var tier = list[index];
         if (tier > 0) {
-            if (probability == 0) probability = tier_probabilities[tier]
-            else {
-                probability = probability * tier_probabilities[tier]
-            }
+            probability = probability * tier_probabilities[tier]
         }
         index++
     }
     return probability
+}
+
+// Get the lowest possible tier this flame can roll on this item.
+function getLowerTierLimit(flame_type, non_advantaged_item) {
+    const flameAdvantageAdjustment = non_advantaged_item ? 2 : 0;
+    for (let i = 3; i <= 8; i++) {
+        if (TIER_PROBABILITIES[flame_type][i] > 0) {
+            return i - flameAdvantageAdjustment;
+        }
+    }
+    return 3;
+}
+
+// Get the lowest possible tier this flame can roll on this item.
+function getUpperTierLimit(flame_type, non_advantaged_item) {
+    const flameAdvantageAdjustment = non_advantaged_item ? 2 : 0;
+    for (let i = 8; i >= 3; i--) {
+        if (TIER_PROBABILITIES[flame_type][i] > 0) {
+            // +1 because the loop uses < and not <=
+            return i - flameAdvantageAdjustment + 1;
+        }
+    }
+    return 8;
 }
 
 function getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class) {
@@ -392,45 +418,14 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
     //attack_tier
 
     var solutions = []
-    var upper_limit = 7
-    var sec_upper_limit = 7
-    var combo_four_upper_limit = 7
-    var combo_five_upper_limit = 7
-    var att_upper_limit = 7
-    var all_stat_upper_limit = 7
+    var upper_limit = getUpperTierLimit(flame_type, non_advantaged_item);
+    var lower_limit = getLowerTierLimit(flame_type, non_advantaged_item);
 
-    var lower_limit = 3
-
-    if (non_advantaged_item) {
-        lower_limit = 1
-        upper_limit = 5
-        sec_upper_limit = 5
-        combo_four_upper_limit = 5
-        combo_five_upper_limit = 5
-        att_upper_limit = 5
-        all_stat_upper_limit = 5
-    }
-
-    if (flame_type == "eternal") {
-        upper_limit = 8
-        sec_upper_limit = 8
-        combo_four_upper_limit = 8
-        combo_five_upper_limit = 8
-        att_upper_limit = 8
-        all_stat_upper_limit = 8
-
-        lower_limit = 4
-
-        if (non_advantaged_item) {
-            lower_limit = 2
-            upper_limit = 6
-            sec_upper_limit = 6
-            combo_four_upper_limit = 6
-            combo_five_upper_limit = 6
-            att_upper_limit = 6
-            all_stat_upper_limit = 6
-        }
-    }
+    var sec_upper_limit = upper_limit
+    var combo_four_upper_limit = upper_limit
+    var combo_five_upper_limit = upper_limit
+    var att_upper_limit = upper_limit
+    var all_stat_upper_limit = upper_limit
 
     if (item_type == "armor") {
         if (desired_stat == 0) return 1
@@ -446,6 +441,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
         }
         if (maple_class == "kanna") {
             var item_level_adjusted
+            if (item_level == "120-129" || item_level == "130-139") item_level_adjusted = '120-139'
             if (item_level == "140-149" || item_level == "150-159") item_level_adjusted = '140-159'
             if (item_level == "160-169" || item_level == "170-179") item_level_adjusted = '160-179'
             if (item_level == "180-189" || item_level == "190-199") item_level_adjusted = '180-199'
@@ -1079,6 +1075,17 @@ function geoDistrQuantile(p) {
     return { mean: mean, median: median, seventy_fifth: seventy_fifth, eighty_fifth: eighty_fifth, nintey_fifth: nintey_fifth }
 }
 
+// Translate the flame type into appropriate text to show for the averages.
+function getFlameTypeText(flameType) {
+    if (flameType === "drop") {
+        return "drops";
+    }
+    if (["fusion", "masterFusion", "meisterFusion"].includes(flameType)) {
+        return "fuses";
+    }
+    return `${flameType} flames`;
+}
+
 //test
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
@@ -1171,6 +1178,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
+            const flameTypeText = getFlameTypeText(flame_type);
+
             document.getElementById('result').style.display = '';
             document.getElementById('error-container').style.display = 'none';
             document.getElementById('result').innerHTML =
@@ -1195,16 +1204,16 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class=" statBox statBox3" style="background-color:#aaa;">
         <h2 style="text-align:center;"">Flame Stats</h2>
             <p style="text-align:center;"">
-                Average flames: ${mean.toLocaleString()} ${flame_type} flames<br />
-                Median flames: ${median.toLocaleString()} ${flame_type} flames<br />
+                Average: ${mean.toLocaleString()} ${flameTypeText}<br />
+                Median: ${median.toLocaleString()} ${flameTypeText}<br />
             </p>
       </div>
       <div class=" statBox statBox4" style="background-color:#bbb;">
         <h2 style="text-align:center;">Flame Percentiles</h2>
         <p style="text-align:center;"">
-            75% chance within ${seventy_fifth.toLocaleString()} ${flame_type} flames<br />
-            85% chance within ${eighty_fifth.toLocaleString()} ${flame_type} flames<br />
-            95% chance within ${nintey_fifth.toLocaleString()} ${flame_type} flames<br />
+            75% chance within ${seventy_fifth.toLocaleString()} ${flameTypeText}<br />
+            85% chance within ${eighty_fifth.toLocaleString()} ${flameTypeText}<br />
+            95% chance within ${nintey_fifth.toLocaleString()} ${flameTypeText}<br />
         </p>
       </div>
     </div>
