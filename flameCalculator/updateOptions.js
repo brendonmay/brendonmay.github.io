@@ -2,18 +2,10 @@ const DA_ATTACK_TIER_SELECTOR = '#da_attack_tier';
 const HP_TIER_SELECTOR = '#hp_tier';
 const ITEM_LEVEL_SELECTOR = '#item_level';
 function updateAttackTierOptions(flame_type, flame_advantage) {
-    // Tier 1 and 2 are skipped, so index 1 is tier 3.
-    let maxTierIndex = 2;
-    if (flame_type === 'eternal') {
-        maxTierIndex += 1;
-    }
-    if (flame_advantage) {
-        maxTierIndex += 2;
-    }
-    // No need to disable tier 4+ and under, they're always valid.
+    const maxAttackTierIndex = getUpperTierLimit(flame_type, !flame_advantage) - 1;
     const attackTierSelect = document.getElementById('attack_tier');
-    for (let i = 3; i <= 5; i++) {
-        attackTierSelect.options[i].disabled = i > maxTierIndex;
+    for (let i = 0; i <= 7; i++) {
+        attackTierSelect.options[i].disabled = i > maxAttackTierIndex;
     }
 }
 
@@ -59,12 +51,12 @@ function updateDAOptions(flame_type, flame_advantage) {
     $attackTier.append("<option value=0>Tier 0+</option>");
     $hpTier.append("<option value=0>Tier 0+</option>");
 
-    const base = flame_type === 'powerful' ? 1 : 2;
-    const min = base + flame_advantage ? 2 : 0;
-    const max = min + 3;
 
-    for (let i = min; i <= max; i++) {
-        const extra = i !== max ? "+" : "";
+    const maxTierIndex = getUpperTierLimit(flame_type, !flame_advantage);
+    const minTierIndex = getLowerTierLimit(flame_type, !flame_advantage);
+
+    for (let i = minTierIndex; i < maxTierIndex; i++) {
+        const extra = i !== maxTierIndex ? "+" : "";
         $attackTier.append(`<option value=${i}>Tier ${i}${extra}</option>`);
         $hpTier.append(`<option value=${i}>Tier ${i}${extra}</option>`);
     }
