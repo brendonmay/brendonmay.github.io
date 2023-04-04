@@ -22,8 +22,24 @@ function preSaviorCost(current_star, item_level) {
     return mesoFn(current_star, item_level);
 }
 
+function saviorMesoFn(current_star) {
+    switch (current_star) {
+        case 11:
+            return makeMesoFn(22000);
+        case 12:
+            return makeMesoFn(15000);
+        case 13:
+            return makeMesoFn(11000);
+        case 14:
+            return makeMesoFn(7500);
+        default:
+            return preSaviorMesoFn(current_star);
+    }
+}
+
 function saviorCost(current_star, item_level) {
-    return preSaviorCost(current_star, item_level);
+    const mesoFn = saviorMesoFn(current_star);
+    return mesoFn(current_star, item_level);
 }
 
 function tmsRegMesoFn(current_star) {
