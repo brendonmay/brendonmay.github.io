@@ -163,3 +163,17 @@ function getRates(server, itemType, useAEE) {
     }
     return server === "kms" ? saviorRates : preSaviorRates;
 }
+
+function getSafeguardMultiplierIncrease(current_star, sauna, server) {
+    if (sauna || server === "kms") {
+        if (current_star >= 15 && current_star <= 16) {
+            return 1;
+        }
+    }
+    else {
+        if (current_star >= 12 && current_star <= 16) {
+            return 1;
+        }
+    }
+    return 0
+}

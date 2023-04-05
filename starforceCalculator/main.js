@@ -89,16 +89,7 @@ function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, 
         var multiplier = 1;
 
         if (boom_protect && !(five_ten_fifteen && current_star == 15) && !(chance_time)) {
-            if (sauna) {
-                if (current_star >= 15 && current_star <= 16) {
-                    multiplier = multiplier + 1;
-                }
-            }
-            else {
-                if (current_star >= 12 && current_star <= 16) {
-                    multiplier = multiplier + 1;
-                }
-            }
+            multiplier = multiplier + getSafeguardMultiplierIncrease(current_star, sauna, server);
         }
         if (silver && current_star <= 15) {
             multiplier = multiplier - 0.03;
