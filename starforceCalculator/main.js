@@ -278,7 +278,7 @@ function do_stuff() {
     
     if (item_type == 'normal' && (desired_star > 25 || desired_star < 0 || current_star < 0)){
     		document.getElementById('result').style.display='none';
-        document.getElementById('graphhere').style.display='none';
+        // document.getElementById('graphhere').style.display='none';
         document.getElementById('error-container').style.display='';
         document.getElementById('error-msg').innerHTML =
             `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 25.</p>`
@@ -286,7 +286,7 @@ function do_stuff() {
     }
     if (item_type == 'tyrant' && (desired_star > 15 || desired_star < 0 || current_star < 0)){
     		document.getElementById('result').style.display='none';
-        document.getElementById('graphhere').style.display='none';
+        // document.getElementById('graphhere').style.display='none';
         document.getElementById('error-container').style.display='';
         document.getElementById('error-msg').innerHTML =
             `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 15.</p>`
@@ -363,73 +363,73 @@ function do_stuff() {
         var percentile_title = 'Mesos Percentiles';
         var currency = 'mesos'
     }
-    Highcharts.chart('container', {
-        title: {
-            text: 'Frequency Histogram'
-        },
+    // Highcharts.chart('container', {
+    //     title: {
+    //         text: 'Frequency Histogram'
+    //     },
 
-        xAxis: [{
-            title: {
-                text: ''
-            },
-            alignTicks: false,
-            visible: false,
-            opposite: true
-        }, {
-            title: {
-                text: x_axis
-            },
-            alignTicks: false,
-            opposite: false
-        }],
+    //     xAxis: [{
+    //         title: {
+    //             text: ''
+    //         },
+    //         alignTicks: false,
+    //         visible: false,
+    //         opposite: true
+    //     }, {
+    //         title: {
+    //             text: x_axis
+    //         },
+    //         alignTicks: false,
+    //         opposite: false
+    //     }],
 
-        yAxis: [{
-            title: {
-                text: ''
-            },
-            visible: false,
-            opposite: true
-        }, {
-            title: {
-                text: 'Frequency'
-            },
-            opposite: false
-        }],
+    //     yAxis: [{
+    //         title: {
+    //             text: ''
+    //         },
+    //         visible: false,
+    //         opposite: true
+    //     }, {
+    //         title: {
+    //             text: 'Frequency'
+    //         },
+    //         opposite: false
+    //     }],
 
-        plotOptions: {
-            histogram: {
-                accessibility: {
-                    pointDescriptionFormatter: function(point) {
-                        var ix = point.index + 1,
-                            x1 = point.x.toFixed(3),
-                            x2 = point.x2.toFixed(3),
-                            val = point.y;
-                        return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
-                    }
-                }
-            }
-        },
+    //     plotOptions: {
+    //         histogram: {
+    //             accessibility: {
+    //                 pointDescriptionFormatter: function(point) {
+    //                     var ix = point.index + 1,
+    //                         x1 = point.x.toFixed(3),
+    //                         x2 = point.x2.toFixed(3),
+    //                         val = point.y;
+    //                     return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
+    //                 }
+    //             }
+    //         }
+    //     },
 
-        series: [{
-            name: 'Histogram',
-            type: 'histogram',
-            color: '#8b3687',
-            xAxis: 1,
-            yAxis: 1,
-            baseSeries: 's1',
-            zIndex: -1
-        }, {
-            name: '',
-            type: 'scatter',
-            visible: false,
-            data: bar_data,
-            id: 's1',
-            marker: {
-                radius: 0
-            }
-        }]
-    });
-		document.getElementById("graphhere").style.display = '';
+    //     series: [{
+    //         name: 'Histogram',
+    //         type: 'histogram',
+    //         color: '#8b3687',
+    //         xAxis: 1,
+    //         yAxis: 1,
+    //         baseSeries: 's1',
+    //         zIndex: -1
+    //     }, {
+    //         name: '',
+    //         type: 'scatter',
+    //         visible: false,
+    //         data: bar_data,
+    //         id: 's1',
+    //         marker: {
+    //             radius: 0
+    //         }
+    //     }]
+    // });
+	// 	document.getElementById("graphhere").style.display = '';
     document.getElementById('result').style.display='';
     document.getElementById('error-container').style.display='none';
 
