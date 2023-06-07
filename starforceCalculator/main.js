@@ -244,14 +244,6 @@ function buildBoomChart(boom_result_list, boomPercentiles) {
     return chart;
 }
 
-function buildBody(amount, sampleSize) {
-    let bodyArray = amount.map(trials => {
-        return `${trials} occurrences`;
-    });
-    console.log ('bodyArray', bodyArray);
-    return bodyArray;
-}
-
 function determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type) {
     /** returns either "Success", "Maintain", "Decrease", or "Boom" */
     if (five_ten_fifteen) {
