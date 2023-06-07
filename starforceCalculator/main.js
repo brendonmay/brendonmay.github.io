@@ -196,7 +196,7 @@ function createCanvas(chartData, canvasId, chartContainer) {
                         },
                         label: function(context) {
                             let trialsAmount = context.dataset.data.reduce((partialSum, a) => partialSum + a, 0);
-                            return `${context.raw} trials (${context.raw*100/trialsAmount}%)`;
+                            return `${context.raw} occurrences (${context.raw*100/trialsAmount}%)`;
                         },
                     }
                 },
@@ -246,7 +246,7 @@ function buildBoomChart(boom_result_list, boomPercentiles) {
 
 function buildBody(amount, sampleSize) {
     let bodyArray = amount.map(trials => {
-        return `${trials} trials`;
+        return `${trials} occurrences`;
     });
     console.log ('bodyArray', bodyArray);
     return bodyArray;
