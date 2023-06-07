@@ -177,7 +177,7 @@ function createCanvas(chartData, canvasId, chartContainer) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Booms distribution',
+                    text: 'Frequency Histogram',
                     padding: {
                         top: 30,
                         bottom: 20
@@ -209,13 +209,7 @@ function createCanvas(chartData, canvasId, chartContainer) {
                         font: {size: 18},
                     }
                 },  
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Trials Amount',
-                        font: {size: 18},
-                    }   
-                }
+                y: {}
             },
             interaction: {
                 intersect: false,
