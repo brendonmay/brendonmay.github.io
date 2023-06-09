@@ -112,6 +112,138 @@ function checkChanceTime(decrease_count) {
     return decrease_count == 2
 }
 
+function grabColumnColors(boomsAmount, boomPercentiles) {
+    let backgroundColors = [
+        'rgba(75, 192, 192, 0.2)', // green
+        'rgba(54, 162, 235, 0.2)', // blue
+        'rgba(255, 205, 86, 0.2)', // yellow
+        'rgba(255, 159, 64, 0.2)', // orange
+        'rgba(255, 99, 132, 0.2)', // red
+        'rgba(192, 192, 192, 0.2)',// gray
+    ];
+    let borderColors = [
+        'rgb(75, 192, 192)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)',
+        'rgb(255, 159, 64)',
+        'rgb(255, 99, 132)',
+        'rgb(192, 192, 192)',
+    ];
+
+    switch (true) {
+        case boomsAmount == 0:
+            return {
+                background: backgroundColors[0], 
+                border: borderColors[0]
+            };
+        case boomsAmount <= boomPercentiles.median_booms:
+            return {
+                background: backgroundColors[1], 
+                border: borderColors[1]
+            };
+        case boomsAmount <= boomPercentiles.seventy_fifth_percentile_boom:
+            return {
+                background: backgroundColors[2], 
+                border: borderColors[2]
+            };
+        case boomsAmount <= boomPercentiles.eighty_fifth_percentile_boom:
+            return {
+                background: backgroundColors[3], 
+                border: borderColors[3]
+            };
+        case boomsAmount <= boomPercentiles.ninty_fifth_percentile_boom:
+            return {
+                background: backgroundColors[4], 
+                border: borderColors[4]
+            };
+        default:
+            return {
+                background: backgroundColors[5], 
+                border: borderColors[5]
+            };
+    }
+}
+
+function createCanvas(chartData, canvasId, chartContainer) {
+    document.getElementById(canvasId).remove();
+    let canvas = document.createElement('canvas');
+    canvas.setAttribute('id', canvasId);
+    document.querySelector('#'+chartContainer).appendChild(canvas);
+
+    let chart = new Chart(document.getElementById(canvasId), {
+        type: 'bar',
+        data: chartData,
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Frequency Histogram',
+                    padding: {
+                        top: 30,
+                        bottom: 20
+                    },
+                    font: {size: 20}
+                },
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            let label = context[0].label;
+                            if (label == '0') return 'No Boom';
+                            return label == '1'? '1 Boom' : `${label} Booms`;
+                        },
+                        label: function(context) {
+                            let trialsAmount = context.dataset.data.reduce((partialSum, a) => partialSum + a, 0);
+                            return `${context.raw} occurrences (${context.raw*100/trialsAmount}%)`;
+                        },
+                    }
+                },
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Boom Amount',
+                        font: {size: 18},
+                    }
+                },  
+                y: {}
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+        }
+        });
+    return chart;
+}
+
+function buildBoomChart(boom_result_list, boomPercentiles) {
+
+    let boomMap = boom_result_list.reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
+    let colorMatrix = Array.from(boomMap.keys()).map(key => {
+        return grabColumnColors(key, boomPercentiles);
+    });
+
+    let backgroundArray = colorMatrix.map(el => el.background);
+    let borderArray = colorMatrix.map(el => el.border);
+    
+    const chartData = {
+    labels: Array.from(boomMap.keys()),
+    datasets: [{
+        data: Array.from(boomMap.values()),
+        backgroundColor: backgroundArray,
+        borderColor: borderArray,
+        borderWidth: 1
+    }]
+    };
+
+    let chart = createCanvas(chartData, 'boom-chart', 'boom-chart-container');
+    return chart;
+}
+
 function determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type) {
     /** returns either "Success", "Maintain", "Decrease", or "Boom" */
     if (five_ten_fifteen) {
@@ -278,7 +410,6 @@ function do_stuff() {
     
     if (item_type == 'normal' && (desired_star > 25 || desired_star < 0 || current_star < 0)){
     		document.getElementById('result').style.display='none';
-        // document.getElementById('graphhere').style.display='none';
         document.getElementById('error-container').style.display='';
         document.getElementById('error-msg').innerHTML =
             `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 25.</p>`
@@ -286,7 +417,6 @@ function do_stuff() {
     }
     if (item_type == 'tyrant' && (desired_star > 15 || desired_star < 0 || current_star < 0)){
     		document.getElementById('result').style.display='none';
-        // document.getElementById('graphhere').style.display='none';
         document.getElementById('error-container').style.display='';
         document.getElementById('error-msg').innerHTML =
             `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 15.</p>`
@@ -363,73 +493,15 @@ function do_stuff() {
         var percentile_title = 'Mesos Percentiles';
         var currency = 'mesos'
     }
-    // Highcharts.chart('container', {
-    //     title: {
-    //         text: 'Frequency Histogram'
-    //     },
-
-    //     xAxis: [{
-    //         title: {
-    //             text: ''
-    //         },
-    //         alignTicks: false,
-    //         visible: false,
-    //         opposite: true
-    //     }, {
-    //         title: {
-    //             text: x_axis
-    //         },
-    //         alignTicks: false,
-    //         opposite: false
-    //     }],
-
-    //     yAxis: [{
-    //         title: {
-    //             text: ''
-    //         },
-    //         visible: false,
-    //         opposite: true
-    //     }, {
-    //         title: {
-    //             text: 'Frequency'
-    //         },
-    //         opposite: false
-    //     }],
-
-    //     plotOptions: {
-    //         histogram: {
-    //             accessibility: {
-    //                 pointDescriptionFormatter: function(point) {
-    //                     var ix = point.index + 1,
-    //                         x1 = point.x.toFixed(3),
-    //                         x2 = point.x2.toFixed(3),
-    //                         val = point.y;
-    //                     return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
-    //                 }
-    //             }
-    //         }
-    //     },
-
-    //     series: [{
-    //         name: 'Histogram',
-    //         type: 'histogram',
-    //         color: '#8b3687',
-    //         xAxis: 1,
-    //         yAxis: 1,
-    //         baseSeries: 's1',
-    //         zIndex: -1
-    //     }, {
-    //         name: '',
-    //         type: 'scatter',
-    //         visible: false,
-    //         data: bar_data,
-    //         id: 's1',
-    //         marker: {
-    //             radius: 0
-    //         }
-    //     }]
-    // });
-	// 	document.getElementById("graphhere").style.display = '';
+    
+    if (boomChartObject) {
+        boomChartObject.destroy();
+    }
+    let boomPercentiles = {
+        median_booms, seventy_fifth_percentile_boom, eighty_fifth_percentile_boom, ninty_fifth_percentile_boom
+    };
+    var boomChartObject = buildBoomChart(boom_result_list, boomPercentiles);
+	document.getElementById("boom-chart-container").style.display = '';
     document.getElementById('result').style.display='';
     document.getElementById('error-container').style.display='none';
 
