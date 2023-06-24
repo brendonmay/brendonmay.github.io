@@ -73,7 +73,8 @@ function tmsRebootCost(current_star, item_level) {
 // The Savior update increases cost for 11-15 but removes downgrading/booming.
 const SERVER_COST_FUNCTIONS = {
     "kms": saviorCost,
-    "gms": preSaviorCost,
+    // Leaving this in for players who want to compare.
+    "old": preSaviorCost,
     "tms": tmsRegCost,
     "tmsr": tmsRebootCost,
 }
@@ -118,7 +119,22 @@ const saviorRates = {
     12: [0.4, 0.6, 0.0, 0.0],
     13: [0.35, 0.65, 0.0, 0.0],
     14: [0.3, 0.7, 0.0, 0.0],
+}
 
+// Source: https://tw.beanfun.com/beanfuncommon/EventAD_Mobile/EventAD.aspx?EventADID=8388
+// Big oof.
+const TMSRates = {
+    ...saviorRates,
+    15: [0.3, 0.595, 0, 0.1],
+    16: [0.3, 0.0, 0.56, 0.14],
+    17: [0.3, 0.0, 0.49, 0.21],
+    18: [0.3, 0.0, 0.42, 0.28],
+    19: [0.3, 0.0, 0.42, 0.28],
+    20: [0.3, 0.35, 0, 0.35],
+    21: [0.3, 0, 0.35, 0.35],
+    22: [0.03, 0.0, 0.388, 0.582],
+    23: [0.02, 0.0, 0.392, 0.588],
+    24: [0.01, 0.0, 0.396, 0.594]
 }
 
 const tyrantAEERates = {
@@ -157,23 +173,28 @@ const tyrantRates = {
    14: [0.01, 0, 0.495, 0.495],
 }
 
+// Map from server input value to the associated starforcing rates.
+const SERVER_RATES = {
+    "kms": saviorRates,
+    // Leaving this in for players who want to compare.
+    "old": preSaviorRates,
+    "tms": TMSRates,
+    "tmsr": TMSRates,
+}
+
 function getRates(server, itemType, useAEE) {
     if (itemType === "tyrant") {
         return useAEE ? tyrantAEERates : tyrantRates;
     }
-    return server === "kms" ? saviorRates : preSaviorRates;
+    return SERVER_RATES[server];
 }
 
 function getSafeguardMultiplierIncrease(current_star, sauna, server) {
-    if (sauna || server === "kms") {
-        if (current_star >= 15 && current_star <= 16) {
-            return 1;
-        }
+    if (server === "old" && !sauna && current_star >= 12 && current_star <= 16) {
+        return 1;
     }
-    else {
-        if (current_star >= 12 && current_star <= 16) {
-            return 1;
-        }
+    if (current_star >= 15 && current_star <= 16) {
+        return 1;
     }
     return 0
 }
