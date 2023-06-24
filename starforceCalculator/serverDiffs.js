@@ -65,7 +65,7 @@ function tmsRegCost(current_star, item_level) {
 
 function tmsRebootCost(current_star, item_level) {
     const adjusted_level = item_level > 150 ? 150 : item_level;
-    return preSaviorCost(current_star, adjusted_level);
+    return saviorCost(current_star, adjusted_level);
 }
 
 // Map from server input value to the associated cost function.
