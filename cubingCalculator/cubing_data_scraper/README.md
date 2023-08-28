@@ -21,7 +21,18 @@ The output file with the formatted data is located at: `data/formatted_data.json
 > 1. This default configuration will issue requests for items types, cubes, and tiers that are currently supported by the calculator.
 At the time of writing, this will make 140 requests and save each into a separate html file so it can take several minutes.
 >
-> 2. For now we are just manually copying and pasting the contents from `formatted_data.json` into the file: `cubingRates.js` (for various reasons 😑). Might add a small script to do it later.
+> 2. For now we are just manually copying and pasting the contents from `formatted_data.json` into the file: `cubingRates.js` but we should come up with a better solution.
+
+### Current steps for updating cubing rates
+1. Run the script and dump results (ideally into a separate data folder by date)
+```
+./cubing_data_scrapyer.py -o data_<DD-MM-YY>
+```
+2. Check for any un-translated lines in output debug messages. If we need to make changes to processing scripts, re-run on cached html files with `-c`:
+```
+./cubing_data_scrapyer.py -c -o data_<DD-MM-YY>
+```
+3. Set the value of `cubeRates` in `cubingRates.js` to the contents from `cubing_data_scraper/data_<DD-MM-YY>/formatted_data.json`. Paste the contents immediately following `const cubeRates =`
 
 ---
 
@@ -38,12 +49,7 @@ The scraper basically automates the process of going through all the selection o
 ---
 ### Running with custom options
 
-To see the usage for other run options:
-```
-./cubing_data_scrapyer.py -h
-```
-
-Just going to paste it directly for now since I'm lazy:
+See usage by running `./cubing_data_scrapyer.py -h`
 ```
 usage: cubing_data_scraper.py [-h] [-c] [-o dir]
 
