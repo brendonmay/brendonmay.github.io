@@ -13,4 +13,5 @@ __pycache__/
 # don't track downloaded html files, raw json, or test data
 lib/test/
 data/
+data_*/
 
