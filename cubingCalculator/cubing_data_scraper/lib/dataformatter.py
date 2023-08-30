@@ -54,9 +54,9 @@ LINE_MAPPINGS = [
     ("Critical Chance %", r"^Critical Chance : \+(\d+)%", process_line_value),
     ("Critical Damage %", r"^Critical Damage : \+(\d+)%", process_line_value),
     ("Boss Damage", r"^Boss Damage : \+(\d+)%", process_line_value),
-    ("Skill Cooldown Reduction", r"Skill cooldown -(\d+) second", process_line_value),
+    ("Skill Cooldown Reduction", r"Skill cooldown : -(\d+)seconds", process_line_value),
     ("Decent Skill", r"\<(.+?)\>\senabled", process_line_decentskill),
-    ("Chance to auto steal %", r"(\d+)% chance to auto steal when attacking", process_line_value),
+    ("Chance to auto steal %", r"When attacking (\d+)% chance to auto steal", process_line_value),
     ("Meso Amount %", r"^Meso Amount : \+(\d+)%", process_line_value),
     ("Item Drop Rate %", r"^Item Drop Rate : \+(\d+)%", process_line_value),
     ("STR Flat", r"^STR : \+(\d+)$", process_line_value),
@@ -72,26 +72,27 @@ LINE_MAPPINGS = [
 
     # these are technically junk lines but rolling them will change the probability calculation of
     # subsequent lines so they need to be handled differently
-    ("Increase invincibility time after being hit", r"Invincibility time after being hit: \+(\d+) seconds?",
+    ("Increase invincibility time after being hit", r"After being hit invincibility duration : \+(\d+)seconds",
      process_line_value),
-    ("Chance of being invincible for seconds when hit", r"(\d+)% of being invincible for (\d+) seconds when attacked",
+    ("Chance of being invincible for seconds when hit", r"When hit \d+% chance for \d+seconds of invincibility",
      process_line_junk),
-    ("Chance to ignore % damage when hit", r"(\d+)% chance to ignore (\d+)% damage when hit", process_line_junk),
+    ("Chance to ignore % damage when hit", r"^When hit (\d+)% chance for Damageof (\d+)% ignore", process_line_junk),
+    ("Chance to ignore flat damage when hit", r"^When hit (\d+)% chance for (\d+)of Damage ignore", process_line_junk),
 
     # junk lines
     ("Junk", r"Max MP : \+(\d+)%", process_line_junk),
     ("Junk", r"^Defense : \+(\d+)%", process_line_junk),
     ("Junk", r"Increase efficiency of (M|H)P recovery items and skills by : \+(\d+)%", process_line_junk),
-    ("Junk", r"\d+% chance to ignore \d+ damage when hit", process_line_junk),
-    ("Junk", r"\d+% chance to recover \d+ (M|H)P when killing monsters", process_line_junk),
-    ("Junk", r"\d+% chance to recover \d+ (M|H)P when attacking", process_line_junk),
-    ("Junk", r"\d+% chance to reflect \d+% of damage taken", process_line_junk),
-    ("Junk", r"\+\d+ \w+ per \d+ character levels", process_line_junk),
+    ("Junk", r"^When killing a monster \d+% chance for \d+of (M|H)P recovery", process_line_junk),
+    ("Junk", r"\d+% chance for damage received \d+%reflect", process_line_junk),
+    ("Junk", r"Per \d+ character levels (ATT|MATT|STR|LUK|DEX|INT) : \+1", process_line_junk),
     ("Junk", r"MP consumption of all skills : -(\d+)%", process_line_junk),
     ("Junk", r"^Jump : \+(\d+)", process_line_junk),
     ("Junk", r"^Speed : \+(\d+)", process_line_junk),
-    ("Junk", r"Recover \d+ (M|H)P per \d+ seconds", process_line_junk),
-    ("Junk", r"\d+% chance to apply level \d+ (poison|stun|freeze|slow|seal|dark) when attacking", process_line_junk),
+    ("Junk", r"Per 4 seconds \d+of (M|H)P recovery", process_line_junk),
+    ("Junk", r"^When attacking \d+% chance for \d+of (H|M)P recovery", process_line_junk),
+    ("Junk", r"^When hit \d+% chance for \d+seconds to feel", process_line_junk),
+    ("Junk", r"^When attacking \d+% chance for \d+level (poison|stun|freeze|slow|seal|dark) status", process_line_junk),
 ]
 
 
