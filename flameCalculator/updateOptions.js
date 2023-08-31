@@ -32,7 +32,7 @@ function updateItemLevels(maple_class) {
         $itemLevel.append("<option value='250+'>250+</option>")
     }
     else {
-        $itemLevel.append("<option value='120-139'>140-159</option>")
+        $itemLevel.append("<option value='120-139'>120-139</option>")
         $itemLevel.append("<option value='140-159'>140-159</option>")
         $itemLevel.append("<option value='160-179'>160-179</option>")
         $itemLevel.append("<option value='180-199'>180-199</option>")
