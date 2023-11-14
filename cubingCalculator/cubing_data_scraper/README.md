@@ -7,32 +7,31 @@ To install dependencies, run:
 ```
 pip install -r requirements.txt --user
 ```
-Note: remember to omit the `--user` flag if running from a virtual environment.
+Note: omit the `--user` flag if running from a virtual environment.
 
 ### Running the scraper
 To run with the default configuration:
 ```
 ./cubing_data_scrapyer.py
 ```
-The output file with the formatted data is located at: `data/formatted_data.json`
+Cubing data will be written to `cubeRates.js` which is used by the calculator scripts.\
+Raw data (html and json files) will be stored in: `cubing_data_scraper/data/`
 
 > Notes:
+> - All existing content in `cubeRates.js` will be overwritten.
+> - This default configuration will issue requests for items types, cubes, and tiers that are currently supported by the calculator.\
+> At the time of writing, this will make 140 requests and save each into a separate html file so it can take several minutes.
 >
-> 1. This default configuration will issue requests for items types, cubes, and tiers that are currently supported by the calculator.
-At the time of writing, this will make 140 requests and save each into a separate html file so it can take several minutes.
->
-> 2. For now we are just manually copying and pasting the contents from `formatted_data.json` into the file: `cubingRates.js` but we should come up with a better solution.
 
 ### Current steps for updating cubing rates
 1. Run the script and dump results (ideally into a separate data folder by date)
 ```
 ./cubing_data_scrapyer.py -o data_<DD-MM-YY>
 ```
-2. Check for any un-translated lines in output debug messages. If we need to make changes to processing scripts, re-run on cached html files with `-c`:
+2. Check for any un-translated lines in output debug messages. If we need to make changes to processing scripts, re-run on cached html files in the same data folder with `-c`:
 ```
 ./cubing_data_scrapyer.py -c -o data_<DD-MM-YY>
 ```
-3. Set the value of `cubeRates` in `cubingRates.js` to the contents from `cubing_data_scraper/data_<DD-MM-YY>/formatted_data.json`. Paste the contents immediately following `const cubeRates =`
 
 ---
 

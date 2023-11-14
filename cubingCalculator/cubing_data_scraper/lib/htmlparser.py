@@ -1,9 +1,9 @@
 """Parse html files and extract raw cubing data into a combined json file."""
 
 from bs4 import BeautifulSoup
+from collections import OrderedDict
 import json
 import os
-
 
 from lib.translator import translate_text
 
@@ -22,7 +22,7 @@ class Parser:
 
     def __init__(self):
         self.current_html_data = None
-        self.data = {}
+        self.data = OrderedDict()
 
     def _load_html_file(self, html_file):
         with open(html_file) as fp:
@@ -44,17 +44,17 @@ class Parser:
         cube_type = chosen_options["cube_type"]
 
         if lvl_range not in self.data.keys():
-            self.data[lvl_range] = {}
+            self.data[lvl_range] = OrderedDict()
         if item_type not in self.data[lvl_range].keys():
-            self.data[lvl_range][item_type] = {}
+            self.data[lvl_range][item_type] = OrderedDict()
         if cube_type not in self.data[lvl_range][item_type].keys():
-            self.data[lvl_range][item_type][cube_type] = {}
+            self.data[lvl_range][item_type][cube_type] = OrderedDict()
 
         self.data[lvl_range][item_type][cube_type][tier] = self._parse_tables_potlines()
 
     # parse data from potentials table of this page
     def _parse_tables_potlines(self):
-        pot_rates = {}
+        pot_rates = OrderedDict()
 
         for table_class in self.LINE_NUMBER_TABLE_CLASSES:
             table_data = self.current_html_data.find("table", class_=table_class)
@@ -83,7 +83,7 @@ class Parser:
 # Additionally, the website has: 1) tier up information and 2) chance to roll a prime vs non-prime line
 # the implementation for parsing 2) is in scrape_tier_rates(), currently unused
 def scrape_tier_rates(page_data):
-    cube_rates_data = {}
+    cube_rates_data = OrderedDict()
 
     soup = BeautifulSoup(page_data.content, "html.parser")
 
