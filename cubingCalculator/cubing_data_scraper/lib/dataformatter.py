@@ -132,6 +132,7 @@ def format_rates_list(potential_lines_list):
 
 # format raw data for easier parsing by javascript files, save it as a json
 # each entry is stored as a tuple with format: (category, value, rate as float)
+# returns path to output file
 def format_cubing_data(raw_json_file, output_dir):
     with open(raw_json_file, "r") as fh:
         raw_data_dictionary = json.load(fh)
@@ -175,6 +176,7 @@ def format_cubing_data(raw_json_file, output_dir):
         f.write(full_dump)
 
     print("Finished writing formatted json file: {}".format(full_formatted_data_file))
+    return full_formatted_data_file
 
 
 if __name__ == "__main__":

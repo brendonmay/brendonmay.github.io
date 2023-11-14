@@ -6,13 +6,15 @@ import os
 import sys
 import argparse
 import glob
+import json
+import datetime
 
 # internal modules
 from lib import requester, htmlparser, dataformatter
 
 PARENT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DATA_PATH = os.path.join(PARENT_DIR, "data")
-
+CUBE_DATA_JS_PATH = os.path.join(os.path.dirname(PARENT_DIR), "cubeRates.js")
 
 # setting this up in case we add more options in the future
 def parse_arguments():
@@ -53,7 +55,22 @@ def main(output_dir, use_cached):
     # extract pieces of interest from full dataset
     # process and format data into useful structure
     print("Generate formatted json file for calculator scripts...")
-    dataformatter.format_cubing_data(raw_json_file, data_source_dir)
+    output_file = dataformatter.format_cubing_data(raw_json_file, data_source_dir)
+
+    # write the contents of formatted json file to cubeRates.js
+    # this is a hack to store data in a way that's accessible from the calculator script
+    # i'd like to be able to access it directly from json or other static data file but not sure how
+    print("Writing data to: {}".format(CUBE_DATA_JS_PATH))
+    formatted_data = None
+    with open(output_file, "r") as fh:
+        formatted_data = json.dumps(json.load(fh), indent=4)
+    
+    with open(CUBE_DATA_JS_PATH, "w") as fh:
+        fh.write("// Auto-generated on {}\n".format(datetime.date.today().strftime("%m/%d/%Y")))
+        fh.write("const cubeRates = ")
+        fh.write(formatted_data)
+    
+    print("Done.")
 
 
 if __name__ == "__main__":
