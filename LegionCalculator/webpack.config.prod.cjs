@@ -15,14 +15,15 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 options: {
-                    presets: [{'plugins': ['@babel/plugin-proposal-class-properties']}]
+                    presets: ['@babel/preset-env', '@babel/preset-react'],
+                    plugins: ['@babel/plugin-proposal-class-properties']
                 }
             },
             {
                 test: /\.css$/,
-                loader: [
-                  'style-loader',
-                  'css-loader'
+                use: [
+                    'style-loader',
+                    'css-loader'
                 ]
             }
         ]

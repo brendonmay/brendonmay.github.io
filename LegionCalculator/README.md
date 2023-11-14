@@ -5,3 +5,4 @@ To push changes:
 To run locally:
     - 'npm run build'
     - go to `file:///C:/Users/brend/Desktop/cubingProject/brendonmay.github.io/LegionCalculator/index.html` in the browser 
+    - file:///C:/Users/brend/OneDrive/Documents/Github/brendonmay.github.io/LegionCalculator/index.html

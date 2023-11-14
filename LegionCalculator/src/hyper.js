@@ -4611,11 +4611,7 @@ function optimizeWSE() {
     var multiplier = getMultiplier(weapon_type, maple_class);
     var boss_percent = parseInt(document.getElementById('boss_percent').value);
     var final_damage_percent = parseInt(document.getElementById('final_damage_percent').value);
-    var ied_percent = document.getElementById('ied_percent').value - 0.5; //due to rounding up in game
-    if (document.getElementById('ied_percent').value.includes('.')) {
-        pro_mode = true;
-        ied_percent = parseFloat(document.getElementById('ied_percent').value);
-    }
+    var ied_percent = parseFloat(document.getElementById('ied_percent').value);
     var damage_percent = parseInt(document.getElementById('damage_percent').value);
     var primary_stat = parseInt(document.getElementById('primary_stat').value);
     var secondary_stat = parseInt(document.getElementById('secondary_stat').value);
