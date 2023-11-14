@@ -2796,11 +2796,7 @@ function optimizeWSE() {
     // Stats from Stat Window
     var maple_class = document.getElementById('class').value;
     var boss_percent = parseInt(document.getElementById('boss_percent').value);
-    var ied_percent = document.getElementById('ied_percent').value - 0.5; //due to rounding up in game
-    if (document.getElementById('ied_percent').value.includes('.')) {
-        pro_mode = true;
-        ied_percent = parseFloat(document.getElementById('ied_percent').value);
-    }
+    var ied_percent = parseFloat(document.getElementById('ied_percent').value);
     var damage_percent = parseInt(document.getElementById('damage_percent').value);
     var attack_percent = 100;
 
