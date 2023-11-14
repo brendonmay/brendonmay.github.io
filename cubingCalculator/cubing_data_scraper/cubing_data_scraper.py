@@ -8,6 +8,7 @@ import argparse
 import glob
 import json
 import datetime
+from collections import OrderedDict
 
 # internal modules
 from lib import requester, htmlparser, dataformatter
@@ -66,9 +67,8 @@ def main(output_dir, use_cached):
     # this is a hack to store data in a way that's accessible from the calculator script
     # i'd like to be able to access it directly from json or other static data file but not sure how
     print("Writing data to: {}".format(CUBE_DATA_JS_PATH))
-    formatted_data = None
     with open(output_file, "r") as fh:
-        formatted_data = json.dumps(json.load(fh), indent=4)
+        formatted_data = json.dumps(json.load(fh, object_pairs_hook=OrderedDict), indent=4)
     
     with open(CUBE_DATA_JS_PATH, "w") as fh:
         fh.write("// Auto-generated on {}\n".format(datetime.date.today().strftime("%m/%d/%Y")))
