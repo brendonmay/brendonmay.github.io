@@ -36,6 +36,10 @@ def main(output_dir, use_cached):
     data_source_dir = os.path.abspath(output_dir)
     html_files_dir = os.path.join(data_source_dir, "html_files")
 
+    print("This script will overwrite the contents of: {}".format(CUBE_DATA_JS_PATH))
+    print("Raw data will be stored in: {}".format(data_source_dir))
+    print()
+
     if use_cached:
         print("Looking for cached html files in: {}".format(html_files_dir))
         html_files = glob.glob(os.path.join(html_files_dir, "*.html"))
@@ -47,6 +51,7 @@ def main(output_dir, use_cached):
         # send HTTP requests for cubing data and download html files
         print("Preparing to send HTTP requests to Nexon's website for cubing data...")
         html_files = requester.download_html_files(html_files_dir)
+    print()
 
     # parse html files and extract all data into a single json file
     print("Parsing html files to generate raw json. Convert strings from korean to english...")
