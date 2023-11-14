@@ -271,7 +271,7 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
     }
 
     if (star_catch) { //star catch adjustment
-        probability_success = probability_success * 1.045;
+        probability_success = probability_success * 1.05;
         var left_over = 1 - probability_success;
 
         if (probability_decrease == 0) {
