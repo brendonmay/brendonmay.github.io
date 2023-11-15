@@ -120,14 +120,14 @@ function calculateOptimalLuk2(data, progress, cb, mobbing) {
         data.points = oldPoints;
     };
 
-    let inner = loop(loop(loop(loop(loop(loop(() => {
+    let inner = loop(loop(loop(loop(loop(loop(loop(() => {
         let damage = calculateDamageLuk2(
             data.primary + statGain(counters[7]),
             data.secondary1 + statGain(counters[0]),
             data.secondary2 + statGain(counters[1]),
             data.cdmg + cdmgGain(counters[4]),
             data.boss + bossGain(counters[2], mobbing),
-            data.dmg + dmgGain(counters[3]),
+            data.dmg + dmgGain(counters[3]) + mobGain(counters[8], mobbing),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[5]))),
             data.att + attGain(counters[6]),
             data.pdr
@@ -143,12 +143,13 @@ function calculateOptimalLuk2(data, progress, cb, mobbing) {
                 'ied': counters[5],
                 'att': counters[6],
                 'primary': counters[7],
+                'mob': counters[8],
                 'extra points': data.points,
                 'score': damage,
             };
             cb(optimalConfig);
         }
-    }))))));
+    })))))));
     for (let j = 0; j <= data.i; ++j) {
         data.points = data.points - pointCost(j);
     }
@@ -180,14 +181,14 @@ function calculateOptimalXenon(data, progress, cb, mobbing) {
         data.points = oldPoints;
     };
 
-    let inner = loop(loop(loop(loop(loop(loop(() => {
+    let inner = loop(loop(loop(loop(loop(loop(loop(() => {
         let damage = calculateDamageXenon(
             data.primary1 + statGain(counters[5]),
             data.primary2 + statGain(counters[6]),
             data.primary3 + statGain(counters[7]),
             data.cdmg + cdmgGain(counters[3]),
             data.boss + bossGain(counters[1], mobbing),
-            data.dmg + dmgGain(counters[2]),
+            data.dmg + dmgGain(counters[2]) + mobGain(counters[8], mobbing),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
             data.att + attGain(counters[0]),
             data.pdr
@@ -203,12 +204,13 @@ function calculateOptimalXenon(data, progress, cb, mobbing) {
                 'primary1': counters[5],
                 'primary2': counters[6],
                 'primary3': counters[7],
+                'mob': counters[8],
                 'extra points': data.points,
                 'score': damage,
             };
             cb(optimalConfig);
         }
-    }))))));
+    })))))));
     for (let j = 0; j <= data.i; ++j) {
         data.points = data.points - pointCost(j);
     }
@@ -241,14 +243,14 @@ function calculateOptimalDA(data, progress, cb, mobbing) {
         data.points = oldPoints;
     }; //purehp, hp, str, cdmg, boss, dmg, ied, att, pdr
 
-    let inner = loop(loop(loop(loop(loop(() => {
+    let inner = loop(loop(loop(loop(loop(loop(() => {
         let damage = calculateDamageDA(
             purehp,
             (data.hp - data.flathp) / (1.00 + data.php) * (1.00 + data.php + hpGain(counters[6])) + data.flathp,
             data.str + statGain(counters[0]),
             data.cdmg + cdmgGain(counters[4]),
             data.boss + bossGain(counters[2], mobbing),
-            data.dmg + dmgGain(counters[3]),
+            data.dmg + dmgGain(counters[3]) + mobGain(counters[7], mobbing),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[5]))),
             data.att + attGain(counters[1]),
             data.pdr
@@ -263,19 +265,20 @@ function calculateOptimalDA(data, progress, cb, mobbing) {
                 'cdmg': counters[4],
                 'ied': counters[5],
                 'hp': counters[6],
+                'mob': counters[7],
                 'extra points': data.points,
                 'score': damage,
                 'hp_base': (data.hp - data.flathp) / (1.00 + data.php) * (1.00 + data.php + hpGain(counters[6])) + data.flathp,
                 'str_base': data.str + statGain(counters[0]),
                 'cdmg_base': data.cdmg + cdmgGain(counters[4]),
                 'boss_base': data.boss + bossGain(counters[2], mobbing),
-                'dmg_base': data.dmg + dmgGain(counters[3]),
+                'dmg_base': data.dmg + dmgGain(counters[3]) + mobGain(counters[7], mobbing),
                 'ied_base': (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[5]))),
                 'att_base': data.att + attGain(counters[1]),
             };
             cb(optimalConfig);
         }
-    })))));
+    }))))));
     for (let j = 0; j <= data.i; ++j) {
         data.points = data.points - pointCost(j);
     }
@@ -307,7 +310,7 @@ function calculateOptimalKanna(data, progress, cb, mobbing) {
         data.points = oldPoints;
     };
 
-    let inner = loop(loop(loop(loop(loop(loop(() => {
+    let inner = loop(loop(loop(loop(loop(loop(loop(() => {
         var hp_with_percent = data.hp - data.flathp;
         var att_removal = Math.floor((data.hp/700));
         var hp_without_percent = hp_with_percent / (1 + data.php);
@@ -318,7 +321,7 @@ function calculateOptimalKanna(data, progress, cb, mobbing) {
             data.luk + statGain(counters[0]),
             data.cdmg + cdmgGain(counters[3]),
             data.boss + bossGain(counters[1], mobbing),
-            data.dmg + dmgGain(counters[2]),
+            data.dmg + dmgGain(counters[2]) + mobGain(counters[8], mobbing),
             (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
             Math.floor(((data.att / data.patt) - att_removal + attGain(counters[5]) + att_boost) * data.patt),
             //Total attack is divided by attk percent to determine base attack. We remove the old HP att gain and replace with the new one. Also add in new hyper stat gain. Then reapply percent attack.
@@ -336,19 +339,20 @@ function calculateOptimalKanna(data, progress, cb, mobbing) {
                 'att': counters[5],
                 'int': counters[6],
                 'hp': counters[7],
+                'mob': counters[8],
                 'extra points': data.points,
                 'score': damage,
                 'base_int': data.int + statGain(counters[6]),
                 'base_luk': data.luk + statGain(counters[0]),
                 'base_cdmg': data.cdmg + cdmgGain(counters[3]),
                 'base_boss': data.boss + bossGain(counters[1], mobbing),
-                'base_dmg': data.dmg + dmgGain(counters[2]),
+                'base_dmg': data.dmg + dmgGain(counters[2]) + mobGain(counters[8], mobbing),
                 'base_ied': (1.0 - (1.0 - data.ied) * (1.0 - iedGain(counters[4]))),
                 'base_att': Math.floor((data.att + attGain(counters[5])) * data.patt + att_boost)
             };
             cb(optimalConfig);
         }
-    }))))));
+    })))))));
     for (let j = 0; j <= data.i; ++j) {
         data.points = data.points - pointCost(j);
     }
