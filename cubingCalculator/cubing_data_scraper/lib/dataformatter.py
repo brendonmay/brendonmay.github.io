@@ -3,6 +3,7 @@
 import re
 import json
 import os
+from collections import OrderedDict
 
 
 def _str_percent_to_float(percent_string):
@@ -132,31 +133,32 @@ def format_rates_list(potential_lines_list):
 
 # format raw data for easier parsing by javascript files, save it as a json
 # each entry is stored as a tuple with format: (category, value, rate as float)
+# returns path to output file
 def format_cubing_data(raw_json_file, output_dir):
     with open(raw_json_file, "r") as fh:
         raw_data_dictionary = json.load(fh)
 
     # structure is: lvl range -> item type -> cube type -> item tier -> line number -> list of rates
     # "list of rates" is the portion that will be formatted. hierarchy matches the raw dictionary otherwise.
-    formatted_data = {}
+    formatted_data = OrderedDict()
 
     # keep track of lines that did not match any regex patterns for debugging
     full_error_list = []
 
     for (level_range, item_type_data) in raw_data_dictionary.items():
-        formatted_data[level_range] = {}
+        formatted_data[level_range] = OrderedDict()
 
         for (item_type, cube_data) in item_type_data.items():
-            formatted_data[level_range][item_type] = {}
+            formatted_data[level_range][item_type] = OrderedDict()
 
             for (cube_type, item_tier_data) in cube_data.items():
-                formatted_data[level_range][item_type][cube_type] = {}
+                formatted_data[level_range][item_type][cube_type] = OrderedDict()
 
                 for (item_tier, line_data) in item_tier_data.items():
-                    formatted_data[level_range][item_type][cube_type][item_tier] = {}
+                    formatted_data[level_range][item_type][cube_type][item_tier] = OrderedDict()
 
                     for (line_num, rates) in line_data.items():
-                        formatted_data[level_range][item_type][cube_type][item_tier][line_num] = {}
+                        formatted_data[level_range][item_type][cube_type][item_tier][line_num] = OrderedDict()
 
                         raw_potentials_list = raw_data_dictionary[level_range][item_type][cube_type][item_tier][line_num]
                         (formatted_rates, error_list) = format_rates_list(raw_potentials_list)
@@ -175,6 +177,7 @@ def format_cubing_data(raw_json_file, output_dir):
         f.write(full_dump)
 
     print("Finished writing formatted json file: {}".format(full_formatted_data_file))
+    return full_formatted_data_file
 
 
 if __name__ == "__main__":

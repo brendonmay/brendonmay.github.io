@@ -1,9 +1,9 @@
 //here update homepage, update navbar, also include stat equivalence calc in both
 let line_probabilities = {
-    'rare': 0.8,
-    'epic': 0.15,
-    'unique': 0.05,
-    'uniquep': 0.05,
+    'rare': 0,
+    'epic': 0.85,
+    'unique': 0.15,
+    'uniquep': 0.15,
     'legendaryp': 1,
     "legendary": 1
 }
@@ -16,99 +16,99 @@ let abilities_honor =
 {
     'normal_dmg':
     {
-        'epic': 0.025662,
-        'unique': 0.017241,
-        'uniquep': 0.017241 * 0.25,
-        'legendaryp': 0.017761 * 0.6,
-        "legendary": 0.017761
+        'epic': 0.027800,
+        'unique': 0.018779,
+        'uniquep': 0.018779 * 0.25,
+        'legendaryp': 0.018501 * 0.6,
+        "legendary": 0.018501
     },
     'abnormal_dmg':
     {
-        'epic': 0.025662,
-        'unique': 0.017241,
-        'uniquep': 0.017241 * 0.25,
-        'legendaryp': 0.017761 * 0.6,
-        "legendary": 0.017761
+        'epic': 0.027800,
+        'unique': 0.018779,
+        'uniquep': 0.018779 * 0.25,
+        'legendaryp': 0.018501 * 0.6,
+        "legendary": 0.018501
     },
     'buff_duration':
     {
-        'epic': 0.012831,
-        'unique': 0.00862,
-        'uniquep': 0.00862 * 0.1,
-        'legendaryp': 0.00888 * 0.1,
-        "legendary": 0.00888
+        'epic': 0.013900,
+        'unique': 0.00939,
+        'uniquep': 0.00939 * 0.1,
+        'legendaryp': 0.00925 * 0.1,
+        "legendary": 0.00925
     },
     'item_drop':
     {
-        'epic': 0.025662,
-        'unique': 0.017241,
-        'uniquep': 0.017241 * 0.25,
-        'legendaryp': 0.017761 * 0.25,
-        "legendary": 0.017761
+        'epic': 0.027800,
+        'unique': 0.018779,
+        'uniquep': 0.018779 * 0.25,
+        'legendaryp': 0.018501 * 0.25,
+        "legendary": 0.018501
     },
     'meso_drop':
     {
-        'epic': 0.025662,
-        'unique': 0.017241,
-        'uniquep': 0.017241 * 0.25,
-        'legendaryp': 0.017761 * 0.25,
-        "legendary": 0.017761
+        'epic': 0.027800,
+        'unique': 0.018779,
+        'uniquep': 0.018779 * 0.25,
+        'legendaryp': 0.018501 * 0.25,
+        "legendary": 0.018501
     },
     'w_attk':
     {
-        'epic': 0.017108,
-        'unique': 0.012931,
-        'uniquep': 0.012931 * 0.25,
-        'legendaryp': 0.022202 * 0.4,
-        "legendary": 0.022202
+        'epic': 0.018496,
+        'unique': 0.014085,
+        'uniquep': 0.014085 * 0.25,
+        'legendaryp': 0.023127 * 0.4,
+        "legendary": 0.023127
     },
     'm_attk':
     {
-        'epic': 0.017108,
-        'unique': 0.012931,
-        'uniquep': 0.012931 * 0.25,
-        'legendaryp': 0.022202 * 0.4,
-        "legendary": 0.022202
+        'epic': 0.018496,
+        'unique': 0.014085,
+        'uniquep': 0.014085 * 0.25,
+        'legendaryp': 0.023127 * 0.4,
+        "legendary": 0.023127
     },
     'crit_rate':
     {
-        'epic': 0,
-        'unique': 0.00431,
-        'uniquep': 0.00431 * 0.1,
-        'legendaryp': 0.00444 * 0.1,
-        "legendary": 0.00444
+        'epic': 0.009304,
+        'unique': 0.004695,
+        'uniquep': 0.004695 * 0.1,
+        'legendaryp': 0.004625 * 0.1,
+        "legendary": 0.004625
     },
     'boss':
     {
         'epic': 0,
-        'unique': 0.00862,
-        'uniquep': 0.00862 * 0.1,
-        'legendaryp': 0.022202 * 0.1,
-        "legendary": 0.022202
+        'unique': 0.00939,
+        'uniquep': 0.00939 * 0.1,
+        'legendaryp': 0.023127 * 0.1,
+        "legendary": 0.023127
     },
     'att_speed':
     {
         'epic': 0,
         'unique': 0,
         'uniquep': 0,
-        'legendaryp': 0.00444,
-        "legendary": 0.00444
+        'legendaryp': 0.004625,
+        "legendary": 0.004625
     },
     'passive_skill':
     {
         'epic': 0,
         'unique': 0,
         'uniquep': 0,
-        'legendaryp': 0.007104,
-        "legendary": 0.007104
+        'legendaryp': 0.007401,
+        "legendary": 0.007401
     },
     'cd_skip':
     {
         'epic': 0,
-        'unique': 0.017241,
-        'uniquep': 0.017241 * 0.1,
-        'legendaryp': 0.017761 * 0.1,
-        "legendary": 0.017761
+        'unique': 0.018779,
+        'uniquep': 0.018779 * 0.1,
+        'legendaryp': 0.018501 * 0.1,
+        "legendary": 0.018501
     }
 }
 
@@ -116,99 +116,99 @@ let abilities_circulator =
 {
     'normal_dmg':
     {
-        'epic': 0.026223,
-        'unique': 0.017391,
-        'uniquep': 0.017391,
-        "legendaryp": 0.017761,
-        "legendary": 0.017761
+        'epic': 0.027800,
+        'unique': 0.018779,
+        'uniquep': 0.018779,
+        'legendaryp': 0.018501,
+        "legendary": 0.018501
     },
     'abnormal_dmg':
     {
-        'epic': 0.026223,
-        'unique': 0.017391,
-        'uniquep': 0.017391,
-        "legendaryp": 0.017761,
-        "legendary": 0.017761
+        'epic': 0.027800,
+        'unique': 0.018779,
+        'uniquep': 0.018779,
+        'legendaryp': 0.018501,
+        "legendary": 0.018501
     },
     'buff_duration':
     {
-        'epic': 0.013111,
-        'unique': 0.008695,
-        'uniquep': 0.008695,
-        "legendaryp": 0.00888,
-        "legendary": 0.00888
+        'epic': 0.013900,
+        'unique': 0.00939,
+        'uniquep': 0.00939,
+        'legendaryp': 0.00925,
+        "legendary": 0.00925
     },
     'item_drop':
     {
-        'epic': 0.026223,
-        'unique': 0.017391,
-        'uniquep': 0.017391,
-        "legendaryp": 0.017761,
-        "legendary": 0.017761
+        'epic': 0.027800,
+        'unique': 0.018779,
+        'uniquep': 0.018779,
+        'legendaryp': 0.018501,
+        "legendary": 0.018501
     },
     'meso_drop':
     {
-        'epic': 0.026223,
-        'unique': 0.017391,
-        'uniquep': 0.017391,
-        "legendaryp": 0.017761,
-        "legendary": 0.017761
+        'epic': 0.027800,
+        'unique': 0.018779,
+        'uniquep': 0.018779,
+        'legendaryp': 0.018501,
+        "legendary": 0.018501
     },
     'w_attk':
     {
-        'epic': 0.026223,
-        'unique': 0.021739,
-        'uniquep': 0.021739,
-        "legendaryp": 0.022202,
-        "legendary": 0.022202
+        'epic': 0.018496,
+        'unique': 0.014085,
+        'uniquep': 0.014085,
+        'legendaryp': 0.023127,
+        "legendary": 0.023127
     },
     'm_attk':
     {
-        'epic': 0.026223,
-        'unique': 0.021739,
-        'uniquep': 0.021739,
-        "legendaryp": 0.022202,
-        "legendary": 0.022202
+        'epic': 0.018496,
+        'unique': 0.014085,
+        'uniquep': 0.014085,
+        'legendaryp': 0.023127,
+        "legendary": 0.023127
     },
     'crit_rate':
     {
-        'epic': 0.017482,
-        'unique': 0.008695,
-        'uniquep': 0.008695,
-        "legendaryp": 0.00444,
-        "legendary": 0.00444
+        'epic': 0.009304,
+        'unique': 0.004695,
+        'uniquep': 0.004695,
+        'legendaryp': 0.004625,
+        "legendary": 0.004625
     },
     'boss':
     {
         'epic': 0,
-        'unique': 0.021739,
-        'uniquep': 0.021739,
-        "legendaryp": 0.022202,
-        "legendary": 0.022202
+        'unique': 0.00939,
+        'uniquep': 0.00939,
+        'legendaryp': 0.023127,
+        "legendary": 0.023127
     },
     'att_speed':
     {
         'epic': 0,
         'unique': 0,
         'uniquep': 0,
-        'legendaryp': 0.00444,
-        "legendary": 0.00444
+        'legendaryp': 0.004625,
+        "legendary": 0.004625
     },
     'passive_skill':
     {
         'epic': 0,
         'unique': 0,
         'uniquep': 0,
-        'legendaryp': 0.007104,
-        "legendary": 0.007104
+        'legendaryp': 0.007401,
+        "legendary": 0.007401
     },
     'cd_skip':
     {
         'epic': 0,
-        'unique': 0.017391,
-        'uniquep': 0.017391,
-        "legendaryp": 0.017761,
-        "legendary": 0.017761
+        'unique': 0.018779,
+        'uniquep': 0.018779,
+        'legendaryp': 0.018501,
+        "legendary": 0.018501
     }
 }
 

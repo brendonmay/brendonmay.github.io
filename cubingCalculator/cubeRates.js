@@ -1,3 +1,4 @@
+// Auto-generated on 11/14/2023
 const cubeRates = {
     "lvl120to200": {
         "secondary": {
