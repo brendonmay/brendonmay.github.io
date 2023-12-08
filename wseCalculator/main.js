@@ -1018,6 +1018,10 @@ function determineOptimizedWSE(weapon_level, secondary_level, emblem_level, stri
 
         var new_potential_list = [new_wep_line_1, new_wep_line_2, new_wep_line_3, new_sec_line_1, new_sec_line_2, new_sec_line_3, new_emb_line_1, new_emb_line_2, new_emb_line_3];
 
+        if (maple_class == "Zero"){
+            var new_potential_list = [new_wep_line_1, new_wep_line_2, new_wep_line_3, new_wep_line_1, new_wep_line_2, new_wep_line_3, new_emb_line_1, new_emb_line_2, new_emb_line_3];
+        }
+        
         var withNewWSEStats = AddPotentialsToStats(new_potential_list, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent);
         var new_ied_percent = withNewWSEStats.new_ied_percent;
         var new_attack_percent = withNewWSEStats.new_attack_percent;
