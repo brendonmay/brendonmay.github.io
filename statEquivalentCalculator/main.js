@@ -331,7 +331,7 @@ function loadLocalStorage() {
                         document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
                         document.getElementById('sec_perc_label').innerHTML = `<label for="secondary_stat_perc"> ${secondary_stat} % on Equips</label>`;
                     }
-                    document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane Symbols)</label>`;
+                    document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane + Sacred)</label>`;
 
                     if (maple_class == "Xenon") {
                         var primary_2 = "LUK"
@@ -3486,7 +3486,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
             document.getElementById('sec_perc_label').innerHTML = `<label for="secondary_stat_perc"> ${secondary_stat} % on Equips</label>`;
         }
-        document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane Symbols)</label>`;
+        document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane + Sacred)</label>`;
         if (maple_class == "Xenon") document.getElementById("hp_arcane").value = 5148
         else if (maple_class == "Demon Avenger") document.getElementById("hp_arcane").value = 184000 //here fix this to proper amount
         else document.getElementById("hp_arcane").value = 13200
