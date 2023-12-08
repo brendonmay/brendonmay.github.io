@@ -976,7 +976,6 @@ function determineAllWSECombinations(weapon_combinations, emblem_combinations, s
 }
 
 function determineOptimizedWSE(weapon_level, secondary_level, emblem_level, stripped_ied_percent, stripped_attack_percent, stripped_boss_percent, stripped_damage_percent, maple_class) {
-    console.log(maple_class)
     var weapon_combinations = generatePossibleLineCombinations("weapon", weapon_level, maple_class);
     var emblem_combinations = generatePossibleLineCombinations("emblem", emblem_level, maple_class);
     if (weapon_level == secondary_level && maple_class != "Kanna") {
