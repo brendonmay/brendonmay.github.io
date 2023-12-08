@@ -945,7 +945,7 @@ function generatePossibleLineCombinations(item_type, item_level, maple_class) {
     return combinations
 }
 
-function determineAllWSECombinations(weapon_combinations, emblem_combinations, secondary_combinations) {
+function determineAllWSECombinations(weapon_combinations, emblem_combinations, secondary_combinations, maple_class) {
     var combinations = [];
 
     var i = 0;
@@ -958,7 +958,12 @@ function determineAllWSECombinations(weapon_combinations, emblem_combinations, s
             var k = 0;
             while (k < emblem_combinations.length) {
                 var emblem_lines = emblem_combinations[k];
+                if (maple_class == "Zero"){
+                    specific_combination = [weapon_lines, weapon_lines, emblem_lines];
+                }
+                else {
                 specific_combination = [weapon_lines, secondary_lines, emblem_lines];
+                }
                 combinations.push(specific_combination);
                 k++;
             }
@@ -980,7 +985,7 @@ function determineOptimizedWSE(weapon_level, secondary_level, emblem_level, stri
         var secondary_combinations = generatePossibleLineCombinations("secondary", secondary_level, maple_class);
     }
 
-    wse_combinations = determineAllWSECombinations(weapon_combinations, emblem_combinations, secondary_combinations);
+    wse_combinations = determineAllWSECombinations(weapon_combinations, emblem_combinations, secondary_combinations, maple_class);
     //0 = wep, 1 = sec, 2 = emb
     var best_combination = [];
     var tied_combinations = [];
