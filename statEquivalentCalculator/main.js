@@ -3078,6 +3078,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $('#sec_perc_2').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
 
         $('#kanna_hp_perc').tooltip({ 'trigger': 'hover focus', 'title': 'HP % and MP % total from potentials only.', 'placement': 'bottom' });
+        $('#hp_arcane').tooltip({ 'trigger': 'hover focus', 'title': 'Add up the total stat earned from Arcane Force and Sacred Power', 'placement': 'bottom' });
         $('#sec_perc').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
     });
 
