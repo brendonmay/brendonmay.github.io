@@ -35,7 +35,7 @@
 <body>
     <h1>Constraint Violations</h1>
     <h2>There are a total of {{ num_unique_courses }} unqiue courses offered this semester</h2>
-    <h3>You must give a rank of 3 or higher to half of the course offerings you are eligible to teach</h3>
+    <h3>You must give a rank of 3 or higher to <u>at least half</u> (rounded down) of the course offerings you are eligible to teach</h3>
     <div class="teacher-container">
         {% for teacher, courses in teacher_violators.items() %}
         <div class="teacher">
