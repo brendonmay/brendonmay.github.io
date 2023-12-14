@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+      h1 {
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 30px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      h3 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 18px;
+        font-weight: lighter;
+      }
+      .teacher-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .teacher {
+        margin: 10px;
+        padding: 10px;
+        background-color: #f2f2f2;
+        border-radius: 5px;
+      }
+    </style>
+</head>
+<body>
+    <h1>Constraint Violations</h1>
+    <h2>There are a total of {{ num_unique_courses }} unqiue courses offered this semester</h2>
+    <h3>You must give a rank of 3 or higher to half of the course offerings</h3>
+    <div class="teacher-container">
+        {% for teacher, courses in teacher_violators.items() %}
+        <div class="teacher">
+            <h2>{{ teacher }}</h2>
+            <ul>
+                {% for course in courses %}
+                <li>{{ course }}</li>
+                {% endfor %}
+            </ul>
+            <p>Rank 3 or higher on an additional {{ teacher_additions[teacher] }} courses</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

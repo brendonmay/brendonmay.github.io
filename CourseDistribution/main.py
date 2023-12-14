@@ -1,9 +1,9 @@
 import csv
+import math
 from pulp import *
 from flask import Flask, request, render_template
 from io import StringIO
 app = Flask(__name__)
-
 
 def load_data(file_like_object):
     reader = csv.reader(file_like_object)
@@ -44,7 +44,7 @@ def load_data(file_like_object):
                 excluded_courses.append(j)
         if excluded_courses:
             course_exclusions[i] = excluded_courses
-            
+
     # print("teacher_preferences:", teacher_preferences)
     # print("num_courses_per_teacher:", num_courses_per_teacher)
     # print("course_names:", course_names)
@@ -55,7 +55,7 @@ def load_data(file_like_object):
     # print("course_exclusions: ", course_exclusions)
     # print("teachers_dict: ", teachers_dict)
     # print("teachers_names: ", teachers_names)
-    
+
     # # Test data
     # teacher_preferences = [
     #     [4, 3, 5, 2, 1, 4, 5, 2, 3, 4, 5, 1, 2, 4, 3, 2, 5, 1, 4, 3],
@@ -64,7 +64,7 @@ def load_data(file_like_object):
     #     [2, 4, 3, 5, 1, 2, 4, 5, 3, 2, 4, 1, 5, 2, 4, 5, 3, 1, 2, 4],
     #     [1, 2, 4, 3, 5, 1, 2, 3, 4, 1, 2, 5, 3, 1, 2, 3, 4, 5, 1, 2],
     #     [5, 3, 2, 4, 1, 5, 3, 4, 2, 5, 3, 1, 4, 5, 3, 4, 2, 1, 5, 3],
-    #     [4, 2, 5, 3, 1, 4, 2, 3, 5, 4, 2, 1, 3, 4, 2, 3, 5, 1, 4, 2]
+    #     [5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 5]
     # ]
     # prep_preferences = [5, 5, 5, 5, 5, 5, 5]
     # teachers = [0, 1, 2, 3, 4, 5, 6]
@@ -77,7 +77,7 @@ def load_data(file_like_object):
     # course_names = ["MHF4U1-01", "MHF4U1-02", "MHF4U1-03", "MCR3U1-01", "MCR3U1-02", "MCR3U1-03", "MTH1W1-01", "MTH1W1-02", "MTH1W1-03", "MTH1W1-04",
     #                 "MTH1W1-05", "MTH1W1-06", "MPM2D1-01", "MPM2D1-02", "MPM2D1-03", "MPM2D1-04", "MAP4C1-01", "MCF3M1-01", "MCF3M1-02", "MCV4U-01"]
     # teachers_names = ["May", "Sturino", "Tavares", "Lammers", "Gonsalves", "Higgens", "Tran"]
-    
+
     # Define the set of periods
     periods = set(course_period.values())
 
@@ -91,17 +91,69 @@ def load_data(file_like_object):
     def get_same_first_five_letters(courses):
         return [course[:5] for course in courses]
 
+    def num_of_unique_courses(course_names):
+        unique_courses = set()
+
+        for course in course_names:
+            unique_courses.add(course[:5])
+
+        return len(unique_courses)
+
+
+    def constraints_satisfied(course_names, teachers_names, teacher_preferences):
+        num_unique_courses = num_of_unique_courses(course_names)
+        teacher_index = 0
+        teacher_violators = {}  # {"May": {"MHF4U", "MCR3U"}}
+        teacher_additions = {} # {"May": 2} implies May needs an additional 2 courses rank 3 or higher
+        display_violation = False
+
+        while teacher_index < len(teacher_preferences):
+            course_ranks = teacher_preferences[teacher_index]
+            course_index = 0
+            teacher_name = teachers_names[teacher_index]
+            teacher_courses = set()
+            teacher_exclusions = set()
+
+            while course_index < len(course_ranks):
+                course_rank = course_ranks[course_index]
+                full_course_name = course_names[course_index]
+                course_name = full_course_name[:5]
+
+                if course_rank >= 3:
+                    teacher_courses.add(course_name)
+
+                if course_rank == 0:
+                    teacher_exclusions.add(course_name)
+                course_index += 1
+
+            teacher_spread = len(teacher_courses)
+            num_of_exclusions = len(teacher_exclusions)
+            spread = math.floor((num_unique_courses - num_of_exclusions) / 2)
+
+            if teacher_spread < spread:
+                teacher_violators[teacher_name] = teacher_courses
+                difference = spread - teacher_spread
+                teacher_additions[teacher_name] = difference
+                display_violation = True
+
+            teacher_index += 1
+        if display_violation:
+            return teacher_violators, teacher_additions
+        else:
+            return True
+
     prob += lpSum([teacher_preferences[i][j] * teacher_vars[i][j]
-                for i in teachers for j in courses]) + lpSum([prep_preferences[i] * (len([c for c in range(len(courses)) if teacher_vars[i][c].varValue == 1]) == 2 and len(set(get_same_first_five_letters([courses[c] for c in range(len(courses)) if teacher_vars[i][c].varValue == 1]))) == 1) 
+                for i in teachers for j in courses]) + lpSum([prep_preferences[i] * (len([c for c in range(len(courses)) if teacher_vars[i][c].varValue == 1]) == 2 and len(set(get_same_first_five_letters([courses[c] for c in range(len(courses)) if teacher_vars[i][c].varValue == 1]))) == 1)
                 for i in teachers]), "Total Teacher Preference and Same First Five Letter Course Count"
 
     # Add constraints
-    # Maximize fairness
-    # mean = sum(teacher_preferences[i][j] * teacher_vars[i][j] for i in teachers for j in courses) / len(teachers)
-    # delta = 0.1 * mean
-    # for i in teachers:
-    #     prob += lpSum([teacher_preferences[i][j] * teacher_vars[i][j] for j in courses]) >= mean - delta, f"Fairness_Lower_{i}"
-    #     prob += lpSum([teacher_preferences[i][j] * teacher_vars[i][j] for j in courses]) <= mean + delta, f"Fairness_Upper_{i}"
+    # Create a dictionary to track the number of occurrences of each course name for each teacher
+    course_name_count = {(i, course_name): lpSum([teacher_vars[i][j] for j in courses if course_names[j] == course_name]) for i in teachers for course_name in set(course_names)}
+
+    # No teacher can be given multiple courses with the same name
+    for i in teachers:
+        for course_name in set(course_names):
+            prob += course_name_count[(i, course_name)] <= 2, f"No_Three_Same_Courses_{i}_{course_name}"
 
     # Teachers are excluded from particular courses
     for i in teachers:
@@ -127,7 +179,7 @@ def load_data(file_like_object):
 
     # Solve the LP problem
     prob.solve()
-        
+
     # Print the solution
     # for i in teachers:
     #     teacher_score = 0
@@ -137,15 +189,34 @@ def load_data(file_like_object):
     #             print(
     #                 f"Teacher {i} assigned to course {course_names[j]} with preference {teacher_preferences[i][j]} and period {course_period[j]}")
     #     print(f"Teacher {i} has a total preference score of {teacher_score}")
-        
+
     # Retrieve the solution and organize it in a nested dictionary
     solution = {}
+    send_error = False
+    teacher_violators = {}
+    teacher_additions = {}
+
+    if constraints_satisfied(course_names, teachers_names, teacher_preferences) != True:
+        teacher_violators, teacher_additions = constraints_satisfied(course_names, teachers_names, teacher_preferences)
+        send_error = True
+
     for i in teachers:
-        solution[teachers_names[i]] = []
+        teacher_score = 0
+        solution[teachers_names[i]] = { 'course_names': [], 'teacher_score': 0 }
         for j in courses:
             if teacher_vars[i][j].varValue == 1:
-                solution[teachers_names[i]].append(course_names[j])
-    return solution
+                solution[teachers_names[i]]['course_names'].append(course_names[j])
+                teacher_score += teacher_preferences[i][j]
+        solution[teachers_names[i]]['teacher_score'] = teacher_score
+        
+        if len(solution[teachers_names[i]]['course_names']) != 0:
+            solution[teachers_names[i]]['average_score'] = round(teacher_score / len(solution[teachers_names[i]]['course_names']), 2)
+        else:
+            solution[teachers_names[i]]['average_score'] = 0
+
+    num_unique_courses = num_of_unique_courses(course_names)
+
+    return {"solution":solution, "send_error":send_error, "teacher_violators":teacher_violators, "teacher_additions":teacher_additions, "num_unique_courses": num_unique_courses}
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -155,8 +226,18 @@ def index():
 
         if file:
             file_like_object = StringIO(file_data)
-            solution = load_data(file_like_object)
+            all_data = load_data(file_like_object)
+            solution = all_data["solution"]
+            send_error = all_data["send_error"]
+            teacher_violators = all_data["teacher_violators"]
+            teacher_additions = all_data["teacher_additions"]
+            num_unique_courses = all_data["num_unique_courses"]
+
+            if send_error:
+                return render_template("error.html", teacher_violators=teacher_violators, teacher_additions=teacher_additions, num_unique_courses=num_unique_courses)
+
             return render_template("teacher_assignments.html", solution=solution)
+
     return """
         <html>
     <head>
@@ -170,6 +251,11 @@ def index():
             h1 {
                 color: #333333;
                 font-size: 36px;
+                margin-bottom: 5px;
+            }
+            h2 {
+                color: #333333;
+                font-size: 12px;
                 margin-bottom: 20px;
             }
             p {
@@ -205,7 +291,8 @@ def index():
         </style>
     </head>
     <body>
-        <h1>Teacher Course Distributor</h1>
+        <h1>Teacher Course Distributor V4</h1>
+        <h2>Last Updated: 12/14/2023</h2>
         <p>This program is designed to consider all teacher preferences for desired courses and will automatically construct a schedule which maximizes overall teacher preference. With the power of mathematics, we can create a schedule that satisfies all department members as much as possible.</p>
         <p>Please download this <a href="https://docs.google.com/forms/d/1KDXckJ5_bVsctTY4rKxEKv4ZI01ZtPOx4xfo-_FikcE/copy" target="_blank">Google Form</a> and have all of your department members fill it out.</p>
         <p>Once all members have completed the form, download the spreadsheet as a .CSV file and upload it below:</p>
@@ -218,6 +305,6 @@ def index():
 </html>
 
     """
-    
+
 if __name__ == "__main__":
     app.run(debug=True)
