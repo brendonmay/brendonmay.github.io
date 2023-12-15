@@ -1424,6 +1424,14 @@ function getClassData(maple_class) {
             'bossPercent': 0
         },
 
+        'Khali': {
+            'attPercent': 4,
+            'iedPercent': [20, 20, 20],
+            'dmgPercent': 0,
+            'bossPercent': 30,
+            'critDmg': 28
+        },
+
         'Kinesis': {
             'attPercent': 14,
             'iedPercent': [20],

@@ -1386,6 +1386,10 @@ function getPrimaryAndSecondaryStatType(maple_class) {
             'primaryStatType': 'INT',
             'secondaryStatType': 'LUK'
         },
+        'Khali': {
+            'primaryStatType': 'LUK',
+            'secondaryStatType': 'DEX'
+        },
         'Kinesis': {
             'primaryStatType': 'INT',
             'secondaryStatType': 'LUK'
@@ -1474,6 +1478,7 @@ function getMultiplier(weapon_type, maple_class) {
         'bow': 1.30, //good
         'cane': 1.30, //good
         'cannon': 1.50, //good
+        'chakram': 1.30,
         'claw': 1.75, //good
         'cross_bow': 1.35, //good
         'dagger': 1.30, //good
@@ -1507,7 +1512,7 @@ function getMultiplier(weapon_type, maple_class) {
         'wand': 1.00, //good
         'wand_adventure': 1.20, //good
         'whip_blade': 1.3125, //good
-        'whispershot': 1.30, //good
+        'whispershot': 1.30 //good
     };
 
     if (maple_class == 'Hero') {
@@ -2367,6 +2372,14 @@ function getClassData(maple_class) {
             'dmgPercent': 0,
             'bossPercent': 0,
             'critDmg': 0
+        },
+
+        'Khali': {
+            'attPercent': 4,
+            'iedPercent': [20, 20, 20],
+            'dmgPercent': 0,
+            'bossPercent': 30,
+            'critDmg': 28
         },
 
         'Kinesis': {
