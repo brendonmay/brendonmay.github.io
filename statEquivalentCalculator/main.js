@@ -82,7 +82,7 @@ function statAmount(without_perc, flat, perc, xenon_primary_bool, luk2_secondary
     return (without_perc - flat) * (perc) + flat
 }
 
-function damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc) {
+function damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) {
     if (maple_class == "Xenon") { //flat_primary, primary_without_perc, primary_perc are all objects with keys 1, 2, 3
         var primary_stats = statAmount(primary_without_perc, flat_primary, primary_perc, true)
         var primary1 = primary_stats[1]
@@ -90,7 +90,8 @@ function damage(maple_class, attack_without_perc, attack_perc, flat_primary, pri
         var primary3 = primary_stats[3]
         var att = statAmount(attack_without_perc, 0, attack_perc)
 
-        return (4 * primary1 + 4 * primary2 + 4 * primary3) * att
+        return (4 * primary1 + 4 * primary2 + 4 * primary3) * att * (1 + (total_dmg + boss_dmg) / 100)
+        
     }
     else if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
         var primary = statAmount(primary_without_perc, flat_primary, primary_perc)
@@ -99,7 +100,8 @@ function damage(maple_class, attack_without_perc, attack_perc, flat_primary, pri
         var secondary2 = secondary_stats[2]
         var att = statAmount(attack_without_perc, 0, attack_perc)
 
-        return (4 * primary + secondary1 + secondary2) * att
+        return (4 * primary + secondary1 + secondary2) * att * (1 + (total_dmg + boss_dmg) / 100)
+        
     }
     else if (maple_class == "Demon Avenger") {
         var level = parseInt(document.getElementById('level').value)
@@ -108,7 +110,7 @@ function damage(maple_class, attack_without_perc, attack_perc, flat_primary, pri
         var str = statAmount(sec_without_perc, flat_sec, sec_perc)
         var hp = statAmount(primary_without_perc, flat_primary, primary_perc)
 
-        return (Math.floor(purehp / 3.5) + 0.8 * Math.floor((hp - purehp) / 3.5) + str) * att
+        return (Math.floor(purehp / 3.5) + 0.8 * Math.floor((hp - purehp) / 3.5) + str) * att * (1 + (total_dmg + boss_dmg) / 100)
     }
     else {
         if (maple_class == "Kanna") {
@@ -119,15 +121,20 @@ function damage(maple_class, attack_without_perc, attack_perc, flat_primary, pri
         }
         var primary = statAmount(primary_without_perc, flat_primary, primary_perc)
         var att = statAmount(attack_without_perc, 0, attack_perc)
-        return (4 * primary + secondary) * att
+
+        return (4 * primary + secondary) * att * (1 + (total_dmg + boss_dmg) / 100)
     }
 
 }
 
-function determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc) {
-    var current_dmg = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc)
+function determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) {
+    var current_dmg = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg)
 
-    var att_diff = damage(maple_class, attack_without_perc + 1, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
+    var att_diff = damage(maple_class, attack_without_perc + 1, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
+
+    //update determinestatequivalences with , boss_dmg, total_dmg parameters
+    var boss_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg + 1, total_dmg) - current_dmg
+    var dmg_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg + 1) - current_dmg
 
     if (maple_class == "Xenon") {
         var adjusted_perc_all = { 1: primary_perc[1] + 0.01, 2: primary_perc[2] + 0.01, 3: primary_perc[3] + 0.01 }
@@ -136,38 +143,38 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
         var adjusted_primary_without_perc_2 = { 1: primary_without_perc[1], 2: primary_without_perc[2] + 1, 3: primary_without_perc[3] }
         var adjusted_primary_without_perc_3 = { 1: primary_without_perc[1], 2: primary_without_perc[2], 3: primary_without_perc[3] + 1 }
 
-        var stat_diff_1 = damage(maple_class, attack_without_perc, attack_perc, flat_primary, adjusted_primary_without_perc_1, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
-        var stat_diff_2 = damage(maple_class, attack_without_perc, attack_perc, flat_primary, adjusted_primary_without_perc_2, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
-        var stat_diff_3 = damage(maple_class, attack_without_perc, attack_perc, flat_primary, adjusted_primary_without_perc_3, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
+        var stat_diff_1 = damage(maple_class, attack_without_perc, attack_perc, flat_primary, adjusted_primary_without_perc_1, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
+        var stat_diff_2 = damage(maple_class, attack_without_perc, attack_perc, flat_primary, adjusted_primary_without_perc_2, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
+        var stat_diff_3 = damage(maple_class, attack_without_perc, attack_perc, flat_primary, adjusted_primary_without_perc_3, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
 
 
         var sec_diff = 0
-        var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, adjusted_perc_all, flat_sec, sec_without_perc, sec_perc) - current_dmg
+        var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, adjusted_perc_all, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
 
     }
     else if (maple_class == "Shadower" || maple_class == "Dual Blade" || maple_class == "Cadena" || maple_class == "Kanna") {
-        var stat_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc + 1, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
+        var stat_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc + 1, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
 
         if (maple_class == "Kanna") {
             var adjusted_luk_without_perc = { 1: sec_without_perc[1] + 1, 2: sec_without_perc[2] }
-            var luk_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, adjusted_luk_without_perc, sec_perc) - current_dmg
+            var luk_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, adjusted_luk_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
 
             var old_att_gain = sec_without_perc[2] * (1 + sec_perc[2]) / 700
             var new_att_gain = (sec_without_perc[2] + 1) * (1 + sec_perc[2]) / 700
             var new_att_without_perc = attack_without_perc - old_att_gain + new_att_gain
 
             var hp_to_att = 700 / sec_perc[2]
-            var hp_diff = damage(maple_class, new_att_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
+            var hp_diff = damage(maple_class, new_att_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
 
             var sec_diff = { luk_diff, hp_diff }
             var sec_perc_adjusted = { 1: sec_perc[1] + 0.01, 2: sec_perc[2] }
         }
         else {
             var adjusted_dex_without_perc = { 1: sec_without_perc[1] + 1, 2: sec_without_perc[2] }
-            var dex_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, adjusted_dex_without_perc, sec_perc) - current_dmg
+            var dex_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, adjusted_dex_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
 
             var adjusted_str_without_perc = { 1: sec_without_perc[1], 2: sec_without_perc[2] + 1 }
-            var str_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, adjusted_str_without_perc, sec_perc) - current_dmg
+            var str_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, adjusted_str_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
 
             var sec_diff = { dex_diff, str_diff }
 
@@ -175,18 +182,18 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
         }
 
 
-        var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc + 0.01, flat_sec, sec_without_perc, sec_perc_adjusted) - current_dmg
+        var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc + 0.01, flat_sec, sec_without_perc, sec_perc_adjusted, boss_dmg, total_dmg) - current_dmg
 
     }
     else {
-        var stat_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc + 1, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
-        var sec_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc + 1, sec_perc) - current_dmg
+        var stat_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc + 1, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg
+        var sec_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc + 1, sec_perc, boss_dmg, total_dmg) - current_dmg
         if (maple_class == "Demon Avenger") {
-            var stat_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc + 1, primary_perc, flat_sec, sec_without_perc, sec_perc) - current_dmg
-            var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc + 0.01, sec_perc) - current_dmg
+            var stat_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc + 1000, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg) - current_dmg //add 1000HP
+            var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc + 0.01, sec_perc, boss_dmg, total_dmg) - current_dmg
         }
         else {
-            var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc + 0.01, flat_sec, sec_without_perc, sec_perc + 0.01) - current_dmg
+            var perc_all_diff = damage(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc + 0.01, flat_sec, sec_without_perc, sec_perc + 0.01, boss_dmg, total_dmg) - current_dmg
         }
 
 
@@ -213,8 +220,11 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
     // }
     else if (maple_class == "Demon Avenger") {// Demon avenger x STR = 1 att, x att = 1000 HP 
         var att_equiv = att_diff / stat_diff
+        var sec_equiv = sec_diff / stat_diff
+        var dmg_equiv = dmg_diff / stat_diff
+        var boss_equiv = boss_diff / stat_diff
 
-        return { att_equiv }
+        return { att_equiv, dmg_equiv, boss_equiv, sec_equiv }
     }
     else if (maple_class == "Kanna") {
         var att_equiv = att_diff / stat_diff
@@ -231,6 +241,8 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
     if (maple_class != "Xenon") {
         var att_equiv = att_diff / stat_diff
         var perc_all_equiv = perc_all_diff / stat_diff
+        var dmg_equiv = dmg_diff / stat_diff
+        var boss_equiv = boss_diff / stat_diff
     }
     else {
         var att_equiv_1 = att_diff / stat_diff_1
@@ -241,11 +253,21 @@ function determineStatEquivalences(maple_class, attack_without_perc, attack_perc
         var perc_all_equiv_2 = perc_all_diff / stat_diff_2
         var perc_all_equiv_3 = perc_all_diff / stat_diff_3
 
+        var dmg_equiv_1 = dmg_diff / stat_diff_1
+        var dmg_equiv_2 = dmg_diff / stat_diff_3
+        var dmg_equiv_3 = dmg_diff / stat_diff_3
+
+        var boss_equiv_1 = boss_diff / stat_diff_1
+        var boss_equiv_2 = boss_diff / stat_diff_2
+        var boss_equiv_3 = boss_diff / stat_diff_3
+
         var perc_all_equiv = (perc_all_equiv_1 + perc_all_equiv_2 + perc_all_equiv_3) / 3
         var att_equiv = (att_equiv_1 + att_equiv_2 + att_equiv_3) / 3
+        var dmg_equiv = (dmg_equiv_1 + dmg_equiv_2 + dmg_equiv_3) / 3
+        var boss_equiv = (boss_equiv_1 + boss_equiv_2 + boss_equiv_3) / 3
     }
 
-    return { sec_equiv, perc_all_equiv, att_equiv }
+    return { sec_equiv, perc_all_equiv, att_equiv, dmg_equiv, boss_equiv }
 }
 
 function loadLocalStorage() {
@@ -3639,6 +3661,8 @@ function optimizeWSE() {
     var multiplier = getMultiplier(weapon_type, maple_class);
     // var boss_percent = parseInt(document.getElementById('boss_percent').value);
     var final_damage_percent = parseInt(document.getElementById('final_damage_percent').value);
+    var boss_dmg = parseInt(document.getElementById('boss_percent').value);
+    var total_dmg = parseInt(document.getElementById('damage_percent').value);
 
     var damage_percent = parseInt(document.getElementById('damage_percent').value);
     var primary_stat = parseInt(document.getElementById('primary_stat').value);
@@ -3969,7 +3993,7 @@ function optimizeWSE() {
     var attack = Math.floor(determineAttAmount(upperShownDamage, multiplier, stat_value, parseInt(document.getElementById('damage_percent').value), final_damage_percent) / (current_attack_percent / 100));
 
     //determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
-    var statEquivalences = determineStatEquivalences(maple_class, attack, current_attack_percent / 100, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc)
+    var statEquivalences = determineStatEquivalences(maple_class, attack, current_attack_percent / 100, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg)
 
     document.getElementById('resultSection').style.display = ''
     if (maple_class == "Kanna") {
@@ -3978,6 +4002,7 @@ function optimizeWSE() {
         <div id='text-center result'>
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
+            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.luk_equiv)} LUK</div>
             <div class="test">1 Main Stat = ${roundUp(statEquivalences.sec_equiv.hp_equiv)} HP</div>
         </div>
@@ -3989,6 +4014,7 @@ function optimizeWSE() {
         <div id='text-center result'>
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
+            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.dex_equiv)} DEX</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.str_equiv)} STR</div>
         </div>
@@ -4000,6 +4026,17 @@ function optimizeWSE() {
         <div id='text-center result'>
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
+            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
+        </div>
+        `
+    }
+    else if (maple_class == "Demon Avenger") { //come return { att_equiv, dmg_equiv, boss_equiv }, x STR = 1 att, x att = 1000 HP
+        document.getElementById('result').innerHTML =
+            `
+        <div id='text-center result'>
+            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv) * 1000} HP</div>
+            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv) * 1000} HP</div>
+            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv) * 1000} HP</div>
         </div>
         `
     }
@@ -4009,6 +4046,7 @@ function optimizeWSE() {
         <div id='text-center result'>
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
+            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv)} Secondary Stat</div>
         </div>
         `
