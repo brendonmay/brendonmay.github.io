@@ -3,7 +3,7 @@ When starting project from scratch:
     - Intall nvm for windows
     - In project terminal: nvm install 10.24.0                        
     - In project terminal: nvm use 10.24.0
-    - Open PowerShell as admin: 
+    - Open PowerShell as admin: Set-ExecutionPolicy RemoteSigned
     - In project terminal: npm install -g npm@6.14.13
     - then run "npm install" to install all of the dependencies
 
