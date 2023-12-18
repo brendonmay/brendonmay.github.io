@@ -869,6 +869,7 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
                 }
             }
         }
+	console.log('# of solutions: ', solutions.length)
         if (maple_class != "da") {
             var probability = 0
             for (var i = 0; i < solutions.length; i++) {
