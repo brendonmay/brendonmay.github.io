@@ -154,7 +154,7 @@
             <div class='form-row' id="statequivalences">
                 <div class="input-group" id="all_stat_div">
                     <span class="input-group-text no-rad">1 All Stat % = </span>
-                    <input type="number" class="form-control text-align-right" id="all_stat" value=8
+                    <input type="number" class="form-control text-align-right" id="all_stat" value=9
                         step=0.01>
                     <span class="input-group-text white">Main Stat</span>
                 </div>
@@ -166,7 +166,7 @@
                 </div>
                 <div class="input-group" id="secondary_stat_div">
                     <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="secondary_stat" value=10
+                    <input type="number" class="form-control text-align-right" id="secondary_stat" value=11
                         step=0.01>
                     <span class="input-group-text white">Secondary Stat</span>
                 </div>
@@ -193,6 +193,12 @@
                     <input type="number" class="form-control text-align-right" id="hp_stat" value=110
                         step=0.01>
                     <span class="input-group-text white">HP</span>
+                </div>
+                <div class="input-group" id="boss_stat_div" hidden>
+                    <span class="input-group-text no-rad">1 % Damage =</span>
+                    <input type="number" class="form-control text-align-right" id="boss_stat" value=15
+                        step=0.01>
+                    <span class="input-group-text white">Main Stat</span>
                 </div>
             </div>
             <div class='form-row mt-14'>
@@ -271,9 +277,14 @@
                 </div>
             </div>
             <div class='form-row'>
-                <div class='form-group col text-center'>
+                <div class='form-group col text-center calc-button-margin'>
                     <button id='calculateButton' type="submit"
                         class="btn btn-primary btnSubmit btn-danger">Calculate</button>
+                </div>
+            </div>
+            <div class="'form-row" id="progress_div" style="display: none;">
+                <div class='form-group col text-center remove-top-margin' id="progress">
+                    <p>Progress = 0.00%</p>
                 </div>
             </div>
         </form>
