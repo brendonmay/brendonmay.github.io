@@ -188,17 +188,6 @@ body{
 .remove-bottom-margin{
     margin-bottom: 0!important;
 }
-
-.remove-top-margin{
-    margin-top: 0!important;
-    padding-top: 0!important;
-    color: #D44D5C;
-}
-
-.calc-button-margin{
-    margin-bottom: 0.5rem
-}
-
 .nav-item:hover, .navbar-text:hover, .active{
     color:#F5E9E2!important
 }
