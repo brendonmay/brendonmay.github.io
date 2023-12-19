@@ -118,6 +118,10 @@
                         <option value='meisterFusion'>Fusion (Meister Craftsman)</option>
                     </select>
                 </div>
+                <div id="base_attack_div" class='form-group col' style="display: none;">
+                    <label for="base_attack">Base Attack</label>
+                    <input type="number" class="form-control text-align-center" id="base_attack" value=149 min=0 step=1>
+                </div>
                 <div class='form-group col' id="item_level_div">
                     <label for="item_level">Item Level</label>
                     <select id="item_level" class="form-control">
@@ -130,7 +134,13 @@
                         <option value="250+">250+</option>
                     </select>
                 </div>
-
+                <div class='form-group col' id="w_level_div" style="display: none;">
+                    <label for="w_level">Item Level</label>
+                    <select id="w_level" class="form-control">
+                        <option value="160-199">160-199</option>
+                        <option value="200+" selected>200+</option>
+                    </select>
+                </div>
             </div>
             <div class='form-row'>
                 <div class='form-group col text-center remove-bottom-margin'>
@@ -154,7 +164,7 @@
             <div class='form-row' id="statequivalences">
                 <div class="input-group" id="all_stat_div">
                     <span class="input-group-text no-rad">1 All Stat % = </span>
-                    <input type="number" class="form-control text-align-right" id="all_stat" value=8
+                    <input type="number" class="form-control text-align-right" id="all_stat" value=9
                         step=0.01>
                     <span class="input-group-text white">Main Stat</span>
                 </div>
@@ -166,7 +176,7 @@
                 </div>
                 <div class="input-group" id="secondary_stat_div">
                     <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="secondary_stat" value=10
+                    <input type="number" class="form-control text-align-right" id="secondary_stat" value=11
                         step=0.01>
                     <span class="input-group-text white">Secondary Stat</span>
                 </div>
@@ -193,6 +203,12 @@
                     <input type="number" class="form-control text-align-right" id="hp_stat" value=110
                         step=0.01>
                     <span class="input-group-text white">HP</span>
+                </div>
+                <div class="input-group" id="boss_stat_div" hidden>
+                    <span class="input-group-text no-rad">1 % Damage =</span>
+                    <input type="number" class="form-control text-align-right" id="boss_stat" value=15
+                        step=0.01>
+                    <span class="input-group-text white">Main Stat</span>
                 </div>
             </div>
             <div class='form-row mt-14'>
@@ -271,9 +287,14 @@
                 </div>
             </div>
             <div class='form-row'>
-                <div class='form-group col text-center'>
+                <div class='form-group col text-center calc-button-margin'>
                     <button id='calculateButton' type="submit"
                         class="btn btn-primary btnSubmit btn-danger">Calculate</button>
+                </div>
+            </div>
+            <div class="'form-row" id="progress_div" style="display: none;">
+                <div class='form-group col text-center remove-top-margin' id="progress">
+                    <p>Progress = 0.00%</p>
                 </div>
             </div>
         </form>

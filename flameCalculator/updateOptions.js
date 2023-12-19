@@ -1,12 +1,34 @@
 const DA_ATTACK_TIER_SELECTOR = '#da_attack_tier';
 const HP_TIER_SELECTOR = '#hp_tier';
 const ITEM_LEVEL_SELECTOR = '#item_level';
+
 function updateAttackTierOptions(flame_type, flame_advantage) {
     const maxAttackTierIndex = getUpperTierLimit(flame_type, !flame_advantage) - 1;
     const attackTierSelect = document.getElementById('attack_tier');
     for (let i = 0; i <= 7; i++) {
         attackTierSelect.options[i].disabled = i > maxAttackTierIndex;
     }
+}
+
+function getUpperTierLimit(flame_type, non_advantaged_item) {
+    const flameAdvantageAdjustment = non_advantaged_item ? 2 : 0;
+    for (let i = 8; i >= 3; i--) {
+        if (TIER_PROBABILITIES[flame_type][i] > 0) {
+            // +1 because the loop uses < and not <=
+            return i - flameAdvantageAdjustment + 1;
+        }
+    }
+    return 8;
+}
+
+function getLowerTierLimit(flame_type, non_advantaged_item) {
+    const flameAdvantageAdjustment = non_advantaged_item ? 2 : 0;
+    for (let i = 3; i <= 8; i++) {
+        if (TIER_PROBABILITIES[flame_type][i] > 0) {
+            return i - flameAdvantageAdjustment;
+        }
+    }
+    return 3;
 }
 
 function updateItemLevels(maple_class) {
@@ -80,6 +102,11 @@ function showArmorInputsForClass(maple_class) {
     document.getElementById('str_stat_div').hidden = !isDualStat;
     document.getElementById('dex_stat_div').hidden = !isDualStat;
     document.getElementById('secondary_stat_div').hidden = !isOther;
+    const baseAttack = document.getElementById('base_attack_div');
+    baseAttack.style.display = 'none';
+
+    const wepLevel = document.getElementById('w_level_div');
+    wepLevel.style.display = 'none';
 
     if (isKanna) {
         document.getElementById("all_stat").value = 8
@@ -102,23 +129,40 @@ function onItemTypeChange() {
     var item_type = document.getElementById('item_type').value
     var flame_type = document.getElementById('flame_type').value
     var flame_advantage = document.getElementById('flame-advantaged').checked
-    if (item_type === 'armor') {
-        if (maple_class === "da") {
-            updateDAOptions(flame_type, flame_advantage)
-        }
+    if (maple_class != "da") {
         updateItemLevels(maple_class);
         showArmorInputsForClass(maple_class);
         document.getElementById('weapon_desired_stats').hidden = true;
         document.getElementById('item_level_div').hidden = false;
-    } else {
-        document.getElementById('weapon_desired_stats').hidden = false;
-        document.getElementById('armor_desired_stats').hidden = true;
-        document.getElementById('statequivalences').hidden = true;
-        document.getElementById('statequivalences_title').hidden = true;
-        document.getElementById('item_level_div').hidden = true;
-        document.getElementById("da_desired_stats").hidden = true
+        document.getElementById('boss_stat_div').hidden = true;
 
-        updateAttackTierOptions(flame_type, flame_advantage);
+        if (item_type === 'weapon') {
+            document.getElementById('boss_stat_div').hidden = false;
+            const baseAttack = document.getElementById('base_attack_div');
+            baseAttack.style.display = 'block';
+
+            const wepLevel = document.getElementById('w_level_div');
+            wepLevel.style.display = 'block';
+            document.getElementById('item_level_div').hidden = true;
+        }
+    }
+    else {
+        document.getElementById('item_level_div').hidden = true;
+        if (item_type === 'armor') {
+            updateDAOptions(flame_type, flame_advantage)
+            document.getElementById("da_desired_stats").hidden = false
+            document.getElementById('weapon_desired_stats').hidden = true;
+            document.getElementById('armor_desired_stats').hidden = true;
+        }
+        else {
+            document.getElementById('weapon_desired_stats').hidden = false;
+            document.getElementById('armor_desired_stats').hidden = true;
+            document.getElementById('statequivalences').hidden = true;
+            document.getElementById('statequivalences_title').hidden = true;
+            document.getElementById("da_desired_stats").hidden = true
+
+            updateAttackTierOptions(flame_type, flame_advantage);
+        }
     }
 }
 
@@ -126,13 +170,49 @@ function onClassChange() {
     var maple_class = document.getElementById("maple_class").value
     var flame_type = document.getElementById("flame_type").value
     var flame_advantage = document.getElementById('flame-advantaged')
+    var item_type = document.getElementById('item_type').value
 
-    if (document.getElementById("item_type").value === "armor") {
-        if (maple_class === "da") {
-            updateDAOptions(flame_type, flame_advantage);
+    if (maple_class === "da") {
+
+        document.getElementById('item_level_div').hidden = true;
+
+        if (item_type === 'armor') {
+            updateDAOptions(flame_type, flame_advantage)
+            document.getElementById("da_desired_stats").hidden = false
+            document.getElementById('weapon_desired_stats').hidden = true
+            document.getElementById('statequivalences').hidden = true
+            document.getElementById('statequivalences_title').hidden = true
+            document.getElementById('armor_desired_stats').hidden = true;
         }
+
+        else {
+            document.getElementById('weapon_desired_stats').hidden = false;
+            document.getElementById('armor_desired_stats').hidden = true;
+            document.getElementById('statequivalences').hidden = true;
+            document.getElementById('statequivalences_title').hidden = true;
+            document.getElementById("da_desired_stats").hidden = true
+
+            updateAttackTierOptions(flame_type, flame_advantage);
+        }
+    }
+
+    else {
         updateItemLevels(maple_class);
         showArmorInputsForClass(maple_class);
+        document.getElementById('weapon_desired_stats').hidden = true;
+        document.getElementById('item_level_div').hidden = false;
+        document.getElementById('boss_stat_div').hidden = true;
+
+
+        if (item_type === 'weapon') {
+            document.getElementById('boss_stat_div').hidden = false;
+            const baseAttack = document.getElementById('base_attack_div');
+            baseAttack.style.display = 'block';
+
+            const wepLevel = document.getElementById('w_level_div');
+            wepLevel.style.display = 'block';
+            document.getElementById('item_level_div').hidden = true;
+        }
     }
 }
 
@@ -141,7 +221,7 @@ function onFlameAdvantagedChange() {
     var item_type = document.getElementById('item_type').value
     var maple_class = document.getElementById('maple_class').value
     var flame_advantage = document.getElementById('flame-advantaged').checked
-    if (item_type === 'weapon') {
+    if (maple_class === "da" && item_type === 'weapon') {
         updateAttackTierOptions(flame_type, flame_advantage);
     }
     if (maple_class === "da" && item_type === 'armor') {

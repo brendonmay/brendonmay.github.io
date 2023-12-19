@@ -407,6 +407,7 @@ function loadLocalStorage() {
         }
         k++;
     }
+    document.getElementById('hp_arcane_div').hidden = false;
 }
 function saveToLocalStorage(maple_class) {
     var obj = {};
@@ -3124,6 +3125,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (window.localStorage.getItem('data') !== null) {
         loadLocalStorage(); //load data from localstorage //here
     }
+    
+    document.getElementById('hp_arcane_div').hidden = false;
 
     //checkbox behaviour
     // document.getElementById("solus2").addEventListener("click", function () {
@@ -4015,9 +4018,9 @@ function optimizeWSE() {
         <div id='text-center result'>
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
-            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.luk_equiv)} LUK</div>
             <div class="test">1 Main Stat = ${roundUp(statEquivalences.sec_equiv.hp_equiv)} HP</div>
+            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
         </div>
         `
     }
@@ -4027,9 +4030,9 @@ function optimizeWSE() {
         <div id='text-center result'>
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
-            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.dex_equiv)} DEX</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.str_equiv)} STR</div>
+            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
         </div>
         `
     }
@@ -4059,8 +4062,8 @@ function optimizeWSE() {
         <div id='text-center result'>
             <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
             <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
-            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
             <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv)} Secondary Stat</div>
+            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
         </div>
         `
     }
