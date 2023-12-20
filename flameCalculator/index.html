@@ -164,50 +164,42 @@
             <div class='form-row' id="statequivalences">
                 <div class="input-group" id="all_stat_div">
                     <span class="input-group-text no-rad">1 All Stat % = </span>
-                    <input type="number" class="form-control text-align-right" id="all_stat" value=9
-                        step=0.01>
+                    <input type="number" class="form-control text-align-right" id="all_stat" value=9 step=0.01>
                     <span class="input-group-text white">Main Stat</span>
                 </div>
                 <div class="input-group" id="attack_div">
                     <span class="input-group-text no-rad">1 Attack = </span>
-                    <input type="number" class="form-control text-align-right" id="attack" value=3
-                        step=0.01>
+                    <input type="number" class="form-control text-align-right" id="attack" value=3 step=0.01>
                     <span class="input-group-text white">Main Stat</span>
                 </div>
                 <div class="input-group" id="secondary_stat_div">
                     <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="secondary_stat" value=11
-                        step=0.01>
+                    <input type="number" class="form-control text-align-right" id="secondary_stat" value=11 step=0.01>
                     <span class="input-group-text white">Secondary Stat</span>
                 </div>
                 <div class="input-group" id="luk_stat_div" hidden>
                     <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="luk_stat" value=10
-                        step=0.01>
+                    <input type="number" class="form-control text-align-right" id="luk_stat" value=10 step=0.01>
                     <span class="input-group-text white">LUK</span>
                 </div>
                 <div class="input-group" id="dex_stat_div" hidden>
                     <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="dex_stat" value=10
-                        step=0.01>
+                    <input type="number" class="form-control text-align-right" id="dex_stat" value=10 step=0.01>
                     <span class="input-group-text white">DEX</span>
                 </div>
                 <div class="input-group" id="str_stat_div" hidden>
                     <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="str_stat" value=10
-                        step=0.01>
+                    <input type="number" class="form-control text-align-right" id="str_stat" value=10 step=0.01>
                     <span class="input-group-text white">STR</span>
                 </div>
                 <div class="input-group" id="hp_stat_div" hidden>
                     <span class="input-group-text no-rad">1 Main Stat =</span>
-                    <input type="number" class="form-control text-align-right" id="hp_stat" value=110
-                        step=0.01>
+                    <input type="number" class="form-control text-align-right" id="hp_stat" value=110 step=0.01>
                     <span class="input-group-text white">HP</span>
                 </div>
                 <div class="input-group" id="boss_stat_div" hidden>
                     <span class="input-group-text no-rad">1 % Damage =</span>
-                    <input type="number" class="form-control text-align-right" id="boss_stat" value=15
-                        step=0.01>
+                    <input type="number" class="form-control text-align-right" id="boss_stat" value=15 step=0.01>
                     <span class="input-group-text white">Main Stat</span>
                 </div>
             </div>
@@ -292,9 +284,66 @@
                         class="btn btn-primary btnSubmit btn-danger">Calculate</button>
                 </div>
             </div>
-            <div class="'form-row" id="progress_div" style="display: none;">
+
+            <div class="form-row" id="progress_div" style="display: none;">
                 <div class='form-group col text-center remove-top-margin' id="progress">
                     <p>Progress = 0.00%</p>
+                </div>
+            </div>
+            <div id="flame_score_div" class="form-row container containThree">
+                <div class='form-group col-12 text-center'>
+                    <div class="form-check ">
+                        <input class="form-check-input" type="checkbox" value="" id="flamescorecheck">
+                        <label class="form-check-label title-check" for="flamescorecheck">
+                            Want to check your item's current flame score?
+                        </label>
+                    </div>
+                </div>
+                <div class="col-4 form-group" id="main_flame_div" hidden>
+                    <label for="main_flame"> Main Stat </label>
+                    <input class="form-control" type="number" id="main_flame" name="main_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="sec_flame_div" hidden>
+                    <label for="sec_flame"> Secondary Stat </label>
+                    <input class="form-control" type="number" id="sec_flame" name="sec_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="dex_flame_div" hidden>
+                    <label for="dex_flame"> DEX </label>
+                    <input class="form-control" type="number" id="dex_flame" name="dex_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="str_flame_div" hidden>
+                    <label for="str_flame"> STR </label>
+                    <input class="form-control" type="number" id="str_flame" name="str_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="luk_flame_div" hidden>
+                    <label for="luk_flame"> LUK </label>
+                    <input class="form-control" type="number" id="luk_flame" name="luk_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="hp_flame_div" hidden>
+                    <label for="hp_flame"> HP </label>
+                    <input class="form-control" type="number" id="hp_flame" name="hp_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="att_flame_div" hidden>
+                    <label for="att_flame"> Attack Power</label>
+                    <input class="form-control" type="number" id="att_flame" name="att_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="boss_flame_div" hidden>
+                    <label for="boss_flame"> Boss % </label>
+                    <input class="form-control" type="number" id="boss_flame" name="boss_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="dmg_flame_div" hidden>
+                    <label for="dmg_flame"> Damage % </label>
+                    <input class="form-control" type="number" id="dmg_flame" name="dmg_flame" value=0>
+                </div>
+                <div class="col-4 form-group" id="all_flame_div" hidden>
+                    <label for="all_flame"> All Stat % </label>
+                    <input class="form-control" type="number" id="all_flame" name="all_flame" value=0>
+                </div>
+                <div id="flamescore_div" class="col-12"></div>
+                <div class='form-row col-12' id="flamebutton_div" hidden>
+                    <div class='form-group col-12 text-center calc-button-margin'>
+                        <button id='flameButton' type="submit" class="btn btn-light btn-sm">Calculate</button>
+                    </div>
                 </div>
             </div>
         </form>

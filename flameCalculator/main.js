@@ -51,6 +51,19 @@ let hp_stat_per_tier = {
     "250+": 700,
 }
 
+function scrollToBottom() {
+    // Get the height of the entire document
+    const body = document.body;
+    const html = document.documentElement;
+    const documentHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+    // Scroll to the bottom smoothly
+    window.scrollTo({
+        top: documentHeight,
+        behavior: 'smooth'
+    });
+}
+
 function getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class, solutions) {
     if (maple_class != "da") {
         var probability = 0
@@ -493,6 +506,109 @@ function checkRatios(maple_class, stat_equivalences) {
     return { zeroes, remove_all_stat, remove_sec, remove_att }
 }
 
+function showItemScore(maple_class, direction, item_type) {
+    const isKanna = maple_class === "kanna";
+    const isXenon = maple_class === "xenon";
+    const isDualStat = maple_class === "db" || maple_class === "shadower" || maple_class === "cadena";
+    const isDA = maple_class === "da";
+    const isOther = maple_class === "other";
+
+    if (direction == 'show' && maple_class != "da") {
+        document.getElementById('hp_flame_div').hidden = !isKanna;
+        document.getElementById('luk_flame_div').hidden = !isKanna;
+        document.getElementById('str_flame_div').hidden = !isDualStat;
+        document.getElementById('dex_flame_div').hidden = !isDualStat;
+        document.getElementById('sec_flame_div').hidden = !isOther;
+
+        document.getElementById('all_flame_div').hidden = false
+        document.getElementById('att_flame_div').hidden = false
+        document.getElementById('main_flame_div').hidden = false
+
+        document.getElementById('dmg_flame_div').hidden = false
+        document.getElementById('boss_flame_div').hidden = false
+
+        document.getElementById('flamebutton_div').hidden = false
+        document.getElementById('flamescore_div').hidden = false
+
+        if (item_type == 'armor') {
+            document.getElementById('dmg_flame_div').hidden = true
+            document.getElementById('boss_flame_div').hidden = true
+        }
+    }
+
+    else {
+        document.getElementById('flamescore_div').hidden = true
+        document.getElementById('all_flame_div').hidden = true
+        document.getElementById('dmg_flame_div').hidden = true
+        document.getElementById('boss_flame_div').hidden = true
+        document.getElementById('att_flame_div').hidden = true
+        document.getElementById('hp_flame_div').hidden = true
+        document.getElementById('luk_flame_div').hidden = true
+        document.getElementById('str_flame_div').hidden = true
+        document.getElementById('dex_flame_div').hidden = true
+        document.getElementById('sec_flame_div').hidden = true
+        document.getElementById('main_flame_div').hidden = true
+        document.getElementById('flamebutton_div').hidden = true
+        document.getElementById('flamescore_div').hidden = true
+
+    }
+}
+
+function getItemScore(maple_class, item_type) {
+    var main_amount = Number(document.getElementById('main_flame').value)
+    var att_amount = Number(document.getElementById('att_flame').value)
+    var all_amount = Number(document.getElementById('all_flame').value)
+
+    var att_equiv = Number(document.getElementById('attack').value)
+    var all_equiv = Number(document.getElementById('all_stat').value)
+
+    if (item_type == 'weapon') {
+        var boss_amount = Number(document.getElementById('boss_flame').value)
+        var dmg_amount = Number(document.getElementById('dmg_flame').value)
+
+        var dmg_equiv = Number(document.getElementById('boss_stat').value)
+    }
+    else {
+        var boss_amount = 0
+        var dmg_amount = 0
+
+        var dmg_equiv = 0
+    }
+
+    if (maple_class == 'other') {
+        var sec_amount = Number(document.getElementById('sec_flame').value)
+        var sec_equiv = 1 / Number(document.getElementById('secondary_stat').value)
+
+        var score = main_amount + (att_amount * att_equiv) + (all_amount * all_equiv) + ((boss_amount + dmg_amount) * dmg_equiv) + (sec_amount * sec_equiv)
+    }
+
+    else if (maple_class == 'xenon') {
+        var score = main_amount + (att_amount * att_equiv) + (all_amount * all_equiv) + ((boss_amount + dmg_amount) * dmg_equiv)
+    }
+
+    else if (maple_class == 'shadower' || maple_class == 'cadena' || maple_class == 'db') {
+        var dex_amount = Number(document.getElementById('dex_flame').value)
+        var str_amount = Number(document.getElementById('str_flame').value)
+
+        var dex_equiv = 1 / Number(document.getElementById('dex_stat').value)
+        var str_equiv = 1 / Number(document.getElementById('str_stat').value)
+
+        var score = main_amount + (att_amount * att_equiv) + (all_amount * all_equiv) + ((boss_amount + dmg_amount) * dmg_equiv) + (dex_amount * dex_equiv) + (str_amount * str_equiv)
+
+    }
+    else if (maple_class == "kanna") {
+        var luk_amount = Number(document.getElementById('luk_flame').value)
+        var hp_amount = Number(document.getElementById('hp_flame').value)
+
+        var luk_equiv = 1 / Number(document.getElementById('luk_stat').value)
+        var hp_equiv = 1 / Number(document.getElementById('hp_stat').value)
+
+        var score = main_amount + (att_amount * att_equiv) + (all_amount * all_equiv) + ((boss_amount + dmg_amount) * dmg_equiv) + (luk_amount * luk_equiv) + (hp_amount * hp_equiv)
+    }
+
+    return score
+}
+
 //test
 document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
@@ -502,6 +618,40 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("maple_class").addEventListener("change", onClassChange)
     document.getElementById("flame-advantaged").addEventListener("change", onFlameAdvantagedChange)
     document.getElementById("flame_type").addEventListener("change", onFlameTypeChange)
+
+    // Assuming your checkbox has the id 'flamescorecheck'
+    var checkbox = document.getElementById('flamescorecheck');
+
+    // Adding an event listener for the 'click' event
+    checkbox.addEventListener('click', function () {
+        // Code to be executed when the checkbox is clicked
+        if (checkbox.checked) {
+            var maple_class = document.getElementById('maple_class').value
+            var item_type = document.getElementById('item_type').value;
+            showItemScore(maple_class, 'show', item_type)
+        } else {
+            // Code to be executed if the checkbox is unchecked
+            showItemScore(maple_class, 'hide', item_type)
+        }
+    });
+
+    document.getElementById("flameButton").addEventListener("click", function () {
+        //determine item score
+        var item_type = document.getElementById('item_type').value
+        var maple_class = document.getElementById('maple_class').value
+        var item_score = getItemScore(maple_class, item_type).toFixed(1)
+
+        document.getElementById('flamescore_div').innerHTML =
+                        `
+                        <div class="col-12 form-group">
+                            <p class="flamescore">
+                                Your item's flame score is: ${item_score}
+                            </p>
+                        </div>
+                          `
+
+    });
+
     document.getElementById("calculateButton").addEventListener("click", function () {
         function loaderOn() {
             $('#loader1').show();
@@ -582,7 +732,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         var end = lower_limit
                     }
                     else {
-                        var start = lower_limit + (i-1);
+                        var start = lower_limit + (i - 1);
                         var end = lower_limit + i
                     }
                     // console.log('start for chunk #', i, ' = ', start)
@@ -712,6 +862,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             `
                         //hide progress
                         progressOff();
+                        scrollToBottom()
                         //loaderOff();
                     })
                     .catch((error) => {
@@ -720,6 +871,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             runParallelTasks();
+
 
 
             //         var worker = new Worker('worker.js');

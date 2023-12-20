@@ -91,6 +91,8 @@ function showArmorInputsForClass(maple_class) {
     const isDA = maple_class === "da";
     const isOther = maple_class === "other";
 
+    var item_type = document.getElementById('item_type').value
+
     document.getElementById("statequivalences").hidden = isDA;
     document.getElementById("statequivalences_title").hidden = isDA;
 
@@ -102,6 +104,45 @@ function showArmorInputsForClass(maple_class) {
     document.getElementById('str_stat_div').hidden = !isDualStat;
     document.getElementById('dex_stat_div').hidden = !isDualStat;
     document.getElementById('secondary_stat_div').hidden = !isOther;
+
+    if (document.getElementById('flamescorecheck').checked) {
+        document.getElementById('hp_flame_div').hidden = !isKanna;
+        document.getElementById('luk_flame_div').hidden = !isKanna;
+        document.getElementById('str_flame_div').hidden = !isDualStat;
+        document.getElementById('dex_flame_div').hidden = !isDualStat;
+        document.getElementById('sec_flame_div').hidden = !isOther;
+        
+        document.getElementById('all_flame_div').hidden = false
+        document.getElementById('dmg_flame_div').hidden = false
+        document.getElementById('boss_flame_div').hidden = false
+        document.getElementById('att_flame_div').hidden = false
+        document.getElementById('main_flame_div').hidden = false
+
+        document.getElementById('flamebutton_div').hidden = false
+        document.getElementById('flamescore_div').hidden = false
+        
+
+        if (item_type == 'armor') {
+            document.getElementById('dmg_flame_div').hidden = true
+            document.getElementById('boss_flame_div').hidden = true
+        }
+    }
+
+    if (maple_class == 'da'){
+        document.getElementById('flamescore_div').hidden = true
+        document.getElementById('all_flame_div').hidden = true
+        document.getElementById('dmg_flame_div').hidden = true
+        document.getElementById('boss_flame_div').hidden = true
+        document.getElementById('att_flame_div').hidden = true
+        document.getElementById('hp_flame_div').hidden = true
+        document.getElementById('luk_flame_div').hidden = true
+        document.getElementById('str_flame_div').hidden = true
+        document.getElementById('dex_flame_div').hidden = true
+        document.getElementById('sec_flame_div').hidden = true
+        document.getElementById('main_flame_div').hidden = true
+        document.getElementById('flamebutton_div').hidden = true
+    }
+
     const baseAttack = document.getElementById('base_attack_div');
     baseAttack.style.display = 'none';
 
@@ -175,6 +216,18 @@ function onClassChange() {
     if (maple_class === "da") {
 
         document.getElementById('item_level_div').hidden = true;
+        document.getElementById('flamescore_div').hidden = true
+        document.getElementById('all_flame_div').hidden = true
+        document.getElementById('dmg_flame_div').hidden = true
+        document.getElementById('boss_flame_div').hidden = true
+        document.getElementById('att_flame_div').hidden = true
+        document.getElementById('hp_flame_div').hidden = true
+        document.getElementById('luk_flame_div').hidden = true
+        document.getElementById('str_flame_div').hidden = true
+        document.getElementById('dex_flame_div').hidden = true
+        document.getElementById('sec_flame_div').hidden = true
+        document.getElementById('main_flame_div').hidden = true
+        document.getElementById('flamebutton_div').hidden = true
 
         if (item_type === 'armor') {
             updateDAOptions(flame_type, flame_advantage)
