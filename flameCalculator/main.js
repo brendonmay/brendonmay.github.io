@@ -639,7 +639,7 @@ document.addEventListener("DOMContentLoaded", function () {
         //determine item score
         var item_type = document.getElementById('item_type').value
         var maple_class = document.getElementById('maple_class').value
-        var item_score = getItemScore(maple_class, item_type).toFixed(1)
+        var item_score = Math.round(getItemScore(maple_class, item_type))
 
         document.getElementById('flamescore_div').innerHTML =
                         `
