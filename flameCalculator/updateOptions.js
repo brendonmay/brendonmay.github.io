@@ -90,6 +90,9 @@ function showArmorInputsForClass(maple_class) {
     const isDualStat = maple_class === "db" || maple_class === "shadower" || maple_class === "cadena";
     const isDA = maple_class === "da";
     const isOther = maple_class === "other";
+    const isDb = maple_class === "db"
+    const isShad = maple_class === "shadower"
+    const isCadena = maple_class === "cadena"
 
     var item_type = document.getElementById('item_type').value
 
@@ -150,18 +153,41 @@ function showArmorInputsForClass(maple_class) {
     wepLevel.style.display = 'none';
 
     if (isKanna) {
-        document.getElementById("all_stat").value = 8
-        document.getElementById("attack").value = 3
+        document.getElementById("all_stat").value = 12
+        document.getElementById("attack").value = 2
+        document.getElementById("boss_stat").value = 18
+        document.getElementById("hp_stat").value = 135
+        document.getElementById("luk_stat").value = 11
+
     } else if (isXenon) {
-        document.getElementById("desired_stat_armor").value = 200
-        document.getElementById("all_stat").value = 19
-        document.getElementById("attack").value = 8
-    } else if (isDualStat) {
-        document.getElementById("all_stat").value = 8
+        document.getElementById("desired_stat_armor").value = 230
+        document.getElementById("all_stat").value = 25
+        document.getElementById("attack").value = 6
+        document.getElementById("boss_stat").value = 30
+    } else if (isShad) {
+        document.getElementById("all_stat").value = 12
         document.getElementById("attack").value = 3
-    } else if (isOther) {
-        document.getElementById("all_stat").value = 8
+        document.getElementById("boss_stat").value = 13
+        document.getElementById("dex_stat").value = 10
+        document.getElementById("str_stat").value = 10
+    } else if (isDb) {
+        document.getElementById("all_stat").value = 12
         document.getElementById("attack").value = 3
+        document.getElementById("boss_stat").value = 13
+        document.getElementById("dex_stat").value = 12
+        document.getElementById("str_stat").value = 12
+    } else if (isCadena) {
+        document.getElementById("all_stat").value = 12
+        document.getElementById("attack").value = 3
+        document.getElementById("boss_stat").value = 13
+        document.getElementById("dex_stat").value = 12
+        document.getElementById("str_stat").value = 12
+    } 
+    else if (isOther) {
+        document.getElementById("all_stat").value = 12
+        document.getElementById("attack").value = 3
+        document.getElementById("boss_stat").value = 15
+        document.getElementById("secondary_stat").value = 15
     }
 }
 

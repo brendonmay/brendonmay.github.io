@@ -13,7 +13,7 @@ const TIER_PROBABILITIES = {
     meisterFusion: { 3: 0, 4: 0.4, 5: 0.45, 6: 0.14, 7: 0.01 },
 };
 
-var stat_equivalences = { "all_stat": 9, "secondary_stat": 0.0909, "attack": 3, "dmg": 15 }
+var stat_equivalences = { "all_stat": 12, "secondary_stat": 0.066667, "attack": 3, "dmg": 15 }
 
 var stat_per_tier = {
     "120-139": 7,
