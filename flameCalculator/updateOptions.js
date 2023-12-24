@@ -37,7 +37,7 @@ function updateItemLevels(maple_class) {
     const isDA = maple_class === "da";
     document.getElementById("item_level_div").hidden = isArmor && isDA;
     $itemLevel.empty()
-    if (maple_class === "kanna") {
+    if (maple_class == "kanna" || maple_class == 'da') {
         $itemLevel.append("<option value='120-129'>120-129</option>")
         $itemLevel.append("<option value='130-139'>130-139</option>")
         $itemLevel.append("<option value='140-149'>140-149</option>")
@@ -96,11 +96,11 @@ function showArmorInputsForClass(maple_class) {
 
     var item_type = document.getElementById('item_type').value
 
-    document.getElementById("statequivalences").hidden = isDA;
-    document.getElementById("statequivalences_title").hidden = isDA;
+    document.getElementById("statequivalences").hidden = false;
+    document.getElementById("statequivalences_title").hidden = false;
 
     document.getElementById("da_desired_stats").hidden = !isDA;
-    document.getElementById("armor_desired_stats").hidden = isDA
+    document.getElementById("armor_desired_stats").hidden = false
 
     document.getElementById('hp_stat_div').hidden = !isKanna;
     document.getElementById('luk_stat_div').hidden = !isKanna;
@@ -114,6 +114,7 @@ function showArmorInputsForClass(maple_class) {
         document.getElementById('str_flame_div').hidden = !isDualStat;
         document.getElementById('dex_flame_div').hidden = !isDualStat;
         document.getElementById('sec_flame_div').hidden = !isOther;
+        document.getElementById('all_flame_div').hidden = false
         
         document.getElementById('all_flame_div').hidden = false
         document.getElementById('dmg_flame_div').hidden = false
@@ -123,27 +124,20 @@ function showArmorInputsForClass(maple_class) {
 
         document.getElementById('flamebutton_div').hidden = false
         document.getElementById('flamescore_div').hidden = false
+        document.getElementById('main_flame_div').hidden = false
+        document.getElementById('dahp_flame_div').hidden = true
         
 
         if (item_type == 'armor') {
             document.getElementById('dmg_flame_div').hidden = true
             document.getElementById('boss_flame_div').hidden = true
         }
-    }
 
-    if (maple_class == 'da'){
-        document.getElementById('flamescore_div').hidden = true
-        document.getElementById('all_flame_div').hidden = true
-        document.getElementById('dmg_flame_div').hidden = true
-        document.getElementById('boss_flame_div').hidden = true
-        document.getElementById('att_flame_div').hidden = true
-        document.getElementById('hp_flame_div').hidden = true
-        document.getElementById('luk_flame_div').hidden = true
-        document.getElementById('str_flame_div').hidden = true
-        document.getElementById('dex_flame_div').hidden = true
-        document.getElementById('sec_flame_div').hidden = true
-        document.getElementById('main_flame_div').hidden = true
-        document.getElementById('flamebutton_div').hidden = true
+        if (maple_class == 'da') {
+            document.getElementById('all_flame_div').hidden = true
+            document.getElementById('main_flame_div').hidden = true
+            document.getElementById('dahp_flame_div').hidden = false
+        }
     }
 
     const baseAttack = document.getElementById('base_attack_div');
@@ -158,36 +152,38 @@ function showArmorInputsForClass(maple_class) {
         document.getElementById("boss_stat").value = 18
         document.getElementById("hp_stat").value = 135
         document.getElementById("luk_stat").value = 11
+        document.getElementById("desired_stat_armor").value = 100
+        if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 400
 
     } else if (isXenon) {
-        document.getElementById("desired_stat_armor").value = 230
         document.getElementById("all_stat").value = 25
         document.getElementById("attack").value = 6
         document.getElementById("boss_stat").value = 30
-    } else if (isShad) {
-        document.getElementById("all_stat").value = 12
-        document.getElementById("attack").value = 3
-        document.getElementById("boss_stat").value = 13
-        document.getElementById("dex_stat").value = 10
-        document.getElementById("str_stat").value = 10
-    } else if (isDb) {
-        document.getElementById("all_stat").value = 12
-        document.getElementById("attack").value = 3
-        document.getElementById("boss_stat").value = 13
-        document.getElementById("dex_stat").value = 12
-        document.getElementById("str_stat").value = 12
-    } else if (isCadena) {
+        document.getElementById("desired_stat_armor").value = 230
+        if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 700
+
+    } else if (isShad || isDb || isCadena) {
         document.getElementById("all_stat").value = 12
         document.getElementById("attack").value = 3
         document.getElementById("boss_stat").value = 13
         document.getElementById("dex_stat").value = 12
         document.getElementById("str_stat").value = 12
+        document.getElementById("desired_stat_armor").value = 100
+        if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 500
     } 
     else if (isOther) {
         document.getElementById("all_stat").value = 12
         document.getElementById("attack").value = 3
         document.getElementById("boss_stat").value = 15
         document.getElementById("secondary_stat").value = 15
+        document.getElementById("desired_stat_armor").value = 100
+        if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 500
+    }
+    else if(isDA) {
+        document.getElementById("attack").value = 78
+        document.getElementById("boss_stat").value = 390
+        document.getElementById("desired_stat_armor").value = 3000
+        if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 15000
     }
 }
 
@@ -196,41 +192,49 @@ function onItemTypeChange() {
     var item_type = document.getElementById('item_type').value
     var flame_type = document.getElementById('flame_type').value
     var flame_advantage = document.getElementById('flame-advantaged').checked
-    if (maple_class != "da") {
+    // if (maple_class != "da") {
         updateItemLevels(maple_class);
         showArmorInputsForClass(maple_class);
         document.getElementById('weapon_desired_stats').hidden = true;
         document.getElementById('item_level_div').hidden = false;
         document.getElementById('boss_stat_div').hidden = true;
+        document.getElementById("da_desired_stats").hidden = true
+        document.getElementById("all_stat_div").hidden = false
+
+        if (maple_class == "da") document.getElementById("all_stat_div").hidden = true
 
         if (item_type === 'weapon') {
             document.getElementById('boss_stat_div').hidden = false;
             const baseAttack = document.getElementById('base_attack_div');
             baseAttack.style.display = 'block';
 
-            const wepLevel = document.getElementById('w_level_div');
-            wepLevel.style.display = 'block';
-            document.getElementById('item_level_div').hidden = true;
-        }
-    }
-    else {
-        document.getElementById('item_level_div').hidden = true;
-        if (item_type === 'armor') {
-            updateDAOptions(flame_type, flame_advantage)
-            document.getElementById("da_desired_stats").hidden = false
-            document.getElementById('weapon_desired_stats').hidden = true;
-            document.getElementById('armor_desired_stats').hidden = true;
-        }
-        else {
-            document.getElementById('weapon_desired_stats').hidden = false;
-            document.getElementById('armor_desired_stats').hidden = true;
-            document.getElementById('statequivalences').hidden = true;
-            document.getElementById('statequivalences_title').hidden = true;
-            document.getElementById("da_desired_stats").hidden = true
+            if (maple_class != 'da' && maple_class != 'kanna'){
+                const wepLevel = document.getElementById('w_level_div');
+                wepLevel.style.display = 'block';
+                document.getElementById('item_level_div').hidden = true;
+            }
 
-            updateAttackTierOptions(flame_type, flame_advantage);
+            
         }
-    }
+    // }
+    // else {
+    //     document.getElementById('item_level_div').hidden = true;
+    //     if (item_type === 'armor') {
+    //         updateDAOptions(flame_type, flame_advantage)
+    //         document.getElementById("da_desired_stats").hidden = false
+    //         document.getElementById('weapon_desired_stats').hidden = true;
+    //         document.getElementById('armor_desired_stats').hidden = true;
+    //     }
+    //     else {
+    //         document.getElementById('weapon_desired_stats').hidden = false;
+    //         document.getElementById('armor_desired_stats').hidden = true;
+    //         document.getElementById('statequivalences').hidden = true;
+    //         document.getElementById('statequivalences_title').hidden = true;
+    //         document.getElementById("da_desired_stats").hidden = true
+
+    //         updateAttackTierOptions(flame_type, flame_advantage);
+    //     }
+    // }
 }
 
 function onClassChange() {
@@ -239,48 +243,54 @@ function onClassChange() {
     var flame_advantage = document.getElementById('flame-advantaged')
     var item_type = document.getElementById('item_type').value
 
-    if (maple_class === "da") {
+    // if (maple_class === "da") {
 
-        document.getElementById('item_level_div').hidden = true;
-        document.getElementById('flamescore_div').hidden = true
-        document.getElementById('all_flame_div').hidden = true
-        document.getElementById('dmg_flame_div').hidden = true
-        document.getElementById('boss_flame_div').hidden = true
-        document.getElementById('att_flame_div').hidden = true
-        document.getElementById('hp_flame_div').hidden = true
-        document.getElementById('luk_flame_div').hidden = true
-        document.getElementById('str_flame_div').hidden = true
-        document.getElementById('dex_flame_div').hidden = true
-        document.getElementById('sec_flame_div').hidden = true
-        document.getElementById('main_flame_div').hidden = true
-        document.getElementById('flamebutton_div').hidden = true
+    //     document.getElementById('item_level_div').hidden = true;
+    //     document.getElementById('flamescore_div').hidden = true
+    //     document.getElementById('all_flame_div').hidden = true
+    //     document.getElementById('dmg_flame_div').hidden = true
+    //     document.getElementById('boss_flame_div').hidden = true
+    //     document.getElementById('att_flame_div').hidden = true
+    //     document.getElementById('hp_flame_div').hidden = true
+    //     document.getElementById('luk_flame_div').hidden = true
+    //     document.getElementById('str_flame_div').hidden = true
+    //     document.getElementById('dex_flame_div').hidden = true
+    //     document.getElementById('sec_flame_div').hidden = true
+    //     document.getElementById('main_flame_div').hidden = true
+    //     document.getElementById('flamebutton_div').hidden = true
 
-        if (item_type === 'armor') {
-            updateDAOptions(flame_type, flame_advantage)
-            document.getElementById("da_desired_stats").hidden = false
-            document.getElementById('weapon_desired_stats').hidden = true
-            document.getElementById('statequivalences').hidden = true
-            document.getElementById('statequivalences_title').hidden = true
-            document.getElementById('armor_desired_stats').hidden = true;
-        }
+    //     if (item_type === 'armor') {
+    //         updateDAOptions(flame_type, flame_advantage)
+    //         document.getElementById("da_desired_stats").hidden = false
+    //         document.getElementById('weapon_desired_stats').hidden = true
+    //         document.getElementById('statequivalences').hidden = true
+    //         document.getElementById('statequivalences_title').hidden = true
+    //         document.getElementById('armor_desired_stats').hidden = true;
+    //     }
 
-        else {
-            document.getElementById('weapon_desired_stats').hidden = false;
-            document.getElementById('armor_desired_stats').hidden = true;
-            document.getElementById('statequivalences').hidden = true;
-            document.getElementById('statequivalences_title').hidden = true;
-            document.getElementById("da_desired_stats").hidden = true
+    //     else {
+    //         document.getElementById('weapon_desired_stats').hidden = false;
+    //         document.getElementById('armor_desired_stats').hidden = true;
+    //         document.getElementById('statequivalences').hidden = true;
+    //         document.getElementById('statequivalences_title').hidden = true;
+    //         document.getElementById("da_desired_stats").hidden = true
 
-            updateAttackTierOptions(flame_type, flame_advantage);
-        }
-    }
+    //         updateAttackTierOptions(flame_type, flame_advantage);
+    //     }
+    // }
 
-    else {
+    // else {
         updateItemLevels(maple_class);
         showArmorInputsForClass(maple_class);
+        document.getElementById("da_desired_stats").hidden = true
         document.getElementById('weapon_desired_stats').hidden = true;
         document.getElementById('item_level_div').hidden = false;
         document.getElementById('boss_stat_div').hidden = true;
+        document.getElementById("all_stat_div").hidden = false
+
+        if (maple_class == "da"){
+            document.getElementById("all_stat_div").hidden = true
+        }
 
 
         if (item_type === 'weapon') {
@@ -288,11 +298,13 @@ function onClassChange() {
             const baseAttack = document.getElementById('base_attack_div');
             baseAttack.style.display = 'block';
 
-            const wepLevel = document.getElementById('w_level_div');
-            wepLevel.style.display = 'block';
-            document.getElementById('item_level_div').hidden = true;
+            if (maple_class != 'da' && maple_class != 'kanna'){
+                const wepLevel = document.getElementById('w_level_div');
+                wepLevel.style.display = 'block';
+                document.getElementById('item_level_div').hidden = true;
+            }
         }
-    }
+    // }
 }
 
 function onFlameAdvantagedChange() {
@@ -300,12 +312,12 @@ function onFlameAdvantagedChange() {
     var item_type = document.getElementById('item_type').value
     var maple_class = document.getElementById('maple_class').value
     var flame_advantage = document.getElementById('flame-advantaged').checked
-    if (maple_class === "da" && item_type === 'weapon') {
-        updateAttackTierOptions(flame_type, flame_advantage);
-    }
-    if (maple_class === "da" && item_type === 'armor') {
-        updateDAOptions(flame_type, flame_advantage);
-    }
+    // if (maple_class === "da" && item_type === 'weapon') {
+    //     updateAttackTierOptions(flame_type, flame_advantage);
+    // }
+    // if (maple_class === "da" && item_type === 'armor') {
+    //     updateDAOptions(flame_type, flame_advantage);
+    // }
 }
 
 function onFlameTypeChange() {
@@ -313,10 +325,10 @@ function onFlameTypeChange() {
     var item_type = document.getElementById('item_type').value
     var maple_class = document.getElementById('maple_class').value
     var flame_advantage = document.getElementById('flame-advantaged').checked
-    if (item_type === 'weapon') {
-        updateAttackTierOptions(flame_type, flame_advantage);
-    }
-    if (maple_class === 'da') {
-        updateDAOptions(flame_type, flame_advantage);
-    }
+    // if (item_type === 'weapon') {
+    //     updateAttackTierOptions(flame_type, flame_advantage);
+    // }
+    // if (maple_class === 'da') {
+    //     updateDAOptions(flame_type, flame_advantage);
+    // }
 }

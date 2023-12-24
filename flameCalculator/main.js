@@ -65,70 +65,63 @@ function scrollToBottom() {
 }
 
 function getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class, solutions) {
-    if (maple_class != "da") {
-        var probability = 0
-        for (var i = 0; i < solutions.length; i++) {
-            var main2_tier = 0
-            var main3_tier = 0
-            var combo_six_tier = 0
-            var main_tier = solutions[i].main_tier
-            if (maple_class == "other" || maple_class == "kanna") var secondary_tier = solutions[i].secondary_tier
-            var combo_one_tier = solutions[i].combo_one_tier
-            var combo_two_tier = solutions[i].combo_two_tier
-            var combo_three_tier = solutions[i].combo_three_tier
-            var combo_four_tier = solutions[i].combo_four_tier
-            var combo_five_tier = solutions[i].combo_five_tier
-            var all_stat_tier = solutions[i].all_stat_tier
-            var attack_tier = solutions[i].attack_tier
-            var boss_tier = solutions[i].boss_tier
-            var dmg_tier = solutions[i].dmg_tier
 
-            if (maple_class == "kanna") {
-                hp_tier = solutions[i].hp_tier
-                //function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier) {
-                var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, 0, hp_tier)
-            }
-            else if (maple_class == "xenon") {
-                main2_tier = solutions[i].main2_tier
-                main3_tier = solutions[i].main3_tier
-                combo_six_tier = solutions[i].combo_six_tier
-                var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier)
-            }
-            else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
-                var sec1_tier = solutions[i].sec1_tier
-                var sec2_tier = solutions[i].sec2_tier
-                combo_six_tier = solutions[i].combo_six_tier
-                var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, sec1_tier, sec2_tier)
-            }
-            else {
-                var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, 0, 0)
-            }
-            if (number_of_lines > 4) {
-                console.log("More than 4 lines")
-            }
+    var probability = 0
+    for (var i = 0; i < solutions.length; i++) {
+        var main2_tier = 0
+        var main3_tier = 0
+        var combo_six_tier = 0
+        var main_tier = solutions[i].main_tier
+        if (maple_class == "other" || maple_class == "kanna") var secondary_tier = solutions[i].secondary_tier
+        var combo_one_tier = solutions[i].combo_one_tier
+        var combo_two_tier = solutions[i].combo_two_tier
+        var combo_three_tier = solutions[i].combo_three_tier
+        var combo_four_tier = solutions[i].combo_four_tier
+        var combo_five_tier = solutions[i].combo_five_tier
+        var all_stat_tier = solutions[i].all_stat_tier
+        var attack_tier = solutions[i].attack_tier
+        var boss_tier = solutions[i].boss_tier
+        var dmg_tier = solutions[i].dmg_tier
 
-            //determine probability
-            var choose_from = 10
-            if (maple_class == "xenon" || maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") choose_from = 8
-            if (maple_class == "kanna") choose_from = 9
-
-            //here
-            var line_probability = getLineProbability(choose_from, number_of_lines, non_advantaged_item, item_type)
-            var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier, non_advantaged_item, main2_tier, main3_tier, combo_six_tier)
-            var event_probability = line_probability * tier_probability
-
-            probability = probability + event_probability
-
+        if (maple_class == "kanna") {
+            hp_tier = solutions[i].hp_tier
+            //function numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier) {
+            var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, 0, hp_tier)
         }
-    }
-    else if (item_type == "weapon" && maple_class == "da") {
-        var desired_attack_tier = desired_stat.attack_tier
-        var desired_dmg_percent = desired_stat.dmg_percent
+        else if (maple_class == "xenon") {
+            main2_tier = solutions[i].main2_tier
+            main3_tier = solutions[i].main3_tier
+            combo_six_tier = solutions[i].combo_six_tier
+            var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, main2_tier, main3_tier)
+        }
+        else if (maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") {
+            var sec1_tier = solutions[i].sec1_tier
+            var sec2_tier = solutions[i].sec2_tier
+            combo_six_tier = solutions[i].combo_six_tier
+            var number_of_lines = numberOfLines(main_tier, combo_six_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, sec1_tier, sec2_tier)
+        }
+        else {
+            var number_of_lines = numberOfLines(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, boss_tier, dmg_tier, 0, 0)
+        }
+        if (number_of_lines > 4) {
+            console.log("More than 4 lines")
+        }
 
-        if (desired_attack_tier == 0 && desired_dmg_percent) return 1
+        //determine probability
+        var choose_from = 10
+        if (maple_class == "xenon" || maple_class == "db" || maple_class == "shadower" || maple_class == "cadena") choose_from = 8
+        if (maple_class == "kanna") choose_from = 9
 
-        var probability = getWeaponProbability(desired_attack_tier, desired_dmg_percent, flame_type, non_advantaged_item)
+        //here
+        var line_probability = getLineProbability(choose_from, number_of_lines, non_advantaged_item, item_type)
+        var tier_probability = getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two_tier, combo_three_tier, combo_four_tier, combo_five_tier, all_stat_tier, attack_tier, flame_type, boss_tier, dmg_tier, non_advantaged_item, main2_tier, main3_tier, combo_six_tier)
+        var event_probability = line_probability * tier_probability
+
+        probability = probability + event_probability
+
     }
+
+
 
     return probability
 }
@@ -513,12 +506,13 @@ function showItemScore(maple_class, direction, item_type) {
     const isDA = maple_class === "da";
     const isOther = maple_class === "other";
 
-    if (direction == 'show' && maple_class != "da") {
+    if (direction == 'show') {
         document.getElementById('hp_flame_div').hidden = !isKanna;
         document.getElementById('luk_flame_div').hidden = !isKanna;
         document.getElementById('str_flame_div').hidden = !isDualStat;
         document.getElementById('dex_flame_div').hidden = !isDualStat;
         document.getElementById('sec_flame_div').hidden = !isOther;
+        document.getElementById('all_flame_div').hidden = false
 
         document.getElementById('all_flame_div').hidden = false
         document.getElementById('att_flame_div').hidden = false
@@ -529,10 +523,18 @@ function showItemScore(maple_class, direction, item_type) {
 
         document.getElementById('flamebutton_div').hidden = false
         document.getElementById('flamescore_div').hidden = false
+        document.getElementById('main_flame_div').hidden = false
+        document.getElementById('dahp_flame_div').hidden = true
 
         if (item_type == 'armor') {
             document.getElementById('dmg_flame_div').hidden = true
             document.getElementById('boss_flame_div').hidden = true
+        }
+
+        if (maple_class == 'da') {
+            document.getElementById('all_flame_div').hidden = true
+            document.getElementById('main_flame_div').hidden = true
+            document.getElementById('dahp_flame_div').hidden = false
         }
     }
 
@@ -555,12 +557,14 @@ function showItemScore(maple_class, direction, item_type) {
 }
 
 function getItemScore(maple_class, item_type) {
-    var main_amount = Number(document.getElementById('main_flame').value)
     var att_amount = Number(document.getElementById('att_flame').value)
-    var all_amount = Number(document.getElementById('all_flame').value)
-
     var att_equiv = Number(document.getElementById('attack').value)
-    var all_equiv = Number(document.getElementById('all_stat').value)
+
+    if (maple_class != 'da') {
+        var main_amount = Number(document.getElementById('main_flame').value)
+        var all_amount = Number(document.getElementById('all_flame').value)
+        var all_equiv = Number(document.getElementById('all_stat').value)
+    }
 
     if (item_type == 'weapon') {
         var boss_amount = Number(document.getElementById('boss_flame').value)
@@ -605,6 +609,12 @@ function getItemScore(maple_class, item_type) {
 
         var score = main_amount + (att_amount * att_equiv) + (all_amount * all_equiv) + ((boss_amount + dmg_amount) * dmg_equiv) + (luk_amount * luk_equiv) + (hp_amount * hp_equiv)
     }
+    else if (maple_class == "da") {
+        var hp_amount = Number(document.getElementById('dahp_flame').value)
+
+        var score = hp_amount + (att_amount * att_equiv) + ((boss_amount + dmg_amount) * dmg_equiv)
+
+    }
 
     return score
 }
@@ -642,7 +652,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var item_score = Math.round(getItemScore(maple_class, item_type))
 
         document.getElementById('flamescore_div').innerHTML =
-                        `
+            `
                         <div class="col-12 form-group">
                             <p class="flamescore">
                                 Your item's flame score is: ${item_score}
@@ -698,23 +708,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (maple_class != "xenon") stat_equivalences.secondary_stat = 1 / document.getElementById('secondary_stat').value
 
-            if (maple_class == "da") {
-                if (item_type == 'armor') {
-                    var attack_tier = document.getElementById('da_attack_tier').value
-                    var hp_tier = document.getElementById('hp_tier').value
-                    var desired_stat = { "attack_tier": attack_tier, "hp_tier": hp_tier }
-                }
-                else {
-                    var attack_tier = document.getElementById('attack_tier').value
-                    var dmg_percent = document.getElementById('dmg_percent').value
-                    var desired_stat = { "attack_tier": attack_tier, "dmg_percent": dmg_percent }
-                }
-            }
+            // if (maple_class == "da") {
+            //     if (item_type == 'armor') {
+            //         var attack_tier = document.getElementById('da_attack_tier').value
+            //         var hp_tier = document.getElementById('hp_tier').value
+            //         var desired_stat = { "attack_tier": attack_tier, "hp_tier": hp_tier }
+            //     }
+            //     else {
+            //         var attack_tier = document.getElementById('attack_tier').value
+            //         var dmg_percent = document.getElementById('dmg_percent').value
+            //         var desired_stat = { "attack_tier": attack_tier, "dmg_percent": dmg_percent }
+            //     }
+            // }
 
-            else {
-                var desired_stat = document.getElementById('desired_stat_armor').value
-                item_level = document.getElementById('item_level').value
-            }
+            // else {
+            var desired_stat = document.getElementById('desired_stat_armor').value
+            item_level = document.getElementById('item_level').value
+            // }
 
             // Worker logic
             function runParallelTasks() {
@@ -779,15 +789,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 Promise.all(workerPromises)
                     .then((workerResults) => {
-                        if (maple_class == 'da') {
-                            results = workerResults.flat()
-                            p = results[0]
-                        }
-                        else {
-                            const arrangements = workerResults.flat();
-                            var p = getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class, arrangements)
-                            //console.log(p)
-                        }
+
+                        const arrangements = workerResults.flat();
+                        var p = getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class, arrangements)
+                        //console.log(p)
+                        //console.log(arrangements)
+
                         // The rest of your result handling logic goes here
                         var stats = geoDistrQuantile(p)
 

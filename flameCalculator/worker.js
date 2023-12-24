@@ -409,26 +409,26 @@ function generateArrangements(item_level, flame_type, item_type, desired_stat, n
     // var start = lower_limit //remove once fixed
     // var end = upper_limit //remove once fixed
 
-    if (maple_class == "da" && item_type == "armor") {
-        var desired_attack_tier = desired_stat.attack_tier
-        var desired_hp_tier = desired_stat.hp_tier
+    // if (maple_class == "da" && item_type == "armor") {
+    //     var desired_attack_tier = desired_stat.attack_tier
+    //     var desired_hp_tier = desired_stat.hp_tier
 
-        if (desired_attack_tier == 0 && desired_hp_tier == 0) return 1
+    //     if (desired_attack_tier == 0 && desired_hp_tier == 0) return 1
 
-        var probability = getDAProbability(desired_attack_tier, desired_hp_tier, flame_type, non_advantaged_item)
-        return probability
-    }
-    if (maple_class == "da" && item_type == "weapon") {
-        var desired_attack_tier = desired_stat.attack_tier
-        var desired_dmg_percent = desired_stat.dmg_percent
+    //     var probability = getDAProbability(desired_attack_tier, desired_hp_tier, flame_type, non_advantaged_item)
+    //     return probability
+    // }
+    // if (maple_class == "da" && item_type == "weapon") {
+    //     var desired_attack_tier = desired_stat.attack_tier
+    //     var desired_dmg_percent = desired_stat.dmg_percent
 
-        if (desired_attack_tier == 0 && desired_dmg_percent) return 1
+    //     if (desired_attack_tier == 0 && desired_dmg_percent) return 1
 
-        var probability = getWeaponProbability(desired_attack_tier, desired_dmg_percent, flame_type, non_advantaged_item)
-        return probability
-    }
+    //     var probability = getWeaponProbability(desired_attack_tier, desired_dmg_percent, flame_type, non_advantaged_item)
+    //     return probability
+    // }
 
-    if (item_type == "armor" || (item_type == "weapon" && maple_class != "da")) {
+    if (item_type == "armor" || (item_type == "weapon")) {
         var solutions = []
 
 
@@ -854,6 +854,60 @@ function generateArrangements(item_level, flame_type, item_type, desired_stat, n
                 }
             }
         }
+        if (maple_class == "da") {
+            var dmg_tier = 0
+            while (dmg_tier < dmg_upper_limit) {
+                var boss_tier = 0
+                while (boss_tier < boss_upper_limit) {
+                    var hp_tier = start //hp_tier = hp_tier
+                    while (hp_tier < end) {
+                        var attack_tier = 0
+                        while (attack_tier < upper_limit) {
+
+                            //equation here change this calculation for different classes
+                            var attack_gain = attackGain(item_type, attack_tier, stat_equivalences, w_level, non_advantaged_item, base_attack)
+                            
+                            var stat_score = attack_gain + hp_tier * hp_stat_per_tier[item_level] + boss_tier * 2 * stat_equivalences.dmg + dmg_tier * stat_equivalences.dmg
+                            //console.log(stat_score)
+                            if (stat_score >= desired_stat) {
+                                if (possibleOutcome(0, 0, 0, 0, 0, 0, 0, 0, attack_tier, boss_tier, dmg_tier, 0, hp_tier)) {
+                                    //console.log("valid score")
+                                    var solution = { "attack_tier": attack_tier, "hp_tier": hp_tier, "boss_tier": boss_tier, "dmg_tier": dmg_tier }
+                                    solutions[solutions.length] = solution
+                                }
+
+                            }
+
+                            if (attack_tier == 0) {
+                                var attack_tier = lower_limit
+                            }
+                            else {
+                                attack_tier++
+                            }
+                        }
+                        if (hp_tier == 0) {
+                            var hp_tier = lower_limit
+                        }
+                        else {
+                            hp_tier++
+                        }
+                    }
+                    if (boss_tier == 0) {
+                        var boss_tier = lower_limit
+                    }
+                    else {
+                        boss_tier++
+                    }
+                }
+                if (dmg_tier == 0) {
+                    var dmg_tier = lower_limit
+                }
+                else {
+                    dmg_tier++
+                }
+            }
+        }
+
         if (maple_class == "other") {
             if (ratios.remove_all_stat == true) all_stat_upper_limit = 1
             if (ratios.remove_att == true) att_upper_limit = 1
@@ -977,7 +1031,7 @@ function generateArrangements(item_level, flame_type, item_type, desired_stat, n
         }
         //console.log(progress_counter)
     }
-    console.log('# of solutions: ', solutions.length)
+    // console.log('# of solutions: ', solutions.length)
     return solutions
     // if (maple_class != "da") {
     //     var probability = 0

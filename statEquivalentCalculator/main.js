@@ -3841,13 +3841,13 @@ function optimizeWSE() {
     if (primary_stat_type == "HP") {
         var hp_hyper = parseInt(document.getElementById('hp').value);
         var hp_percent = 1 + (parseInt(document.getElementById('main_stat_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
-        console.log('hp perc: ' + hp_percent)
+        //console.log('hp perc: ' + hp_percent)
         var new_hp_percent = ((hp_percent * 100) - hp_hyper) / 100;
         //console.log('new hp perc: ' + new_hp_percent)
         var new_hp = flat_hp + (primary_stat - flat_hp) * (new_hp_percent) / (hp_percent);
         stripped_primary = new_hp;
 
-        //console.log('new hp: ' + new_hp)
+        //console.log('stripped_primary: ' + new_hp)
     }
     else {
         var stripped_primary = primary_stat - hyper_primary;
@@ -4007,20 +4007,20 @@ function optimizeWSE() {
 
     var stat_value = getStatValue(maple_class, primary_stat, secondary_stat, level);
     var attack = Math.floor(determineAttAmount(upperShownDamage, multiplier, stat_value, parseInt(document.getElementById('damage_percent').value), final_damage_percent) / (current_attack_percent / 100));
-
+    
     //determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
     var statEquivalences = determineStatEquivalences(maple_class, attack, current_attack_percent / 100, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg)
-
+    //console.log(statEquivalences)
     document.getElementById('resultSection').style.display = ''
     if (maple_class == "Kanna") {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
-            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
-            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.luk_equiv)} LUK</div>
-            <div class="test">1 Main Stat = ${roundUp(statEquivalences.sec_equiv.hp_equiv)} HP</div>
-            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
+            <div class="test">1 All Stat % = ${(statEquivalences.perc_all_equiv).toFixed(1)} Main Stat</div>
+            <div class="test">1 Attack = ${(statEquivalences.att_equiv).toFixed(1)} Main Stat</div>
+            <div class="test">1 Main Stat = ${(1 / statEquivalences.sec_equiv.luk_equiv).toFixed(1)} LUK</div>
+            <div class="test">1 Main Stat = ${(statEquivalences.sec_equiv.hp_equiv).toFixed(1)} HP</div>
+            <div class="test">1% Damage / 1% Boss = ${(statEquivalences.dmg_equiv).toFixed(1)} Main Stat</div>
         </div>
         `
     }
@@ -4028,11 +4028,11 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
-            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
-            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.dex_equiv)} DEX</div>
-            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv.str_equiv)} STR</div>
-            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
+            <div class="test">1 All Stat % = ${(statEquivalences.perc_all_equiv).toFixed(1)} Main Stat</div>
+            <div class="test">1 Attack = ${(statEquivalences.att_equiv).toFixed(1)} Main Stat</div>
+            <div class="test">1 Main Stat = ${(1 / statEquivalences.sec_equiv.dex_equiv).toFixed(1)} DEX</div>
+            <div class="test">1 Main Stat = ${(1 / statEquivalences.sec_equiv.str_equiv).toFixed(1)} STR</div>
+            <div class="test">1% Damage / 1% Boss = ${(statEquivalences.dmg_equiv).toFixed(1)} Main Stat</div>
         </div>
         `
     }
@@ -4040,9 +4040,9 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
-            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
-            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
+            <div class="test">1 All Stat % = ${(statEquivalences.perc_all_equiv).toFixed(1)} Main Stat</div>
+            <div class="test">1 Attack = ${(statEquivalences.att_equiv).toFixed(1)} Main Stat</div>
+            <div class="test">1% Damage / 1% Boss = ${(statEquivalences.dmg_equiv).toFixed(1)} Main Stat</div>
         </div>
         `
     }
@@ -4050,9 +4050,8 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv) * 1000} HP</div>
-            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv) * 1000} HP</div>
-            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv) * 1000} HP</div>
+            <div class="test">1 Attack = ${(statEquivalences.att_equiv * 1000).toFixed(1)} HP</div>
+            <div class="test">1% Damage / 1% Boss = ${(statEquivalences.dmg_equiv * 1000).toFixed(1)} HP</div>
         </div>
         `
     }
@@ -4060,10 +4059,10 @@ function optimizeWSE() {
         document.getElementById('result').innerHTML =
             `
         <div id='text-center result'>
-            <div class="test">1 All Stat % = ${roundUp(statEquivalences.perc_all_equiv)} Main Stat</div>
-            <div class="test">1 Attack = ${roundDown(statEquivalences.att_equiv)} Main Stat</div>
-            <div class="test">1 Main Stat = ${roundUp(1 / statEquivalences.sec_equiv)} Secondary Stat</div>
-            <div class="test">1% Damage / 1% Boss = ${roundDown(statEquivalences.dmg_equiv)} Main Stat</div>
+            <div class="test">1 All Stat % = ${(statEquivalences.perc_all_equiv).toFixed(1)} Main Stat</div>
+            <div class="test">1 Attack = ${(statEquivalences.att_equiv).toFixed(1)} Main Stat</div>
+            <div class="test">1 Main Stat = ${(1 / statEquivalences.sec_equiv).toFixed(1)} Secondary Stat</div>
+            <div class="test">1% Damage / 1% Boss = ${(statEquivalences.dmg_equiv).toFixed(1)} Main Stat</div>
         </div>
         `
     }
