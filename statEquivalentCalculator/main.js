@@ -91,7 +91,7 @@ function damage(maple_class, attack_without_perc, attack_perc, flat_primary, pri
         var att = statAmount(attack_without_perc, 0, attack_perc)
 
         return (4 * primary1 + 4 * primary2 + 4 * primary3) * att * (1 + (total_dmg + boss_dmg) / 100)
-        
+
     }
     else if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
         var primary = statAmount(primary_without_perc, flat_primary, primary_perc)
@@ -101,7 +101,7 @@ function damage(maple_class, attack_without_perc, attack_perc, flat_primary, pri
         var att = statAmount(attack_without_perc, 0, attack_perc)
 
         return (4 * primary + secondary1 + secondary2) * att * (1 + (total_dmg + boss_dmg) / 100)
-        
+
     }
     else if (maple_class == "Demon Avenger") {
         var level = parseInt(document.getElementById('level').value)
@@ -353,7 +353,9 @@ function loadLocalStorage() {
                         document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
                         document.getElementById('sec_perc_label').innerHTML = `<label for="secondary_stat_perc"> ${secondary_stat} % on Equips</label>`;
                     }
-                    document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane + Sacred)</label>`;
+                    document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane)</label>`;
+                    document.getElementById('sacred_label').innerHTML = `<label for="sacred"> ${primary_stat} (From Sacred)</label>`;
+                    document.getElementById('hexa_label').innerHTML = `<label for="hexa"> ${primary_stat} (From Hexa Stat)</label>`;
 
                     if (maple_class == "Xenon") {
                         var primary_2 = "LUK"
@@ -426,7 +428,7 @@ function saveToLocalStorage(maple_class) {
     //sec_perc_2, sec_perc_2_div(hidden), sec_2_div (hidden), secondary_2_stat, sec_perc, main_stat_perc, kanna_hp_perc, kanna_hp_perc_div(hidden)
 
     //collection of IDs to collect data on
-    var id_values = ['level', 'sec_perc_2', 'secondary_2_stat', 'sec_perc', 'main_stat_perc', 'kanna_hp_perc', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
+    var id_values = ['level', 'sec_perc_2', 'secondary_2_stat', 'sec_perc', 'main_stat_perc', 'kanna_hp_perc', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'hp_arcane','hexa','sacred', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
     var id_checked = ['CRA', 'Dom', 'gollux', 'bt2', 'bt3', 'DHB', 'solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
@@ -3114,7 +3116,9 @@ document.addEventListener("DOMContentLoaded", function () {
         $('#sec_perc_2').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
 
         $('#kanna_hp_perc').tooltip({ 'trigger': 'hover focus', 'title': 'HP % and MP % total from potentials only.', 'placement': 'bottom' });
-        $('#hp_arcane').tooltip({ 'trigger': 'hover focus', 'title': 'Add up the total stat earned from Arcane Force and Sacred Power', 'placement': 'bottom' });
+        $('#hp_arcane').tooltip({ 'trigger': 'hover focus', 'title': 'Stat earned from Arcane Force', 'placement': 'bottom' });
+        $('#sacred').tooltip({ 'trigger': 'hover focus', 'title': 'Stat earned from Sacred Power', 'placement': 'bottom' });
+        $('#hexa').tooltip({ 'trigger': 'hover focus', 'title': 'Stat earned from Hexa Stat', 'placement': 'bottom' });
         $('#sec_perc').tooltip({ 'trigger': 'hover focus', 'title': 'Stat % from potentials and flames (All Stat % counts towards this total).', 'placement': 'bottom' });
     });
 
@@ -3125,7 +3129,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (window.localStorage.getItem('data') !== null) {
         loadLocalStorage(); //load data from localstorage //here
     }
-    
+
     document.getElementById('hp_arcane_div').hidden = false;
 
     //checkbox behaviour
@@ -3524,7 +3528,9 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('secondary_label').innerHTML = `<label for="secondary_stat"> ${secondary_stat} </label>`;
             document.getElementById('sec_perc_label').innerHTML = `<label for="secondary_stat_perc"> ${secondary_stat} % on Equips</label>`;
         }
-        document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane + Sacred)</label>`;
+        document.getElementById('hp_arcane_label').innerHTML = `<label for="hp_arcane"> ${primary_stat} (From Arcane)</label>`;
+        document.getElementById('sacred_label').innerHTML = `<label for="sacred"> ${primary_stat} (From Sacred)</label>`;
+        document.getElementById('hexa_label').innerHTML = `<label for="hexa"> ${primary_stat} (From Hexa Stat)</label>`;
         if (maple_class == "Xenon") document.getElementById("hp_arcane").value = 5148
         else if (maple_class == "Demon Avenger") document.getElementById("hp_arcane").value = 184000 //here fix this to proper amount
         else document.getElementById("hp_arcane").value = 13200
@@ -3837,7 +3843,7 @@ function optimizeWSE() {
     }
     //var stripped_boss_percent = current_boss_percent - hyper_boss_dmg; //wrong
     var stripped_damage_percent = current_damage_percent - hyper_dmg; //wrong
-    var flat_hp = parseInt(document.getElementById('hp_arcane').value);
+    var flat_hp = parseInt(document.getElementById('hp_arcane').value) + parseInt(document.getElementById("sacred").value) + parseInt(document.getElementById("hexa").value)
     if (primary_stat_type == "HP") {
         var hp_hyper = parseInt(document.getElementById('hp').value);
         var hp_percent = 1 + (parseInt(document.getElementById('main_stat_perc').value) + parseInt(document.getElementById('hp').value)) / 100;
@@ -3919,9 +3925,9 @@ function optimizeWSE() {
 
         primary_perc = { 1: primary_1_perc, 2: primary_2_perc, 3: primary_3_perc }
 
-        var flat_primary_1 = hyper_primary_1 + parseInt(document.getElementById("hp_arcane").value)
-        var flat_primary_2 = hyper_primary_2 + parseInt(document.getElementById("hp_arcane").value)
-        var flat_primary_3 = hyper_primary_3 + parseInt(document.getElementById("hp_arcane").value)
+        var flat_primary_1 = hyper_primary_1 + parseInt(document.getElementById("hp_arcane").value) + parseInt(document.getElementById("sacred").value) + parseInt(document.getElementById("hexa").value)
+        var flat_primary_2 = hyper_primary_2 + parseInt(document.getElementById("hp_arcane").value) + parseInt(document.getElementById("sacred").value) + parseInt(document.getElementById("hexa").value)
+        var flat_primary_3 = hyper_primary_3 + parseInt(document.getElementById("hp_arcane").value) + parseInt(document.getElementById("sacred").value) + parseInt(document.getElementById("hexa").value)
 
         var flat_primary = { 1: flat_primary_1, 2: flat_primary_2, 3: flat_primary_3 }
 
@@ -3945,7 +3951,7 @@ function optimizeWSE() {
     }
     else if (maple_class == "Dual Blade" || maple_class == "Cadena" || maple_class == "Shadower" || maple_class == "Kanna") {
 
-        var flat_primary = hyper_primary + parseInt(document.getElementById("hp_arcane").value)
+        var flat_primary = hyper_primary + parseInt(document.getElementById("hp_arcane").value) + parseInt(document.getElementById("sacred").value) + parseInt(document.getElementById("hexa").value)
 
         if (maple_class == "Kanna") {
             var flat_sec_1 = hyper_secondary
@@ -3995,7 +4001,7 @@ function optimizeWSE() {
     else {
         var sec_perc = (100 + parseInt(document.getElementById("sec_perc").value)) / 100
 
-        var flat_primary = hyper_primary + parseInt(document.getElementById("hp_arcane").value) // collect directly (inner ability)
+        var flat_primary = hyper_primary + parseInt(document.getElementById("hp_arcane").value) + parseInt(document.getElementById("sacred").value) + parseInt(document.getElementById("hexa").value) // collect directly (inner ability)
         if (maple_class == "Demon Avenger") {
             flat_primary = flat_hp
         }
@@ -4007,7 +4013,7 @@ function optimizeWSE() {
 
     var stat_value = getStatValue(maple_class, primary_stat, secondary_stat, level);
     var attack = Math.floor(determineAttAmount(upperShownDamage, multiplier, stat_value, parseInt(document.getElementById('damage_percent').value), final_damage_percent) / (current_attack_percent / 100));
-    
+
     //determineStatEquivalences(maple_class, attack_without_perc, attack_perc, flat_primary, primary_without_perc, primary_perc, sec_without_perc, sec_perc)
     var statEquivalences = determineStatEquivalences(maple_class, attack, current_attack_percent / 100, flat_primary, primary_without_perc, primary_perc, flat_sec, sec_without_perc, sec_perc, boss_dmg, total_dmg)
     //console.log(statEquivalences)
