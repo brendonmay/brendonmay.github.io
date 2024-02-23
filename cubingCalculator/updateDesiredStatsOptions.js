@@ -156,7 +156,7 @@ function removeNormalStatOptions() {
     removeElementIfExists("statGroup");
 }
 
-function addCommonWSEOptions(itemLevel, desiredTier) {
+function addCommonWSEOptions(itemLevel, desiredTier, itemType) {
     const prime = getPrimeLineValue(itemLevel, desiredTier);
     const optionAmounts = get3LStatOptionAmounts(prime);
     addNormalOptionGroup("attack",
@@ -171,17 +171,41 @@ function addCommonWSEOptions(itemLevel, desiredTier) {
         "Attack and IED",
         "Attack With 1 Line of IED",
         IEDOptionAmounts);
+
+    const $desiredStats = $('#desiredStats');
+    // Hide boss for emblem or epic tier.
+    const showBoss = itemType !== "emblem" && desiredTier >= 2;
+    // These lines will calculate just fine for emblems too, but we still change the text to avoid confusion.
+    const shortAnyText = `(Attack${showBoss ? "/Boss" : ""}/IED)`;
+    const longAnyText = `Attack% ${showBoss ? "or Boss% " : ""}or IED`;
+
+    // Remove previous options in case user switched between WS and E.
+    removeElementIfExists("attackOrBossOrIedGroup");
+    removeElementIfExists("attackAndAnyGroup");
+
+    $desiredStats.append(`<optgroup id='attackOrBossOrIedGroup' label='Any Useful Lines ${shortAnyText}'></optgroup>`);
+    const $attackOrBossOrIedGroup = $('#attackOrBossOrIedGroup');
+    for (let i = 1; i <= 3; i++) {
+        $attackOrBossOrIedGroup.append(`<option id='labi${i}' value='lineAttOrBossOrIed+${i}'>${i} Line ${longAnyText}</option>`);
+    }
+
+    $desiredStats.append(`<optgroup id='attackAndAnyGroup' label='Attack + Any Useful Lines'></optgroup>`);
+    const $attackAndAnyGroup = $('#attackAndAnyGroup');
+    $attackAndAnyGroup.append(`<option id='lalabi' value='lineAtt+1&lineAttOrBossOrIed+2'>1 Line attack with 1 Line ${longAnyText}</option>`);
+    $attackAndAnyGroup.append(`<option id='la2labi' value='lineAtt+1&lineAttOrBossOrIed+3'>1 Line attack with 2 Line ${longAnyText}</option>`);
+    $attackAndAnyGroup.append(`<option id='2lalabi' value='lineAtt+2&lineAttOrBossOrIed+3'>2 Line attack with 1 Line ${longAnyText}</option>`);
 }
 
 function removeCommonWSEOptions() {
     removeElementIfExists("attackGroup");
     removeElementIfExists("attackAndIEDGroup");
+    removeElementIfExists("attackOrBossOrIedGroup");
+    removeElementIfExists("attackAndAnyGroup");
 }
 
 function removeCommonSEOptions() {
     removeElementIfExists("attackAndBossGroup");
     removeElementIfExists("attackOrBossGroup");
-    removeElementIfExists("attackOrBossOrIedGroup");
 }
 
 function addCommonSEOptions(itemLevel, desiredTier) {
@@ -216,12 +240,6 @@ function addCommonSEOptions(itemLevel, desiredTier) {
     const $attackOrBossGroup = $('#attackOrBossGroup');
     for (let i = 1; i <= 3; i++) {
         $attackOrBossGroup.append(`<option id='lab${i}' value='lineAttOrBoss+${i}'>${i} Line Attack% or Boss%</option>`);
-    }
-
-    $desiredStats.append(`<optgroup id='attackOrBossOrIedGroup' label='Attack or Boss Damage or IED'></optgroup>`);
-    const $attackOrBossOrIedGroup = $('#attackOrBossOrIedGroup');
-    for (let i = 1; i <= 3; i++) {
-        $attackOrBossOrIedGroup.append(`<option id='labi${i}' value='lineAttOrBossOrIed+${i}'>${i} Line Attack% or Boss% or IED</option>`);
     }
 }
 
@@ -370,7 +388,7 @@ function updateDesiredStatsOptions() {
     const statType = document.getElementById('statType').value;
 
     if (itemType === 'weapon' || itemType === 'secondary' || itemType === 'emblem') {
-        addCommonWSEOptions(itemLevel, desiredTier);
+        addCommonWSEOptions(itemLevel, desiredTier, itemType);
         removeNormalStatOptions();
         if (itemType !== 'emblem') {
             addCommonSEOptions(itemLevel, desiredTier);
