@@ -1451,7 +1451,7 @@ function getTrueHitDamage(boss_percent, attack_percent, damage_percent, critical
 }
 
 function getBossDefMultiplier(ied_percent) {
-    var bossDefMultipler = 1 - (300 / 100) * (1 - (ied_percent / 100))
+    var bossDefMultipler = 1 - (380 / 100) * (1 - (ied_percent / 100))
     return bossDefMultipler
 }
 
