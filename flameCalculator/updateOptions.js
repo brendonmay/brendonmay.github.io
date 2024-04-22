@@ -147,10 +147,10 @@ function showArmorInputsForClass(maple_class) {
     wepLevel.style.display = 'none';
 
     if (isKanna) {
-        document.getElementById("all_stat").value = 12
+        document.getElementById("all_stat").value = 10
         document.getElementById("attack").value = 2
         document.getElementById("boss_stat").value = 18
-        document.getElementById("hp_stat").value = 135
+        document.getElementById("hp_stat").value = 350
         document.getElementById("luk_stat").value = 11
         document.getElementById("desired_stat_armor").value = 100
         if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 400
@@ -163,7 +163,7 @@ function showArmorInputsForClass(maple_class) {
         if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 700
 
     } else if (isShad || isDb || isCadena) {
-        document.getElementById("all_stat").value = 12
+        document.getElementById("all_stat").value = 10
         document.getElementById("attack").value = 3
         document.getElementById("boss_stat").value = 13
         document.getElementById("dex_stat").value = 12
@@ -172,10 +172,10 @@ function showArmorInputsForClass(maple_class) {
         if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 500
     } 
     else if (isOther) {
-        document.getElementById("all_stat").value = 12
+        document.getElementById("all_stat").value = 10
         document.getElementById("attack").value = 3
         document.getElementById("boss_stat").value = 15
-        document.getElementById("secondary_stat").value = 15
+        document.getElementById("secondary_stat").value = 12
         document.getElementById("desired_stat_armor").value = 100
         if (item_type == 'weapon') document.getElementById("desired_stat_armor").value = 500
     }
