@@ -317,8 +317,8 @@ def index():
         </style>
     </head>
     <body>
-        <h1>Teacher Course Distributor V4</h1>
-        <h2>Last Updated: 12/14/2023</h2>
+        <h1>Teacher Course Distributor V5</h1>
+        <h2>Last Updated: 05/10/2024</h2>
         <p>This program is designed to consider all teacher preferences for desired courses and will automatically construct a schedule which maximizes overall teacher preference. With the power of mathematics, we can create a schedule that satisfies all department members as much as possible.</p>
         <p>Please download this <a href="https://docs.google.com/forms/d/1KDXckJ5_bVsctTY4rKxEKv4ZI01ZtPOx4xfo-_FikcE/copy" target="_blank">Google Form</a> and have all of your department members fill it out.</p>
         <p>Once all members have completed the form, download the spreadsheet as a .CSV file and upload it below:</p>
