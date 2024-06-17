@@ -89,9 +89,9 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("itemLevel").addEventListener("change", function () {
     var itemLevel = parseInt($(this).val());
 
-    if (itemLevel < 71 || itemLevel > 200) {
+    if (itemLevel < 71 || itemLevel > 250) {
       $desiredStats.empty();
-      $desiredStats.append("<option value='N/A' disabled selected>Your item level must be between 71 and 200</option>");
+      $desiredStats.append("<option value='N/A' disabled selected>Your item level must be between 71 and 250</option>");
       document.getElementById('calculateButton').disabled = true;
     } else {
       updateDesiredStats();
