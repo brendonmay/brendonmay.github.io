@@ -89,11 +89,16 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("itemLevel").addEventListener("change", function () {
     var itemLevel = parseInt($(this).val());
 
-    if (itemLevel < 71 || itemLevel > 250) {
+    if (itemLevel < 71) {
       $desiredStats.empty();
-      $desiredStats.append("<option value='N/A' disabled selected>Your item level must be between 71 and 250</option>");
+      $desiredStats.append("<option value='N/A' disabled selected id='error_text'>Your item level must be greater than 71</option>");
       document.getElementById('calculateButton').disabled = true;
-    } else {
+    } 
+    else {
+      if (document.getElementById('error_text')){
+        $desiredStats.append("<option id='any' value='any'>Any</option>");
+        removeElementIfExists("error_text");
+      }
       updateDesiredStats();
       document.getElementById('calculateButton').disabled = false;
     }
