@@ -345,6 +345,7 @@ function addDropAndMesoOptions(desiredTier, statType) {
         $dropMesoGroup.append("<option id='accessory6' value='lineMesoOrDrop+2'>2 Lines Involving Item Drop% or Mesos Obtained%</option>");
 
         $dropMesoGroup.append("<option id='accessory7' value='lineMeso+3'>3 Line Mesos Obtained%</option>");
+        $dropMesoGroup.append("<option id='accessory11' value='lineDrop+3'>3 Line Drop%</option>");
     }
     // Update these lines in case the user changed stat type.
     updateOrCreateOption("accessory8", `lineMeso+1&line${statValueName}+1`, `1 Line Mesos Obtained% and 1 line ${displayText}`, $dropMesoGroup);
