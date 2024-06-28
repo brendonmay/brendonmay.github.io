@@ -1270,11 +1270,11 @@ function getClassData(maple_class) {
             'bossPercent': 0
         },
 
-        'Beast Tamer': {
-            'attPercent': 15,
-            'iedPercent': [20],
-            'dmgPercent': 20,
-            'bossPercent': 20
+        'Lynn': {
+            'attPercent': 4,
+            'iedPercent': [10, 20],
+            'dmgPercent': 0,
+            'bossPercent': 0
         },
 
         'Bowmaster': {
@@ -1405,9 +1405,9 @@ function getClassData(maple_class) {
 
         'Kain': {
             'attPercent': 34,
-            'iedPercent': [10, 30],
-            'dmgPercent': 10,
-            'bossPercent': 10,
+            'iedPercent': [20],
+            'dmgPercent': 0,
+            'bossPercent': 0
         },
 
         'Kaiser': {

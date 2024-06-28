@@ -1317,7 +1317,7 @@ function getPrimaryAndSecondaryStatType(maple_class) {
             'primaryStatType': 'INT',
             'secondaryStatType': 'LUK'
         },
-        'Beast Tamer': {
+        'Lynn': {
             'primaryStatType': 'INT',
             'secondaryStatType': 'LUK'
         },
@@ -2217,11 +2217,11 @@ function getClassData(maple_class) {
             'critDmg': 0
         },
 
-        'Beast Tamer': {
-            'attPercent': 15,
+        'Lynn': {
+            'attPercent': 4,
             'iedPercent': [20],
-            'dmgPercent': 20,
-            'bossPercent': 20,
+            'dmgPercent': 0,
+            'bossPercent': 0,
             'critDmg': 0
         },
 
