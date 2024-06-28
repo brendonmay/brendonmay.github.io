@@ -1404,7 +1404,7 @@ function getClassData(maple_class) {
         },
 
         'Kain': {
-            'attPercent': 34,
+            'attPercent': 4,
             'iedPercent': [20],
             'dmgPercent': 0,
             'bossPercent': 0

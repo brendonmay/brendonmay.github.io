@@ -2370,11 +2370,11 @@ function getClassData(maple_class) {
         },
 
         'Kain': {
-            'attPercent': 34,
-            'iedPercent': [10, 30],
-            'dmgPercent': 10,
-            'bossPercent': 10,
-            'critDmg': 40
+            'attPercent': 4,
+            'iedPercent': [20],
+            'dmgPercent': 0,
+            'bossPercent': 0,
+            'critDmg': 0
         },
 
         'Kaiser': {
