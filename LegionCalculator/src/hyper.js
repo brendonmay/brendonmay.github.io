@@ -4328,7 +4328,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
             stat_counter = 5;
             attack_counter = 5;
             if (ied_counter >= remaining_blocks) {
-                if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
+                if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter <= remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
                     if (maple_class == 'Demon Avenger') {
                         var attack = new_att + attack_counter;
                         //here
@@ -4371,7 +4371,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                 stat_counter = 5;
                 attack_counter = 5;
                 if (ied_counter + boss_counter >= remaining_blocks) {
-                    if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
+                    if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter <= remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
                         if (maple_class == 'Demon Avenger') {
                             var attack = new_att + attack_counter;
                             //here
@@ -4413,7 +4413,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                 for (stat_counter = 5; stat_counter <= 15; stat_counter++) {
                     attack_counter = 5;
                     if (ied_counter + boss_counter + crit_dmg_counter >= remaining_blocks) {
-                        if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
+                        if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter <= remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
                             if (maple_class == 'Demon Avenger') {
                                 var attack = new_att + attack_counter;
                                 //here
@@ -4453,7 +4453,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
                         break;
                     }
                     for (attack_counter = 5; attack_counter <= 15; attack_counter++) {
-                        if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter == remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
+                        if (ied_counter + boss_counter + crit_dmg_counter + stat_counter + attack_counter <= remaining_blocks && isValidCombination(ied_counter, crit_dmg_counter, crit_rate_amount)) {
                             if (maple_class == 'Demon Avenger') {
                                 var attack = new_att + attack_counter;
                                 //here
@@ -4495,7 +4495,7 @@ function allStatCombinations(crit_rate_amount, maple_class, new_cdmg, new_boss, 
             }
         }
     }
-    //console.log(optimal_setup);
+    console.log(optimal_setup);
     return optimal_setup
 
 }

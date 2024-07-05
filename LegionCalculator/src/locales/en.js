@@ -46,11 +46,11 @@ export default {
     archer250: 'Lvl 250 Archer',
     thief250: 'Lvl 250 Thief',
     mage250: 'Lvl 250 Mage',
-    pirate250: 'Lvl 250 Pirate',
+    pirate250: 'Lvl 250 Pirate/Abyssal',
     xenon250: 'Lvl 250 Xenon',
 
     /** special jobs */
-    enhancedLab200: 'Lvl 200 Enhanced Lab',
-    enhancedLab250: 'Lvl 250 Enhanced Lab',
-    lab250: 'Lvl 250 Lab'
+    enhancedLab200: 'Lvl 200 E-Lab',
+    enhancedLab250: 'Lvl 250 E-Lab',
+    lab250: 'Lvl 250 Lab',
 }

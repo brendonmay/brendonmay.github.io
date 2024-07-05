@@ -49,7 +49,7 @@ document.getElementById('result').addEventListener("DOMSubtreeModified", functio
 
 function initialBoardTemplate(crit_rate_amount) {
     var row = 10;
-    if (crit_rate_amount > 0) row = 9;
+    // if (crit_rate_amount > 0) row = 9;
     var column = 5;
     while (column < 17) {
         setBoard(row, column, 0);
@@ -151,18 +151,41 @@ function buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss) {
     var crit_rate_blocks = crit_rate;
     var crit_dmg_blocks = crit_dmg * 2;
     var boss_dmg_blocks = boss;
+    var buff_dur_blocks = 0
+    var sec_blocks = 0
+
+    if (stat == 75) {
+        var buff_dur_blocks = attack - 5
+        attack_blocks = 0
+    }
+    
+    var total_blocks = stat_blocks + attack_blocks + IED_blocks + crit_rate_blocks + crit_dmg_blocks + boss_dmg_blocks + buff_dur_blocks + 12
+    //var attack_blocks = 0 //change to remaining number of blocks. Check if greater than max, if so, rest go into secondary
+ 
+    var currentPieces = parseInt(JSON.parse(localStorage.getItem('currentPieces'))); //currentPieces = # of blocks to fill
+    var remaining_pieces = currentPieces - total_blocks
+    buff_dur_blocks += remaining_pieces
+    
+    if (buff_dur_blocks > 40) {
+        attack_blocks = buff_dur_blocks - 40
+        buff_dur_blocks = 40
+        if (attack_blocks > 10){
+            sec_blocks = attack_blocks - 10
+            attack_blocks = 10
+        }
+    }
 
     //assume stat on left, attack on right
-    var block_types = [crit_rate_blocks, crit_dmg_blocks, IED_blocks, boss_dmg_blocks];
-    var legion_groups = [{ x: 9, y: 17 }, { x: 9, y: 4 }, { x: 10, y: 4 }, { x: 10, y: 17 }];
+    var block_types = [crit_rate_blocks, crit_dmg_blocks, IED_blocks, boss_dmg_blocks, buff_dur_blocks, sec_blocks];
+    var legion_groups = [{ x: 9, y: 17 }, { x: 9, y: 4 }, { x: 10, y: 4 }, { x: 10, y: 17 }, { x: 15, y: 5}, { x: 9, y: 13}];
 
-    var crit_block_types = [stat_blocks, attack_blocks];
-    var crit_legion_groups = [{ x: 9, y: 5 }, { x: 9, y: 13 }];
+    // var crit_block_types = [stat_blocks, attack_blocks];
+    // var crit_legion_groups = [{ x: 9, y: 5 }, { x: 9, y: 13 }];
 
-    if (!has_crit_rate) { //update these 
+    // if (!has_crit_rate) { //update these 
         var crit_block_types = [stat_blocks, attack_blocks];
         var crit_legion_groups = [{ x: 10, y: 5 }, { x: 10, y: 13 }];
-    }
+    // }
 
     var w = 0
     while (w < 2) {

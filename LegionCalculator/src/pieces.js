@@ -95,6 +95,7 @@ const defaultPieces = [
 ];
 
 const gmsPieces = [
+
     // Lvl 200 Enhanced Lab
     [
         [1, 0, 0, 0],
