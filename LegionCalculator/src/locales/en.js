@@ -37,7 +37,7 @@ export default {
     // Lvl: 200
     warrior200: 'Lvl 200 Warrior',
     archer200: 'Lvl 200 Archer',
-    thiefLab200: 'Lvl 200 Thief/Lab',
+    thiefLab200: 'Lvl 200 Thief/Lab/Xenon',
     mage200: 'Lvl 200 Mage',
     pirate200: 'Lvl 200 Pirate',
 
