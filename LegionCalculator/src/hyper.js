@@ -1298,7 +1298,7 @@ function getPrimaryAndSecondaryStatType(maple_class) {
             'primaryStatType': 'INT',
             'secondaryStatType': 'LUK'
         },
-        'Beast Tamer': {
+        'Lynn': {
             'primaryStatType': 'INT',
             'secondaryStatType': 'LUK'
         },
@@ -1499,7 +1499,7 @@ function getMultiplier(weapon_type, maple_class) {
         'polearm': 1.49, //good
         'psy_limiter': 1.20, //good
         'ritual_fan': 1.30, //good
-        'scepter': 1.34, //good
+        'memorial_staff': 1.34, //good
         'shining_rod': 1.20, //good
         'soul_shooter': 1.70, //good
         'spear': 1.49, //good
@@ -2198,11 +2198,11 @@ function getClassData(maple_class) {
             'critDmg': 0
         },
 
-        'Beast Tamer': {
-            'attPercent': 15,
+        'Lynn': {
+            'attPercent': 4,
             'iedPercent': [20],
-            'dmgPercent': 20,
-            'bossPercent': 20,
+            'dmgPercent': 0,
+            'bossPercent': 0,
             'critDmg': 0
         },
 

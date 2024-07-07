@@ -1402,6 +1402,7 @@ function getMultiplier(weapon_type, maple_class) {
         'knuckle': 1.70, //good
         'long_sword': 1.34, //good
         'lucent_gauntlet': 1.20, //good
+        'memorial_staff': 1.34, //good
         'one_hand_axe': 1.20, //good
         'one_hand_axe_hero': 1.30, //good
         'one_hand_blunt': 1.20, //good
@@ -1409,7 +1410,6 @@ function getMultiplier(weapon_type, maple_class) {
         'polearm': 1.49, //good
         'psy_limiter': 1.20, //good
         'ritual_fan': 1.30, //good
-        'scepter': 1.34, //good
         'shining_rod': 1.20, //good
         'soul_shooter': 1.70, //good
         'spear': 1.49, //good
