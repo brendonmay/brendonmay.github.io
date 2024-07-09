@@ -383,9 +383,9 @@ function reroll_or_lock(current_lines, desired_lines) {
         line++
     }
     //console.log("lines to roll: " + lines_to_roll)
-    
+
     if (lines_to_roll == 0) return "done"
-   
+
     else if (lines_to_roll == 1 || lines_to_roll == 2) {
         var line_type2 = lines.line_types[2]
         var line_rank2 = lines.lines[2]
@@ -400,8 +400,8 @@ function reroll_or_lock(current_lines, desired_lines) {
         console.log('lines in following line')
         console.log(lines)
         console.log('# of lines to roll: ' + lines_to_roll)
-        if ((lines[1] == false && lines_to_roll == 1) || 
-            (lines[2] && (circ_line_prob2 <= circ_line_prob3)) || 
+        if ((lines[1] == false && lines_to_roll == 1) ||
+            (lines[2] && (circ_line_prob2 <= circ_line_prob3)) ||
             (lines[3] && (circ_line_prob2 >= circ_line_prob3))) {
             lines.reroll.choice = false
         }
@@ -460,7 +460,7 @@ function adjust_probability(line_rank, line_prob, locked_lines) {
     return (line_prob * total) / (total - locked_lines)
 }
 
-function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines, locked_lines_list) {
+function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines, locked_lines_list, circulators) {
     var number_of_successful_outcomes = line_ranks.length
     var line_successes = {}
 
@@ -478,7 +478,6 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
             var p = line_success
         }
         else {
-            console.log(locked_lines_list)
             if (locked_lines_list.includes(2) || locked_lines_list.includes(3)) var p = line_success
             else var p = line_success + line_failure * adjust_probability(line_rank, original_line_success, locked_lines + 1)
 
@@ -517,6 +516,9 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
                     case2 = line1_success * line2_failure
                     case3 = line1_failure * line2_success
                 }
+
+                if ((line_ranks[1] == 'unique' || line_ranks[1] == 'uniquep') && !circulators) case2 = 0 //dont lock line 1 before a unique line
+
                 var p = case1 + case2 + case3
             }
             else {
@@ -530,6 +532,9 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
                     case2 = line1_success * (1 - adjust_probability(line2_rank, original_line2_success, locked_lines + 1))
                     case3 = line1_failure * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
                 }
+
+                if ((line_ranks[1] == 'unique' || line_ranks[1] == 'uniquep') && !circulators) case2 = 0 //dont lock line 1 before a unique line
+
                 var p = case1 + case2 + case3
             }
         }
@@ -643,10 +648,11 @@ function circulatorsSpent(compare_lines, line_to_roll) {
     var locked_lines_list = []
     var probabilities = [abilities_circulator[line_types[0]][line_ranks[0]]]
     var number_of_locked_lines = 0
+    var circulators = true
 
     //console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types)
 
-    var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list).p
+    var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list, circulators).p
     // console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
     // console.log("p: " + p)
 
@@ -655,6 +661,31 @@ function circulatorsSpent(compare_lines, line_to_roll) {
     var rolls_75 = geoDistrQuantile(p).seventy_fifth
 
     return { median_rolls: median_rolls, rolls_25: rolls_25, rolls_75: rolls_75 }
+}
+
+function honorSpentRerolling(compare_lines, line_to_roll) {
+    var line_ranks = [compare_lines.lines[line_to_roll]]
+    var line_types = [compare_lines.line_types[line_to_roll]]
+    var locked_lines_list = []
+    var probabilities = [abilities_honor[line_types[0]][line_ranks[0]]]
+    var number_of_locked_lines = 0
+    var circulators = false
+
+    //console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types)
+
+    var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list, circulators).p
+    // console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
+    // console.log("p: " + p)
+
+    var median_rolls = geoDistrQuantile(p).median
+    var rolls_25 = geoDistrQuantile(p).twenty_fifth
+    var rolls_75 = geoDistrQuantile(p).seventy_fifth
+
+    var honor_spent_median = honor_cost(0) * median_rolls
+    var honor_spent_25 = honor_cost(0) * rolls_25
+    var honor_spent_75 = honor_cost(0) * rolls_75
+
+    return { honor_spent_median, honor_spent_25, honor_spent_75 }
 }
 
 function cloneArray(array) {
@@ -736,8 +767,11 @@ function pureHonorSpent(compare_lines) {
 
     }
     if (lines_to_roll == 2) {
+        console.log(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list)
         var success_info = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list)
         var p = success_info.p
+        console.log("Success Info Below")
+        console.log(success_info)
         //console.log("p(rolling line2 or line3 = " + p)
         var median_rolls = geoDistrQuantile(p).median
         var rolls_25 = geoDistrQuantile(p).twenty_fifth
@@ -761,13 +795,20 @@ function pureHonorSpent(compare_lines) {
 
         var outcome_1 = probabilitySuccess([probabilities[0]], [line_ranks[0]], [line_types[0]], number_of_locked_lines + 1, locked_lines_list2).p //line 2 previously successful
         var outcome_2 = probabilitySuccess([probabilities[1]], [line_ranks[1]], [line_types[1]], number_of_locked_lines + 1, locked_lines_list1).p // line 1 previously successful
+
+        if ((line_ranks[0] == "legendary" || line_ranks[0] == "legendaryp") &&
+            (line_ranks[1] == 'unique' || line_ranks[1] == 'uniquep')) {
+            outcome_2 = 0 //it is cheaper to roll for the unique line before locking the legendary line.
+
+        }
+
         var new_p = (success_info.line_successes[2] / p) * (outcome_1) + (success_info.line_successes[1] / p) * (outcome_2) + (success_info.line_successes.all) / p
 
-        // console.log("probabilities: " + probabilities[0], ", line_ranks: " + line_ranks[0], ", line_types: " + line_types[0], ", number_of_locked_lines: " + number_of_locked_lines)
-        // console.log("line1 = " + line_types[0], ", line2 = " + line_types[1])
-        // console.log("p(rolling1|2) = " + (outcome_1), ", percentage of time line 2 occurs before line 2 = " + (success_info.line_successes[2] / p) * 100 + "%")
-        // console.log("p(rolling2|1) = " + (outcome_2), ", percentage of time line 1 occurs before line 2 = " + (success_info.line_successes[1] / p) * 100 + "%")
-        // console.log("p(rolling 1 and 2) = " + (success_info.line_successes.all) / p * 100 + "%")
+        console.log("probabilities: " + probabilities[0] + ', ' + probabilities[1], "| line_ranks: " + line_ranks[0] + ', ' + line_ranks[1], "| line_types: " + line_types[0] + ', ' + line_types[1], "| number_of_locked_lines: " + number_of_locked_lines)
+        console.log("line1 = " + line_types[0], "| line2 = " + line_types[1])
+        console.log("p(rolling1|2) = " + (outcome_1), ", percentage of time line 2 occurs before line 2 = " + (success_info.line_successes[2] / p) * 100 + "%")
+        console.log("p(rolling2|1) = " + (outcome_2), ", percentage of time line 1 occurs before line 2 = " + (success_info.line_successes[1] / p) * 100 + "%")
+        console.log("p(rolling 1 and 2) = " + (success_info.line_successes.all) / p * 100 + "%")
 
         //console.log(new_p)
         median_rolls = geoDistrQuantile(new_p).median
@@ -804,33 +845,50 @@ function run_calculation(current_lines, desired_lines, only_honor) {
     var only_lock = 0
     var first_honor_roll
     var compare_lines = reroll_or_lock(current_lines, desired_lines)
-    //console.log(compare_lines)
+    console.log("compare_lines below")
+    console.log(compare_lines)
     if (compare_lines == "done") {
         console.log("No computation needed.")
         return 0
     }
-    if (compare_lines.lines_to_roll == 3 && only_honor) {
-        console.log("Recommend they use circulators. This calculation is too high.")
-        return 99
-    }
+    // if (compare_lines.lines_to_roll == 3 && only_honor) {
+    //     console.log("Recommend they use circulators. This calculation is too high.")
+    //     return 99
+    // }
     var reroll_choice = compare_lines.reroll.choice
-    if (only_honor) reroll_choice = false
 
     if (reroll_choice) {
         if (compare_lines.lines[1] != "N/A") compare_lines[1] = false
         if (compare_lines.lines[2] != "N/A") compare_lines[2] = false
         if (compare_lines.lines[3] != "N/A") compare_lines[3] = false
         var line_to_roll = compare_lines.reroll.line
-        var circulators_spent = circulatorsSpent(compare_lines, line_to_roll)
+        if (only_honor) { //here
+            var first_honor_spent = honorSpentRerolling(compare_lines, line_to_roll) //gives honor spent re-rerolling expensive line
 
-        compare_lines[line_to_roll] = true
-        compare_lines.locked_lines = [line_to_roll]
-        var honor_spent = pureHonorSpent(compare_lines)
+            compare_lines[line_to_roll] = true
+            compare_lines.locked_lines = [line_to_roll]
+            var second_honor_spent = pureHonorSpent(compare_lines) //rolling next 2 lines
+
+            var honor_spent_median = first_honor_spent.honor_spent_median + second_honor_spent.honor_spent_median
+            var honor_spent_25 = first_honor_spent.honor_spent_25 + second_honor_spent.honor_spent_25
+            var honor_spent_75 = first_honor_spent.honor_spent_75 + second_honor_spent.honor_spent_75
+
+            var honor_spent = {honor_spent_median, honor_spent_25, honor_spent_75}
+            var circulators_spent = 0
+        }
+        else {
+            var circulators_spent = circulatorsSpent(compare_lines, line_to_roll)
+
+            compare_lines[line_to_roll] = true
+            compare_lines.locked_lines = [line_to_roll]
+            var honor_spent = pureHonorSpent(compare_lines)
+        }
+
     }
     else {
         var line_1_achieved = compare_lines[1]
         console.log("line 1 achieved:" + line_1_achieved)
-        if (compare_lines.lines_to_roll == 1 && line_1_achieved){
+        if (compare_lines.lines_to_roll == 1 && line_1_achieved) {
             if (compare_lines[2]) {
                 var new_locked_lines = [2]
                 var first_honor_roll = 3
@@ -843,14 +901,13 @@ function run_calculation(current_lines, desired_lines, only_honor) {
             compare_lines[1] = false
             unlock_line_1 = true
             only_lock = new_locked_lines[0]
-            console.log('need to only lock line #' + only_lock +' then use honor until you hit line #' + first_honor_roll) //here
-            console.log()
-            console.log('compare lines in following line')
-            console.log(compare_lines)
+            console.log('need to only lock line #' + only_lock + ' then use honor until you hit line #' + first_honor_roll)
+            // console.log('compare lines in following line')
+            // console.log(compare_lines)
         }
         var honor_spent = pureHonorSpent(compare_lines)
-        console.log("honor cost following line")
-        console.log(honor_spent)
+        // console.log("honor cost following line")
+        // console.log(honor_spent)
         var circulators_spent = 0
     }
     return { "honor": honor_spent, "circulators": circulators_spent, "line_to_roll": line_to_roll, unlock_line_1, only_lock, first_honor_roll }
@@ -1052,7 +1109,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 `
 
-                if (isValid == "identical") { //here
+                if (isValid == "identical") {
 
                 }
 
@@ -1108,7 +1165,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var fifty_off = document.getElementById("fifty").checked
 
                 var expected_data = run_calculation(current_lines, desired_lines, only_honor)
-                //console.log(expected_data)
+                console.log(expected_data)
                 if (expected_data == 0) {
                     var expected_honor = 0
                     var expected_circulators = 0
@@ -1196,7 +1253,7 @@ document.addEventListener("DOMContentLoaded", function () {
         `
                     }
                     else {
-                        if (expected_data.unlock_line_1){
+                        if (expected_data.unlock_line_1) {
                             document.getElementById('result').innerHTML =
                                 `
                         <div class="container secondarycon">
@@ -1216,29 +1273,46 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
         `
                         }
-                        else{
-                            document.getElementById('result').innerHTML =
-                                `
-                        <div class="container secondarycon">
-                        <div class=" statBox statBox1" style="background-color:#aaa;">
-                            <h2 style="text-align:center;">Honor Cost</h2>
-                                <p style="text-align:center;"">
-                                You are expected to use between:<br>
-                                ${honor_spent_25.toLocaleString()} and ${honor_spent_75.toLocaleString()} Honor Exp<br><br>
+                        else {
+                            if (expected_data.line_to_roll != 1 && expected_data.line_to_roll != 2 && expected_data.line_to_roll != 3){
+                                document.getElementById('result').innerHTML =
+                                        `
+                                <div class="container secondarycon">
+                                <div class=" statBox statBox1" style="background-color:#aaa;">
+                                    <h2 style="text-align:center;">Honor Cost</h2>
+                                        <p style="text-align:center;"">
+                                        You are expected to use between:<br>
+                                        ${honor_spent_25.toLocaleString()} and ${honor_spent_75.toLocaleString()} Honor Exp<br><br>
 
-                                <b>Median: ${honor_spent_median.toLocaleString()} Honor Exp
-                                </p>
-                                <br>
-                                <p>
-                                <b>Instructions:</b> Do not lock line 1 until you have both lines 2 and 3.</b>
-                                </p>
-                
-                                </p>
-                        </div>
-                        </div>
-        `
+                                        <b>Median: ${honor_spent_median.toLocaleString()} Honor Exp </b>
+                                        </p>
+                                </div>
+                                </div>
+                                        `
+                            }
+                            else{
+                                document.getElementById('result').innerHTML =
+                                        `
+                                <div class="container secondarycon">
+                                <div class=" statBox statBox1" style="background-color:#aaa;">
+                                    <h2 style="text-align:center;">Honor Cost</h2>
+                                        <p style="text-align:center;"">
+                                        You are expected to use between:<br>
+                                        ${honor_spent_25.toLocaleString()} and ${honor_spent_75.toLocaleString()} Honor Exp<br><br>
+
+                                        <b>Median: ${honor_spent_median.toLocaleString()} Honor Exp </b>
+                                        </p>
+                                        <br>
+                                        <p>
+                                        <b>Instructions:</b> Unlock all and <b>roll for line ${expected_data.line_to_roll}</b>. Do not lock line 1 until you have both lines 2 and 3.</b>
+                                        </p>
+                                </div>
+                                </div>
+                                        `
+                            }
+                            
                         }
-                      
+
                     }
                 }
             }
