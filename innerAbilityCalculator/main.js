@@ -384,47 +384,91 @@ function reroll_or_lock(current_lines, desired_lines) {
     }
     //console.log("lines to roll: " + lines_to_roll)
 
+    lines.reroll.choice = false
+
     if (lines_to_roll == 0) return "done"
 
     else if (lines_to_roll == 1 || lines_to_roll == 2) {
+        var line_type1 = lines.line_types[1]
+        var line_rank1 = lines.lines[1]
         var line_type2 = lines.line_types[2]
         var line_rank2 = lines.lines[2]
         var line_type3 = lines.line_types[3]
         var line_rank3 = lines.lines[3]
         //console.log(line_type2, line_rank2, line_type3, line_rank3)
+        var circ_line_prob1 = circProb(line_type1, line_rank1)
         var circ_line_prob2 = circProb(line_type2, line_rank2)
         var circ_line_prob3 = circProb(line_type3, line_rank3)
         var perfectline2 = isPerfect(line_rank2)
         var perfectline3 = isPerfect(line_rank3)
+
+        if(lines_to_roll == 1){
+            if (lines[1] == false && circ_line_prob1 < circ_line_prob2 && circ_line_prob1 < circ_line_prob3) {
+                lines.reroll.choice = true
+                lines.reroll.line = 1
+            }
+            if (lines[2] == false && circ_line_prob2 < circ_line_prob1 && circ_line_prob2 < circ_line_prob3) {
+                lines.reroll.choice = true
+                lines.reroll.line = 2
+            }
+            if (lines[3] == false && circ_line_prob3 < circ_line_prob1 && circ_line_prob3 < circ_line_prob2) {
+                lines.reroll.choice = true
+                lines.reroll.line = 3
+            }
+        }
+        if(lines_to_roll == 2){
+            if (lines[1] == true && (circ_line_prob1 > circ_line_prob2 || circ_line_prob1 > circ_line_prob3) ) {
+                lines.reroll.choice = true
+                if (circ_line_prob2 >= circ_line_prob3) lines.reroll.line = 3
+                else lines.reroll.line = 2 
+                
+            }
+            if (lines[2] == true && (circ_line_prob2 > circ_line_prob1 && circ_line_prob2 > circ_line_prob3) ) {
+                lines.reroll.choice = true
+                if (circ_line_prob1 >= circ_line_prob3) lines.reroll.line = 3
+                else lines.reroll.line = 1 
+            }
+            if (lines[3] == true && (circ_line_prob3 > circ_line_prob1 && circ_line_prob3 > circ_line_prob2)) {
+                lines.reroll.choice = true
+                if (circ_line_prob2 >= circ_line_prob1) lines.reroll.line = 1
+                else lines.reroll.line = 2 
+            }
+        }
         //console.log(circ_line_prob2, circ_line_prob3)
         // console.log('lines in following line')
         // console.log(lines)
         // console.log('# of lines to roll: ' + lines_to_roll)
-        if ((lines[1] == false && lines_to_roll == 1) ||
-            (lines[2] && (circ_line_prob2 <= circ_line_prob3)) || 
-            (lines[3] && (circ_line_prob2 >= circ_line_prob3))) {
-            lines.reroll.choice = false
-        }
-        else {
-            lines.reroll.choice = true
-            if (circ_line_prob2 < circ_line_prob3) lines.reroll.line = 2
-            else lines.reroll.line = 3
-        }
+        // if ((lines[1] == false && lines_to_roll == 1) ||
+        //     (lines[2] && (circ_line_prob2 <= circ_line_prob3)) || 
+        //     (lines[3] && (circ_line_prob2 >= circ_line_prob3))) {
+        //     lines.reroll.choice = false
+        // }
+        // else {
+        //     lines.reroll.choice = true
+        //     if (circ_line_prob2 < circ_line_prob3) lines.reroll.line = 2
+        //     else lines.reroll.line = 3
+        // }
 
     }
     else if (lines_to_roll == 3) {
         lines.reroll.choice = true
+        var line_type1 = lines.line_types[1]
+        var line_rank1 = lines.lines[1]
         var line_type2 = lines.line_types[2]
         var line_rank2 = lines.lines[2]
         var line_type3 = lines.line_types[3]
         var line_rank3 = lines.lines[3]
         //console.log(line_type2, line_rank2, line_type3, line_rank3)
+        var circ_line_prob1 = circProb(line_type1, line_rank1)
         var circ_line_prob2 = circProb(line_type2, line_rank2)
         var circ_line_prob3 = circProb(line_type3, line_rank3)
+        console.log(circ_line_prob1, circ_line_prob2, circ_line_prob3)
         var perfectline2 = isPerfect(line_rank2)
         var perfectline3 = isPerfect(line_rank3)
         //console.log(circ_line_prob2, circ_line_prob3)
-        if (circ_line_prob2 < circ_line_prob3) lines.reroll.line = 2
+        var hardest_prob = Math.min(circ_line_prob1, circ_line_prob2, circ_line_prob3)
+        if (circ_line_prob1 == hardest_prob) lines.reroll.line = 1
+        else if (circ_line_prob2 == hardest_prob) lines.reroll.line = 2
         else lines.reroll.line = 3
     }
 
@@ -887,9 +931,9 @@ function run_calculation(current_lines, desired_lines, only_honor) {
             var i = 0
             while (i < 3) {
                 if (i + 1 != line_to_roll) { //here
-                    if (compare_lines.line_probabilities[i+1] < lowest_prob){
+                    if (compare_lines.line_probabilities[i+1] * line_probabilities[compare_lines.lines[i+1]] < lowest_prob){
                         var first_honor_roll = i + 1
-                        lowest_prob = compare_lines.line_probabilities[i+1]
+                        lowest_prob = compare_lines.line_probabilities[i+1] * line_probabilities[compare_lines.lines[i+1]]
                     }
                 }
                 i++
@@ -906,9 +950,9 @@ function run_calculation(current_lines, desired_lines, only_honor) {
             var i = 0
             while (i < 3) {
                 if (i + 1 != line_to_roll) { //here
-                    if (compare_lines.line_probabilities[i+1] < lowest_prob){
+                    if (compare_lines.line_probabilities[i+1] * line_probabilities[compare_lines.lines[i+1]] < lowest_prob){
                         first_honor_roll = i + 1
-                        lowest_prob = compare_lines.line_probabilities[i+1]
+                        lowest_prob = compare_lines.line_probabilities[i+1] * line_probabilities[compare_lines.lines[i+1]]
                     }
                 }
                 i++
@@ -922,7 +966,7 @@ function run_calculation(current_lines, desired_lines, only_honor) {
 
         if (compare_lines.locked_lines.length == 1) { //One line is locked, checking which line to roll for first
             if (compare_lines.locked_lines.includes(1)) {
-                if (compare_lines.line_probabilities[2] < compare_lines.line_probabilities[3]){
+                if (compare_lines.line_probabilities[2] * line_probabilities[compare_lines.lines[2]] < compare_lines.line_probabilities[3] * line_probabilities[compare_lines.lines[3]]){
                     var first_honor_roll = 2
                 } 
                 else {
@@ -930,20 +974,20 @@ function run_calculation(current_lines, desired_lines, only_honor) {
                 }
             }
             else if (compare_lines.locked_lines.includes(2)) {
-                if (compare_lines.line_probabilities[1] < compare_lines.line_probabilities[3]) var first_honor_roll = 1
+                if (compare_lines.line_probabilities[1] * line_probabilities[compare_lines.lines[1]] < compare_lines.line_probabilities[3] * line_probabilities[compare_lines.lines[3]]) var first_honor_roll = 1
                 else var first_honor_roll = 3
             }
             else if (compare_lines.locked_lines.includes(3)) {
-                if (compare_lines.line_probabilities[2] < compare_lines.line_probabilities[1]) var first_honor_roll = 2
+                if (compare_lines.line_probabilities[2] * line_probabilities[compare_lines.lines[2]] < compare_lines.line_probabilities[1] * line_probabilities[compare_lines.lines[1]]) var first_honor_roll = 2
                 else var first_honor_roll = 1
             }
         }
 
         //case where two lines have already been achieved, including line #1. Check if its worth unlocking line 1
         if (compare_lines.lines_to_roll == 1 && line_1_achieved) {
-            var line_1_prob = compare_lines.line_probabilities[1]
-            if (locked_lines.includes(2)) var line_2_prob =  compare_lines.line_probabilities[3]
-            else var line_2_prob = compare_lines.line_probabilities[2]
+            var line_1_prob = compare_lines.line_probabilities[1] * line_probabilities[compare_lines.lines[1]]
+            if (locked_lines.includes(2)) var line_2_prob =  compare_lines.line_probabilities[3] * line_probabilities[compare_lines.lines[3]]
+            else var line_2_prob = compare_lines.line_probabilities[2] * line_probabilities[compare_lines.lines[2]]
             if(line_1_prob > line_2_prob){ //in this case, unlock line 1
                 console.log("It is worth unlocking Line #1")
                 if (compare_lines[2]) {
@@ -968,9 +1012,9 @@ function run_calculation(current_lines, desired_lines, only_honor) {
         }
         //case where two lines have already been achieved, excluding line #1. Check if its worth unlocking line 2 or line 3
         if (compare_lines.lines_to_roll == 1 && !line_1_achieved) {
-            var line_1_prob = compare_lines.line_probabilities[1]
-            var line_2_prob = compare_lines.line_probabilities[2]
-            var line_3_prob = compare_lines.line_probabilities[3]
+            var line_1_prob = compare_lines.line_probabilities[1] * line_probabilities[compare_lines.lines[1]]
+            var line_2_prob = compare_lines.line_probabilities[2] * line_probabilities[compare_lines.lines[2]]
+            var line_3_prob = compare_lines.line_probabilities[3] * line_probabilities[compare_lines.lines[3]]
 
             // if (line_1_prob < line_2_prob && line_1_prob < line_3_prob){ //may need to fix this
                 
