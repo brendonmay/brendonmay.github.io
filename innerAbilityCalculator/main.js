@@ -546,7 +546,10 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
 
         var both_failure = line1_failure * line2_failure
 
-        //console.log(line_ranks)
+        console.log("line_ranks: " + line_ranks)
+        console.log(!circulators)
+        console.log('line1_success: ' + line1_success)
+        console.log('line2_success: ' + line2_success)
 
         if (line_ranks[0] == "legendary" || line_ranks[0] == "legendaryp") { 
             if (not_repeatable.includes(line1_type)) {
@@ -561,8 +564,14 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
                     case3 = line1_failure * line2_success
                 }
                 
-                if ((line_ranks[1] == 'unique' || line_ranks[1] == 'uniquep' || line_ranks[1] == 'epic') && (!circulators) && (line1_success < line2_success)) {
-                    case2 = 0 //dont lock line 1 before a unique line unless its more rare
+                if ((!circulators) && (line1_success < line2_success)) { //line 1 is more rare
+                    case3 = 0 //line1 must be successful first
+                    console.log("Roll line 1 first")
+                }
+
+                if ((!circulators) && (line1_success > line2_success)) { //line 2 is more rare
+                    case2 = 0 //line2 must be successful first
+                    console.log("Do not roll line 1 first")
                 }
                 var p = case1 + case2 + case3
             }
@@ -578,9 +587,15 @@ function probabilitySuccess(probabilities, line_ranks, line_types, locked_lines,
                     case3 = line1_failure * adjust_probability(line2_rank, original_line2_success, locked_lines + 1)
                 }
 
-                if ((!circulators) && (line1_success < line2_success)){
-                    case2 = 0 //dont lock line 1 before a unique line unless its more rare
-                } 
+                if ((!circulators) && (line1_success < line2_success)) { //line 1 is more rare
+                    case3 = 0 //line1 must be successful first
+                    console.log("Roll line 1 first")
+                }
+
+                if ((!circulators) && (line1_success > line2_success)) { //line 2 is more rare
+                    case2 = 0 //line2 must be successful first
+                    console.log("Do not roll line 1 first")
+                }
 
                 var p = case1 + case2 + case3
             }
@@ -868,8 +883,8 @@ function pureHonorSpent(compare_lines) {
     }
     if (lines_to_roll == 1) {
         var p = probabilitySuccess(probabilities, line_ranks, line_types, number_of_locked_lines, locked_lines_list).p
-        // console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
-        // console.log("p: " + p)
+        console.log("probabilities: " + probabilities, ", line_ranks: " + line_ranks, ", line_types: " + line_types, ", number_of_locked_lines: " + number_of_locked_lines)
+        console.log("p: " + p)
 
         var median_rolls = geoDistrQuantile(p).median
         var rolls_25 = geoDistrQuantile(p).twenty_fifth
