@@ -310,11 +310,14 @@ function isPerfect(line_rank) {
     return line_rank.slice(-1) == 'p'
 }
 
-function circProb(line_type, line_rank) {
+function circProb(line_type, line_rank, use_honor_prob) {
     //console.log(line_type, line_rank)
     if (line_type == "N/A" || line_rank == "N/A") return 1
     if (line_rank == "epic") {
-        abilities_circulator[line_type][line_rank] * line_probabilities[line_rank] + abilities_circulator[line_type]['unique'] * line_probabilities['unique']
+        return abilities_circulator[line_type][line_rank] * line_probabilities[line_rank] + abilities_circulator[line_type]['unique'] * line_probabilities['unique']
+    }
+    if (use_honor_prob){ 
+        return abilities_honor[line_type][line_rank] * line_probabilities[line_rank]
     }
     return abilities_circulator[line_type][line_rank] * line_probabilities[line_rank]
 }
@@ -335,11 +338,12 @@ function reroll_or_lock(current_lines, desired_lines) {
 
     var line = 0
     var lines_to_roll = 3
-    var line_probabilities = { 1: 0, 2: 0, 3: 0 }
+    var line_probabilities_dict = { 1: 0, 2: 0, 3: 0 }
     var desired_NAs = 0
     var locked_lines = []
     var repeated_lock_check = []
     var repeated_roll_check = []
+    var use_honor_prob = false
 
     while (line < 3) {
         var current_line = current_lines[line]
@@ -376,7 +380,7 @@ function reroll_or_lock(current_lines, desired_lines) {
                 lines.line_types[index] = line_type
 
             }
-            line_probabilities[index] = probability_for_desired_line
+            line_probabilities_dict[index] = probability_for_desired_line
             desired_line++
         }
 
@@ -395,12 +399,16 @@ function reroll_or_lock(current_lines, desired_lines) {
         var line_rank2 = lines.lines[2]
         var line_type3 = lines.line_types[3]
         var line_rank3 = lines.lines[3]
-        //console.log(line_type2, line_rank2, line_type3, line_rank3)
-        var circ_line_prob1 = circProb(line_type1, line_rank1)
-        var circ_line_prob2 = circProb(line_type2, line_rank2)
-        var circ_line_prob3 = circProb(line_type3, line_rank3)
-        var perfectline2 = isPerfect(line_rank2)
-        var perfectline3 = isPerfect(line_rank3)
+
+        if (!isPerfect(line_rank1) || !isPerfect(line_rank2) || !isPerfect(line_rank3)){
+            use_honor_prob = true
+        }
+
+        var circ_line_prob1 = circProb(line_type1, line_rank1, use_honor_prob)
+        var circ_line_prob2 = circProb(line_type2, line_rank2, use_honor_prob)
+        var circ_line_prob3 = circProb(line_type3, line_rank3, use_honor_prob)
+
+        console.log('circ_line_probs: ' + circ_line_prob1 + circ_line_prob2 + circ_line_prob3)
 
         if(lines_to_roll == 1){
             if (lines[1] == false && circ_line_prob1 < circ_line_prob2 && circ_line_prob1 < circ_line_prob3) {
@@ -459,13 +467,16 @@ function reroll_or_lock(current_lines, desired_lines) {
         var line_type3 = lines.line_types[3]
         var line_rank3 = lines.lines[3]
         //console.log(line_type2, line_rank2, line_type3, line_rank3)
-        var circ_line_prob1 = circProb(line_type1, line_rank1)
-        var circ_line_prob2 = circProb(line_type2, line_rank2)
-        var circ_line_prob3 = circProb(line_type3, line_rank3)
-        console.log(circ_line_prob1, circ_line_prob2, circ_line_prob3)
-        var perfectline2 = isPerfect(line_rank2)
-        var perfectline3 = isPerfect(line_rank3)
+        if (!isPerfect(line_rank1) || !isPerfect(line_rank2) || !isPerfect(line_rank3)){
+            use_honor_prob = true
+        }
+
+        var circ_line_prob1 = circProb(line_type1, line_rank1, use_honor_prob)
+        var circ_line_prob2 = circProb(line_type2, line_rank2, use_honor_prob)
+        var circ_line_prob3 = circProb(line_type3, line_rank3, use_honor_prob)
+        
         //console.log(circ_line_prob2, circ_line_prob3)
+        console.log(circ_line_prob1, circ_line_prob2, circ_line_prob3)
         var hardest_prob = Math.min(circ_line_prob1, circ_line_prob2, circ_line_prob3)
         if (circ_line_prob1 == hardest_prob) lines.reroll.line = 1
         else if (circ_line_prob2 == hardest_prob) lines.reroll.line = 2
@@ -473,7 +484,7 @@ function reroll_or_lock(current_lines, desired_lines) {
     }
 
     lines.locked_lines = locked_lines
-    lines.line_probabilities = line_probabilities
+    lines.line_probabilities = line_probabilities_dict
     lines.desired_NAs = desired_NAs / 3
     lines.lines_to_roll = lines_to_roll
 
@@ -945,7 +956,7 @@ function run_calculation(current_lines, desired_lines, only_honor) {
             var lowest_prob = 1
             var i = 0
             while (i < 3) {
-                if (i + 1 != line_to_roll) { //here
+                if (i + 1 != line_to_roll) { 
                     if (compare_lines.line_probabilities[i+1] * line_probabilities[compare_lines.lines[i+1]] < lowest_prob){
                         var first_honor_roll = i + 1
                         lowest_prob = compare_lines.line_probabilities[i+1] * line_probabilities[compare_lines.lines[i+1]]
@@ -964,7 +975,7 @@ function run_calculation(current_lines, desired_lines, only_honor) {
             var lowest_prob = 1
             var i = 0
             while (i < 3) {
-                if (i + 1 != line_to_roll) { //here
+                if (i + 1 != line_to_roll) { 
                     if (compare_lines.line_probabilities[i+1] * line_probabilities[compare_lines.lines[i+1]] < lowest_prob){
                         first_honor_roll = i + 1
                         lowest_prob = compare_lines.line_probabilities[i+1] * line_probabilities[compare_lines.lines[i+1]]
@@ -1497,7 +1508,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                             else if (expected_data.locked_lines.length == 1) { //case where there is 1 locked line
                                 var locked_line = expected_data.locked_lines[0]
-                                var line_to_roll = expected_data.first_honor_roll //here get this
+                                var line_to_roll = expected_data.first_honor_roll 
 
                                 document.getElementById('result').innerHTML =
                                         `
