@@ -22,30 +22,37 @@ document.getElementById('disableBoard').addEventListener('click', function () {
 
 })
 
+// Select the target node
+var targetNode = document.getElementById('result');
 
-document.getElementById('result').addEventListener("DOMSubtreeModified", function () {
-    var goBuild = document.getElementById('result').innerHTML == 'Step 3/6. Building Legion Board...';
+// Create an observer instance linked to the callback function
+var observer = new MutationObserver(function (mutationsList, observer) {
+    for (var mutation of mutationsList) {
+        if (mutation.type === 'childList' || mutation.type === 'subtree') {
+            var goBuild = targetNode.innerHTML == 'Step 3/6. Building Legion Board...';
+            if (goBuild) {
+                var board_stat = parseInt(JSON.parse(localStorage.getItem('board_stat')))
+                var board_attack = parseInt(JSON.parse(localStorage.getItem('board_attack')))
+                var board_ied = parseFloat(JSON.parse(localStorage.getItem('board_ied')))
+                var board_crit_rate = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks')));
+                var board_cdmg = parseFloat(JSON.parse(localStorage.getItem('board_cdmg')))
+                var board_boss = parseInt(JSON.parse(localStorage.getItem('board_boss')))
 
-    if (goBuild) {
+                // document.getElementById("clearBoard").click();
+                // clearBoard();
+                //console.log(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss)
+                buildBoard(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss);
 
-        var board_stat = parseInt(JSON.parse(localStorage.getItem('board_stat')))
-        var board_attack = parseInt(JSON.parse(localStorage.getItem('board_attack')))
-        var board_ied = parseFloat(JSON.parse(localStorage.getItem('board_ied')))
-        var board_crit_rate = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks')));
-        var board_cdmg = parseFloat(JSON.parse(localStorage.getItem('board_cdmg')))
-        var board_boss = parseInt(JSON.parse(localStorage.getItem('board_boss')))
-
-        // document.getElementById("clearBoard").click();
-        // clearBoard();
-        //console.log(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss)
-        buildBoard(board_stat, board_attack, board_ied, board_crit_rate, board_cdmg, board_boss);
-
-        //move to step 4
-        document.getElementById('result').innerHTML = 'Step 4/6. Solving Legion Board...';
-        runSolver();
+                //move to step 4
+                document.getElementById('result').innerHTML = 'Step 4/6. Solving Legion Board...';
+                runSolver();
+            }
+        }
     }
 });
 
+// Start observing the target node for configured mutations
+observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
 
 function initialBoardTemplate(crit_rate_amount) {
     var row = 10;
@@ -158,18 +165,18 @@ function buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss) {
         var buff_dur_blocks = attack - 5
         attack_blocks = 0
     }
-    
+
     var total_blocks = stat_blocks + attack_blocks + IED_blocks + crit_rate_blocks + crit_dmg_blocks + boss_dmg_blocks + buff_dur_blocks + 12
     //var attack_blocks = 0 //change to remaining number of blocks. Check if greater than max, if so, rest go into secondary
- 
+
     var currentPieces = parseInt(JSON.parse(localStorage.getItem('currentPieces'))); //currentPieces = # of blocks to fill
     var remaining_pieces = currentPieces - total_blocks
     buff_dur_blocks += remaining_pieces
-    
+
     if (buff_dur_blocks > 40) {
         attack_blocks = buff_dur_blocks - 40
         buff_dur_blocks = 40
-        if (attack_blocks > 10){
+        if (attack_blocks > 10) {
             sec_blocks = attack_blocks - 10
             attack_blocks = 10
         }
@@ -177,14 +184,14 @@ function buildBoard(stat, attack, IED, crit_rate, crit_dmg, boss) {
 
     //assume stat on left, attack on right
     var block_types = [crit_rate_blocks, crit_dmg_blocks, IED_blocks, boss_dmg_blocks, buff_dur_blocks, sec_blocks];
-    var legion_groups = [{ x: 9, y: 17 }, { x: 9, y: 4 }, { x: 10, y: 4 }, { x: 10, y: 17 }, { x: 15, y: 5}, { x: 9, y: 13}];
+    var legion_groups = [{ x: 9, y: 17 }, { x: 9, y: 4 }, { x: 10, y: 4 }, { x: 10, y: 17 }, { x: 15, y: 5 }, { x: 9, y: 13 }];
 
     // var crit_block_types = [stat_blocks, attack_blocks];
     // var crit_legion_groups = [{ x: 9, y: 5 }, { x: 9, y: 13 }];
 
     // if (!has_crit_rate) { //update these 
-        var crit_block_types = [stat_blocks, attack_blocks];
-        var crit_legion_groups = [{ x: 10, y: 5 }, { x: 10, y: 13 }];
+    var crit_block_types = [stat_blocks, attack_blocks];
+    var crit_legion_groups = [{ x: 10, y: 5 }, { x: 10, y: 13 }];
     // }
 
     var w = 0

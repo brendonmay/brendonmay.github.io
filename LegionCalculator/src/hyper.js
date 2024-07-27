@@ -3247,320 +3247,332 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    document.getElementById('result').addEventListener("DOMSubtreeModified", function () {
-        var isFinished = document.getElementById('result').innerHTML == "Finished";
-        var beginLegionOptimization = document.getElementById('result').innerHTML == 'Step 2/6. Optimizing Legion Board...';
-        var startSecondHyperOptimization = document.getElementById('result').innerHTML == 'Step 5/6. Configuring Hyper Stats...'
+    // Select the target node
+    var targetNode = document.getElementById('result');
 
-        if (startSecondHyperOptimization) {
-            var maple_class = document.getElementById('class').value;
-            var current_attack_percent = parseInt(JSON.parse(localStorage.getItem('current_attack_percent')));
-            var level = parseInt(document.getElementById('level').value);
-            var pdr = 3;
+    // Create an observer instance linked to the callback function
+    var observer = new MutationObserver(function (mutationsList, observer) {
+        for (var mutation of mutationsList) {
+            if (mutation.type === 'childList' || mutation.type === 'subtree') {
+                var isFinished = targetNode.innerHTML == "Finished";
+                var beginLegionOptimization = targetNode.innerHTML == 'Step 2/6. Optimizing Legion Board...';
+                var startSecondHyperOptimization = targetNode.innerHTML == 'Step 5/6. Configuring Hyper Stats...'
 
-            var extra_boss_points = parseInt(points_to_be_removed.boss);
-            var extra_cdmg_points = parseInt(points_to_be_removed.cdmg);
-            var extra_dmg_points = parseInt(points_to_be_removed.dmg);
-            var extra_ied_points = parseInt(points_to_be_removed.ied);
+                if (startSecondHyperOptimization) {
+                    var maple_class = document.getElementById('class').value;
+                    var current_attack_percent = parseInt(JSON.parse(localStorage.getItem('current_attack_percent')));
+                    var level = parseInt(document.getElementById('level').value);
+                    var pdr = 3;
 
-            if (extra_boss_points > 10) extra_boss_points = 10;
-            if (extra_cdmg_points > 10) extra_cdmg_points = 10;
-            if (extra_dmg_points > 10) extra_dmg_points = 10;
-            if (extra_ied_points > 10) extra_ied_points = 10;
+                    var extra_boss_points = parseInt(points_to_be_removed.boss);
+                    var extra_cdmg_points = parseInt(points_to_be_removed.cdmg);
+                    var extra_dmg_points = parseInt(points_to_be_removed.dmg);
+                    var extra_ied_points = parseInt(points_to_be_removed.ied);
 
-            if (extra_boss_points > 5) {
-                var boss_to_remove = (3 * 5) + (extra_boss_points - 5) * 4;
-            }
-            else {
-                var boss_to_remove = 3 * extra_boss_points;
-            }
+                    if (extra_boss_points > 10) extra_boss_points = 10;
+                    if (extra_cdmg_points > 10) extra_cdmg_points = 10;
+                    if (extra_dmg_points > 10) extra_dmg_points = 10;
+                    if (extra_ied_points > 10) extra_ied_points = 10;
 
-            var cdmg_to_remove = extra_cdmg_points;
-            var dmg_to_remove = extra_dmg_points * 3;
-            var ied_to_remove = extra_ied_points * 3;
+                    if (extra_boss_points > 5) {
+                        var boss_to_remove = (3 * 5) + (extra_boss_points - 5) * 4;
+                    }
+                    else {
+                        var boss_to_remove = 3 * extra_boss_points;
+                    }
 
-            var final_boss = optimal_setup.boss - boss_to_remove
-            var final_dmg = optimal_setup.dmg - dmg_to_remove
-            var final_cdmg = optimal_setup.cdmg - cdmg_to_remove
-            var final_ied = (optimal_setup.ied - ied_to_remove) / ((-1 * ied_to_remove / 100) + 1)
+                    var cdmg_to_remove = extra_cdmg_points;
+                    var dmg_to_remove = extra_dmg_points * 3;
+                    var ied_to_remove = extra_ied_points * 3;
 
-            //here
-            console.log(optimal_setup)
-            if (maple_class == "Kanna") {
-                calculate(optimal_setup.attack * current_attack_percent / 100, final_dmg, final_boss, final_ied, final_cdmg, optimal_setup.primary, optimal_setup.secondary, maple_class, level, current_attack_percent, pdr, true);
+                    var final_boss = optimal_setup.boss - boss_to_remove
+                    var final_dmg = optimal_setup.dmg - dmg_to_remove
+                    var final_cdmg = optimal_setup.cdmg - cdmg_to_remove
+                    var final_ied = (optimal_setup.ied - ied_to_remove) / ((-1 * ied_to_remove / 100) + 1)
 
-            }
-            else {
-                calculate(optimal_setup.attack, final_dmg, final_boss, final_ied, final_cdmg, optimal_setup.primary, optimal_setup.secondary, maple_class, level, current_attack_percent, pdr, true);
-            }
-        }
-        if (beginLegionOptimization) {
-            //start legion optimization here
-            //here
-            console.log("intial hyper optimization: " + bestScore[0]);
-            console.log(bestResult);
+                    //here
+                    console.log(optimal_setup)
+                    if (maple_class == "Kanna") {
+                        calculate(optimal_setup.attack * current_attack_percent / 100, final_dmg, final_boss, final_ied, final_cdmg, optimal_setup.primary, optimal_setup.secondary, maple_class, level, current_attack_percent, pdr, true);
 
-            var initial_boss_points = bestResult.boss;
-            var initial_cdmg_points = bestResult.cdmg;
-            var initial_dmg_points = bestResult.dmg;
-            var initial_ied_points = bestResult.ied;
-
-            points_to_be_removed = {
-                boss: initial_boss_points,
-                cdmg: initial_cdmg_points,
-                dmg: initial_dmg_points,
-                ied: initial_ied_points
-            }
-
-            var maple_class = document.getElementById('class').value;
-
-            var diff_data = {
-                boss: { 11: 39, 12: 43, 13: 47, 14: 51, 15: 55 },
-                cdmg: { 11: 11, 12: 12, 13: 13, 14: 14, 15: 15 },
-                dmg: { 11: 33, 12: 36, 13: 39, 14: 42, 15: 45 },
-                ied: { 11: 33, 12: 36, 13: 39, 14: 42, 15: 45 }
-            }
-
-            if (maple_class == 'Kanna') {
-                var new_boss = bestResult.base_boss
-                var new_cdmg = bestResult.base_cdmg
-                var new_dmg = bestResult.base_dmg
-                var new_ied = bestResult.base_ied
-            }
-            else {
-                var new_boss = bestResult.boss_base
-                var new_cdmg = bestResult.cdmg_base
-                var new_dmg = bestResult.dmg_base
-                var new_ied = bestResult.ied_base
-            }
-
-            console.log('new_boss: ' + new_boss + ", new_cdmg: " + new_cdmg + ", new_dmg: " + new_dmg + ", new_ied: " + new_ied)
-
-            var att = parseInt(JSON.parse(localStorage.getItem('stripped_attack')));
-            var primary = parseInt(JSON.parse(localStorage.getItem('stripped_primary')));
-            var secondary = parseInt(JSON.parse(localStorage.getItem('stripped_secondary')));
-            //var new_hp_percent = 1;
-
-            //if (maple_class == 'Demon Avenger') new_hp_percent = parseFloat(JSON.parse(localStorage.getItem('new_hp_percent')));
-
-            if (initial_boss_points > 10) {
-                new_boss = new_boss - diff_data.boss[initial_boss_points] / 100 + 35 / 100;
-            }
-            if (initial_cdmg_points > 10) {
-                new_cdmg = new_cdmg - diff_data.cdmg[initial_cdmg_points] / 100 + 10 / 100;
-            }
-            if (initial_dmg_points > 10) {
-                new_dmg = new_dmg - diff_data.dmg[initial_dmg_points] / 100 + 30 / 100;
-            }
-            if (initial_ied_points > 10) {
-                var stripped_ied = ((new_ied * 100) - diff_data.ied[initial_ied_points]) / ((-1 * diff_data.ied[initial_ied_points] / 100) + 1);
-                new_ied = (1 - (stripped_ied / 100)) * 0.3 + stripped_ied / 100;
-            }
-
-            var pdr = 3;
-
-            var crit_rate_amount = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks')));
-            //here assume 3 ATT = 3 stat
-
-            //console.log(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary)
-            optimal_setup = allStatCombinations(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary); //optimizes legion board
-            console.log(optimal_setup)
-            //move to step 3
-            document.getElementById('result').innerHTML = 'Step 3/6. Building Legion Board...';
-
-            //build board
-            var board_stat = optimal_setup.primary_bonus //here issue for D.A giving NaN
-            var board_attack = optimal_setup.att_bonus
-            var board_ied = optimal_setup.ied_bonus
-            var board_crit_rate = crit_rate_amount
-            var board_cdmg = optimal_setup.cdmg_bonus
-            var board_boss = optimal_setup.boss_bonus
-
-            console.log('board_stat: ' + board_stat + ", board_attack: " + board_attack + ", board_ied: " + board_ied + ", board_cdmg: " + board_cdmg + ", board_boss: " + board_boss)
-
-            localStorage.setItem("board_stat", JSON.stringify(board_stat));
-            localStorage.setItem("board_attack", JSON.stringify(board_attack));
-            localStorage.setItem("board_ied", JSON.stringify(board_ied));
-            localStorage.setItem("board_cdmg", JSON.stringify(board_cdmg));
-            localStorage.setItem("board_boss", JSON.stringify(board_boss));
-
-        }
-
-        if (isFinished) {
-            //console.log("old score: " + currentScore);
-            console.log("optimal score: " + bestScore[0]);
-            console.log(bestResult);
-
-            //update optimized hyper table
-            document.getElementById('nattPowerSelect').value = bestResult.att;
-            nupdatePoints(document.getElementById('nattPowerSelect'));
-
-            document.getElementById('nbDamageSelect').value = bestResult.boss;
-            nupdatePoints(document.getElementById('nbDamageSelect'));
-
-            document.getElementById('ncritDmgSelect').value = bestResult.cdmg;
-            nupdatePoints(document.getElementById('ncritDmgSelect'));
-
-            document.getElementById('ndamageSelect').value = bestResult.dmg;
-            nupdatePoints(document.getElementById('ndamageSelect'));
-
-            document.getElementById('nignDefSelect').value = bestResult.ied;
-            nupdatePoints(document.getElementById('nignDefSelect'));
-
-            var maple_class = document.getElementById('class').value;
-
-            if (maple_class == "Xenon") {
-                document.getElementById('nstrSelect').value = bestResult.primary1;
-                nupdatePoints(document.getElementById('nstrSelect'));
-
-                document.getElementById('ndexSelect').value = bestResult.primary2;
-                nupdatePoints(document.getElementById('ndexSelect'));
-
-                document.getElementById('nlukSelect').value = bestResult.primary3;
-                nupdatePoints(document.getElementById('nlukSelect'));
-            }
-            else if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
-                document.getElementById('nlukSelect').value = bestResult.primary;
-                nupdatePoints(document.getElementById('nlukSelect'));
-
-                document.getElementById('nstrSelect').value = bestResult.secondary1;
-                nupdatePoints(document.getElementById('nstrSelect'));
-
-                document.getElementById('ndexSelect').value = bestResult.secondary2;
-                nupdatePoints(document.getElementById('ndexSelect'));
-            }
-            else if (maple_class == "Demon Avenger") {
-                document.getElementById('nhpSelect').value = bestResult.hp;
-                nupdatePoints(document.getElementById('nhpSelect'));
-
-                document.getElementById('nstrSelect').value = bestResult.str;
-                nupdatePoints(document.getElementById('nstrSelect'));
-            }
-            else if (maple_class == "Kanna") {
-                document.getElementById('nhpSelect').value = bestResult.hp;
-                nupdatePoints(document.getElementById('nhpSelect'));
-
-                document.getElementById('nlukSelect').value = bestResult.luk;
-                nupdatePoints(document.getElementById('nlukSelect'));
-
-                document.getElementById('nintSelect').value = bestResult.int;
-                nupdatePoints(document.getElementById('nintSelect'));
-            }
-            else {
-                var stat_types = getPrimaryAndSecondaryStatType(maple_class);
-                var primary_stat_type = stat_types.primaryStatType;
-                var secondary_stat_type = stat_types.secondaryStatType;
-
-                if (primary_stat_type == "LUK") {
-                    document.getElementById('nlukSelect').value = bestResult.primary;
-                    nupdatePoints(document.getElementById('nlukSelect'));
+                    }
+                    else {
+                        calculate(optimal_setup.attack, final_dmg, final_boss, final_ied, final_cdmg, optimal_setup.primary, optimal_setup.secondary, maple_class, level, current_attack_percent, pdr, true);
+                    }
                 }
-                if (primary_stat_type == "DEX") {
-                    document.getElementById('ndexSelect').value = bestResult.primary;
-                    nupdatePoints(document.getElementById('ndexSelect'));
-                }
-                if (primary_stat_type == "STR") {
-                    document.getElementById('nstrSelect').value = bestResult.primary;
-                    nupdatePoints(document.getElementById('nstrSelect'));
-                }
-                if (primary_stat_type == "INT") {
-                    document.getElementById('nintSelect').value = bestResult.primary;
-                    nupdatePoints(document.getElementById('nintSelect'));
-                }
-                if (secondary_stat_type == "LUK") {
-                    document.getElementById('nlukSelect').value = bestResult.secondary;
-                    nupdatePoints(document.getElementById('nlukSelect'));
-                }
-                if (secondary_stat_type == "DEX") {
-                    document.getElementById('ndexSelect').value = bestResult.secondary;
-                    nupdatePoints(document.getElementById('ndexSelect'));
-                }
-                if (secondary_stat_type == "STR") {
-                    document.getElementById('nstrSelect').value = bestResult.secondary;
-                    nupdatePoints(document.getElementById('nstrSelect'));
-                }
-                if (secondary_stat_type == "INT") {
-                    document.getElementById('nintSelect').value = bestResult.secondary;
-                    nupdatePoints(document.getElementById('nintSelect'));
-                }
-            }
+                if (beginLegionOptimization) {
+                    //start legion optimization here
+                    //here
+                    console.log("intial hyper optimization: " + bestScore[0]);
+                    console.log(bestResult);
 
-            var mobbing = document.getElementById('mobbing').checked;
-            //determine damage increase
-            var dmgRatio = bestScore[0] / currentScore;
-            var dmgIncrease = ((dmgRatio - 1) * 100).toFixed(2);
-            var maple_class = document.getElementById('class').value;
+                    var initial_boss_points = bestResult.boss;
+                    var initial_cdmg_points = bestResult.cdmg;
+                    var initial_dmg_points = bestResult.dmg;
+                    var initial_ied_points = bestResult.ied;
 
-            //console.log(dmgRatio);
-            //console.log(dmgIncrease);
+                    points_to_be_removed = {
+                        boss: initial_boss_points,
+                        cdmg: initial_cdmg_points,
+                        dmg: initial_dmg_points,
+                        ied: initial_ied_points
+                    }
 
-            if (dmgRatio == 1 || dmgIncrease == '0.00') {
-                document.getElementById('resultSection').hidden = false;
-                document.getElementById('result').innerHTML = `
+                    var maple_class = document.getElementById('class').value;
+
+                    var diff_data = {
+                        boss: { 11: 39, 12: 43, 13: 47, 14: 51, 15: 55 },
+                        cdmg: { 11: 11, 12: 12, 13: 13, 14: 14, 15: 15 },
+                        dmg: { 11: 33, 12: 36, 13: 39, 14: 42, 15: 45 },
+                        ied: { 11: 33, 12: 36, 13: 39, 14: 42, 15: 45 }
+                    }
+
+                    if (maple_class == 'Kanna') {
+                        var new_boss = bestResult.base_boss
+                        var new_cdmg = bestResult.base_cdmg
+                        var new_dmg = bestResult.base_dmg
+                        var new_ied = bestResult.base_ied
+                    }
+                    else {
+                        var new_boss = bestResult.boss_base
+                        var new_cdmg = bestResult.cdmg_base
+                        var new_dmg = bestResult.dmg_base
+                        var new_ied = bestResult.ied_base
+                    }
+
+                    console.log('new_boss: ' + new_boss + ", new_cdmg: " + new_cdmg + ", new_dmg: " + new_dmg + ", new_ied: " + new_ied)
+
+                    var att = parseInt(JSON.parse(localStorage.getItem('stripped_attack')));
+                    var primary = parseInt(JSON.parse(localStorage.getItem('stripped_primary')));
+                    var secondary = parseInt(JSON.parse(localStorage.getItem('stripped_secondary')));
+                    //var new_hp_percent = 1;
+
+                    //if (maple_class == 'Demon Avenger') new_hp_percent = parseFloat(JSON.parse(localStorage.getItem('new_hp_percent')));
+
+                    if (initial_boss_points > 10) {
+                        new_boss = new_boss - diff_data.boss[initial_boss_points] / 100 + 35 / 100;
+                    }
+                    if (initial_cdmg_points > 10) {
+                        new_cdmg = new_cdmg - diff_data.cdmg[initial_cdmg_points] / 100 + 10 / 100;
+                    }
+                    if (initial_dmg_points > 10) {
+                        new_dmg = new_dmg - diff_data.dmg[initial_dmg_points] / 100 + 30 / 100;
+                    }
+                    if (initial_ied_points > 10) {
+                        var stripped_ied = ((new_ied * 100) - diff_data.ied[initial_ied_points]) / ((-1 * diff_data.ied[initial_ied_points] / 100) + 1);
+                        new_ied = (1 - (stripped_ied / 100)) * 0.3 + stripped_ied / 100;
+                    }
+
+                    var pdr = 3;
+
+                    var crit_rate_amount = parseInt(JSON.parse(localStorage.getItem('legion_crit_blocks')));
+                    //here assume 3 ATT = 3 stat
+
+                    //console.log(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary)
+                    optimal_setup = allStatCombinations(crit_rate_amount, maple_class, new_cdmg * 100, new_boss * 100, new_dmg * 100, new_ied * 100, att, pdr, primary, secondary); //optimizes legion board
+                    console.log(optimal_setup)
+                    //move to step 3
+                    document.getElementById('result').innerHTML = 'Step 3/6. Building Legion Board...';
+
+                    //build board
+                    var board_stat = optimal_setup.primary_bonus //here issue for D.A giving NaN
+                    var board_attack = optimal_setup.att_bonus
+                    var board_ied = optimal_setup.ied_bonus
+                    var board_crit_rate = crit_rate_amount
+                    var board_cdmg = optimal_setup.cdmg_bonus
+                    var board_boss = optimal_setup.boss_bonus
+
+                    console.log('board_stat: ' + board_stat + ", board_attack: " + board_attack + ", board_ied: " + board_ied + ", board_cdmg: " + board_cdmg + ", board_boss: " + board_boss)
+
+                    localStorage.setItem("board_stat", JSON.stringify(board_stat));
+                    localStorage.setItem("board_attack", JSON.stringify(board_attack));
+                    localStorage.setItem("board_ied", JSON.stringify(board_ied));
+                    localStorage.setItem("board_cdmg", JSON.stringify(board_cdmg));
+                    localStorage.setItem("board_boss", JSON.stringify(board_boss));
+
+                }
+
+                if (isFinished) {
+                    //console.log("old score: " + currentScore);
+                    console.log("optimal score: " + bestScore[0]);
+                    console.log(bestResult);
+
+                    //update optimized hyper table
+                    document.getElementById('nattPowerSelect').value = bestResult.att;
+                    nupdatePoints(document.getElementById('nattPowerSelect'));
+
+                    document.getElementById('nbDamageSelect').value = bestResult.boss;
+                    nupdatePoints(document.getElementById('nbDamageSelect'));
+
+                    document.getElementById('ncritDmgSelect').value = bestResult.cdmg;
+                    nupdatePoints(document.getElementById('ncritDmgSelect'));
+
+                    document.getElementById('ndamageSelect').value = bestResult.dmg;
+                    nupdatePoints(document.getElementById('ndamageSelect'));
+
+                    document.getElementById('nignDefSelect').value = bestResult.ied;
+                    nupdatePoints(document.getElementById('nignDefSelect'));
+
+                    var maple_class = document.getElementById('class').value;
+
+                    if (maple_class == "Xenon") {
+                        document.getElementById('nstrSelect').value = bestResult.primary1;
+                        nupdatePoints(document.getElementById('nstrSelect'));
+
+                        document.getElementById('ndexSelect').value = bestResult.primary2;
+                        nupdatePoints(document.getElementById('ndexSelect'));
+
+                        document.getElementById('nlukSelect').value = bestResult.primary3;
+                        nupdatePoints(document.getElementById('nlukSelect'));
+                    }
+                    else if (maple_class == "Cadena" || maple_class == "Dual Blade" || maple_class == "Shadower") {
+                        document.getElementById('nlukSelect').value = bestResult.primary;
+                        nupdatePoints(document.getElementById('nlukSelect'));
+
+                        document.getElementById('nstrSelect').value = bestResult.secondary1;
+                        nupdatePoints(document.getElementById('nstrSelect'));
+
+                        document.getElementById('ndexSelect').value = bestResult.secondary2;
+                        nupdatePoints(document.getElementById('ndexSelect'));
+                    }
+                    else if (maple_class == "Demon Avenger") {
+                        document.getElementById('nhpSelect').value = bestResult.hp;
+                        nupdatePoints(document.getElementById('nhpSelect'));
+
+                        document.getElementById('nstrSelect').value = bestResult.str;
+                        nupdatePoints(document.getElementById('nstrSelect'));
+                    }
+                    else if (maple_class == "Kanna") {
+                        document.getElementById('nhpSelect').value = bestResult.hp;
+                        nupdatePoints(document.getElementById('nhpSelect'));
+
+                        document.getElementById('nlukSelect').value = bestResult.luk;
+                        nupdatePoints(document.getElementById('nlukSelect'));
+
+                        document.getElementById('nintSelect').value = bestResult.int;
+                        nupdatePoints(document.getElementById('nintSelect'));
+                    }
+                    else {
+                        var stat_types = getPrimaryAndSecondaryStatType(maple_class);
+                        var primary_stat_type = stat_types.primaryStatType;
+                        var secondary_stat_type = stat_types.secondaryStatType;
+
+                        if (primary_stat_type == "LUK") {
+                            document.getElementById('nlukSelect').value = bestResult.primary;
+                            nupdatePoints(document.getElementById('nlukSelect'));
+                        }
+                        if (primary_stat_type == "DEX") {
+                            document.getElementById('ndexSelect').value = bestResult.primary;
+                            nupdatePoints(document.getElementById('ndexSelect'));
+                        }
+                        if (primary_stat_type == "STR") {
+                            document.getElementById('nstrSelect').value = bestResult.primary;
+                            nupdatePoints(document.getElementById('nstrSelect'));
+                        }
+                        if (primary_stat_type == "INT") {
+                            document.getElementById('nintSelect').value = bestResult.primary;
+                            nupdatePoints(document.getElementById('nintSelect'));
+                        }
+                        if (secondary_stat_type == "LUK") {
+                            document.getElementById('nlukSelect').value = bestResult.secondary;
+                            nupdatePoints(document.getElementById('nlukSelect'));
+                        }
+                        if (secondary_stat_type == "DEX") {
+                            document.getElementById('ndexSelect').value = bestResult.secondary;
+                            nupdatePoints(document.getElementById('ndexSelect'));
+                        }
+                        if (secondary_stat_type == "STR") {
+                            document.getElementById('nstrSelect').value = bestResult.secondary;
+                            nupdatePoints(document.getElementById('nstrSelect'));
+                        }
+                        if (secondary_stat_type == "INT") {
+                            document.getElementById('nintSelect').value = bestResult.secondary;
+                            nupdatePoints(document.getElementById('nintSelect'));
+                        }
+                    }
+
+                    var mobbing = document.getElementById('mobbing').checked;
+                    //determine damage increase
+                    var dmgRatio = bestScore[0] / currentScore;
+                    var dmgIncrease = ((dmgRatio - 1) * 100).toFixed(2);
+                    var maple_class = document.getElementById('class').value;
+
+                    //console.log(dmgRatio);
+                    //console.log(dmgIncrease);
+
+                    if (dmgRatio == 1 || dmgIncrease == '0.00') {
+                        document.getElementById('resultSection').hidden = false;
+                        document.getElementById('result').innerHTML = `
                     You already obtain a fully optimized configuration!
                 `;
-                window.scrollTo(0, document.body.scrollHeight);
-            }
+                        window.scrollTo(0, document.body.scrollHeight);
+                    }
 
-            else if (dmgRatio > 1) {
-                var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
-                document.getElementById('resultSection').hidden = false;
-                if (currentScore == 0) {
-                    if (mobbing) {
-                        document.getElementById('result').innerHTML = `
+                    else if (dmgRatio > 1) {
+                        var output_increase = ((dmgRatio - 1) * 100).toFixed(2);
+                        document.getElementById('resultSection').hidden = false;
+                        if (currentScore == 0) {
+                            if (mobbing) {
+                                document.getElementById('result').innerHTML = `
                         Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> significantly! Refer to the above table for your optimal setup.
                     `;
-                    }
-                    else {
-                        document.getElementById('result').innerHTML = `
+                            }
+                            else {
+                                document.getElementById('result').innerHTML = `
                         Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> significantly! Refer to the above table for your optimal setup.
                     `;
-                    }
-                }
-                else {
-                    if (mobbing) {
-                        document.getElementById('result').innerHTML = `
+                            }
+                        }
+                        else {
+                            if (mobbing) {
+                                document.getElementById('result').innerHTML = `
                         Hit Damage on Mobs will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
                     `;
-                    }
-                    else {
-                        // if (maple_class == "Kanna") {
-                        //     document.getElementById('result').innerHTML = `
-                        //     Your legion board and hyper stats have successfully been optimized!
-                        // `;
-                        // }
-                        // else {
-                        document.getElementById('result').innerHTML = `
+                            }
+                            else {
+                                // if (maple_class == "Kanna") {
+                                //     document.getElementById('result').innerHTML = `
+                                //     Your legion board and hyper stats have successfully been optimized!
+                                // `;
+                                // }
+                                // else {
+                                document.getElementById('result').innerHTML = `
                         Your legion board and hyper stats have successfully been optimized!<br>Hit Damage on Bosses will <span style='color:green !important'><strong>increase</strong></span> by ${output_increase}%.
                     `;
-                        // }
+                                // }
+                            }
+
+                        }
+                        window.scrollTo(0, document.body.scrollHeight);
                     }
 
-                }
-                window.scrollTo(0, document.body.scrollHeight);
-            }
+                    else if (dmgRatio < 1) {
 
-            else if (dmgRatio < 1) {
-
-                //4. if desired crit > current crit, dmg will go down, fix results message
-                if (weaker || maple_class == "Kanna") {
-                    document.getElementById('result').innerHTML = `
+                        //4. if desired crit > current crit, dmg will go down, fix results message
+                        if (weaker || maple_class == "Kanna") {
+                            document.getElementById('result').innerHTML = `
                     Your legion board and hyper stats have successfully been optimized! 
                 `;
-                }
-                else {
-                    var output_decrease = ((1 - dmgRatio) * 100).toFixed(2);
-                    // document.getElementById('resultSection').hidden = false;
-                    document.getElementById('result').innerHTML = `
+                        }
+                        else {
+                            var output_decrease = ((1 - dmgRatio) * 100).toFixed(2);
+                            // document.getElementById('resultSection').hidden = false;
+                            document.getElementById('result').innerHTML = `
                     Optimization Failed! You will lose ${output_decrease}%. Please contact developer. 
                 `;
+                        }
+                        window.scrollTo(0, document.body.scrollHeight);
+                    }
+
+
                 }
-                window.scrollTo(0, document.body.scrollHeight);
             }
-
-
         }
     });
+
+    // Start observing the target node for configured mutations
+    observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
+    
 
     document.getElementById("calculateButton").addEventListener("click", function () {
         optimizeWSE();
