@@ -351,7 +351,7 @@ function convertCubeDataForLevel(cubeData, itemLevel) {
 
     let adjustedCubeData = {};
     const affected_categories = [CATEGORY.STR_PERC, CATEGORY.LUK_PERC, CATEGORY.DEX_PERC, CATEGORY.INT_PERC,
-        CATEGORY.ALLSTATS_PERC, CATEGORY.ATT_PERC, CATEGORY.MATT_PERC];
+        CATEGORY.ALLSTATS_PERC, CATEGORY.ATT_PERC, CATEGORY.MATT_PERC, CATEGORY.MAXHP_PERC];
 
     console.groupCollapsed("Adjusted stats for lvl >=160")
     for (const line in cubeData) {

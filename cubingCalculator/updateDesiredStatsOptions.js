@@ -41,7 +41,7 @@ function translateInputToObject(webInput) {
 }
 
 function getPrimeLineValue(itemLevel, desiredTier, type) {
-    const levelBonus = itemLevel >= 160 && !(type === "hp") ? 1 : 0;
+    const levelBonus = itemLevel >= 160 ? 1 : 0;
     const base = type === "allStat" ? 0 : 3;
 
     return base + (3 * desiredTier) + levelBonus;
