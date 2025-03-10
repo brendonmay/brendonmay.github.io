@@ -47,26 +47,32 @@ function getPrimeLineValue(itemLevel, desiredTier, type) {
     return base + (3 * desiredTier) + levelBonus;
 }
 
-function get3LStatOptionAmounts(prime) {
+// Attack lines can only be prime or non-prime
+function get3LAtkOptionAmounts(prime) {
     // To keep things understandable -> p = prime, n = nonprime, a = allstat.
     const ppp = prime * 3;
     const ppn = ppp - 3;
     const pnn = ppp - 6;
-    const pna = ppp - 9; // This doesn't work for max HP legendary, but it's not worth a special case.
-    const paa = ppp - 12;
-    const aaa = ppp - 15;
-    const idkman = ppp - 18;
     // Only keep non-zero entries since epic tier will get down to 0 with this.
-    return [idkman,
-        aaa,
-        paa,
-        pna,
-        pnn,
+    return [pnn,
         ppn,
         ppp].filter((x) => x > 0);
 }
 
-function get2LStatOptionAmounts(prime) {
+// Stat lines can include all stat lines, which have prime and non-prime lines 3% lower than normal.
+function get3LStatOptionAmounts(prime) {
+    // To keep things understandable -> p = prime, n = nonprime, a = allstat.
+    const ppp = prime * 3;
+    const pna = ppp - 9;
+    const paa = ppp - 12;
+    const aaa = ppp - 15;
+    const idkman = ppp - 18;
+    const nonAllStatOptions = get3LAtkOptionAmounts(prime);
+    // Only keep non-zero entries since epic tier will get down to 0.
+    return [idkman, aaa, paa, pna, ...nonAllStatOptions].filter((x) => x > 0);
+}
+
+function get2LAtkOptionAmounts(prime) {
     // For when we want to do stuff like 2L + boss.
     const pp = prime * 2;
     const pn = pp - 3;
@@ -158,19 +164,20 @@ function removeNormalStatOptions() {
 
 function addCommonWSEOptions(itemLevel, desiredTier, itemType) {
     const prime = getPrimeLineValue(itemLevel, desiredTier);
-    const optionAmounts = get3LStatOptionAmounts(prime);
+    const threeLineOptionAmounts = get3LAtkOptionAmounts(prime);
+    const twoLineOptionAmounts = get2LAtkOptionAmounts(prime);
+    const attackOptionsAmounts = [...twoLineOptionAmounts, ...threeLineOptionAmounts];
+
     addNormalOptionGroup("attack",
         "percAtt",
         "Attack",
         "Attack",
-        optionAmounts);
-
-    const IEDOptionAmounts = get2LStatOptionAmounts(prime);
+        attackOptionsAmounts);
     addNormalOptionGroup("attackAndIED",
         "lineIed+1&percAtt",
         "Attack and IED",
         "Attack With 1 Line of IED",
-        IEDOptionAmounts);
+        twoLineOptionAmounts);
 
     const $desiredStats = $('#desiredStats');
     // Hide boss for emblem or epic tier.
@@ -210,7 +217,7 @@ function removeCommonSEOptions() {
 
 function addCommonSEOptions(itemLevel, desiredTier) {
     const prime = getPrimeLineValue(itemLevel, desiredTier);
-    const [_, pn, pp] = get2LStatOptionAmounts(prime);
+    const [_, pn, pp] = get2LAtkOptionAmounts(prime);
 
     // To avoid having to figure out which lines to change when changing potential tier.
     removeCommonSEOptions();
