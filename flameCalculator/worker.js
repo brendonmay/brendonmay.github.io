@@ -22,6 +22,7 @@ const TIER_PROBABILITIES = {
     drop: { 3: 0.25, 4: 0.3, 5: 0.3, 6: 0.14, 7: 0.01 },
     powerful: { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 },
     eternal: { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 },
+    reincarnation: { 3: 0, 4: 0.01, 5: 0.63, 6: 0.34, 7: 0.02 },
     fusion: { 3: 0.5, 4: 0.4, 5: 0.1, 6: 0, 7: 0 },
     masterFusion: { 3: 0.25, 4: 0.35, 5: 0.3, 6: 0.1, 7: 0 },
     meisterFusion: { 3: 0, 4: 0.4, 5: 0.45, 6: 0.14, 7: 0.01 },
@@ -107,7 +108,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
     }
     if (attack == 0) {
         //only dmg
-        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7)) {
+        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7) || (flame_type == "reincarnation" && dmg <= 7)) {
             var tier_probability = 0
             var tier_check = minTier
             while (tier_check <= maxTier) {
@@ -120,7 +121,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
             probability = probability + tier_probability * line_probability
         }
         //only boss
-        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14)) {
+        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14) || (flame_type == "reincarnation" && dmg <= 14)) {
             var tier_probability = 0
             var tier_check = minTier
             while (tier_check <= maxTier) {
@@ -133,7 +134,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
             probability = probability + tier_probability * line_probability
         }
         //boss + dmg
-        if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21)) {
+        if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21) || (flame_type == "reincarnation" && dmg <= 21)) {
             var tier_probability = 0
             var boss_tier_check = minTier
             while (boss_tier_check <= maxTier) {
@@ -153,7 +154,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
     }
     if (attack != 0 && dmg != 0) {
         //Attack + Boss
-        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14)) {
+        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14) || (flame_type == "reincarnation" && dmg <= 14)) {
             var tier_probability = 0
             var boss_tier_check = minTier
             while (boss_tier_check <= maxTier) {
@@ -171,7 +172,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
 
         }
         //Attack + DMG
-        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7)) {
+        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7) || (flame_type == "reincarnation" && dmg <= 7)) {
             var tier_probability = 0
             var dmg_tier_check = minTier
             while (dmg_tier_check <= maxTier) {
@@ -189,7 +190,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
 
         }
         //Attack + Boss + DMG
-        if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21)) {
+        if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21) || (flame_type == "reincarnation" && dmg <= 21)) {
             var tier_probability = 0
             var dmg_tier_check = minTier
             while (dmg_tier_check <= maxTier) {

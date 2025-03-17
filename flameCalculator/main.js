@@ -8,6 +8,7 @@ const TIER_PROBABILITIES = {
     drop: { 3: 0.25, 4: 0.3, 5: 0.3, 6: 0.14, 7: 0.01 },
     powerful: { 3: 0.2, 4: 0.3, 5: 0.36, 6: 0.14, 7: 0 },
     eternal: { 3: 0, 4: 0.29, 5: 0.45, 6: 0.25, 7: 0.01 },
+    reincarnation: { 3: 0, 4: 0, 5: 0.63, 6: 0.34, 7: 0.03 },
     fusion: { 3: 0.5, 4: 0.4, 5: 0.1, 6: 0, 7: 0 },
     masterFusion: { 3: 0.25, 4: 0.35, 5: 0.3, 6: 0.1, 7: 0 },
     meisterFusion: { 3: 0, 4: 0.4, 5: 0.45, 6: 0.14, 7: 0.01 },
@@ -118,7 +119,6 @@ function getProbability(item_level, flame_type, item_type, desired_stat, non_adv
         var event_probability = line_probability * tier_probability
 
         probability = probability + event_probability
-
     }
 
 
@@ -182,7 +182,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
     }
     if (attack == 0) {
         //only dmg
-        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7)) {
+        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7) || (flame_type == "reincarnation" && dmg <= 7)) {
             var tier_probability = 0
             var tier_check = minTier
             while (tier_check <= maxTier) {
@@ -195,7 +195,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
             probability = probability + tier_probability * line_probability
         }
         //only boss
-        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14)) {
+        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14) || (flame_type == "reincarnation" && dmg <= 14)) {
             var tier_probability = 0
             var tier_check = minTier
             while (tier_check <= maxTier) {
@@ -228,7 +228,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
     }
     if (attack != 0 && dmg != 0) {
         //Attack + Boss
-        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14)) {
+        if ((flame_type == "powerful" && dmg <= 12) || (flame_type == "eternal" && dmg <= 14) || (flame_type == "reincarnation" && dmg <= 14)) {
             var tier_probability = 0
             var boss_tier_check = minTier
             while (boss_tier_check <= maxTier) {
@@ -246,7 +246,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
 
         }
         //Attack + DMG
-        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7)) {
+        if ((flame_type == "powerful" && dmg <= 6) || (flame_type == "eternal" && dmg <= 7) || (flame_type == "reincarnation" && dmg <= 7)) {
             var tier_probability = 0
             var dmg_tier_check = minTier
             while (dmg_tier_check <= maxTier) {
@@ -264,7 +264,7 @@ function getWeaponProbability(attack, dmg, flame_type, non_advantaged_item) {
 
         }
         //Attack + Boss + DMG
-        if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21)) {
+        if ((flame_type == "powerful" && dmg <= 18) || (flame_type == "eternal" && dmg <= 21) || (flame_type == "reincarnation" && dmg <= 21)) {
             var tier_probability = 0
             var dmg_tier_check = minTier
             while (dmg_tier_check <= maxTier) {
@@ -393,6 +393,11 @@ function getTierProbability(main_tier, secondary_tier, combo_one_tier, combo_two
     while (index < list.length) {
         var tier = list[index];
         if (tier > 0) {
+            if (tier == 8){
+                // console.log(list)
+            }
+            // console.log('tier: ' + tier)
+            // console.log('probability of tier: '+ tier_probabilities[tier])
             probability = probability * tier_probabilities[tier]
         }
         index++
@@ -728,9 +733,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Worker logic
             function runParallelTasks() {
-                const numWorkers = 5
-                var upper_limit = getUpperTierLimit(flame_type, non_advantaged_item);
+                var numWorkers = 5
+                if (flame_type == 'reincarnation') numWorkers = 4
+                var upper_limit = getUpperTierLimit(flame_type, non_advantaged_item)
                 var lower_limit = getLowerTierLimit(flame_type, non_advantaged_item);
+                console.log(lower_limit, upper_limit)
                 const chunkSize = Math.floor((upper_limit - lower_limit) / numWorkers);
                 const workerPromises = [];
                 const progressArray = new Array(numWorkers).fill(0);
@@ -745,8 +752,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         var start = lower_limit + (i - 1);
                         var end = lower_limit + i
                     }
-                    // console.log('start for chunk #', i, ' = ', start)
-                    // console.log('end for chunk #', i, ' = ', end)
+                    console.log('start for chunk #', i, ' = ', start)
+                    console.log('end for chunk #', i, ' = ', end)
 
                     const workerPromise = new Promise((resolve) => {
                         const worker = new Worker('worker.js');
@@ -772,7 +779,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 progressArray[i] = event.data.progress;
 
                                 // Calculate overall progress based on individual worker progress
-                                const overallProgress = (progressArray.reduce((acc, val) => acc + val, 0) / (numWorkers)) * 100;
+                                const overallProgress = (progressArray.reduce((acc, val) => acc + val, 0) / (5)) * 100;
 
                                 // Update your UI with the overall progress percentage
                                 progressElement.innerHTML = `<p>Progress = ${overallProgress.toFixed(2)}%</p>`;
@@ -792,8 +799,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         const arrangements = workerResults.flat();
                         var p = getProbability(item_level, flame_type, item_type, desired_stat, non_advantaged_item, maple_class, arrangements)
-                        //console.log(p)
-                        //console.log(arrangements)
 
                         // The rest of your result handling logic goes here
                         var stats = geoDistrQuantile(p)
