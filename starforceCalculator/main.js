@@ -311,7 +311,7 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
             probability_boom = 0;
         }
     }
-    if (boom_event) {
+    if (boom_event && current_star <= 21) {
         //here
         probability_boom = probability_boom * 0.7
         probability_maintain = probability_maintain + probability_boom * 0.3
