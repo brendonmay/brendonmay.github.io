@@ -37,9 +37,37 @@ function saviorMesoFn(current_star) {
     }
 }
 
+function kmsMesoFn(current_star) {
+    switch (current_star) {
+        case 11:
+            return makeMesoFn(22000);
+        case 12:
+            return makeMesoFn(15000);
+        case 13:
+            return makeMesoFn(11000);
+        case 14:
+            return makeMesoFn(7500);
+        case 17:
+            return makeMesoFn(20000, 2.7, 4/3);
+        case 18:
+            return makeMesoFn(20000, 2.7, 20/7);
+        case 19:
+            return makeMesoFn(20000, 2.7, 40/9);
+        case 21:
+            return makeMesoFn(20000, 2.7, 8/5);
+        default:
+            return preSaviorMesoFn(current_star);
+    }
+}
+
 function saviorCost(current_star, item_level) {
     const mesoFn = saviorMesoFn(current_star);
     return mesoFn(current_star, item_level);
+}
+
+function kmsCost(current_star, item_level) {
+    const mesoFn = kmsMesoFn(current_star);
+    return mesoFn(current_star, item_level, 1, );
 }
 
 function tmsRegMesoFn(current_star) {
@@ -72,16 +100,17 @@ function tmsRebootCost(current_star, item_level) {
 // As of the ignition update GMS uses KMS starforce prices.
 // The Savior update increases cost for 11-15 but removes downgrading/booming.
 const SERVER_COST_FUNCTIONS = {
-    "kms": saviorCost,
+    "gms": saviorCost,
     // Leaving this in for players who want to compare.
     "old": preSaviorCost,
     "tms": tmsRegCost,
     "tmsr": tmsRebootCost,
+    'kms': kmsCost
 }
 
 function getBaseCost(server, current_star, item_level) {
     const costFn = SERVER_COST_FUNCTIONS[server];
-    return costFn(current_star, item_level);
+    return costFn(current_star, item_level, server);
 }
 
 // { currentStar: [success, maintain, decrease, boom] }
@@ -111,6 +140,39 @@ const preSaviorRates = {
     22: [0.03, 0.0, 0.776, 0.194],
     23: [0.02, 0.0, 0.686, 0.294],
     24: [0.01, 0.0, 0.594, 0.396]
+}
+
+const kmsRates = {
+    0: [0.95, 0.05, 0, 0],
+    1: [0.9, 0.1, 0, 0],
+    2: [0.85, 0.15, 0, 0],
+    3: [0.85, 0.15, 0, 0],
+    4: [0.80, 0.2, 0, 0],
+    5: [0.75, 0.25, 0, 0],
+    6: [0.7, 0.3, 0, 0],
+    7: [0.65, 0.35, 0, 0],
+    8: [0.6, 0.4, 0, 0],
+    9: [0.55, 0.45, 0, 0],
+    10: [0.5, 0.5, 0, 0],
+    11: [0.45, 0.55, 0.0, 0.0],
+    12: [0.4, 0.6, 0.0, 0.0],
+    13: [0.35, 0.65, 0.0, 0.0],
+    14: [0.3, 0.7, 0.0, 0.0],
+    15: [0.3, 0.679, 0, 0.021],
+    16: [0.3, 0.679, 0, 0.021],
+    17: [0.15, 0.782, 0, 0.068],
+    18: [0.15, 0.782, 0, 0.068],
+    19: [0.15, 0.765, 0, 0.085],
+    20: [0.3, 0.595, 0, 0.105],
+    21: [0.15, 0.7225, 0, 0.1275],
+    22: [0.15, 0.68, 0, 0.17],
+    23: [0.10, 0.72, 0, 0.18],
+    24: [0.10, 0.72, 0, 0.18],
+    25: [0.10, 0.72, 0, 0.18],
+    26: [0.07, 0.744, 0, 0.186],
+    27: [0.05, 0.76, 0, 0.19],
+    28: [0.03, 0.776, 0, 0.194],
+    29: [0.01, 0.792, 0, 0.198]
 }
 
 const saviorRates = {
@@ -175,11 +237,12 @@ const tyrantRates = {
 
 // Map from server input value to the associated starforcing rates.
 const SERVER_RATES = {
-    "kms": saviorRates,
+    "gms": saviorRates,
     // Leaving this in for players who want to compare.
     "old": preSaviorRates,
     "tms": TMSRates,
     "tmsr": TMSRates,
+    "kms": kmsRates
 }
 
 function getRates(server, itemType, useAEE) {
@@ -190,11 +253,15 @@ function getRates(server, itemType, useAEE) {
 }
 
 function getSafeguardMultiplierIncrease(current_star, sauna, server) {
+    if (server == 'kms' && current_star >= 15 && current_star <= 17) {
+        return 2;
+    }
     if (server === "old" && !sauna && current_star >= 12 && current_star <= 16) {
         return 1;
     }
-    if (current_star >= 15 && current_star <= 16) {
+    if (server != 'kms' && current_star >= 15 && current_star <= 16) {
         return 1;
     }
+
     return 0
 }

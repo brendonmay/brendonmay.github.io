@@ -1,15 +1,17 @@
 // Returns the value at a given percentile in a sorted numeric array.
 // "Linear interpolation between closest ranks" method
+var CREATED_CHART = false
+
 function loaderOn() {
     $('#loader1').show();
     $('#loader2').show();
     setTimeout(do_stuff, 100);
-  }
+}
 
-  function loaderOff() {
+function loaderOff() {
     $('#loader1').hide();
     $('#loader2').hide()
-  }
+}
 
 function percentile(arr, p) {
     if (arr.length === 0) return 0;
@@ -45,7 +47,7 @@ function percentRank(arr, v) {
 function standardDeviation(values) {
     var avg = average(values);
 
-    var squareDiffs = values.map(function(value) {
+    var squareDiffs = values.map(function (value) {
         var diff = value - avg;
         var sqrDiff = diff * diff;
         return sqrDiff;
@@ -58,7 +60,7 @@ function standardDeviation(values) {
 }
 
 function average(data) {
-    var sum = data.reduce(function(sum, value) {
+    var sum = data.reduce(function (sum, value) {
         return sum + value;
     }, 0);
 
@@ -68,7 +70,7 @@ function average(data) {
 
 function median(values) {
 
-    values.sort(function(a, b) {
+    values.sort(function (a, b) {
         return a - b;
     });
 
@@ -81,31 +83,43 @@ function median(values) {
 }
 
 function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chance_time, item_type, server) {
-    if (item_type == "tyrant"){
-        var attempt_cost = item_level**3.56;
-        return parseFloat(attempt_cost.toFixed(0))
+    // if (item_type == "tyrant"){
+    //     var attempt_cost = item_level**3.56;
+    //     return parseFloat(attempt_cost.toFixed(0))
+    // }
+    var multiplier = 1;
+
+    if (silver && current_star <= 15) {
+        multiplier = multiplier - 0.03;
     }
-    else{
-        var multiplier = 1;
+    if (gold && current_star <= 15) {
+        multiplier = multiplier - 0.05;
+    }
+    if (diamond && current_star <= 15) {
+        multiplier = multiplier - 0.1;
+    }
+    if (thirty_off) {
+        multiplier = multiplier - 0.3;
+    }
+
+    if (server == "kms") {
+        //here
+
+        if (boom_protect) {
+            multiplier = multiplier + getSafeguardMultiplierIncrease(current_star, sauna, server);
+        }
+
+    }
+    else {
 
         if (boom_protect && !(five_ten_fifteen && current_star == 15) && !(chance_time)) {
             multiplier = multiplier + getSafeguardMultiplierIncrease(current_star, sauna, server);
         }
-        if (silver && current_star <= 15) {
-            multiplier = multiplier - 0.03;
-        }
-        if (gold && current_star <= 15) {
-            multiplier = multiplier - 0.05;
-        }
-        if (diamond && current_star <= 15) {
-            multiplier = multiplier - 0.1;
-        }
-        if (thirty_off) {
-            multiplier = multiplier - 0.3;
-        }
-        const attempt_cost = getBaseCost(server, current_star, item_level) * multiplier;
-        return parseFloat(attempt_cost.toFixed(0))
+
     }
+
+    const attempt_cost = getBaseCost(server, current_star, item_level) * multiplier;
+    return parseFloat(attempt_cost.toFixed(0))
 }
 
 function checkChanceTime(decrease_count) {
@@ -133,42 +147,43 @@ function grabColumnColors(boomsAmount, boomPercentiles) {
     switch (true) {
         case boomsAmount == 0:
             return {
-                background: backgroundColors[0], 
+                background: backgroundColors[0],
                 border: borderColors[0]
             };
         case boomsAmount <= boomPercentiles.median_booms:
             return {
-                background: backgroundColors[1], 
+                background: backgroundColors[1],
                 border: borderColors[1]
             };
         case boomsAmount <= boomPercentiles.seventy_fifth_percentile_boom:
             return {
-                background: backgroundColors[2], 
+                background: backgroundColors[2],
                 border: borderColors[2]
             };
         case boomsAmount <= boomPercentiles.eighty_fifth_percentile_boom:
             return {
-                background: backgroundColors[3], 
+                background: backgroundColors[3],
                 border: borderColors[3]
             };
         case boomsAmount <= boomPercentiles.ninty_fifth_percentile_boom:
             return {
-                background: backgroundColors[4], 
+                background: backgroundColors[4],
                 border: borderColors[4]
             };
         default:
             return {
-                background: backgroundColors[5], 
+                background: backgroundColors[5],
                 border: borderColors[5]
             };
     }
 }
 
+
 function createCanvas(chartData, canvasId, chartContainer) {
-    document.getElementById(canvasId).remove();
+
     let canvas = document.createElement('canvas');
     canvas.setAttribute('id', canvasId);
-    document.querySelector('#'+chartContainer).appendChild(canvas);
+    document.querySelector('#' + chartContainer).appendChild(canvas);
 
     let chart = new Chart(document.getElementById(canvasId), {
         type: 'bar',
@@ -182,21 +197,21 @@ function createCanvas(chartData, canvasId, chartContainer) {
                         top: 30,
                         bottom: 20
                     },
-                    font: {size: 20}
+                    font: { size: 20 }
                 },
                 legend: {
                     display: false
                 },
                 tooltip: {
                     callbacks: {
-                        title: function(context) {
+                        title: function (context) {
                             let label = context[0].label;
                             if (label == '0') return 'No Boom';
-                            return label == '1'? '1 Boom' : `${label} Booms`;
+                            return label == '1' ? '1 Boom' : `${label} Booms`;
                         },
-                        label: function(context) {
+                        label: function (context) {
                             let trialsAmount = context.dataset.data.reduce((partialSum, a) => partialSum + a, 0);
-                            return `${context.raw} occurrences (${context.raw*100/trialsAmount}%)`;
+                            return `${context.raw} occurrences (${context.raw * 100 / trialsAmount}%)`;
                         },
                     }
                 },
@@ -206,9 +221,9 @@ function createCanvas(chartData, canvasId, chartContainer) {
                     title: {
                         display: true,
                         text: 'Boom Amount',
-                        font: {size: 18},
+                        font: { size: 18 },
                     }
-                },  
+                },
                 y: {}
             },
             interaction: {
@@ -216,9 +231,40 @@ function createCanvas(chartData, canvasId, chartContainer) {
                 mode: 'index',
             },
         }
-        });
+    });
     return chart;
 }
+function updateBoomChart(boom_result_list, boomPercentiles) {
+    let boomMap = boom_result_list.reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
+    let colorMatrix = Array.from(boomMap.keys()).map(key => {
+      return grabColumnColors(key, boomPercentiles);
+    });
+  
+    let backgroundArray = colorMatrix.map(el => el.background);
+    let borderArray = colorMatrix.map(el => el.border);
+  
+    const chartData = {
+      labels: Array.from(boomMap.keys()),
+      datasets: [{
+        data: Array.from(boomMap.values()),
+        backgroundColor: backgroundArray,
+        borderColor: borderArray,
+        borderWidth: 1
+      }]
+    };
+  
+    // Get the existing canvas and chart instance
+    const canvas = document.getElementById('boom-chart');
+    const chart = Chart.getChart(canvas);
+  
+    if (chart) {
+      chart.data = chartData;
+      chart.update();
+    } else {
+      console.error("Chart instance not found on canvas: boom-chart");
+    }
+    return chart
+  }
 
 function buildBoomChart(boom_result_list, boomPercentiles) {
 
@@ -229,24 +275,24 @@ function buildBoomChart(boom_result_list, boomPercentiles) {
 
     let backgroundArray = colorMatrix.map(el => el.background);
     let borderArray = colorMatrix.map(el => el.border);
-    
-    const chartData = {
-    labels: Array.from(boomMap.keys()),
-    datasets: [{
-        data: Array.from(boomMap.values()),
-        backgroundColor: backgroundArray,
-        borderColor: borderArray,
-        borderWidth: 1
-    }]
-    };
 
+    const chartData = {
+        labels: Array.from(boomMap.keys()),
+        datasets: [{
+            data: Array.from(boomMap.values()),
+            backgroundColor: backgroundArray,
+            borderColor: borderArray,
+            borderWidth: 1
+        }]
+    };
+    // document.getElementById('boom-chart').remove();
     let chart = createCanvas(chartData, 'boom-chart', 'boom-chart-container');
     return chart;
 }
 
-function determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type) {
+function determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type, server, boom_event) {
     /** returns either "Success", "Maintain", "Decrease", or "Boom" */
-    if (five_ten_fifteen) {
+    if (five_ten_fifteen && server != 'kms') {
         if (current_star == 5 || current_star == 10 || current_star == 15) {
             return "Success"
         }
@@ -265,8 +311,20 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
             probability_boom = 0;
         }
     }
-    if (boom_protect && current_star <= 16) { //boom protection enabled
+    if (boom_event) {
+        //here
+        probability_boom = probability_boom * 0.7
+        probability_maintain = probability_maintain + probability_boom * 0.3
+
+        //success + maintain + boom = 1
+        //sucess + maintain + boom * (0.7 +0.3) = 1
+    }
+    if (boom_protect && current_star <= 16 && server != 'kms') { //boom protection enabled non-KMS
         probability_decrease = probability_decrease + probability_boom;
+        probability_boom = 0;
+    }
+    if (boom_protect && current_star <= 17 && server == 'kms') { //boom protection enabled KMS
+        probability_maintain = probability_maintain + probability_boom;
         probability_boom = 0;
     }
 
@@ -304,7 +362,7 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
     }
 }
 
-function performExperiment(current_stars, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server) {
+function performExperiment(current_stars, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event) {
     /** returns [total_mesos, total_booms]  or [AEE_amount, total_booms]*/
     var current_star = current_stars;
     var total_mesos = 0;
@@ -312,34 +370,35 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
     var decrease_count = 0;
 
     while (current_star < desired_star) {
-        if (useAEE){
+        if (useAEE) {
             total_mesos++;
             var chanceTime = false;
         }
-        else{
-            var chanceTime = checkChanceTime(decrease_count); 
+        else {
+            var chanceTime = false
+            if (server != 'kms') var chanceTime = checkChanceTime(decrease_count);
             total_mesos = total_mesos + attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chanceTime, item_type, server);
         }
 
         if (chanceTime) {
             var outcome = "Success";
             decrease_count = 0;
-            if (two_plus && current_star <= 10){
+            if (two_plus && current_star <= 10) {
                 current_star = current_star + 2;
             }
-            else{
+            else {
                 current_star++
             }
-        } 
+        }
         else {
-            var outcome = determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type);
+            var outcome = determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type, server, boom_event);
 
             if (outcome == "Success") {
                 decrease_count = 0;
-                if (two_plus && current_star <= 10){
+                if (two_plus && current_star <= 10) {
                     current_star = current_star + 2;
                 }
-                else{
+                else {
                     current_star++
                 }
             } else if (outcome == "Decrease") {
@@ -362,7 +421,7 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
     return [total_mesos, total_booms]
 }
 
-function repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server) {
+function repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event) {
     //* return [average_cost, average_booms, meso_result_list, boom_result_list] */
     var total_mesos = 0;
     var total_booms = 0;
@@ -372,11 +431,11 @@ function repeatExperiment(total_trials, current_star, desired_star, rates, item_
     var meso_result_list_divided = [];
 
     while (current_trial < total_trials) {
-        var trial_mesos = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server)[0];
+        var trial_mesos = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event)[0];
         meso_result_list.push(trial_mesos);
         meso_result_list_divided.push(trial_mesos / 1000000000);
 
-        var trial_booms = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server)[1];
+        var trial_booms = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event)[1];
         boom_result_list.push(trial_booms);
 
         total_mesos = total_mesos + trial_mesos;
@@ -401,36 +460,52 @@ function repeatExperiment(total_trials, current_star, desired_star, rates, item_
     return [average_cost, average_booms, meso_result_list, boom_result_list, median_cost, median_booms, max_cost, min_cost, max_booms, min_booms, meso_std, boom_std, meso_result_list_divided]
 }
 //(successRate, maintainRate, decreaseRate, boomRate)
+var boomChartObject;
 
 function do_stuff() {
+    if (boomChartObject) {
+        boomChartObject.destroy();
+    }
     let item_level = parseInt(document.getElementById('level').value);
     let item_type = document.getElementById('item_type').value;
     let current_star = parseInt(document.getElementById('cur_stars').value);
     let desired_star = parseInt(document.getElementById('target_stars').value);
-    
-    if (item_type == 'normal' && (desired_star > 25 || desired_star < 0 || current_star < 0)){
-    		document.getElementById('result').style.display='none';
-        document.getElementById('error-container').style.display='';
+    let region = document.getElementById('server').value
+
+    if (region == 'kms') {
+        if (desired_star > 30 || desired_star < 0 || current_star < 0) {
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error-container').style.display = '';
+            document.getElementById('error-msg').innerHTML =
+                `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 30.</p>`
+            return false
+        }
+    }
+    if (item_type == 'normal' && ((desired_star > 25 && region != 'kms') || desired_star < 0 || current_star < 0)) {
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('error-container').style.display = '';
         document.getElementById('error-msg').innerHTML =
             `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 25.</p>`
         return false
     }
-    if (item_type == 'tyrant' && (desired_star > 15 || desired_star < 0 || current_star < 0)){
-    		document.getElementById('result').style.display='none';
-        document.getElementById('error-container').style.display='';
+    if (item_type == 'tyrant' && (desired_star > 15 || desired_star < 0 || current_star < 0)) {
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('error-container').style.display = '';
         document.getElementById('error-msg').innerHTML =
             `<p style="color:#8b3687">Error: Minimum Star Value is 0 and Maximum Star Value is 15.</p>`
         return false
     }
     var boom_protect = document.getElementById('safeguard').value == 'yes';
+    var boom_event = document.getElementById('boom_event').checked;
+
     var star_catch_value = document.getElementById('starcatching').value;
     var mvp = document.getElementById('mvp').value;
     var total_trials = document.getElementById('trials').value;
     var thirty_off = document.getElementById('30').checked;
     var five_ten_fifteen = document.getElementById('5_10_15').checked;
-    var sauna = document.getElementById('sauna').checked;
+    var sauna = false;
     var two_plus = document.getElementById('plus2').checked;
-    var useAEE = document.getElementById('AEE').checked;
+    var useAEE = false;
     let server = document.getElementById('server').value;
 
     const rates = getRates(server, item_type, useAEE);
@@ -452,8 +527,8 @@ function do_stuff() {
     if (mvp == "diamond") {
         diamond = true;
     }
-		
-    var result = repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server);
+
+    var result = repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event);
     //result = [average_cost, average_booms, meso_result_list, boom_result_list, median_cost, median_booms, max_cost, min_cost, max_booms, min_booms, meso_std, boom_std, meso_result_list_divided]
     var average_mesos = result[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     var average_booms = result[1];
@@ -479,35 +554,43 @@ function do_stuff() {
     var eighty_fifth_percentile_boom = (percentile(boom_result_list, 0.85).toFixed(0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     var ninty_fifth_percentile_boom = (percentile(boom_result_list, 0.95).toFixed(0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    if (useAEE){ //here
+    if (useAEE) {
         var x_axis = 'Number of AEEs';
         var bar_data = meso_result_list;
         var stat_title = 'AEE Stats';
         var percentile_title = 'AEE Percentiles';
         var currency = 'AEEs'
     }
-    else{
+    else {
         var x_axis = 'Meso Cost (in Billions)';
         var bar_data = meso_result_list_divided;
         var stat_title = 'Mesos Stats';
         var percentile_title = 'Mesos Percentiles';
         var currency = 'mesos'
     }
-    
+
     if (boomChartObject) {
         boomChartObject.destroy();
     }
     let boomPercentiles = {
         median_booms, seventy_fifth_percentile_boom, eighty_fifth_percentile_boom, ninty_fifth_percentile_boom
     };
+    
+    if (!CREATED_CHART){
     var boomChartObject = buildBoomChart(boom_result_list, boomPercentiles);
-	document.getElementById("boom-chart-container").style.display = '';
-    document.getElementById('result').style.display='';
-    document.getElementById('error-container').style.display='none';
+    CREATED_CHART = true
+    }
+    else {
+    var boomChartObject = updateBoomChart(boom_result_list, boomPercentiles);
+    }
 
-    if(!useAEE){
+    document.getElementById("boom-chart-container").style.display = '';
+    document.getElementById('result').style.display = '';
+    document.getElementById('error-container').style.display = 'none';
+
+    if (!useAEE) {
         document.getElementById('result').innerHTML =
-        `
+            `
 <div class="container secondarycon">
   <div class=" statBox statBox1" style="background-color:#aaa;">
     <h2 style="text-align:center;">${stat_title}</h2>
@@ -545,9 +628,9 @@ function do_stuff() {
 </div>
     `
     }
-    else{
+    else {
         document.getElementById('result').innerHTML =
-        `
+            `
 <div class="container secondarycon">
   <div class=" statBox statBox1" style="background-color:#aaa;">
     <h2 style="text-align:center;">${stat_title}</h2>
@@ -571,76 +654,108 @@ function do_stuff() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("calculateButton").addEventListener("click", function() {
+    document.getElementById("calculateButton").addEventListener("click", function () {
         loaderOn();
-      setTimeout(loaderOff, 100);
+        setTimeout(loaderOff, 100);
     });
-    setTimeout(function(){
+    setTimeout(function () {
         $("#toast").toast('show')
-      }, 1000)
+    }, 1000)
     //add event listener for when AEE is clicked, disable starcatching (no star catching)
-    document.getElementById('AEE').addEventListener('change', function(){
-        if (document.getElementById('AEE').checked){
-            document.getElementById('starcatching').disabled = true;
-            document.getElementById('starcatching').value = 'none';
-            document.getElementById('sauna').checked = false;
-            document.getElementById('sauna').disabled = true;
-            document.getElementById('trials').value = 10000;
+    // document.getElementById('AEE').addEventListener('change', function(){
+    //     if (document.getElementById('AEE').checked){
+    //         document.getElementById('starcatching').disabled = true;
+    //         document.getElementById('starcatching').value = 'none';
+    //         document.getElementById('sauna').checked = false;
+    //         document.getElementById('sauna').disabled = true;
+    //         document.getElementById('trials').value = 10000;
 
-        }
-        else{
-            document.getElementById('starcatching').disabled = false;
-            document.getElementById('sauna').disabled = false;
-            document.getElementById('trials').value = 1000;
-        }
-    })
-    $('#item_type').on('change', function() {
-        if (document.getElementById("tyrant").selected){
-            //enable AEE checkbox to be clicked
-            document.getElementById('AEE').disabled = false;
-            document.getElementById("safeguard").disabled = true;
-            document.getElementById("safeguard").value = 'no';
-    
-            document.getElementById("mvp").disabled = true;
-            document.getElementById("mvp").value = 'none';
-    
-            document.getElementById("level").disabled = true;
-            document.getElementById("level").value = 150;
-    
+    //     }
+    //     else{
+    //         document.getElementById('starcatching').disabled = false;
+    //         document.getElementById('sauna').disabled = false;
+    //         document.getElementById('trials').value = 1000;
+    //     }
+    // })
+    $('#server').on('change', function () {
+        const selectedValue = $(this).val(); // Get the selected value directly
+
+        if (selectedValue === "kms") {
             document.getElementById("5_10_15").disabled = true;
             document.getElementById("5_10_15").checked = false;
-    
-            document.getElementById("30").disabled = true;
-            document.getElementById("30").checked = false;
 
-            document.getElementById('target_stars').value = 12;
-    
-            // document.getElementById("sauna").disabled = true;
-            // document.getElementById("sauna").checked = false;
-            document.getElementById("sauna-text").innerText="No Boom Event (Up to 8 stars) ";
-    
+            document.getElementById("boom_event").disabled = false;
+            document.getElementById("boom_event").checked = false;
+
             document.getElementById("plus2").disabled = true;
             document.getElementById("plus2").checked = false;
-                    document.getElementById('error-container').style.display = '';
+
             document.getElementById('error-msg').innerHTML =
-                `<p style="color:#8b3687">Note: Getting above 12 stars on Tyrant gear is nearly impossible. The calculator may crash if you attempt going above 12 stars.</p>`;
-    
+                `<p style="color:#8b3687">Note: Getting above 26 stars on Normal gear is very unlikely. The calculator may crash if you attempt going above 26 stars.</p>`;
+
         }
-        if (document.getElementById("normal").selected){
+        else {
+            document.getElementById("5_10_15").disabled = false;
+            document.getElementById("5_10_15").checked = false;
+
+            document.getElementById("boom_event").disabled = true;
+            document.getElementById("boom_event").checked = false;
+
+            document.getElementById("plus2").disabled = false;
+            document.getElementById("plus2").checked = false;
+
+            document.getElementById('error-msg').innerHTML =
+                `<p style="color:#8b3687">Note: Getting above 22 stars on Normal gear is very unlikely. The calculator may crash if you attempt going above 22 stars.</p>`;
+        }
+
+    })
+    $('#item_type').on('change', function () {
+        // if (document.getElementById("tyrant").selected){
+        //     //enable AEE checkbox to be clicked
+        //     document.getElementById('AEE').disabled = false;
+        //     document.getElementById("safeguard").disabled = true;
+        //     document.getElementById("safeguard").value = 'no';
+
+        //     document.getElementById("mvp").disabled = true;
+        //     document.getElementById("mvp").value = 'none';
+
+        //     document.getElementById("level").disabled = true;
+        //     document.getElementById("level").value = 150;
+
+        //     document.getElementById("5_10_15").disabled = true;
+        //     document.getElementById("5_10_15").checked = false;
+
+        //     document.getElementById("30").disabled = true;
+        //     document.getElementById("30").checked = false;
+
+        //     document.getElementById('target_stars').value = 12;
+
+        //     // document.getElementById("sauna").disabled = true;
+        //     // document.getElementById("sauna").checked = false;
+        //     document.getElementById("sauna-text").innerText="No Boom Event (Up to 8 stars) ";
+
+        //     document.getElementById("plus2").disabled = true;
+        //     document.getElementById("plus2").checked = false;
+        //             document.getElementById('error-container').style.display = '';
+        //     document.getElementById('error-msg').innerHTML =
+        //         `<p style="color:#8b3687">Note: Getting above 12 stars on Tyrant gear is nearly impossible. The calculator may crash if you attempt going above 12 stars.</p>`;
+
+        // }
+        if (document.getElementById("normal").selected) {
             //disable AEE checkbox from being clicked
-            document.getElementById('AEE').disabled = true;
+            //document.getElementById('AEE').disabled = true;
             document.getElementById("safeguard").disabled = false;
-    
+
             document.getElementById("mvp").disabled = false;
 
             document.getElementById('target_stars').value = 22;
-    
+
             document.getElementById("level").disabled = false;
-    
+
             document.getElementById("5_10_15").disabled = false;
             document.getElementById("30").disabled = false;
-            document.getElementById("sauna").disabled = false;
-            document.getElementById("sauna-text").innerText="No Boom Event (Up to 15 stars) ";
+            //document.getElementById("sauna").disabled = false;
+            // document.getElementById("boom_event-text").innerText = "30% Boom Reduction";
             document.getElementById("plus2").disabled = false;
             document.getElementById('error-container').style.display = '';
             document.getElementById('error-msg').innerHTML =

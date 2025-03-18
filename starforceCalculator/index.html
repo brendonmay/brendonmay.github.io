@@ -80,7 +80,7 @@
                 <p>Item Level: <input type="number" id="level" value="200" /></p>
                 <p>Item Type: <select id="item_type">
                         <option id='normal' value="normal">Normal</option>
-                        <option id='tyrant' value="tyrant">Tyrant</option>
+                        <!-- <option id='tyrant' value="tyrant">Tyrant</option> -->
                     </select>
                 </p>
                 <p>Star Catching: <select id="starcatching">
@@ -111,7 +111,8 @@
 
             <div class="col-sm-12 containOne">
                 <p>Server: <select id="server">
-                    <option value="kms">KMS/GMS/JMS/SEA</option>
+                    <option value="gms">GMS/JMS/SEA</option>
+                    <option value="kms">KMS</option>
                     <option value="tms">TMS</option>
                     <option value="tmsr">TMS Reboot</option>
                     <option value="old">Pre-Savior</option>
@@ -133,22 +134,22 @@
 
                     <label class="checkbox">
                         <input type="checkbox" id="30" name="30" value="30">
-                        <span>30% off</span>
+                        <span>30% Meso Discount</span>
                     </label>
 
-                    <label class="checkbox" id='sauna-div'>
-                        <input type="checkbox" id="sauna" name="sauna" value="sauna">
-                        <span id='sauna-text'>No Boom Event (Up to 15 stars) </span>
+                    <label class="checkbox" id='boom_event-div'>
+                        <input type="checkbox" id="boom_event" name="boom_event" value="boom_event" disabled>
+                        <span id='boom_event-text'>30% Boom Reduction</span>
                     </label>
                 </p>
-                </br>
+                <!-- </br>
                 <p>
                     Non-Reboot:
                     <label class="checkbox" id='AEE-div'>
                         <input type="checkbox" id="AEE" name="AEE" value="AEE" disabled>
                         <span>Use No Boom AEEs (Tyrant Only)</span>
                     </label>
-                </p>
+                </p> -->
             </div>
 
             <div class="col-sm-12 containOne">
