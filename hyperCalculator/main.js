@@ -1328,6 +1328,10 @@ function getPrimaryAndSecondaryStatType(maple_class) {
             'primaryStatType': 'STR',
             'secondaryStatType': 'DEX'
         },
+        'Mo Xuan': {
+            'primaryStatType': 'DEX',
+            'secondaryStatType': 'STR'
+        },
         'Night Lord': {
             'primaryStatType': 'LUK',
             'secondaryStatType': 'DEX'
@@ -1355,6 +1359,10 @@ function getPrimaryAndSecondaryStatType(maple_class) {
         'Shadower': {
             'primaryStatType': 'LUK',
             'secondaryStatType': 'STR + DEX'
+        },
+        'Sia Astelle': {
+            'primaryStatType': 'INT',
+            'secondaryStatType': 'LUK'
         },
         'Thunder Breaker': {
             'primaryStatType': 'STR',
@@ -2348,6 +2356,14 @@ function getClassData(maple_class) {
             'critDmg': 0
         },
 
+        'Mo Xuan': {
+            'attPercent': 4,
+            'iedPercent': [20, 20, 30],
+            'dmgPercent': 50,
+            'bossPercent': 20,
+            'critDmg': 25
+        },
+
         'Night Lord': {
             'attPercent': 4,
             'iedPercent': [30, 20],
@@ -2402,6 +2418,14 @@ function getClassData(maple_class) {
             'dmgPercent': 20,
             'bossPercent': 20,
             'critDmg': 0
+        },
+
+        'Sia Astelle': {
+            'attPercent': 14,
+            'iedPercent': [20, 30],
+            'dmgPercent': 45,
+            'bossPercent': 50,
+            'critDmg': 30
         },
 
         'Thunder Breaker': {

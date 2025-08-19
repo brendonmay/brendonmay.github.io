@@ -1480,6 +1480,14 @@ function getClassData(maple_class) {
             'dmgPercent': 50,
             'bossPercent': 0
         },
+        
+        'Mo Xuan': {
+            'attPercent': 4,
+            'iedPercent': [20, 20, 30],
+            'dmgPercent': 50,
+            'bossPercent': 20,
+            'critDmg': 25
+        },
 
         'Night Lord': {
             'attPercent': 4,
@@ -1528,6 +1536,14 @@ function getClassData(maple_class) {
             'iedPercent': [20],
             'dmgPercent': 20,
             'bossPercent': 20
+        },
+        
+        'Sia Astelle': {
+            'attPercent': 14,
+            'iedPercent': [20, 30],
+            'dmgPercent': 45,
+            'bossPercent': 50,
+            'critDmg': 30
         },
 
         'Thunder Breaker': {

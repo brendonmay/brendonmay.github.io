@@ -292,7 +292,7 @@ function buildBoomChart(boom_result_list, boomPercentiles) {
 
 function determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type, server, boom_event) {
     /** returns either "Success", "Maintain", "Decrease", or "Boom" */
-    if (five_ten_fifteen && server != 'kms') {
+    if (five_ten_fifteen) {
         if (current_star == 5 || current_star == 10 || current_star == 15) {
             return "Success"
         }
@@ -685,9 +685,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedValue = $(this).val(); // Get the selected value directly
 
         if (selectedValue === "kms") {
-            document.getElementById("5_10_15").disabled = true;
-            document.getElementById("5_10_15").checked = false;
-
             document.getElementById("boom_event").disabled = false;
             document.getElementById("boom_event").checked = false;
 
