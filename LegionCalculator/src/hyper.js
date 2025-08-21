@@ -1486,6 +1486,7 @@ function getMultiplier(weapon_type, maple_class) {
         'bow': 1.30, //good
         'cane': 1.30, //good
         'cannon': 1.50, //good
+        'celestial_light': 1.20, //good
         'chakram': 1.30,
         'claw': 1.75, //good
         'cross_bow': 1.35, //good
@@ -1508,6 +1509,7 @@ function getMultiplier(weapon_type, maple_class) {
         'psy_limiter': 1.20, //good
         'ritual_fan': 1.30, //good
         'memorial_staff': 1.34, //good
+        'martial_brace': 1.75, //good
         'shining_rod': 1.20, //good
         'soul_shooter': 1.70, //good
         'spear': 1.49, //good
