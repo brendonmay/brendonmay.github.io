@@ -105,7 +105,7 @@ function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, 
     if (server == "kms") {
         //here
 
-        if (boom_protect) {
+        if (boom_protect && !(five_ten_fifteen && current_star == 15)) {
             multiplier = multiplier + getSafeguardMultiplierIncrease(current_star, sauna, server);
         }
 
