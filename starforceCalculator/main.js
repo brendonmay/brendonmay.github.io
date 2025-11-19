@@ -102,7 +102,7 @@ function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, 
         multiplier = multiplier - 0.3;
     }
 
-    if (server == "kms") {
+    if (server == "kms" || server == "gms") {
         //here
 
         if (boom_protect && !(five_ten_fifteen && current_star == 15)) {
