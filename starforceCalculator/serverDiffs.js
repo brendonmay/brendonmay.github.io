@@ -258,10 +258,16 @@ function getSafeguardMultiplierIncrease(current_star, sauna, server) {
     if (server == 'kms' && current_star >= 15 && current_star <= 17) {
         return 2;
     }
+    if (server == 'gms' && current_star >= 15 && current_star <= 17) {
+        return 2;
+    }
     if (server === "old" && !sauna && current_star >= 12 && current_star <= 16) {
         return 1;
     }
     if (server != 'kms' && current_star >= 15 && current_star <= 16) {
+        return 1;
+    }
+    if (server != 'gms' && current_star >= 15 && current_star <= 16) {
         return 1;
     }
 
