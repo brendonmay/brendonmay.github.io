@@ -100,9 +100,10 @@ function tmsRebootCost(current_star, item_level) {
 // As of the ignition update GMS uses KMS starforce prices.
 // The Savior update increases cost for 11-15 but removes downgrading/booming.
 const SERVER_COST_FUNCTIONS = {
-    "gms": saviorCost,
+    "gms": kmsCost,
     // Leaving this in for players who want to compare.
     "old": preSaviorCost,
+    "gmsPre30": saviorCost,
     "tms": tmsRegCost,
     "tmsr": tmsRebootCost,
     'kms': kmsCost
@@ -237,9 +238,10 @@ const tyrantRates = {
 
 // Map from server input value to the associated starforcing rates.
 const SERVER_RATES = {
-    "gms": saviorRates,
-    // Leaving this in for players who want to compare.
+    "gms": kmsRates,
+    // Leaving these in for players who want to compare.
     "old": preSaviorRates,
+    "gmsPre30": saviorRates,
     "tms": TMSRates,
     "tmsr": TMSRates,
     "kms": kmsRates

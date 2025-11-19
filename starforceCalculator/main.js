@@ -366,6 +366,25 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
     }
 }
 
+function getBoomStar(current_stars, server) {
+    if (server !== "gms") {
+        return 12;
+    }
+    if (current_stars < 20) {
+        return 12;
+    }
+    else if (current_stars === 20) {
+        return 15;
+    }
+    else if (current_stars < 23) {
+        return 17;
+    }
+    else if (current_stars < 26) {
+        return 19;
+    }
+    return 20;
+}
+
 function performExperiment(current_stars, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event) {
     /** returns [total_mesos, total_booms]  or [AEE_amount, total_booms]*/
     var current_star = current_stars;
@@ -412,7 +431,7 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
                 decrease_count = 0;
             } else if (outcome == "Boom" && item_type == 'normal') {
                 decrease_count = 0;
-                current_star = 12;
+                current_star = getBoomStar(current_star, server);
                 total_booms++;
             } else if (outcome == "Boom" && item_type == 'tyrant') {
                 decrease_count = 0;
@@ -476,7 +495,9 @@ function do_stuff() {
     let desired_star = parseInt(document.getElementById('target_stars').value);
     let region = document.getElementById('server').value
 
-    if (region == 'kms') {
+    const has30Stars = region === 'gms' || region === 'kms';
+
+    if (has30Stars) {
         if (desired_star > 30 || desired_star < 0 || current_star < 0) {
             document.getElementById('result').style.display = 'none';
             document.getElementById('error-container').style.display = '';
@@ -485,7 +506,7 @@ function do_stuff() {
             return false
         }
     }
-    if (item_type == 'normal' && ((desired_star > 25 && region != 'kms') || desired_star < 0 || current_star < 0)) {
+    if (item_type == 'normal' && ((desired_star > 25 && !has30Stars) || desired_star < 0 || current_star < 0)) {
         document.getElementById('result').style.display = 'none';
         document.getElementById('error-container').style.display = '';
         document.getElementById('error-msg').innerHTML =
@@ -684,7 +705,7 @@ document.addEventListener("DOMContentLoaded", function () {
     $('#server').on('change', function () {
         const selectedValue = $(this).val(); // Get the selected value directly
 
-        if (selectedValue === "kms") {
+        if (selectedValue === "kms" || selectedValue === "gms") {
             document.getElementById("boom_event").disabled = false;
             document.getElementById("boom_event").checked = false;
 
@@ -693,7 +714,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             document.getElementById('error-msg').innerHTML =
                 `<p style="color:#8b3687">Note: Getting above 26 stars on Normal gear is very unlikely. The calculator may crash if you attempt going above 26 stars.</p>`;
-
         }
         else {
             document.getElementById("5_10_15").disabled = false;
