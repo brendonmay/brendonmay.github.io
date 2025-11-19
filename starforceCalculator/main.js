@@ -319,9 +319,7 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
         //success + maintain + boom = 1
         //sucess + maintain + boom * (0.7 +0.3) = 1
     }
-
-    const revamped_servers = ['kms', 'gms'];
-    if (boom_protect && current_star <= 16 && !revamped_servers.includes(server)) { //boom protection enabled non-KMS
+    if (boom_protect && current_star <= 16 && server != 'kms' && server != 'gms') { //boom protection enabled non-KMS
         if (probability_decrease > 0) {
             probability_decrease = probability_decrease + probability_boom;
         } else {
@@ -329,7 +327,7 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
         }
         probability_boom = 0;
     }
-    if (boom_protect && current_star <= 17 && revamped_servers.includes(server)) { //boom protection enabled KMS
+    if (boom_protect && current_star <= 17 && (server == 'kms' || server == 'gms') ) { //boom protection enabled KMS
         probability_maintain = probability_maintain + probability_boom;
         probability_boom = 0;
     }
@@ -401,7 +399,7 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
         }
         else {
             var chanceTime = false
-            if (server != 'kms') var chanceTime = checkChanceTime(decrease_count);
+            if (server != 'kms' && server != 'gms') var chanceTime = checkChanceTime(decrease_count);
             total_mesos = total_mesos + attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chanceTime, item_type, server);
         }
 
