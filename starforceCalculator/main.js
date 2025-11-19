@@ -320,8 +320,8 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
         //sucess + maintain + boom * (0.7 +0.3) = 1
     }
 
-    const 
-    if (boom_protect && current_star <= 16 && server != 'kms') { //boom protection enabled non-KMS
+    const sfRevampedServers = ['kms', 'gms'];
+    if (boom_protect && current_star <= 16 && !sfRevampedServers.includes(server)) { //boom protection enabled non-KMS
         if (probability_decrease > 0) {
             probability_decrease = probability_decrease + probability_boom;
         } else {
@@ -329,7 +329,7 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
         }
         probability_boom = 0;
     }
-    if (boom_protect && current_star <= 17 && server == 'kms') { //boom protection enabled KMS
+    if (boom_protect && current_star <= 17 && sfRevampedServers.includes(server)) { //boom protection enabled KMS
         probability_maintain = probability_maintain + probability_boom;
         probability_boom = 0;
     }
