@@ -4,7 +4,7 @@
 //
 
 function makeMesoFn(divisor, currentStarExp = 2.7, extraMult = 1) {
-    return (currentStar, itemLevel) => 100 * Math.round(extraMult * itemLevel ** 3 * ((currentStar + 1) ** currentStarExp) / divisor + 10);
+    return (currentStar, itemLevel) => 100 * Math.round(extraMult * (Math.floor(itemLevel / 10) * 10) ** 3 * ((currentStar + 1) ** currentStarExp) / divisor + 10);
 }
 
 function preSaviorMesoFn(current_star) {
