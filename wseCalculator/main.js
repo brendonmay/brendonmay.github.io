@@ -1524,6 +1524,13 @@ function getClassData(maple_class) {
             'bossPercent': 0
         },
 
+        'Ren': {
+            'attPercent': 4,
+            'iedPercent': [40],
+            'dmgPercent': 15,
+            'bossPercent': 0
+        },
+
         'Shade': {
             'attPercent': 4,
             'iedPercent': [20],

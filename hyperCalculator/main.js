@@ -1352,6 +1352,10 @@ function getPrimaryAndSecondaryStatType(maple_class) {
             'primaryStatType': 'LUK',
             'secondaryStatType': 'DEX'
         },
+        'Ren': {
+            'primaryStatType': 'STR',
+            'secondaryStatType': 'DEX'
+        },
         'Shade': {
             'primaryStatType': 'STR',
             'secondaryStatType': 'DEX'
@@ -1425,6 +1429,7 @@ function getMultiplier(weapon_type, maple_class) {
         'spear': 1.49, //good
         'staff': 1.00, //good
         'staff_adventure': 1.20, //good
+        'sword': 1.30, //good
         'two_hand_axe': 1.34, //good
         'two_hand_axe_hero': 1.44, //good
         'two_hand_blunt': 1.34, //good
@@ -2404,6 +2409,14 @@ function getClassData(maple_class) {
             'dmgPercent': 4, //weighed avg
             'bossPercent': 0,
             'critDmg': 0
+        },
+
+        'Ren': {
+            'attPercent': 4,
+            'iedPercent': [40],
+            'dmgPercent': 15,
+            'bossPercent': 20,
+            'critDmg': 10
         },
 
         'Shade': {
