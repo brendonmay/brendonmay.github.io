@@ -206,9 +206,9 @@ function saveToLocalStorage(maple_class) {
 
 
     //collection of IDs to collect data on
-    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'kanna_hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc']
+    var id_values = ['level', 'class', 'weapon_type', 'upper_shown_damage', 'boss_percent', 'ied_percent', 'damage_percent', 'final_damage_percent', 'critical_damage', 'primary_stat', 'secondary_stat', 'hp_perc', 'kanna_hp_perc', 'hp_arcane', 'kanna_hp', 'familiarAttPerc', 'bonusAttPerc', 'solusLevel', 'unfairAdvantageLevel', 'empiricalKnowledgeLevel', 'thiefCunningLevel', 'tideOfBattleLevel', 'spiritGuideBlessingLevel', 'timeToPrepareLevel', 'qiCultivationLevel']
     var id_hyper_values = ['strSelect', 'dexSelect', 'lukSelect', 'intSelect', 'hpSelect', 'mpSelect', 'demForSelect', 'critRateSelect', 'critDmgSelect', 'iedSelect', 'dmgSelect', 'bossSelect', 'statResistSelect', 'stanceSelect', 'attSelect', 'bonusExpSelect', 'arcForceSelect']
-    var id_checked = ['CRA', 'Dom', 'gollux', 'bt2', 'bt3', 'DHB', 'solus2', 'solus3', 'unfairAdvantage', 'empiricalKnowledge', 'thiefCunning', 'tideOfBattle', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
+    var id_checked = ['CRA', 'Dom', 'gollux', 'DHB', 'badge1', 'badge2', 'badge3', 'magSoul', 'demForLock', 'critRateLock', 'statResistLock', 'stanceLock', 'bonusExpLock', 'arcForceLock', 'reboot', 'nonreboot']
     var id_wse_level = ['wlevel', 'slevel', 'elevel'];
     var id_wse_lines = { 'weapon': ['wline1', 'wline2', 'wline3'], 'secondary': ['sline1', 'sline2', 'sline3'], 'emblem': ['eline1', 'eline2', 'eline3'] }
     var id_hidden = ['kanna_hp_perc_div', 'kanna_hp_div', 'hp_perc_div', 'zeromessage', 'DHB_div', 'hp_arcane_div']
@@ -3115,31 +3115,6 @@ document.addEventListener("DOMContentLoaded", function () {
         loadLocalStorage(); //load data from localstorage //here
     }
 
-    //checkbox behaviour
-    document.getElementById("solus2").addEventListener("click", function () {
-        if (document.getElementById('solus2').checked == true) {
-            document.getElementById('solus3').checked = false;
-        }
-    });
-
-    document.getElementById("solus3").addEventListener("click", function () {
-        if (document.getElementById('solus3').checked == true) {
-            document.getElementById('solus2').checked = false;
-        }
-    });
-
-    document.getElementById("bt2").addEventListener("click", function () {
-        if (document.getElementById('bt2').checked == true) {
-            document.getElementById('bt3').checked = false
-        }
-    });
-
-    document.getElementById("bt3").addEventListener("click", function () {
-        if (document.getElementById('bt3').checked == true) {
-            document.getElementById('bt2').checked = false
-        }
-    });
-
     document.getElementById("reboot").addEventListener("click", function () {
         if (document.getElementById('reboot').checked == true) {
             document.getElementById('nonreboot').checked = false;
@@ -4127,31 +4102,73 @@ function optimizeWSE() {
     var critical_damage = parseFloat(document.getElementById('critical_damage').value);
 
     //Link Skill Stats
-    if (document.getElementById('solus2').checked == true) {
-        damage_percent = damage_percent + 11;
+    var solusLevel = parseInt(document.getElementById('solusLevel').value) || 0;
+    if (solusLevel > 3)
+        solusLevel = 3;
+    if (solusLevel >= 1)
+        damage_percent += (1 + (solusLevel * 5)); // lv1 6% lv2 11% lv3 16%
+
+    var unfairAdvantageLevel = parseInt(document.getElementById('unfairAdvantageLevel').value) || 0;
+    if (unfairAdvantageLevel > 3)
+        unfairAdvantageLevel = 3;
+    if (unfairAdvantageLevel >= 1)
+        damage_percent += (6 * unfairAdvantageLevel); // lv1 6% lv2 12% lv3 18%
+    
+    var empiricalKnowledgeLevel = parseInt(document.getElementById('empiricalKnowledgeLevel').value) || 0;
+    if (empiricalKnowledgeLevel > 9)
+        empiricalKnowledgeLevel = 9;
+
+    switch (empiricalKnowledgeLevel) { // weird edge case where damage/ied values only increase every 2 levels
+        case 1:
+        case 2:
+            ied_sources = ied_sources.concat([1, 1, 1]);
+            damage_percent += 3;
+            break;
+        case 3:
+        case 4:
+            ied_sources = ied_sources.concat([2, 2, 2]);
+            damage_percent += 6;
+            break;
+        case 5:
+        case 6:
+            ied_sources = ied_sources.concat([3, 3, 3]);
+            damage_percent += 9;
+            break;
+        case 7:
+        case 8:
+            ied_sources = ied_sources.concat([4, 4, 4]);
+            damage_percent += 12;
+            break;
+        case 9:
+            ied_sources = ied_sources.concat([5, 5, 5]);
+            damage_percent += 15;
+            break;
     }
 
-    if (document.getElementById('solus3').checked == true) {
-        damage_percent = damage_percent + 16;
+    var thiefCunningLevel = parseInt(document.getElementById('thiefCunningLevel').value) || 0;
+    if (thiefCunningLevel > 9)
+        thiefCunningLevel = 9;
+    if (thiefCunningLevel > 0) {
+        damage_percent += (3 * thiefCunningLevel); // scales linear from 3% at lv1 to 27% at lv9
     }
 
-    if (document.getElementById('unfairAdvantage').checked == true) {
-        damage_percent = damage_percent + 12;
-    }
+    var tideOfBattleLevel = parseInt(document.getElementById('tideOfBattleLevel').value) || 0;
+    if (tideOfBattleLevel > 3)
+        tideOfBattleLevel = 3;
+    if (tideOfBattleLevel >= 1)
+        damage_percent += (4 + (tideOfBattleLevel * 4)); // lv1 8% lv2 12% lv3 16%
 
-    if (document.getElementById('empiricalKnowledge').checked == true) {
-        var empiricalKnowledgeIED = [3, 3, 3];
-        ied_sources = ied_sources.concat(empiricalKnowledgeIED);
-        damage_percent = damage_percent + 9;
-    }
-
-    if (document.getElementById('thiefCunning').checked == true) {
-        damage_percent = damage_percent + 18;
-    }
-
-    if (document.getElementById('tideOfBattle').checked == true) {
-        damage_percent = damage_percent + 12;
-    }
+    var timeToPrepareLevel = parseInt(document.getElementById('timeToPrepareLevel').value) || 0;
+    if (timeToPrepareLevel > 3)
+        timeToPrepareLevel = 3;
+    if (timeToPrepareLevel >= 1)
+        damage_percent += (1 + (timeToPrepareLevel * 8)); // lv1 9% lv2 17% lv3 25%
+    
+    var qiCultivationLevel = parseInt(document.getElementById('qiCultivationLevel').value) || 0;
+    if (qiCultivationLevel > 3)
+        qiCultivationLevel = 3;
+    if (qiCultivationLevel >= 1)
+        boss_percent += (6 * qiCultivationLevel); // only factoring in the stacking component not shown in stat window in town
 
     if (document.getElementById('magSoul').checked == true) {
         attack_percent = attack_percent + 3;
@@ -4284,8 +4301,14 @@ function optimizeWSE() {
         if (document.getElementById('Dom').checked) hp_percent = hp_percent + 0.1
         if (document.getElementById('gollux').checked) hp_percent = hp_percent + 0.26
 
-        if (document.getElementById('bt2').checked) hp_percent = hp_percent + 0.04
-        if (document.getElementById('bt3').checked) hp_percent = hp_percent + 0.05
+        var spiritGuideBlessingLevel = parseInt(document.getElementById('spiritGuideBlessingLevel').value) || 0;
+        if (spiritGuideBlessingLevel === 1) {
+            hp_percent = hp_percent + 0.03;
+        } else if (spiritGuideBlessingLevel === 2) {
+            hp_percent = hp_percent + 0.04;
+        } else if (spiritGuideBlessingLevel >= 3) {
+            hp_percent = hp_percent + 0.05;
+        }
 
         console.log('hp perc: ' + hp_percent)
 
@@ -4316,8 +4339,14 @@ function optimizeWSE() {
         if (document.getElementById('Dom').checked) hp_percent = hp_percent + 0.1
         if (document.getElementById('gollux').checked) hp_percent = hp_percent + 0.26
 
-        if (document.getElementById('bt2').checked) hp_percent = hp_percent + 0.04
-        if (document.getElementById('bt3').checked) hp_percent = hp_percent + 0.05
+        var spiritGuideBlessingLevel = parseInt(document.getElementById('spiritGuideBlessingLevel').value) || 0;
+        if (spiritGuideBlessingLevel === 1) {
+            hp_percent = hp_percent + 0.03;
+        } else if (spiritGuideBlessingLevel === 2) {
+            hp_percent = hp_percent + 0.04;
+        } else if (spiritGuideBlessingLevel >= 3) {
+            hp_percent = hp_percent + 0.05;
+        }
 
         console.log('hp perc: ' + hp_percent)
         var new_hp_percent = ((hp_percent * 100) - hp_hyper) / 100;
