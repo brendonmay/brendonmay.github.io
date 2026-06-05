@@ -2,6 +2,44 @@
 // "Linear interpolation between closest ranks" method
 var CREATED_CHART = false
 
+// "Enhancement Mode" boom-reduction system. Eligible: GMS, stars 15 -> 22.
+// All three tables are indexed [current_star][mode - 1]. Mode 1 = baseline.
+// Cost values are additive deltas applied on top of the base multiplier of 1
+// (matching the contract of getSafeguardMultiplierIncrease).
+const BOOM_TIER_COST_MULT_INCREASE = {
+    15: [0, 0.5, 1.5, 2],
+    16: [0, 0.5, 1.5, 2],
+    17: [0, 0.5, 1.5, 2],
+    18: [0, 1, 2.5, 5.5],
+    19: [0, 1, 2.5, 5.5],
+    20: [0, 1, 2.5, 5.5],
+    21: [0, 1, 2.5, 5.5],
+};
+
+const BOOM_TIER_DESTROY_RATES = {
+    15: [0.0210, 0.0140, 0.0070, 0],
+    16: [0.0210, 0.0140, 0.0070, 0],
+    17: [0.0680, 0.0425, 0.0170, 0],
+    18: [0.0680, 0.0440, 0.0180, 0],
+    19: [0.0850, 0.0616, 0.0360, 0],
+    20: [0.1050, 0.0750, 0.0400, 0],
+    21: [0.1275, 0.0880, 0.0450, 0],
+};
+
+const BOOM_TIER_SUCCESS_RATES = {
+    15: [0.30, 0.30, 0.30, 0.30],
+    16: [0.30, 0.30, 0.30, 0.30],
+    17: [0.15, 0.15, 0.15, 0.15],
+    18: [0.15, 0.12, 0.10, 0.08],
+    19: [0.15, 0.12, 0.10, 0.08],
+    20: [0.30, 0.25, 0.20, 0.15],
+    21: [0.15, 0.12, 0.10, 0.08],
+};
+
+function isBoomTierEligible(server, current_star) {
+    return server === 'gms' && current_star >= 15 && current_star <= 21;
+}
+
 function loaderOn() {
     $('#loader1').show();
     $('#loader2').show();
@@ -82,7 +120,7 @@ function median(values) {
         return (values[half - 1] + values[half]) / 2.0;
 }
 
-function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chance_time, item_type, server) {
+function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chance_time, item_type, server, boom_tier) {
     // if (item_type == "tyrant"){
     //     var attempt_cost = item_level**3.56;
     //     return parseFloat(attempt_cost.toFixed(0))
@@ -116,6 +154,10 @@ function attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, 
             multiplier = multiplier + getSafeguardMultiplierIncrease(current_star, sauna, server);
         }
 
+    }
+
+    if (boom_tier > 1 && isBoomTierEligible(server, current_star)) {
+        multiplier = multiplier + BOOM_TIER_COST_MULT_INCREASE[current_star][boom_tier - 1];
     }
 
     const attempt_cost = getBaseCost(server, current_star, item_level) * multiplier;
@@ -290,7 +332,7 @@ function buildBoomChart(boom_result_list, boomPercentiles) {
     return chart;
 }
 
-function determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type, server, boom_event) {
+function determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type, server, boom_event, boom_tier) {
     /** returns either "Success", "Maintain", "Decrease", or "Boom" */
     if (five_ten_fifteen) {
         if (current_star == 5 || current_star == 10 || current_star == 15) {
@@ -304,6 +346,13 @@ function determineOutcome(current_star, rates, star_catch, boom_protect, five_te
     var probability_maintain = rates[current_star][1];
     var probability_decrease = rates[current_star][2];
     var probability_boom = rates[current_star][3];
+
+    if (boom_tier > 1 && isBoomTierEligible(server, current_star)) {
+        var tier_idx = boom_tier - 1;
+        probability_success = BOOM_TIER_SUCCESS_RATES[current_star][tier_idx];
+        probability_boom = BOOM_TIER_DESTROY_RATES[current_star][tier_idx];
+        probability_maintain = 1 - probability_success - probability_decrease - probability_boom;
+    }
 
     if (sauna) {
         if ((current_star >= 12 && current_star <= 14) || (item_type == 'tyrant' && (current_star >= 5 && current_star <= 7))) {
@@ -385,7 +434,7 @@ function getBoomStar(current_stars, server) {
     return 20;
 }
 
-function performExperiment(current_stars, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event) {
+function performExperiment(current_stars, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event, boom_tier) {
     /** returns [total_mesos, total_booms]  or [AEE_amount, total_booms]*/
     var current_star = current_stars;
     var total_mesos = 0;
@@ -400,7 +449,7 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
         else {
             var chanceTime = false
             if (server != 'kms' && server != 'gms') var chanceTime = checkChanceTime(decrease_count);
-            total_mesos = total_mesos + attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chanceTime, item_type, server);
+            total_mesos = total_mesos + attemptCost(current_star, item_level, boom_protect, thirty_off, sauna, silver, gold, diamond, five_ten_fifteen, chanceTime, item_type, server, boom_tier);
         }
 
         if (chanceTime) {
@@ -414,7 +463,7 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
             }
         }
         else {
-            var outcome = determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type, server, boom_event);
+            var outcome = determineOutcome(current_star, rates, star_catch, boom_protect, five_ten_fifteen, sauna, item_type, server, boom_event, boom_tier);
 
             if (outcome == "Success") {
                 decrease_count = 0;
@@ -444,7 +493,7 @@ function performExperiment(current_stars, desired_star, rates, item_level, boom_
     return [total_mesos, total_booms]
 }
 
-function repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event) {
+function repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event, boom_tier) {
     //* return [average_cost, average_booms, meso_result_list, boom_result_list] */
     var total_mesos = 0;
     var total_booms = 0;
@@ -454,11 +503,11 @@ function repeatExperiment(total_trials, current_star, desired_star, rates, item_
     var meso_result_list_divided = [];
 
     while (current_trial < total_trials) {
-        var trial_mesos = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event)[0];
+        var trial_mesos = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event, boom_tier)[0];
         meso_result_list.push(trial_mesos);
         meso_result_list_divided.push(trial_mesos / 1000000000);
 
-        var trial_booms = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event)[1];
+        var trial_booms = performExperiment(current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event, boom_tier)[1];
         boom_result_list.push(trial_booms);
 
         total_mesos = total_mesos + trial_mesos;
@@ -532,6 +581,7 @@ function do_stuff() {
     var two_plus = document.getElementById('plus2').checked;
     var useAEE = false;
     let server = document.getElementById('server').value;
+    var boom_tier = parseInt(document.getElementById('boom_tier').value);
 
     const rates = getRates(server, item_type, useAEE);
 
@@ -553,7 +603,7 @@ function do_stuff() {
         diamond = true;
     }
 
-    var result = repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event);
+    var result = repeatExperiment(total_trials, current_star, desired_star, rates, item_level, boom_protect, thirty_off, star_catch, five_ten_fifteen, sauna, silver, gold, diamond, item_type, two_plus, useAEE, server, boom_event, boom_tier);
     //result = [average_cost, average_booms, meso_result_list, boom_result_list, median_cost, median_booms, max_cost, min_cost, max_booms, min_booms, meso_std, boom_std, meso_result_list_divided]
     var average_mesos = result[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     var average_booms = result[1];
@@ -686,6 +736,13 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
         $("#toast").toast('show')
     }, 1000)
+
+    function syncBoomTierLabel() {
+        document.getElementById('boom_tier_value').textContent =
+            document.getElementById('boom_tier').value;
+    }
+    document.getElementById('boom_tier').addEventListener('input', syncBoomTierLabel);
+    syncBoomTierLabel();
     //add event listener for when AEE is clicked, disable starcatching (no star catching)
     // document.getElementById('AEE').addEventListener('change', function(){
     //     if (document.getElementById('AEE').checked){
@@ -729,6 +786,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 `<p style="color:#8b3687">Note: Getting above 22 stars on Normal gear is very unlikely. The calculator may crash if you attempt going above 22 stars.</p>`;
         }
 
+        var boomTierSlider = document.getElementById('boom_tier');
+        boomTierSlider.disabled = (selectedValue !== 'gms');
+        if (boomTierSlider.disabled) {
+            boomTierSlider.value = 1;
+            syncBoomTierLabel();
+        }
     })
     $('#item_type').on('change', function () {
         // if (document.getElementById("tyrant").selected){
